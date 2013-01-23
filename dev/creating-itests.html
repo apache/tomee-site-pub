@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Creating itests</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../bootstrap.css" rel="stylesheet">
+    <link href="./../prettify.css" rel="stylesheet">
+    <link href="./../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Creating itests",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+
+    <script src="./../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../javascript/common.js"></script>
+    <script src="./../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../index.html">Home</a></li>
+            <li><a href="./../downloads.html">Downloads</a></li>
+            <li><a href="./../documentation.html">Documentation</a></li>
+            <li><a href="./../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
+<h1>Creating itests
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="Creatingitests-OpenEJBitests"></a></p>
+
+<h1>OpenEJB itests</h1>
+
+<p>The OpenEJB itests module is a framework to create EJB test cases that are
+designed according to the JUnit rules, i.e. they all have setUp, tests and
+tearDown methods. Since it's JUnit-based, you can do whatever you could do
+in JUnit.</p>
+
+<p>This page describes the steps to create EJB test cases.</p>
+
+<p><a name="Creatingitests-Howitestswork"></a></p>
+
+<h2>How itests work</h2>
+
+<p>The itests module lives in OpenEJB's repository in the <em>modules\itests</em> directory. Setting up the test environment to execute the itests is based on (<a href="http://svn.apache.org/repos/asf/maven/maven-1/plugins-sandbox/trunk/itest/">maven-itest-plugin-1.0 plugin</a>
+). </p>
+
+<p>Take a look at maven.xml in modules\itests directory. There you'll see that
+the default goal is <em>ejb:install</em>, which in turn executes <em>itest</em>. When the
+EJBs (todo: describe it a bit more) are done, the <em>itest:setup</em> goal is
+executed, which starts the real game. First, <em>org/openejb/Security</em>
+configuration is started. Once it's done, <em>openejb-itests-xxx.jar</em> is
+deployed, which is <em>org/openejb/Itests</em> configuration to be started,
+afterwards. When the configurations are deployed and started, the
+maven-itest-plugin executes junit (see <a href="http://ant.apache.org/manual/OptionalTasks/junit.html">Ant JUnit task documentation</a>
+ and project.properties of the itests module). The project.properties file
+configures which itests are run and some other stuff.</p>
+
+<p>The first itest test case is <em>org.openejb.test.entity.cmp.CmpTestSuite</em>.
+Consult this for more information. Then the others defined in
+<em>maven.itest.includes</em> property are executed.</p>
+
+<p>The order in which the itests are executed is important, so the first order
+is set up via the maven.itest.includes property, then the test suites add
+their tests in some order, and finally the method names in the test classes
+put yet another order. So, be careful what name your test method name will
+become. It may influence the order.</p>
+
+<p>Some EJBs access database resources. It's even more important for CMPs. The
+itests module uses the database as defined in the <em>openejb.test.database</em>
+property. It's currently defined in the <em>project.properties</em> file of the
+module. You can change its value to whatever you wish using the Maven
+property setting approaches (-D on the command line, project.properties,
+build.properties in your home directory or the project you work in).</p>
+
+<p>So, the last important information is how the junit tests access the server
+resources - EJBs. It's done via executing session beans that in turn get at
+the test EJBs, mostly CMPs. It's also possible that the CMP itests will be
+accessed directly without having to pass on the call through a session
+bean.</p>
+
+<p>If itests are part of a larger project structure you can disable executing
+it using the <em>maven.itest.skip</em> property. Set it to <em>true</em> and Maven won't
+run the itests.</p>
+
+<p><a name="Creatingitests-SimpleCMP2.1itest"></a></p>
+
+<h2>Simple CMP 2.1 itest</h2>
+
+<p><a name="Creatingitests-Databasesetup"></a></p>
+
+<h3>Database setup</h3>
+
+<p>The itests default database is Derby. The class -
+<em>org.openejb.test.DerbyTestDatabase</em> - is instantiated upon executing
+<em>org.openejb.testTestManager.getDatabase()</em> in each test case's <em>setUp()</em>
+method. Remember, you can define any other database using the
+<em>openejb.test.database</em> property or do initialization of your own database
+choice in the setUp() method.</p>
+
+<p>The current implementation of database initialization is based on two
+DerbyTestDatabse methods: <em>createCMP2Model()</em> and <em>dropCMP2Model()</em> that
+create and drop database structure, accordingly.</p>
+
+<p><a name="Creatingitests-CMP2.1deployment"></a></p>
+
+<h3>CMP 2.1 deployment</h3>
+
+<p><div class="info">:title=Information}
+Unless specified, all directories are relative to <em>modules/itests</em>
+directory and commands are executed in it.<div class="info">}</p>
+
+<p>A Maven project can produce one build artefact. It's very important to keep
+in mind whenever your tests are to be based on a EJB that's not built by
+default. The default EJBs are defined in
+<em>modules/itests/src/ejb/META-INF/ejb-jar.xml</em>. The corresponding deployment
+plan - the <em>openejb-jar.xml</em> file is in
+<em>modules/itests/src/ejb/META-INF/openejb-jar.xml</em>.</p>
+
+<p>If you want to test your own EJB, you need to build it yourself, i.e.
+describe the build and deployment in <em>modules/itests/maven.xml</em> in the
+pregoal of <em>itest:setup</em>.</p>
+
+<p>In the following example, Ant's jar builds openejb-cmp2-petstore.jar file,
+which in turn is distributed and started in Geronimo. The <em>id</em> attribute of
+<em>deploy:start</em> is as specified in the module's deployment plan. See <a href="http://wiki.apache.org/geronimo/Deployment">Geronimo Deployment</a>
+ for more information about Geronimo deployment plans.</p>
+
+<pre><code>&lt;ant:jar destfile="${basedir}/target/openejb-cmp2-petstore.jar"&gt;
+  &lt;fileset dir="${basedir}/target/classes"&gt;
+    &lt;include name="**/cmp2/petstore/*.class"/&gt;
+    &lt;include name="**/TestFailureException.class"/&gt;
+  &lt;/fileset&gt;
+  &lt;metainf dir="${basedir}/src/cmp2/petstore" includes="*.xml"/&gt;
+&lt;/ant:jar&gt;
+&lt;deploy:distribute
+  uri="deployer:geronimo:jmx:rmi://localhost/jndi/rmi:/JMXConnector"
+  username="system"
+  password="manager"
+  module="${basedir}/target/openejb-cmp2-petstore.jar"
+/&gt;
+&lt;deploy:start
+  uri="deployer:geronimo:jmx:rmi://localhost/jndi/rmi:/JMXConnector"
+  username="system"
+  password="manager"
+  id="org/openejb/cmp2/petstore"/&gt;
+</code></pre>
+
+<p><a name="Creatingitests-Execution"></a></p>
+
+<h3>Execution</h3>
+
+<p>When EJB classes, deployment descriptor and plan, maven.xml are all set up,
+it's time to execute your tests. In order to run itests you will run Maven
+in <em>modules/itests</em> directory.</p>
+
+<pre><code>~/openejb/modules/itests
+$ maven
+</code></pre>
+
+<p>It's also possible to override project properties and run only some test
+cases.</p>
+
+<pre><code>~/openejb/modules/itests
+$ maven -Dmaven.itest.includes=**/Cmp2TestSuite.java
+</code></pre>
+
+<p>When a failure occurs, you should take a look at the result file of the
+failed test suite in <em>target/itest-reports</em>, e.g.</p>
+
+<pre><code>~/openejb/modules/itests
+$ maven -Dmaven.itest.includes=**/Cmp2TestSuite.java -o
+...
+ [junit]
+</code></pre>
+
+<p>Tests run: 113, Failures: 1, Errors: 0, Time elapsed: 22,132 sec
+     [junit]
+ [ERROR]
+ TEST org.openejb.test.entity.cmp2.Cmp2TestSuite FAILED
+    ...
+    BUILD FAILED
+    File...... C:\Documents and
+Settings\root.maven\cache\maven-itest-plugin-1.0\plugin.jelly
+    Element... fail
+    Line...... 166
+    Column.... 64
+    There were test failures.
+    Total time: 2 minutes 3 seconds
+    Finished at: Sun Jul 17 17:48:36 CEST 2005</p>
+
+<pre><code>$ more
+</code></pre>
+
+<p>target/itest-reports/TEST-org.openejb.test.entity.cmp2.Cmp2TestSuite.txt
+    Testsuite: org.openejb.test.entity.cmp2.Cmp2TestSuite
+    Tests run: 113, Failures: 1, Errors: 0, Time elapsed: 22,132 sec</p>
+
+<pre><code>Testcase: PetstoreTests.create: FAILED
+Received Exception class java.lang.NullPointerException : null
+junit.framework.AssertionFailedError: Received Exception class
+</code></pre>
+
+<p>java.lang.NullPointerException : null
+        at
+org.openejb.test.entity.cmp2.PetstoreTests.test01_create(PetstoreTests.java:84)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at
+sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at
+sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at
+org.openejb.test.NumberedTestCase.runTestMethod(NumberedTestCase.java:195)
+        at
+org.openejb.test.NumberedTestCase$3.protect(NumberedTestCase.java:169)
+        at org.openejb.test.NumberedTestCase.run(NumberedTestCase.java:172)
+        at org.openejb.test.NumberedTestCase.run(NumberedTestCase.java:141)
+        at org.openejb.test.TestSuite.run(TestSuite.java:71)
+    ...</p>
+
+<p>Complete execution log is in <em>target/openejb/var/log/openejb.log</em> of the
+itests module.</p>
+
+<p><a name="Creatingitests-RunningtheTestsinEclipse."></a></p>
+
+<h4>Running the Tests in Eclipse.</h4>
+
+<p>The steps for running the iTests inside of Eclipse are given below. They
+are</p>
+
+<p>1) For Local Interface Tests, the class to be run is
+<em>org.apache.openejb.iTest</em>.
+2) For Remote Interface Tests, the class to be run is
+<em>org.apache.openejb.RemoteiTest</em>.</p>
+
+<p>In both the cases you need to give <em>'-Dopenejb.home=target/test-classes/'</em>
+as a vm argument 
+for the tests to run. </p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

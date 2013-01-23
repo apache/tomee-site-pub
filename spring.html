@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Spring</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Spring",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Spring
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><div class="note">}
+This document and the related feature is considered a prototype and will
+change based on user feedback.  All comments suggestions welcome.<div class="note">}</p>
+
+<p><a name="Spring-Introduction"></a></p>
+
+<h1>Introduction</h1>
+
+<p>The OpenEJB Spring integration makes all Spring defined beans injectable to
+Java EE components, and all Java EE components can be injected to Spring beans. 
+The injection system supports arbitrarily complex nesting (e.g., Spring
+bean injected into a Java EE component, which is then injected into another
+Spring bean), including:</p>
+
+<ul>
+<li>@Resouce injection of any Spring bean into EJB</li>
+<li>Injection of any Java EE resource into a Spring bean, including:
+<em>* EJB 3.0 beans
+<em></em> EJB 3.1 Singleton Bean
+<em></em> JDBC Connector
+<em></em> JMS Connector
+<em></em> JMS Queue and Topic
+*</em> Generic Java EE Connector (JCA)</li>
+</ul>
+
+<p>In addition, the OpenEJB Spring integration add support for discovery and
+deployment of standard Java EE packages within a Spring context, including:</p>
+
+<ul>
+<li>EAR</li>
+<li>EJB Jar</li>
+<li>Persistence Unit</li>
+<li>RAR </li>
+</ul>
+
+<p><em>Requirements:</em>
+ * OpenEJB 3.1+
+ * Spring X.X
+ * Java 1.5 or 1.6</p>
+
+<p><a name="Spring-SpringBeans"></a></p>
+
+<h1>Spring Beans</h1>
+
+<p>The following beans are usable in any spring xml file.</p>
+
+<table>
+<tr><th> Class </th><th> Description </th></tr>
+<tr><td> org.apache.openejb.spring.ClassPathApplication </td><td> Scrapes the classpath
+for all EJB, RAR, and Persistence applications, deploys them, and imports
+them into the current ApplicationContext.  All applications found are
+treated as one big EAR unless the _classpathAsEar_ property is set to
+_false_ </td></tr>
+<tr><td> org.apache.openejb.spring.Application </td><td> Scrapes an individual jar file
+for EJB, RAR, and Persistence applications, deploys them, and imports them
+into the current ApplicationContext.  The 'jarFile' property is required. 
+The application is treated as it's own self-contained EAR, separate from
+other uses of 'Application' </td></tr>
+<tr><td> org.apache.openejb.spring.Resource </td><td> Allows an OpenEJB <Resource> to be
+declared in the Spring ApplicationContext </td></tr>
+<tr><td> org.apache.openejb.spring.OpenEJBResource </td><td> A FactoryBean that imports a
+Resource from OpenEJB into the Spring ApplicationContext.  Has the
+following properties: _type_ such as javax.sql.DataSource, and
+_resourceId_.  In the future this bean will not be required and all OpenEJB
+Resources will automatically be imported into the Spring ApplicationContext
+</td></tr>
+<tr><td> org.apache.openejb.spring.BmpContainer </td><td> Allows an OpenEJB BMP
+<Container> to be declared in the Spring ApplicationContext.  Has the
+following properties: _poolSize_ </td></tr>
+<tr><td> org.apache.openejb.spring.CmpContainer </td><td> Allows an OpenEJB CMP
+<Container> to be declared in the Spring ApplicationContext. </td></tr>
+<tr><td> org.apache.openejb.spring.SingletonContainer </td><td> Allows an OpenEJB
+Singleton <Container> to be declared in the Spring ApplicationContext.  Has
+the following properties: _accessTimeout_ </td></tr>
+<tr><td> org.apache.openejb.spring.StatefulContainer </td><td> Allows an OpenEJB Stateful
+<Container> to be declared in the Spring ApplicationContext.  Has the
+following properties: _timeOut_</td></tr>
+<tr><td> org.apache.openejb.spring.StatelessContainer </td><td> Allows an OpenEJB Stateful
+<Container> to be declared in the Spring ApplicationContext.  Has the
+following properties: _timeOut_, _poolSize_, and _strictPooling_ </td></tr>
+<tr><td> org.apache.openejb.spring.MdbContainer </td><td> Allows an OpenEJB Message-Driven
+<Container> to be declared in the Spring ApplicationContext.  Has the
+following properties: _resourceAdapter_, _messageListenerInterface_,
+_activationSpecClass_, and _instanceLimit_ </td></tr>
+<tr><td> org.apache.openejb.spring.EJB </td><td> A FactoryBean that imports an EJB from
+OpenEJB into the Spring ApplicationContext.  One of these is automatically
+created for each interface of each EJB, but explicit use can be nice if you
+desire to import an EJB with a specific name.  Has the following
+properties: _deploymentId_, _interface_ </td></tr>
+</table>
+
+<p><a name="Spring-Examples"></a></p>
+
+<h1>Examples</h1>
+
+<p>See the <a href="spring-ejb-and-jpa.html">Spring EJB and JPA</a>
+ page for example code and a working Spring xml file.</p>
+
+<p><a name="Spring-{anchor:problems}Problems?"></a></p>
+
+<h1>{anchor:problems} Problems?</h1>
+
+<p>If you are having problems with the installation, please send a message to
+the OpenEJB users <a href="openejb:mailing-lists.html">mailing list</a>
+ containing any error message(s) and the following information:</p>
+
+<ul>
+<li>OpenEJB Version</li>
+<li>Spring Version</li>
+<li>Java Version (execute java -version)</li>
+<li>Operating System Type and Version</li>
+</ul>
+
+<p><a name="Spring-Limitations"></a></p>
+
+<h1>Limitations</h1>
+
+<p><em>JavaAgent</em> - OpenEJB uses OpenJPA to provide JPA and CMP persistence, and
+OpenJPA currently requires a JavaAgent to function properly in a Java 1.5
+environment.  OpenJPA does not require a JavaAgent in Java 1.6.  Use
+Hibernate as your the provider in your persistence.xml files if you wish to
+avoid this requirement.</p>
+
+<p><em>EntityManager</em> - Having an OpenEJB created EntityManager or
+EntityManagerFactory injected into Spring beans is currently not supported.
+ This will be added to the next release.  A small workaround for this is to
+use an EJB as a factory by adding a 'getEntityManager' method an using it
+as a <a href="http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-class-instance-factory-method">Spring instance factory method</a>
+.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

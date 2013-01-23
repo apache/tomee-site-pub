@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Service Locator</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Service Locator",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Service Locator
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>The functionality of the <a href="jndi-names.html">openejb.jndiname.format</a>
+ allows for writing some really fun service locator code.  Creating the
+exact layout you want using the exact data you want means you can create
+robust libraries for pulling things out of JNDI.</p>
+
+<p><a name="ServiceLocator-Lookupexamples"></a></p>
+
+<h1>Lookup examples</h1>
+
+<p>To get the creative juices flowing here are a few examples of lookup
+methods you could create for your service locator, the jndi name formats
+that would work with those lookups, and examples of client code using the
+service locator.  For simplicity, we'll assume all the lookup examples
+start with this basic class that has a built-in lookup allowing for a
+common prefix to be optionally applied to the beginning of all lookup
+strings.</p>
+
+<pre><code>public class MyLocator {
+    private final Context context;
+
+    public MyLocator() throws NamingException {
+        this(null);
+    }
+
+    public MyLocator(String commonPrefix) throws NamingException {
+        Properties properties = new Properties();
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+        properties.put(Context.PROVIDER_URL, "ejbd://localhost:4201/");
+        this.context = new InitialContext(properties);
+    }
+
+    public Object lookup(String name) {
+        try {
+            if (commonPrefix != null) name = commonPrefix + "/" +name;
+            return context.lookup(name);
+        } catch (NamingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+}
+</code></pre>
+
+<p><a name="ServiceLocator-Justtheinterface"></a></p>
+
+<h2>Just the interface</h2>
+
+<p>Usable with JNDI name formats ending in the full class name of the
+interface such as:
+ - {interfaceClass}</p>
+
+<pre><code>public &lt;T&gt; T lookup(Class&lt;T&gt; type) {
+    return (T) lookup(type.getName());
+}
+
+
+
+MyLocator locator = new MyLocator();
+Widget widget = locator.lookup(Widget.class);   
+</code></pre>
+
+<p>Or with a common prefix or with a common prefix supplied in constructor
+such as:
+ - {moduleId}/{interfaceClass}
+ - ejb/{moduleId}/{interfaceClass}</p>
+
+<pre><code>MyLocator locator = new MyLocator("ejb/superbiz");
+Widget widget = locator.lookup(Widget.class);   
+Store store = locator.lookup(Store.class);
+</code></pre>
+
+<p><a name="ServiceLocator-Interfaceclassandaprefix"></a></p>
+
+<h2>Interface class and a prefix</h2>
+
+<p>Usable with JNDI name formats including a varying prefix such as ejbName or
+deploymentID
+and ending in the full class name of the interface</p>
+
+<ul>
+<li>{ejbName}/{interfaceClass}</li>
+<li>{deploymentId}/{interfaceClass}</p>
+
+<p>public <T> T lookup(String prefix, Class<T> type) {
+    return (T) lookup(prefix + "/" + type.getName());
+}</p>
+
+<p>MyLocator locator = new MyLocator();
+Widget redWidget = locator.lookup("RedWidgetBean", Widget.class); <br />
+Widget blueWidget = locator.lookup("BlueWidgetBean", Widget.class);   </li>
+</ul>
+
+<p>Or with a common prefix or with a common prefix supplied in constructor
+such as:
+ - {moduleId}/{ejbName}/{interfaceClass}
+ - ejb/{moduleId}/{deploymentId}/{interfaceClass}</p>
+
+<pre><code>MyLocator locator = new MyLocator("accountingApp");
+Widget widget = locator.lookup("RedWidgetBean", Widget.class);   
+Store store = locator.lookup("StoreBean", Store.class);
+</code></pre>
+
+<p><a name="ServiceLocator-Interfaceclassandejbclass"></a></p>
+
+<h2>Interface class and ejb class</h2>
+
+<p>Usable with JNDI name formats comprised of the interfaceClass and ejbClass</p>
+
+<p>For variation, the interface class is the prefix and the ejb class is the
+suffix.  This is neat as the the prefix (the interface class name) becomes
+a jndi context with one binding in it for each implementing ejb class.</p>
+
+<p>Works with:
+ - {interfaceClass}/{ejbClass}</p>
+
+<pre><code>public &lt;T&gt; T lookup(Class&lt;T&gt; type, Class ejbClass) {
+    return (T) lookup(type.getName() + "/" + ejbClass.getName());
+}
+
+
+
+MyLocator locator = new MyLocator();
+Widget widget = locator.lookup(Widget.class, BlueWidgetBean.class);   
+</code></pre>
+
+<p>Or with a common prefix or with a common prefix supplied in constructor
+such as:
+ - {moduleId}/{interfaceClass}/{ejbClass}
+ - ejb/{moduleId}/{interfaceClass}/{ejbClass}</p>
+
+<pre><code>MyLocator locator = new MyLocator("ejb/purchasingApp");
+Widget widget = locator.lookup(Widget.class, RedWidgetBean.class);
+Store store = locator.lookup(Store.class, StoreBean.class);
+</code></pre>
+
+<p><a name="ServiceLocator-Interfaceclassandejbclasswithsimplenames"></a></p>
+
+<h2>Interface class and ejb class with simple names</h2>
+
+<p>Similar to the above example but using the simple name of the classes
+resulting
+in a JNDI tree that's a bit more human readable.
+ - {ejbClass.simpleName}/{interfaceClass.simpleName}</p>
+
+<pre><code>public &lt;T&gt; T lookup(Class ejbClass, Class&lt;T&gt; type) {
+    return (T) lookup(ejbClass.getSimpleName() + "" + type.getSimpleName());
+}
+</code></pre>
+
+<p>and</p>
+
+<pre><code>MyLocator locator = new MyLocator();
+Widget widget = locator.lookup(RedWidgetBean.class, Widget.class);   
+</code></pre>
+
+<p>Or with a common prefix or with a common prefix supplied in constructor
+such as:
+ - {moduleId}/{ejbClass.simpleName}/{interfaceClass.simpleName}
+ - ejb/{moduleId}/{ejbClass.simpleName}/{interfaceClass.simpleName}</p>
+
+<pre><code>MyLocator locator = new MyLocator("shippingApp");
+Widget widget = locator.lookup(GreenWidgetBean.class, Widget.class);   
+Store store = locator.lookup(SuperStoreBean.class, Store.class);
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

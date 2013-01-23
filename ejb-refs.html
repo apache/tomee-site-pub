@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>EJB Refs</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=EJB Refs",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>EJB Refs
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>TomEE complains it doesn't know the container type, so I added type="javax.naming.InitialContext" and it worked (mostly).
+<a name="EJBRefs-Referencingabeaninanotherjar(withannotations)"></a></p>
+
+<h2>Referencing a bean in another jar (with annotations)</h2>
+
+<p>When using annotations to reference a bean from another ejb in your ear you
+have to supplement the @EJB reference with a small chunk of xml in the
+ejb-jar.xml of the referring bean.</p>
+
+<p>So in ejb app A colorsApp.jar you have this bean:</p>
+
+<pre><code>package com.foo.colors;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class OrangeBean implements OrangeRemote {
+}
+</code></pre>
+
+<p>Then in ejb app B shapesApp.jar you have this bean with a reference to
+OrangeRemote:</p>
+
+<pre><code>package com.foo.shapes;
+
+import javax.ejb.Stateless;
+import com.foo.colors.OrangeRemote;
+
+@Stateless
+public class SquareBean implements SquareRemote {
+    @EJB OrangeRemote orangeRemote;
+}
+</code></pre>
+
+<p>To hook this reference up you need to override this ref and add more info
+in the ejb-jar.xml of shapesApp.jar as follows:</p>
+
+<pre><code>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+
+    &lt;session&gt;
+      &lt;ejb-name&gt;SquareBean&lt;/ejb-name&gt;
+      &lt;ejb-ref&gt;
+    &lt;ejb-ref-name&gt;com.foo.shapes.SquareBean/orangeRemote&lt;/ejb-ref-name&gt;
+    &lt;ejb-link&gt;colorsApp.jar#OrangeBean&lt;/ejb-link&gt;
+      &lt;/ejb-ref&gt;
+    &lt;/session&gt;
+
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+
+<p><a name="EJBRefs-Referencingabeaninanotherjar(xmlonly,noannotations)"></a></p>
+
+<h2>Referencing a bean in another jar (xml only, no annotations)</h2>
+
+<p>The same basic approach applies and dependency injection is still possible,
+however more information must be described in the xml.</p>
+
+<p>In ejb app A colorsApp.jar you have this bean:</p>
+
+<pre><code>package com.foo.colors;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class OrangeBean implements OrangeRemote {
+}
+</code></pre>
+
+<p>Then in ejb app B shapesApp.jar -- note there is no @EJB annotation:</p>
+
+<pre><code>package com.foo.shapes;
+
+import javax.ejb.Stateless;
+import com.foo.colors.OrangeRemote;
+
+@Stateless
+public class SquareBean implements SquareRemote {
+    OrangeRemote orangeRemote;
+}
+</code></pre>
+
+<p>Here's how you would hook this reference up, injection and all, with just
+xml.  The following would be added to the ejb-jar.xml of shapesApp.jar:</p>
+
+<pre><code>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+
+    &lt;session&gt;
+      &lt;ejb-name&gt;SquareBean&lt;/ejb-name&gt;
+      &lt;ejb-ref&gt;
+        &lt;ejb-ref-name&gt;com.foo.shapes.SquareBean/orangeRemote&lt;/ejb-ref-name&gt;
+        &lt;ejb-ref-type&gt;Session&lt;/ejb-ref-type&gt;
+        &lt;remote&gt;com.foo.colors.OrangeRemote&lt;/remote&gt;
+        &lt;ejb-link&gt;colorsApp.jar#OrangeBean&lt;/ejb-link&gt;
+        &lt;injection-target&gt;
+          &lt;injection-target-class&gt;com.foo.shapes.SquareBean&lt;/injection-target-class&gt;
+          &lt;injection-target-name&gt;orangeRemote&lt;/injection-target-name&gt;
+        &lt;/injection-target&gt;
+      &lt;/ejb-ref&gt;
+    &lt;/session&gt;
+
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+
+<p>Note that the value of <ejb-ref-name> could actually be anything and the
+above example would still work as there is no annotation that needs to
+match the <ejb-ref-name> and no one will likely be looking up the EJB as
+it's injected.</p>
+
+<h1>Referencing a bean in another server</h1>
+
+<p>As of OpenEJB 4.0.0-beta-3, server to server references work.</p>
+
+<p>First we need to configure and name the InitialContext that will be used to satisfy the lookup to the other server.</p>
+
+<p>In this example we are calling our InitialContext <code>shoe</code> for fun.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;openejb&gt;
+
+  &lt;JndiProvider id="shoe" type="javax.naming.InitialContext"&gt;
+    java.naming.provider.url = ejbd://localhost:4201
+    java.naming.factory.initial = org.apache.openejb.client.RemoteInitialContextFactory
+  &lt;/JndiProvider&gt;
+
+&lt;/openejb&gt;
+</code></pre>
+
+<p>Declaring the <code>@EJB</code> reference is then done using a <code>mappedName</code>  that references the named <code>InitialContext</code></p>
+
+<pre><code>public class BlueBean implements BlueRemote {
+
+    @EJB(mappedName = "jndi:ext://shoe/OrangeBeanRemote")
+    private OrangeRemote orangeRemote;
+
+    public void hasOrangeRemote() {
+        Assert.assertNotNull("orangeRemote is null", orangeRemote);
+        assertEquals("olleh", orangeRemote.echo("hello"));
+    }
+}
+</code></pre>
+
+<p>Specifically, the <code>mappedName</code> syntax is as follows:</p>
+
+<ul>
+<li>jndi:ext://<code>&lt;contextId&gt;</code>/<code>&lt;jndiName&gt;</code></li>
+</ul>
+
+<h2>Referencing a bean in "many" servers</h2>
+
+<p>Note the above also works with the various forms of failover that TomEE supports.</p>
+
+<p>If say, there are two servers that have the <code>OrangeBeanRemote</code> bean, you could expand the <code>&lt;JndiProvider&gt;</code> delcaration like so:</p>
+
+<pre><code>  &lt;JndiProvider id="shoe" type="javax.naming.InitialContext"&gt;
+    java.naming.provider.url = failover:ejbd://192.168.1.20:4201,ejbd://192.168.1.30:4201
+    java.naming.factory.initial = org.apache.openejb.client.RemoteInitialContextFactory
+  &lt;/JndiProvider&gt;
+</code></pre>
+
+<p>In the event that the <code>ejbd://192.168.1.20:4201</code> server cannot be contacted, the second server will be tried.</p>
+
+<p>This sort of arangement can also happen dynamicall against a list of servers that continuously grows and shrinks.  The server list is maintained behind
+the scenes using server discovery logic that can function on either UDP or TCP.  See these docs for more details on Failover and Discovery:</p>
+
+<ul>
+<li><a href="multicast-discovery.html">Multicast Discovery (UDP)</a></li>
+<li><a href="multipulse-discovery.html">Multipulse Discovery (TCP)</a></li>
+<li><a href="multipoint-discovery.html">Multipoint Discovery (TCP)</a></li>
+</ul>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

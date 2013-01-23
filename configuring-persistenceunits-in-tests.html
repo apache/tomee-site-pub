@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Configuring PersistenceUnits in Tests</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Configuring PersistenceUnits in Tests",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Configuring PersistenceUnits in Tests
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="ConfiguringPersistenceUnitsinTests-Overridingthepersistence.xml"></a></p>
+
+<h1>Overriding the persistence.xml</h1>
+
+<p>The most common situation in EJB related testing by far is the need to
+alter your persistence.xml for a test environment.</p>
+
+<p><a name="ConfiguringPersistenceUnitsinTests-Overridingthe<jta-data-source>and<non-jta-data-source>"></a></p>
+
+<h2>Overriding the jta-data-source and non-jta-data-source</h2>
+
+<p>OpenEJB will automatically use the DataSources you have setup in your test
+environment, we're pretty good at guessing the right DataSources you intend
+even if the names don't match exactly -- or in some cases at all.  If there
+is only one DataSource configured, it's very easy for us to guess the
+DataSource to use.</p>
+
+<p>This allows you to keep your persistence.xml configured for your production
+environment and helps eliminate the need for a "test" persistence.xml
+(though we do have that functionality).  A log line will be printed saying
+if we had to adjust the DataSources of your persistence.xml.</p>
+
+<p><a name="ConfiguringPersistenceUnitsinTests-Overridingthepersistence-unit<properties>"></a></p>
+
+<h2>Overriding the persistence-unit properties</h2>
+
+<p>You can override any property in your test setup via either system
+properties or the initial context properties.  The format is:</p>
+
+<p><code>&lt;unit-name&gt;.&lt;property&gt;=&lt;value&gt;</code></p>
+
+<p>So for example with the following persistence.xml:</p>
+
+<pre><code>&lt;persistence&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
+    &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+    &lt;properties&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
+      &lt;property name="hibernate.max_fetch_depth" value="3"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<p>You can override and add persistence unit properties in your test case.
+There are currently no facilities for removing them (if you have a need for
+that let us know -- it hasn't really come up so far).</p>
+
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
+
+p.put("movie-unit.hibernate.hbm2ddl.auto", "update");
+p.put("movie-unit.hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+
+context = new InitialContext(p);
+</code></pre>
+
+<p>The overriding order is as follows: 1 = highest, 4 = lowest.</p>
+
+<ol>
+<li>InitialContext properties</li>
+<li>jndi.properties from the classpath</li>
+<li>System properties</li>
+<li>persistence.xml properties</li>
+</ol>
+
+<p>By default there are no overrides in 1-3, so #4 is the only source of
+information.  </p>
+
+<p>In the above example there would be exactly three properties for the "movie-unit" persistence unit:</p>
+
+<ul>
+<li>hibernate.hbm2ddl.auto = update</li>
+<li>hibernate.max_fetch_depth = 3</li>
+<li>hibernate.dialect = org.hibernate.dialect.HSQLDialect</li>
+</ul>
+
+<p>These properties would be passed by OpenEJB directly to the persistence
+provider (in this case Hibernate).  With one exception OpenEJB does not
+understand or modify these properties.  Details on that one exception
+below.</p>
+
+<h3>Common mistakes</h3>
+
+<p>Note that you <strong>must</strong> use the <strong>unit name</strong> as the prefix.  This will not work:</p>
+
+<pre><code>    Properties p = new Properties();
+    p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
+
+    p.put("hibernate.hbm2ddl.auto", "update");
+    p.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+
+    context = new InitialContext(p);
+</code></pre>
+
+<p>Currently, only properties that start with the unit name are search and applied.</p>
+
+<h3>No need to specify a "transaction lookup" property</h3>
+
+<p>All vendors have such a property for getting a reference to the container's
+TransactionManager and nothing works if this is not set correctly to the
+OpenEJB specific class.  To make the lives of users easier, OpenEJB will
+take the liberty of setting it for you.</p>
+
+<p>Here are the persistence provider classes we understand and the defaults we
+will set for you:</p>
+
+<h4>Provider org.hibernate.ejb.HibernatePersistence</h4>
+
+<p>When using this provider, the <em>hibernate.transaction.manager_lookup_class</em>
+will be automatically set by OpenEJB to
+<em>org.apache.openejb.hibernate.TransactionManagerLookup</em>.  If the property
+is already set in the persistence unit it will be overwritten if it starts
+with the standard "org.hibernate.transaction." prefix.  </p>
+
+<p>Custom lookup implementations will never be overwritten automatically.</p>
+
+<h4>Provider oracle.toplink.essentials.PersistenceProvider</h4>
+
+<p>Or <em>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</em>.</p>
+
+<p>When using this provider, the <em>toplink.target-server</em> will be automatically
+set by OpenEJB to <em>org.apache.openejb.toplink.JTATransactionController</em>. 
+If the property is already set in the persistence unit it will be
+overwritten if it starts with the standard "oracle.toplink.transaction."
+prefix.  </p>
+
+<p>Custom transaction controller implementations will never be overwritten automatically.</p>
+
+<h4>Provider org.eclipse.persistence.jpa.PersistenceProvider</h4>
+
+<p>Or <em>org.eclipse.persistence.jpa.osgi.PersistenceProvider</em>.</p>
+
+<p>When using this provider, the <em>eclipselink.target-server</em> will be
+automatically set by OpenEJB to
+<em>org.apache.openejb.eclipselink.JTATransactionController</em>.  If the property
+is already set in the persistence unit it will be overwritten if it starts
+with the standard "org.eclipse.persistence.transaction." prefix.  </p>
+
+<p>Custom transaction controller implementations will never be overwritten automatically.</p>
+
+<h4>Provider org.apache.openjpa.persistence.PersistenceProviderImpl</h4>
+
+<p>OpenJPA is capable of discovering the correct method for locating the
+TransactionManager without the need for users to specify the specific
+strategy.  Therefore no specific "magic" is required.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

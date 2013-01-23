@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Security</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Security",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Security
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="Security-Security-HowTo."></a></p>
+
+<h1>Security - How To.</h1>
+
+<p>We currently have two authentication mechanisms to choose from:
+* <em>PropertiesLoginModule</em> (a basic text file based login that looks up
+users and groups from the specified properties files)
+* <em>SQLLoginModule</em> (database based login that looks up users and groups
+in a database through SQL queries)</p>
+
+<p>To make your program authenticate itself to the server, simply construct
+your InitialContext with the standard javax.naming.Context properties for
+user/pass info, which is:</p>
+
+<pre><code>Properties props = new Properties();
+props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+props.setProperty(Context.PROVIDER_URL, "ejbd://localhost:4201");
+props.setProperty(Context.SECURITY_PRINCIPAL, "someuser");
+props.setProperty(Context.SECURITY_CREDENTIALS, "thepass");
+props.setProperty("openejb.authentication.realmName", "PropertiesLogin");
+// optional
+InitialContext ctx = new InitialContext(props);
+ctx.lookup(...);
+</code></pre>
+
+<p>That will get you logged in and all your calls from that context should
+execute as you.</p>
+
+<p><em>${openejb.base}/conf/login.config</em> is a standard JAAS config file.
+Here, you can configure any number of security realms to authenticate
+against.
+To specify which of the realms you want to authenticate against, you can
+set the <em>openejb.authentication.realmName</em> property to any of the
+configured realm names in <em>login.config</em>.
+If you don't speficy a realm name, the default (currently
+<em>PropertiesLogin</em>) is used.
+For examples and more information on JAAS configuration, see the <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">JAAS Reference Guide</a>
+.</p>
+
+<p><a name="Security-PropertiesLoginModule"></a></p>
+
+<h2>PropertiesLoginModule</h2>
+
+<p>Supported options:</p>
+
+<table>
+<tr><th>Option</th><th>Description</th><th>Required</th></tr>
+<tr><td>UsersFile</td><td>name of the properties file that contains the users and their
+passwords</td><td>*yes*</td></tr>
+<tr><td>GroupsFile</td><td>name of the properties file that contains the groups and their
+member lists</td><td>*yes*</td></tr>
+</table>
+
+<p><em>UsersFile</em> and <em>GroupsFile</em> are read in on every login, so +you can
+update them+ on a running system and those users will "show up" immediately
++without the need for a restart+ of any kind.</p>
+
+<p><a name="Security-SQLLoginModule"></a></p>
+
+<h2>SQLLoginModule</h2>
+
+<p>You can either use a data source or configure the JDBC URL through which
+the user/group lookups will be made.</p>
+
+<p>If you use a <em>DataSource</em>, you must specify its JNDI name with the
+<em>dataSourceName</em> option.</p>
+
+<p>If you use JDBC directly, you have to specify at least the JDBC URL of the
+database.
+The driver should be autodetected (provided the appropriate jar is on your
+classpath), but if that fails for some reason, you can force a specific
+driver using the <em>jdbcDriver</em> option.
+For more information on JDBC URLs, see the <a href="http://java.sun.com/javase/6/docs/technotes/guides/jdbc/">JDBC Guide</a></p>
+
+<p>The <em>userSelect</em> query must return a two-column list of user names
+(column 1) and passwords (column 2). This query should normally return a
+single row, which can be achieved by the use of a query parameter
+placeholder "?".
+Any such placeholders in both queries will be filled in with the username
+that the client is trying to log in with.
+The <em>groupSelect</em> query must return a two-column list of user names and
+their groups (or "roles" in the EJB world).</p>
+
+<p>Supported options:</p>
+
+<table>
+<tr><th>Option</th><th>Description</th><th>Required</th></tr>
+<tr><td>dataSourceName</td><td>the name of a data source</td><td>*yes* (alternative 1)</td></tr>
+<tr><td>jdbcURL</td><td>a standard JDBC URL</td><td>*yes* (alternative 2)</td></tr>
+<tr><td>jdbcDriver</td><td>the fully qualified class name of the database driver</td><td>no</td></tr>
+<tr><td>jdbcUser</td><td>the user name for accessing the database</td><td>no</td></tr>
+<tr><td>jdbcPassword</td><td>the password for accessing the database</td><td>no</td></tr>
+<tr><td>userSelect</td><td>the SQL query that returns a list of users and their
+passwords</td><td>*yes*
+</tr>
+<tr><td>groupSelect</td><td>the SQL query that returns a list of users and groups
+(roles)</td><td>*yes*
+</tr>
+<tr><td>digest</td><td>the name of the digest algorithm (e.g. "MD5" or "SHA") for digest
+authentication</td><td>no</td></tr>
+<tr><td>encoding</td><td>the digest encoding, can be "hex" or "base64"</td><td>no</td></tr>
+</table>
+
+<p><a name="Security-PLUGPOINTS"></a></p>
+
+<h1>PLUG POINTS</h1>
+
+<p>There are four-five different plug points where you could customize the
+functionality.  From largest to smallest:
+- <em>The SecurityService interface</em>:  As before all security work
+(authentication and authorization) is behind this interface, only the
+methods on it have been updated.  If you want to do something really "out
+there" or need total control, this is where you go. Plugging in your own
+SecurityService should really be a last resort. We still have our "do
+nothing" SecurityService implementation just as before, but it is no longer
+the default. +You can add a new SecurityService impl by creating a
+service-jar.xml and packing it in your jar+.  You can configure OpenEJB to
+use a different SecurityService via the openejb.xml.</p>
+
+<ul>
+<li><em>JaccProvider super class</em>:  If you want to plug in your own JACC
+implementation to perform custom authorization (maybe do some fancy
+auditing), this is one way to do it without really having to understand
+JACC too much.  We will plug your provider in to all the places required by
+JACC if you simply +set the system property+
+"<em>org.apache.openejb.core.security.JaccProvider</em>" with the name of your
+JaccProvider impl.</li>
+<li><em>Regular JACC</em>.  The JaccProvider is simply a wrapper around the many
+things you have to do to create and plugin a JACC provider, but you can
+still plugin a JACC provider in the standard ways.  Read the JACC spec for
+that info.</li>
+<li><em>JAAS LoginModule</em>.  You can setup a different JAAS LoginModule to do all
+your authentication by simply editing the conf/login.config file which is a
+plain JAAS config file.  At the moment we only support username/password
+based login modules.  At some point it would be nice to support any kind of
+input for a JAAS LoginModule, but username/password at least covers the
+majority.  It actually <em>is</em> possible to support any LoginModule, but you
+would have to supply your clients with your own way to authenticate to it
+and write a strategy for telling the OpenEJB client what data to send to
+the server with each invocation request. See the <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASLMDevGuide.html">JAAS LoginModule Developer's Guide</a>
+for more information.</li>
+<li><em>Client IdentityResolver</em>.  This is the just mentioned interface you
+would have to implement to supply the OpenEJB client with alternate data to
+send to the server with each invocation request. If you're plugging in a
+new version of this it is likely that you may also want to plugin in your
+own SecurityService implementation. Reason being, the object returned from
+IdentiyResolve.getIdentity() is sent across the wire and straight in to the
+SecurityService.associate(Object) method.</li>
+</ul>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

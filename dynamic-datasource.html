@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Dynamic Datasource</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Dynamic Datasource",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Dynamic Datasource
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="DynamicDatasource-OpenEJBdynamicdatasource"></a></p>
+
+<h1>OpenEJB dynamic datasource</h1>
+
+<p><a name="DynamicDatasource-Goal"></a></p>
+
+<h2>Goal</h2>
+
+<p>The openejb dynamic datasource api aims to allow to use multiple data
+sources as one.</p>
+
+<p>It can be useful for technical reasons (load balancing for example) or
+functionnal reasons (filtering, aggregation, enriching...).</p>
+
+<p><a name="DynamicDatasource-TheAPI"></a></p>
+
+<h2>The API</h2>
+
+<p>The interface Router (<em>org.apache.openejb.resource.jdbc.Router</em>) have
+only one method to get the datasource to use:</p>
+
+<pre><code>Router.getDataSource()
+</code></pre>
+
+<p>The <em>org.apache.openejb.resource.jdbc.RoutedDataSource</em> wraps a classical
+data source. It has to be used to declare your datasource.</p>
+
+<p>You can implement all the policy you want in your Router implementation.</p>
+
+<p>A class called <em>org.apache.openejb.resource.jdbc.AbstractRouter</em> is
+available to ease router development.</p>
+
+<p><a name="DynamicDatasource-Knownlimitation(s)"></a></p>
+
+<h2>Known limitation(s)</h2>
+
+<p>You have to use the same kind of databases (same version, same
+configuration...).</p>
+
+<p>All database have to be created when you use the router. The way to do it
+automatically can depend of your JPA provider.</p>
+
+<p><a name="DynamicDatasource-OpenJPA"></a></p>
+
+<h3>OpenJPA</h3>
+
+<p>OpenJPA initializes its database when the entitymanager is called for the
+first time so you need to initialize all your proxied datasource before
+using the other one. It can be done using an Init EJB doing a find() on
+each proxied datasource.</p>
+
+<p><a name="DynamicDatasource-Hibernate"></a></p>
+
+<h3>Hibernate</h3>
+
+<p>Hibernate initializes the database when it starts so if you declare a
+persistence unit by database all databases will be initialized at the start
+up.</p>
+
+<p><a name="DynamicDatasource-Example"></a></p>
+
+<h2>Example</h2>
+
+<p><a name="DynamicDatasource-Thestory(theunittestexample)"></a></p>
+
+<h3>The story (the unit test example)</h3>
+
+<p>You want to use only one datasource in the code but you have a criteria to
+set to choose the real database to use between three.</p>
+
+<p>So in your code you want something like:</p>
+
+<pre><code>public class RoutedEJBBean {
+    @PersistenceContext(unitName = "router")
+    private EntityManager em;
+
+    // this router is not automatic, we
+    // need it to select the database to use
+    @Resource(name = "My Router")
+    private DeterminedRouter router;
+
+    public void persist(int id, String name, String clientDatasource) {
+        router.setDataSource(clientDatasource);
+        em.persist(new Person(id, name));
+    }
+}
+</code></pre>
+
+<p><a name="DynamicDatasource-Therouterimplementation"></a></p>
+
+<h2>The router implementation</h2>
+
+<p>The router will simply manage a map to store proxied datasources and a
+field to store the datasource used in the current thread (ThreadLocal).</p>
+
+<pre><code>public class DeterminedRouter implements Router {
+    private String dataSourceNames; // used to store configuration (openejb.xml)
+    private String defaultDataSourceName; // defautl data source name
+    private Map&lt;String, DataSource&gt; dataSources = null; // proxied data sources
+    private ThreadLocal&lt;DataSource&gt; currentDataSource = new ThreadLocal&lt;DataSource&gt;(); // the datasource to use or null
+
+    /**
+     * @param datasourceList datasource resource name, separator is a space
+     */
+    public void setDataSourceNames(String datasourceList) {
+        dataSourceNames = datasourceList;
+    }
+
+    /**
+     * lookup datasource in openejb resources
+     */
+    private void init() { // looking up datasources declared as proxied
+        dataSources = new ConcurrentHashMap&lt;String, DataSource&gt;();
+        for (String ds : dataSourceNames.split(" ")) {
+            ContainerSystem containerSystem = SystemInstance.get().getComponent(ContainerSystem.class);
+
+            Object o = null;
+            Context ctx = containerSystem.getJNDIContext();
+            try {
+                o = ctx.lookup("openejb:Resource/" + ds);
+                if (o instanceof DataSource) {
+                    dataSources.put(ds, (DataSource) o);
+                }
+            } catch (NamingException ignore) {
+            }
+        }
+    }
+
+    /**
+     * @return the user selected data source if it is set
+     *         or the default one
+     *  @throws IllegalArgumentException if the data source is not found
+     */
+    public DataSource getDataSource() {
+        // lazy init of routed datasources
+        if (dataSources == null) {
+            init();
+        }
+
+        // if no datasource is selected use the default one
+        if (currentDataSource.get() == null) {
+            if (dataSources.containsKey(defaultDataSourceName)) {
+                return dataSources.get(defaultDataSourceName);
+
+            } else {
+                throw new IllegalArgumentException("you have to specify at least one datasource");
+            }
+        }
+
+        // the developper set the datasource to use
+        return currentDataSource.get();
+    }
+
+    /**
+     *
+     * @param datasourceName data source name
+     */
+    public void setDataSource(String datasourceName) {
+        if (dataSources == null) {
+            init();
+        }
+        if (!dataSources.containsKey(datasourceName)) {
+            throw new IllegalArgumentException("data source called " + datasourceName + " can't be found.");
+        }
+        DataSource ds = dataSources.get(datasourceName);
+        currentDataSource.set(ds);
+    }
+
+    public void setDefaultDataSourceName(String name) {
+        this.defaultDataSourceName = name;
+    }
+}
+</code></pre>
+
+<p><a name="DynamicDatasource-Creationoftheserviceproviderfortherouter"></a></p>
+
+<h2>Creation of the service provider for the router</h2>
+
+<p>To be able to use your router add a file called service-jar.xml under
+META-INF/<package>. For example META-INF/org.router.</p>
+
+<p>This file will contain something like:</p>
+
+<pre><code>&lt;ServiceJar&gt;
+  &lt;ServiceProvider id="DeterminedRouter" service="Resource"
+           type="org.apache.openejb.resource.jdbc.Router" class-name="implementation class"&gt;
+    Param defaultValue
+    ParamWithNoDefaultValue
+  &lt;/ServiceProvider&gt;
+&lt;/ServiceJar&gt;
+</code></pre>
+
+<h2>openejb.xml</h2>
+
+<p>In the openejb.xml file, you have to declare your dynamic database and in
+our example it needs the proxied datasources too:</p>
+
+<pre><code>&lt;Resource id="router" type="&lt;your implementation&gt;" provider="&lt;your provider&gt;"&gt;
+  Param value
+&lt;/Resource&gt;
+
+&lt;Resource id="route db" type="DataSource" provider="RoutedDataSource"&gt;
+  Router router
+&lt;/Resource&gt;
+
+&lt;!–- real databases – for our example --&gt;
+&lt;Resource id="db1" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db1
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;
+&lt;Resource id="db2" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db2
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;
+&lt;Resource id="db3" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db3
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

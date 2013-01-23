@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Spring EJB and JPA</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Spring EJB and JPA",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Spring EJB and JPA
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><div class="note">}OpenEJB 3.1 or later required{note}
+This example shows how to combine Spring, OpenEJB and Hibernate using the
+integration code provided by OpenEJB.  Here, OpenEJB is used as an
+embeddable EJB container inside of Spring.  See the <a href="spring.html">Spring</a>
+ page for details.</p>
+
+<p>We use the basic Movie example and expand it to include more objects to
+demonstrate both Spring beans, EJB Session beans, and JPA persistent
+objects in one application.  The premise of the example is a Cineplex that
+has a number of Theaters (viewing screens), each playing a number of
+Movies.  The basic object layout is as follows:</p>
+
+<table>
+<tr><th> Object </th><th> Type </th><th> Description </th></tr>
+<tr><td> [CineplexImpl](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/CineplexImpl.java)
+ </td><td> @Stateless </td><td> Shows the use of @Resource to have Spring beans injected.
+Specifically, the _Theaters_ Spring bean </td></tr>
+<tr><td> [Theaters](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/Theaters.java)
+ </td><td> Spring bean </td><td> Simple wrapper object injected into _CineplexImpl_ </td></tr>
+<tr><td> [Theater](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/Theater.java)
+ </td><td> Spring bean </td><td> Shows that EJBs can be injected into Spring beans.  Uses
+both the _Movies_ EJB and the _Movie_ JPA objects </td></tr>
+<tr><td> [MoviesImpl](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/MoviesImpl.java)
+ </td><td> @Stateful </td><td> Wraps a JPA EntityManager and provides transactional access
+to the persistent _Movie_ objects </td></tr>
+<tr><td> [Movie](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/Movie.java)
+ </td><td> @Entity </td><td> Basic JPA bean that is used both by Spring beans and EJBs. 
+The same _Movie_ object as in all the other persistence related examples. </td></tr>
+<tr><td> [AvailableMovies](http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/AvailableMovies.java)
+ </td><td> Spring bean </td><td> Simple object used as a clever way to seed the
+EntityManager (and really, the database) with persistent _Movie_ objects </td></tr>
+</table>
+
+<p><a name="SpringEJBandJPA-Requiredjars"></a></p>
+
+<h1>Required jars</h1>
+
+<p>To setup the integration you'll need:</p>
+
+<ol>
+<li>The standard OpenEJB 3.1 libraries</li>
+<li>The <a href="https://repository.apache.org/content/groups/public/org/apache/openejb/openejb-spring/3.1.2/openejb-spring-3.1.2.jar">openejb-spring-3.1.jar</a>
+or later</li>
+<li>Spring 2.5 or other (any version should work)</li>
+</ol>
+
+<p>In Maven2 this can be done by adding the following dependencies to your
+pom.xml<div class="snippet">:id=required|url=openejb3/examples/spring-integration/pom.xml|lang=xml}
+For other environments, you can simply <a href="openejb:download.html">download an openejb-3.1.zip</a>
+ or later and include all the jars under the lib/ directory in your
+classpath.  Then download and add the [openejb-spring-3.1.jar|http://people.apache.org/repo/m2-ibiblio-rsync-repository/org/apache/openejb/openejb-spring/3.1/openejb-spring-3.1.jar]
+ along with your Spring jars.</p>
+
+<p><a name="SpringEJBandJPA-TheSpringxml"></a></p>
+
+<h1>The Spring xml</h1>
+
+<p>Bootstrapping and Configuring OpenEJB is fairly simple.<div class="snippet">:id=bootstrapping|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+As well, you can optionally declare any resources or containers.  Anything
+declarable as a <Resource> or <Container> in the openejb.xml can instead be
+declared in the Spring xml file as shown here.<div class="snippet">:id=resources|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+And finally our Spring beans.<div class="snippet">:id=pojos|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}<div class="note">:title=Don't forget}<div class="snippet">:id=annotations|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+It allows various annotations to be detected in bean classes: Spring's
+@Required and @Autowired, as well as JSR 250's @PostConstruct, @PreDestroy
+and @Resource (if available), JAX-WS's  @WebServiceRef (if available),
+EJB3's @EJB (if available), and JPA's @PersistenceContext and
+@PersistenceUnit (if available). Alternatively, you may choose to activate
+the individual BeanPostProcessors for those annotations.<div class="note">}</p>
+
+<p><a name="SpringEJBandJPA-TheCode"></a></p>
+
+<h1>The Code</h1>
+
+<p>In efforts to keep the example page somewhat short, we'll show just three
+beans, each demonstrating a particular relationship.</p>
+
+<p>The first is the CineplexImpl EJB which shows EJB -> Spring.<div class="snippet">:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/CineplexImpl.java|lang=java}</p>
+
+<p>The second is the Theater Spring bean which shows Spring -> EJB.<div class="snippet">:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/Theater.java|lang=java}</p>
+
+<p>The last is the AvailableMovies Spring bean which Shows Spring -> EJB ->
+JPA<div class="snippet">:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/AvailableMovies.java|lang=java}</p>
+
+<p><a name="SpringEJBandJPA-TheTestCase"></a></p>
+
+<h1>The TestCase</h1>
+
+<p>The JUnit TestCase uses a ClassPathXmlApplicationContext to load the Spring
+ApplicationContext.  Anything that loads your Spring xml file should work
+fine.  The following code would work a plain java app as well.
+<div class="snippet">:id=code|url=openejb3/examples/spring-integration/src/test/java/org/superbiz/spring/MoviesTest.java|lang=java}</p>
+
+<p><a name="SpringEJBandJPA-Running"></a></p>
+
+<h1>Running</h1>
+
+<p>The source for this example can be downloaded from svn via:</p>
+
+<p>$ svn co <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration">http://svn.apache.org/repos/asf/openejb/trunk/openejb3/examples/spring-integration</a></p>
+
+<p>Then, in the "spring-integration" directory, run:</p>
+
+<p>$ mvn clean install</p>
+
+<p>Which should create output like the following.</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.spring.MoviesTest
+log4j:WARN No appenders could be found for logger
+</code></pre>
+
+<p>(org.springframework.context.support.ClassPathXmlApplicationContext).
+    log4j:WARN Please initialize the log4j system properly.
+    Apache OpenEJB 3.1    build: 20081009-03:31
+    http://openejb.apache.org/
+    INFO - openejb.home =
+/Users/dblevins/work/openejb3/examples/spring-integration
+    INFO - openejb.base =
+/Users/dblevins/work/openejb3/examples/spring-integration
+    INFO - Configuring Service(id=Default JDK 1.3 ProxyFactory,
+type=ProxyFactory, provider-id=Default JDK 1.3 ProxyFactory)
+    INFO - Configuring Service(id=MovieDatabase, type=Resource,
+provider-id=Default JDBC Database)
+    INFO - Configuring Service(id=MovieDatabaseUnmanaged, type=Resource,
+provider-id=Default JDBC Database)
+    INFO - Found EjbModule in classpath:
+/Users/dblevins/work/openejb3/examples/spring-integration/target/classes
+    INFO - Beginning load:
+/Users/dblevins/work/openejb3/examples/spring-integration/target/classes
+    INFO - Configuring enterprise application: classpath.ear
+    INFO - Configuring Service(id=Default Stateless Container, type=Container,
+provider-id=Default Stateless Container)
+    INFO - Auto-creating a container for bean CineplexImpl:
+Container(type=STATELESS, id=Default Stateless Container)
+    INFO - Auto-linking resource-ref
+'org.superbiz.spring.CineplexImpl/theaters' in bean CineplexImpl to
+Resource(id=theaters)
+    INFO - Configuring Service(id=Default Stateful Container, type=Container,
+provider-id=Default Stateful Container)
+    INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL,
+id=Default Stateful Container)
+    INFO - Configuring PersistenceUnit(name=movie-unit,
+provider=org.hibernate.ejb.HibernatePersistence)
+    INFO - Enterprise application "classpath.ear" loaded.
+    INFO - Assembling app: classpath.ear
+    INFO - PersistenceUnit(name=movie-unit,
+provider=org.hibernate.ejb.HibernatePersistence)
+    INFO - Jndi(name=CineplexImplLocal) --> Ejb(deployment-id=CineplexImpl)
+    INFO - Jndi(name=MoviesLocal) --> Ejb(deployment-id=Movies)
+    INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default
+Stateful Container)
+    INFO - Created Ejb(deployment-id=CineplexImpl, ejb-name=CineplexImpl,
+container=Default Stateless Container)
+    INFO - Deployed Application(path=classpath.ear)
+    INFO - Exported EJB Movies with interface org.superbiz.spring.Movies to
+Spring bean MoviesLocal
+    INFO - Exported EJB CineplexImpl with interface
+org.superbiz.spring.Cineplex to Spring bean CineplexImplLocal
+    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.141 sec</p>
+
+<pre><code>Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

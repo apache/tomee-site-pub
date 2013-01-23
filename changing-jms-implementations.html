@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Changing JMS Implementations</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Changing JMS Implementations",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Changing JMS Implementations
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>ActiveMQ is the default JMS provider in Apache TomEE and OpenEJB.</p>
+
+<p>Changing JMS implementation is as simple as using that implementation's Java EE Connector.  The connector which will be a <code>.rar</code> file should be bundled with the application in a <code>.ear</code> 
+file.  All JMS usage in that <code>.ear</code> will favor the JMS ConnectionFactory and Topic and Queue implementations
+that are configured in the <code>.rar</code> file rather than ActiveMQ.</p>
+
+<p>If the JMS implementation does not have a <code>.rar</code> file, there are still some options for wiring in an alternate implementation.</p>
+
+<h1>Generic JMS Resource Adapter</h1>
+
+<p>If the JMS implementation does not have a Resource Archive (<code>.rar</code> file) that defines a compliant Resource Adapter, the <a href="http://genericjmsra.java.net/">Generic Resource Adapter for JMS</a> should work fine.</p>
+
+<p>To use this Adapter in TomEE or OpenEJB you'll need to create a <code>service-jar.xml</code> file and include that in a jar file and add it to the <code>&lt;tomee.home&gt;/lib/</code> directory.
+Then you can declare <code>ConnectionFactory</code>, <code>Topic</code>, and <code>Queue</code> and more via the <code>tomee.xml</code> file.</p>
+
+<p>The one below should be considered boiler plate.  Updating it to contain some useful default values for your JMS implementation would be good.  These values can be overridden in the <code>tomee.xml</code> or <code>openejb.xml</code></p>
+
+<p>Let's say that the following file lives in the jar at <code>META-INF/org.superbiz/service-jar.xml</code></p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ServiceJar&gt;
+  &lt;ServiceProvider
+      id="genericra"
+      service="Resource"
+      types="GenericJMSRA"
+      class-name="com.sun.genericra.GenericJMSRA"&gt;
+          UserName
+          Password
+          ProviderIntegrationMode
+          ConnectionFactoryClassName
+          QueueConnectionFactoryClassName
+          TopicConnectionFactoryClassName
+          XAConnectionFactoryClassName
+          XAQueueConnectionFactoryClassName
+          XATopicConnectionFactoryClassName
+          UnifiedDestinationClassName
+          TopicClassName
+          QueueClassName
+          SupportsXA
+          ConnectionFactoryProperties
+          JndiProperties
+          CommonSetterMethodName
+          RMPolicy
+          LogLevel
+          DeliveryType
+          UseFirstXAForRedelivery
+  &lt;/ServiceProvider&gt;
+
+  &lt;ServiceProvider
+      id="ConnectionFactory"
+      service="Resource"
+      types="javax.jms.ConnectionFactory, javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory, QueueConnectionFactory, TopicConnectionFactory"
+      class-name="com.sun.genericra.outbound.ManagedJMSConnectionFactory"&gt;
+          ConnectionFactoryJndiName
+          ClientId
+          ConnectionValidationEnabled
+          ResourceAdapter
+  &lt;/ServiceProvider&gt;
+
+  &lt;ServiceProvider
+      id="Queue"
+      service="Resource"
+      types="javax.jms.Queue, Queue"
+      class-name="com.sun.genericra.outbound.QueueProxy"&gt;
+          DestinationJndiName
+          ResourceAdapter
+          UserName
+          Password
+          JndiProperties
+          QueueClassName
+  &lt;/ServiceProvider&gt;
+
+  &lt;ServiceProvider
+      id="Topic"
+      service="Resource"
+      types="javax.jms.Topic, Topic"
+      class-name="com.sun.genericra.outbound.TopicProxy"&gt;
+          DestinationJndiName
+          ResourceAdapter
+          UserName
+          Password
+          JndiProperties
+          TopicClassName
+  &lt;/ServiceProvider&gt;
+&lt;/ServiceJar&gt;
+</code></pre>
+
+<p>It is strongly recommended to not leave the values in the service-jar.xml file blank as shown above.  It is 
+possible to setup several sets of defaults in a <code>service-jar.xml</code> or via several <code>service-jar.xml</code> files.</p>
+
+<p>Once this file is packed in a jar and added to the <code>&lt;tomee.home&gt;/lib</code> or  <code>&lt;openejb.home&gt;/lib</code> directory, you can 
+then declare and configure "instances" of these things in your <code>tomee.xml</code> or <code>openejb.xml</code> config file as follows:</p>
+
+<pre><code>&lt;Resource id="My Generic Adapter" type="GenericJMSRA" provider="org.superbiz:genericra"&gt;
+AdapterProperty1 PropertyValue1
+AdapterProperty2 PropertyValue2
+...
+&lt;/Resource&gt;
+</code></pre>
+
+<p>Or in properties like so:</p>
+
+<pre><code>myGenericAdapter = new://Resource?type=GenericJMSRA&amp;provider=org.superbiz:genericra
+myGenericAdapter.AdapterProperty1 = PropertyValue1
+myGenericAdapter.AdapterProperty2 = PropertyValue2
+</code></pre>
+
+<p>This is basically the same as all configuration in TomEE/OpenEJB, but with the addition that you must 
+specify the <code>provider</code> attribute so the server knows where to look for the <code>service-jar.xml</code> file that 
+defines the resource and all its defaults.</p>
+
+<p>In this example:</p>
+
+<ul>
+<li>the file is <code>META-INF/org.superbiz/service-jar.xml</code></li>
+<li>so the <code>provider</code> attribute is <code>org.superbiz</code></li>
+</ul>
+
+<p>You can use whatever prefix you like for the <code>provider</code> id, though for obvious reasons we'd advise not using <code>org.apache.openejb</code> or <code>org.apache.tomee</code> in the prefix.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

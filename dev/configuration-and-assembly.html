@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Configuration and Assembly</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../bootstrap.css" rel="stylesheet">
+    <link href="./../prettify.css" rel="stylesheet">
+    <link href="./../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Configuration and Assembly",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+
+    <script src="./../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../javascript/common.js"></script>
+    <script src="./../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../index.html">Home</a></li>
+            <li><a href="./../downloads.html">Downloads</a></li>
+            <li><a href="./../documentation.html">Documentation</a></li>
+            <li><a href="./../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
+<h1>Configuration and Assembly
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Disclaimer that we do tweak and change this code frequently, without
+notice.  It is the very heart of OpenEJB.  To keep things tight and clean,
+we reserve the right to change it at anytime.  Do not consider it a stable
+public API.</p>
+
+<p><a name="ConfigurationandAssembly-OverviewinCode"></a></p>
+
+<h1>Overview in Code</h1>
+
+<p>First a glimpse of how OpenEJB looks internally.  Here's a test that builds
+OpenEJB using it's internal API.  This is somewhat similar to how you might
+see people constructing Jetty in code.  All our internal tests look like
+this.</p>
+
+<p>This usage involves no xml parsing or classpath scanning.  If you don't
+give it to OpenEJB, OpenEJB doesn't know about it.  This is OpenEJB with
+all the magic stripped away.  At a high level:</p>
+
+<ol>
+<li>You build your app in code using the JAXB tree in code and hand it to the <code>ConfigurationFactory</code>.
+<ol>
+<li>The <code>org.apache.openejb.jee</code> package contains JAXB trees for ejb-jar.xml, beans.xml and all the Java EE deployment descriptors.</li>
+</ol></li>
+<li>The <code>ConfigurationFactory</code> will produce a fully canonical version of the app called the <code>Info</code> tree by:
+<ol>
+<li>Merging all sources of meta-data -- xml and annotations</li>
+<li>Resolving all ejb, persistence unit, datasource and other references</li>
+<li>Validating the app and looking for mistakes</li>
+</ol></li>
+<li>The <code>Info</code> tree is
+<ol>
+<li>The singular source of information about the application from this point forward.</li>
+<li>Pure data with no smarts or logic of any kind.</li>
+<li>The instruction set of what would be built by the assembler.</li>
+</ol></li>
+<li>The <code>Assembler</code> will build and start the application exactly as described in the <code>Info</code> tree.
+<ol>
+<li>When this step completes, you have a running application.</li>
+<li>Any failures prior to this point require no cleanup.  Only the assembler builds "live" objects.</li>
+</ol></li>
+</ol>
+
+<p>An example of what this looks like in code</p>
+
+<pre><code>import javax.ejb.LocalBean;
+import javax.ejb.Stateful;
+import javax.naming.InitialContext;
+
+import junit.framework.TestCase;
+import org.apache.openejb.assembler.classic.Assembler;
+import org.apache.openejb.assembler.classic.SecurityServiceInfo;
+import org.apache.openejb.assembler.classic.TransactionServiceInfo;
+import org.apache.openejb.client.LocalInitialContextFactory;
+import org.apache.openejb.config.ConfigurationFactory;
+import org.apache.openejb.jee.EjbJar;
+import org.apache.openejb.jee.StatefulBean;
+
+public class StatefulTest extends TestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+
+        System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+
+        ConfigurationFactory config = new ConfigurationFactory();
+        Assembler assembler = new Assembler();
+
+        assembler.createTransactionManager(config.configureService(TransactionServiceInfo.class));
+        assembler.createSecurityService(config.configureService(SecurityServiceInfo.class));
+
+        EjbJar ejbJar = new EjbJar();
+        ejbJar.addEnterpriseBean(new StatefulBean(MyBean.class));
+
+        assembler.createApplication(config.configureApplication(ejbJar));
+    }
+
+    public void test() throws Exception {
+        InitialContext context = new InitialContext();
+        MyBean myBean = (MyBean) context.lookup("MyBeanLocalBean");
+
+        assertEquals("pan", myBean.echo("nap"));
+    }
+
+    @Stateful
+    @LocalBean
+    public static class MyBean {
+
+        public String echo(String string) {
+            StringBuilder sb = new StringBuilder(string);
+            return sb.reverse().toString();
+        }
+    }
+}
+</code></pre>
+
+<p><a name="ConfigurationandAssembly-LogicalOverview"></a></p>
+
+<h1>Logical Overview</h1>
+
+<p>Slightly more detailed account of the above.  Our startup and deploy world
+is broken into two phases:</p>
+
+<ol>
+<li>configuration (app.jar -> AppInfo)  we build up a fully normalized and validated tree.  Some of the steps are</p>
+
+<ul>
+<li>read in descriptors</li>
+<li>process annotations filling in the descriptor tree</li>
+<li>validating app compliance</li>
+<li>resolving resource references</li>
+<li>resolving ejb references</li>
+<li>turning the descriptor tree into Info objects for final assembly</li>
+<li>final validation check</li>
+</ul></li>
+<li>assembly (AppInfo -> actual running app)  we assemble a running app as detailed by the AppInfo</p>
+
+<ul>
+<li>creating classloaders for the application</li>
+<li>creating EntityManagers and EntityManagerFactories</li>
+<li>creating live objects associated with resource-env-refs</li>
+<li>creating deployment (CoreDeploymentInfo) objects for each ejb</li>
+<li>creating the jndi enc of each ejb</li>
+<li>adding method permission objects into the security system (JACC Provider)</li>
+<li>creating transaction policy objects for each ejb</li>
+<li>creating interceptor stacks and bindings for each ejb</li>
+<li>adding ejbs to containers (which may also do things like create pools)</li>
+<li>adding ejbs to the live ContainerSystem registry of ejbs</li>
+<li>adding global jndi entries for each ejb</li>
+</ul></li>
+</ol>
+
+<p>The listings above aren't necesarrily complete or perfectly ordered, but
+generally show the nature of the work done in each phase.  </p>
+
+<p><a name="ConfigurationandAssembly-ConfigurationPhase"></a></p>
+
+<h2>Configuration Phase</h2>
+
+<p>A goal is that nothing gets through configuration and into assembly if it
+can't actually be built.  The configuration phase is where we're supposed
+to wipe away any ambiguity, fully normalize the app, make sure it's
+internally consistent, spec compliant and generally good to go.  If it's
+not, no worries as we actually haven't built anything permanent yet. 
+Everything in the configuration phase is temporary.  If it fails the
+configuration phase we just issue an error and say "App will not be loaded"
+and that's it, there's nothing to undo.  </p>
+
+<p><a name="ConfigurationandAssembly-InfoObjects-DatabetweenConfigurationandAssembly"></a></p>
+
+<h2>Info Objects - Data between Configuration and Assembly</h2>
+
+<p>The output of the configuration phase is what we call Info objects and the
+root of that tree is OpenEjbConfiguration.  These objects are all simple,
+serializable data types with no methods, no constructors and no code or
+logic of any kind.  We even have a test that uses ASM to walk down the Info
+tree and check that everything is compliant to these strict rules.</p>
+
+<p>All of the aforementioned configuration phase sits behind this info object
+tree and an interface that produces it:</p>
+
+<ul>
+<li>org.apache.openejb.assembler.classic.OpenEjbConfiguration</li>
+<li>org.apache.openejb.assembler.classic.OpenEjbConfigurationFactory</li>
+</ul>
+
+<p>The job of the OpenEjbConfigurationFactory is simply to produce an 
+OpenEjbConfiguration tree.  With this simple decoupling when the time comes
+we can actually support much different styles of use/topologies.  For
+example, a cluster scenario.  We could create an
+OpenEjbConfigurationFactory implementation that actually pulled the
+OpenEjbConfiguration from a central store or some sort of configuration
+server of our creation.  Perhaps, someday we write an
+OpenEjbConfigurationFactory implementation to wrap the existing one and
+look for any changed files.  If nothing has changed since last boot, we
+simple deserialize an OpenEjbConfiguration tree saved from a previous boot
+as a way of reducing startup time on very large apps.</p>
+
+<p><a name="ConfigurationandAssembly-Assembly"></a></p>
+
+<h2>Assembly</h2>
+
+<p>The assembly phase is where real running things are actually built.  This
+process is inherently ingrained in the details on how OpenEJB works
+internally.  Keeping it separated from descriptor parsing, validation,
+resolving, etc. keeps the actual "openejb building" code as simple as
+possible.  It also allows for some flexibility and change to take place
+architecturally with less chance of it rippling through the entire system. 
+However it's also not so generic (like spring, etc.) that becomes very
+difficult to get things built in a certain way or in a certain order
+requiring you to jump through several hoops just to keep the generic system
+as beautiful as possible.  It knows all the details on how to build each
+individual part and in what order to build them. </p>
+
+<p>In OpenEJB, the Assembler is not supposed to be the gem of the project that
+we keep clean, motivating us to push complex things out into other areas
+for other people (usually users) to worry about.  In fact, it's the
+opposite.  The runtime system gets top priority on it's architectural needs
+and the assembler gets last priority.  If there's something we can do in
+the Assembler that saves the rest of the system from complexity, we gladly
+throw the Assembler on that grenade.  Our philosophy is that you can't make
+100% of your system "perfect" all the time and sometime the mess has to go
+somewhere.  The assembler is where.  It's purposely not over architected so
+that it can continue to serve as a place to take up slack and not make all
+this stuff harder than it has to be.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

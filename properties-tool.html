@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Properties Tool</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Properties Tool",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Properties Tool
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="PropertiesTool-PropertiesCommandlineTool"></a></p>
+
+<h1>Properties Command line Tool</h1>
+
+<p>To see all configurable properties in use by OpenEJB, using the following
+tool against a running server:</p>
+
+<blockquote>
+  <p>./bin/openejb properties</p>
+</blockquote>
+
+<p>The output of this tool takes all overrideable components OpenEJB sees and
+outputs their properties along with the current value.  This allows you to
+easily see what is running in your system, what properties are available
+for overriding, and what exact values are for each component.  OpenEJB has
+a number of flags that can be passed to it not associated with any
+particular component, these are output as well.</p>
+
+<p>Content from this file can be safely copied as-is into the
+conf/system.properties file or sent to the users list with bug reports. 
+These properties may also be applied back into the openejb.xml file by
+pasting the properties without the "<id>." prefix into the respective
+component declarations.  The only warning is that any properties of type
+"<id>.password" will have their values masked, so make sure you edit them
+if you reapply them back into conf/openejb.xml or conf/system.properties.</p>
+
+<p><a name="PropertiesTool-PropertyOverriding"></a></p>
+
+<h1>Property Overriding</h1>
+
+<p>Any component configured in OpenEJB via the openejb.xml (and some that
+aren't) can be overridden using system properties.  The format is:</p>
+
+<p><code>&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt;</code></p>
+
+<p>And this can be done on the command line as follows:</p>
+
+<p><code>./bin/openejb -D&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt; ...</code></p>
+
+<p>Or by adding the property to the conf/system.properties file.  Note that
+command line overrides win over overrides in the
+conf/system.properties file.</p>
+
+<p>In an embedded environment, the properties can be added to the Hashtable
+passed into the javax.naming.InitialContext when using the
+LocalInitialContextFactory or also to the System.getProperties() object
+before OpenEJB is embedded (which will be when the first InitialContext is
+created).</p>
+
+<p>At startup, OpenEJB will find the component with the given id and apply the
+new property value before constructing the individual component.</p>
+
+<p><a name="PropertiesTool-Exampleoutput"></a></p>
+
+<h1>Example output</h1>
+
+<pre><code># Container(id=Default CMP Container)
+# className: org.apache.openejb.core.cmp.CmpContainer
+#
+Default\ CMP\ Container.CmpEngineFactory=org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
+Default\ CMP\ Container.Engine=instantdb
+Default\ CMP\ Container.ConnectorName=Default JDBC Database
+
+# Container(id=Default BMP Container)
+# className: org.apache.openejb.core.entity.EntityContainer
+#
+Default\ BMP\ Container.PoolSize=10
+
+# Container(id=Default Stateful Container)
+# className: org.apache.openejb.core.stateful.StatefulContainer
+#
+Default\ Stateful\ Container.BulkPassivate=50
+Default\ Stateful\ Container.Passivator=org.apache.openejb.core.stateful.SimplePassivater
+Default\ Stateful\ Container.TimeOut=20
+Default\ Stateful\ Container.PoolSize=500
+
+# Container(id=Default Stateless Container)
+# className: org.apache.openejb.core.stateless.StatelessContainer
+#
+Default\ Stateless\ Container.PoolSize=10
+Default\ Stateless\ Container.StrictPooling=true
+Default\ Stateless\ Container.TimeOut=0
+
+# Container(id=Default MDB Container)
+# className: org.apache.openejb.core.mdb.MdbContainer
+#
+Default\ MDB\ Container.ResourceAdapter=Default JMS Resource Adapter
+Default\ MDB\ Container.InstanceLimit=10
+Default\ MDB\ Container.MessageListenerInterface=javax.jms.MessageListener
+Default\ MDB\ Container.ActivationSpecClass=org.apache.activemq.ra.ActiveMQActivationSpec
+
+# ConnectionManager(id=Default Local TX ConnectionManager)
+# className: org.apache.openejb.resource.SharedLocalConnectionManager
+#
+
+# Resource(id=Default JMS Resource Adapter)
+# className: org.apache.activemq.ra.ActiveMQResourceAdapter
+#
+Default\ JMS\ Resource\ Adapter.ServerUrl=vm\://localhost?async\=true
+Default\ JMS\ Resource\ Adapter.BrokerXmlConfig=broker\:(tcp\://localhost\:61616)
+Default\ JMS\ Resource\ Adapter.ThreadPoolSize=30
+
+# Resource(id=Default JDBC Database)
+# className: org.apache.openejb.resource.jdbc.BasicManagedDataSource
+#
+Default\ JDBC\ Database.MinIdle=0
+Default\ JDBC\ Database.Password=xxxx
+Default\ JDBC\ Database.JdbcUrl=jdbc\:hsqldb\:file\:hsqldb
+Default\ JDBC\ Database.MaxIdle=20
+Default\ JDBC\ Database.ConnectionProperties=
+Default\ JDBC\ Database.MaxWait=-1
+Default\ JDBC\ Database.TimeBetweenEvictionRunsMillis=-1
+Default\ JDBC\ Database.MaxActive=20
+Default\ JDBC\ Database.DefaultAutoCommit=true
+Default\ JDBC\ Database.AccessToUnderlyingConnectionAllowed=false
+Default\ JDBC\ Database.JdbcDriver=org.hsqldb.jdbcDriver
+Default\ JDBC\ Database.TestWhileIdle=false
+Default\ JDBC\ Database.UserName=sa
+Default\ JDBC\ Database.MaxOpenPreparedStatements=0
+Default\ JDBC\ Database.TestOnBorrow=true
+Default\ JDBC\ Database.PoolPreparedStatements=false
+Default\ JDBC\ Database.ConnectionInterface=javax.sql.DataSource
+Default\ JDBC\ Database.TestOnReturn=false
+Default\ JDBC\ Database.MinEvictableIdleTimeMillis=1800000
+Default\ JDBC\ Database.NumTestsPerEvictionRun=3
+Default\ JDBC\ Database.InitialSize=0
+
+# Resource(id=Default Unmanaged JDBC Database)
+# className: org.apache.openejb.resource.jdbc.BasicDataSource
+#
+Default\ Unmanaged\ JDBC\ Database.MaxWait=-1
+Default\ Unmanaged\ JDBC\ Database.InitialSize=0
+Default\ Unmanaged\ JDBC\ Database.DefaultAutoCommit=true
+Default\ Unmanaged\ JDBC\ Database.ConnectionProperties=
+Default\ Unmanaged\ JDBC\ Database.MaxActive=10
+Default\ Unmanaged\ JDBC\ Database.TestOnBorrow=true
+Default\ Unmanaged\ JDBC\ Database.JdbcUrl=jdbc\:hsqldb\:file\:hsqldb
+Default\ Unmanaged\ JDBC\ Database.TestOnReturn=false
+Default\ Unmanaged\ JDBC\ Database.AccessToUnderlyingConnectionAllowed=false
+Default\ Unmanaged\ JDBC\ Database.Password=xxxx
+Default\ Unmanaged\ JDBC\ Database.MinEvictableIdleTimeMillis=1800000
+Default\ Unmanaged\ JDBC\ Database.PoolPreparedStatements=false
+Default\ Unmanaged\ JDBC\ Database.MaxOpenPreparedStatements=0
+Default\ Unmanaged\ JDBC\ Database.ConnectionInterface=javax.sql.DataSource
+Default\ Unmanaged\ JDBC\ Database.MinIdle=0
+Default\ Unmanaged\ JDBC\ Database.NumTestsPerEvictionRun=3
+Default\ Unmanaged\ JDBC\ Database.TimeBetweenEvictionRunsMillis=-1
+Default\ Unmanaged\ JDBC\ Database.JdbcDriver=org.hsqldb.jdbcDriver
+Default\ Unmanaged\ JDBC\ Database.UserName=sa
+Default\ Unmanaged\ JDBC\ Database.MaxIdle=10
+Default\ Unmanaged\ JDBC\ Database.TestWhileIdle=false
+
+# Resource(id=Default JMS Connection Factory)
+# className: org.apache.activemq.ra.ActiveMQManagedConnectionFactory
+#
+Default\ JMS\ Connection\ Factory.ConnectionInterface=javax.jms.ConnectionFactory, \
+javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory
+Default\ JMS\ Connection\ Factory.ResourceAdapter=Default JMS Resource Adapter
+
+# SecurityService(id=Default Security Service)
+# className: org.apache.openejb.core.security.SecurityServiceImpl
+#
+
+# TransactionManager(id=Default Transaction Manager)
+# className: org.apache.geronimo.transaction.manager.GeronimoTransactionManager
+#
+
+# ServerService(id=httpejbd)
+# className: org.apache.openejb.server.httpd.HttpEjbServer
+#
+httpejbd.port=4204
+httpejbd.name=httpejbd
+httpejbd.disabled=false
+httpejbd.server=org.apache.openejb.server.httpd.HttpEjbServer
+httpejbd.threads=200
+httpejbd.bind=127.0.0.1
+
+# ServerService(id=telnet)
+# className: org.apache.openejb.server.telnet.TelnetServer
+#
+telnet.port=4202
+telnet.name=telnet
+telnet.disabled=false
+telnet.bind=127.0.0.1
+telnet.threads=5
+telnet.server=org.apache.openejb.server.telnet.TelnetServer
+
+# ServerService(id=ejbd)
+# className: org.apache.openejb.server.ejbd.EjbServer
+#
+ejbd.disabled=false
+ejbd.bind=127.0.0.1
+ejbd.server=org.apache.openejb.server.ejbd.EjbServer
+ejbd.port=4201
+ejbd.name=ejbd
+ejbd.threads=200
+
+# ServerService(id=hsql)
+# className: org.apache.openejb.server.hsql.HsqlService
+#
+hsql.port=9001
+hsql.name=hsql
+hsql.disabled=false
+hsql.server=org.apache.openejb.server.hsql.HsqlService
+hsql.bind=127.0.0.1
+
+# ServerService(id=admin)
+# className: org.apache.openejb.server.admin.AdminDaemon
+#
+admin.disabled=false
+admin.bind=127.0.0.1
+admin.only_from=localhost
+admin.port=4200
+admin.threads=1
+admin.name=admin
+admin.server=org.apache.openejb.server.admin.AdminDaemon
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

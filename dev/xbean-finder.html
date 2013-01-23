@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../bootstrap.css" rel="stylesheet">
+    <link href="./../prettify.css" rel="stylesheet">
+    <link href="./../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+
+    <script src="./../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../javascript/common.js"></script>
+    <script src="./../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../index.html">Home</a></li>
+            <li><a href="./../downloads.html">Downloads</a></li>
+            <li><a href="./../documentation.html">Documentation</a></li>
+            <li><a href="./../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
+<h1>
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<h1>xbean-finder</h1>
+
+<h2>AnnotationFinder</h2>
+
+<p>It uses ASM create an index of annotations and classes in a specific archive. Reason for using ASM are:</p>
+
+<ul>
+<li>Security: Loading classes involves executing static initializers.  Imagine doing this for every class in every jar.</li>
+<li>Speed: Loading all those classes is slow</li>
+<li>Memory: Chews up permgen space quickly and needlessly.  Additional note, see above, some static initializers may hook themselves into the system and make the entire classloader (and the thousands of classes loaded) impossible to GC.</li>
+</ul>
+
+<h3>Usage</h3>
+
+<p>Say you had an <code>@Plugin</code> annotation you used, you could do as follows and skip the
+whole <code>META-INF</code> business:</p>
+
+<pre><code>AnnotationFinder finder = new AnnotationFinder(new JarArchive(classloader, jarUrl));
+List&lt;Class&lt;?&gt;&gt; plugins = finder.findAnnotatedClasses(Plugin.class);
+</code></pre>
+
+<p>That's the basics.</p>
+
+<pre><code>public class AnnotationFinder {
+    boolean isAnnotationPresent(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;String&gt; getClassesNotLoaded();
+
+    List&lt;Package&gt; findAnnotatedPackages(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Class&lt;?&gt;&gt; findAnnotatedClasses(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Class&lt;?&gt;&gt; findInheritedAnnotatedClasses(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Method&gt; findAnnotatedMethods(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Constructor&gt; findAnnotatedConstructors(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Field&gt; findAnnotatedFields(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Class&lt;?&gt;&gt; findClassesInPackage(String packageName, boolean recursive);
+
+    &lt;T&gt; List&lt;Class&lt;? extends T&gt;&gt; findSubclasses(Class&lt;T&gt; clazz);
+
+    &lt;T&gt; List&lt;Class&lt;? extends T&gt;&gt; findImplementations(Class&lt;T&gt; clazz);
+
+    List&lt;Annotated&lt;Method&gt;&gt; findMetaAnnotatedMethods(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Annotated&lt;Field&gt;&gt; findMetaAnnotatedFields(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;Annotated&lt;Class&lt;?&gt;&gt;&gt; findMetaAnnotatedClasses(Class&lt;? extends Annotation&gt; annotation);
+
+    List&lt;String&gt; getAnnotatedClassNames();
+}
+</code></pre>
+
+<h2>Archive</h2>
+
+<p>So what we have now is a composable system.  You create your finder and feed it an archive, like so:</p>
+
+<pre><code>Archive archive = new JarArchive(classloader, jarURL);
+AnnotationFinder finder = new AnnotationFinder( archive );
+List&lt;Class&lt;?&gt;&gt; plugins = finder.findAnnotatedClasses(PluginAnnotation.class)
+</code></pre>
+
+<p>If you want some filtering, you add that in:</p>
+
+<pre><code>Archive archive = new JarArchive(classloader, jarURL);
+
+archive = new FilteredArchive(archive, new Filter {
+
+    @Override
+    public boolean accept(String name) {
+        return name.startsWith("org.foo.");
+    }
+});
+
+AnnotationFinder finder = new AnnotationFinder( archive );
+List&lt;Class&lt;?&gt;&gt; plugins = finder.findAnnotatedClasses(PluginAnnotation.class)
+</code></pre>
+
+<p>Several archives can be composed together via <code>CompositeArchive</code></p>
+
+<pre><code>Archive archive = new CompositeArchive(
+    new JarArchive(classloader, jarURL),
+    new FileArchive(classloader, new File("target/classes/")),
+    new ClassesArchive(Foo.class, Bar.class)
+    );
+</code></pre>
+
+<p>Sky is the limit.</p>
+
+<p>We have the following <code>Archive</code> implementations</p>
+
+<ul>
+<li>ClassesArchive(Class<?>... classes)</li>
+<li>ClassesArchive(Iterable<Class<?>> classes)</li>
+<li>FileArchive(ClassLoader loader, URL url)</li>
+<li>FileArchive(ClassLoader loader, File dir)</li>
+<li>JarArchive(ClassLoader loader, URL url)</li>
+</ul>
+
+<p>For creating combinations of the above we have:</p>
+
+<ul>
+<li>CompositeArchive(Archive... archives)</li>
+<li>CompositeArchive(Iterable<Archive> archives)</li>
+</ul>
+
+<p>For filtering classes out of archvies:</p>
+
+<ul>
+<li>FilteredArchive(Archive archive, Filter filter)</li>
+</ul>
+
+<p>And a convenience class to quickly get an Archive from a set of urls</p>
+
+<ul>
+<li>ClasspathArchive(ClassLoader loader, URL... urls)</li>
+<li>ClasspathArchive(ClassLoader loader, Iterable<URL> urls)</li>
+</ul>
+
+<p>The above currently only supports <code>jar:</code> and <code>file:</code> urls</p>
+
+<h2>Filters</h2>
+
+<p>Several built in filters exist for convenience</p>
+
+<ul>
+<li>ClassFilter(String name)</li>
+<li>ContainsFilter(String token)</li>
+<li>PackageFilter(String packageName)</li>
+<li>PatternFilter(String expression)</li>
+<li>PatternFilter(Pattern pattern)</li>
+<li>PrefixFilter(String prefix)</li>
+<li>SuffixFilter(String suffix)</li>
+</ul>
+
+<p>As well as some filter implementations that allow all of the above to be composed together</p>
+
+<ul>
+<li>ExcludeIncludeFilter(Filter include, Filter exclude)</li>
+<li>FilterList(Filter... filters)</li>
+<li>FilterList(Iterable<Filter> filters)</li>
+<li>IncludeExcludeFilter(Filter include, Filter exclude)</li>
+</ul>
+
+<p>And the following convenience class for quickly creating any of the above</p>
+
+<pre><code>public class Filters {
+    public static Filter packages(String... packages) {
+    public static Filter classes(String... classes) {
+    public static Filter prefixes(String... prefixes) {
+    public static Filter tokens(String... tokens) {
+    public static Filter suffixes(String... suffixes) {
+    public static Filter patterns(String... patterns) {
+    public static Filter optimize(Filter... filters) {
+    public static Filter optimize(List&lt;Filter&gt;... filterss) {
+    public static Filter invert(Filter filter) {
+}
+</code></pre>
+
+<h2>ResourceFinder</h2>
+
+<p>Something similar to Java 6 ServiceLoader, except doesn't do the instantiations, but you could add that for yourself very easily.</p>
+
+<p>Using the same <code>META-INF</code> layout and files as you posted, you can do like:</p>
+
+<pre><code>ResourceFinder finder = new ResourceFinder("META-INF/services/");
+List plugins = finder.findAllImplementations(Plugin.class);
+</code></pre>
+
+<p>A little neater if you adjusted your META-INF layout as follows</p>
+
+<pre><code>META-INF/com.example.plugins.Plugins/red
+META-INF/com.example.plugins.Plugins/blue
+</code></pre>
+
+<p>...where the "red" file contained the text "com.example.plugins.RedPlugin" and the
+"blue" file contained the text "com.example.plugins.BluePlugin", you could then get them
+in a map like so:</p>
+
+<pre><code>Map plugins = finder.mapAvailableImplementations(Plugin.class);
+Class red = plugins.get("red");
+Class blue = plugins.get("blue");
+</code></pre>
+
+<p>Now say you want to do something similar, but the "red" and "blue" files are
+properties files which contain the name of the implementation class and other
+configurable properties for your red and blue plugins.</p>
+
+<pre><code>ResourceFinder finder = new ResourceFinder("META-INF/services/");
+Map pluginConfigs = finder.mapAllProperties(Plugin.class.getName());
+Properties redConfig = pluginConfigs.get("red");
+Properties blueConfig = pluginConfigs.get("blue");
+</code></pre>
+
+<p>Object instantiation was never written into any of those libraries because we're big fans
+of xbean-reflect package, which is a real "don't tell me what to do" library for when
+you just want to create a simple object and would like to get real basic
+field/setter/constructor injection without choking down a whole "i control everything"
+framework.</p>
+
+<p>You just:</p>
+
+<pre><code>ObjectRecipe recpie = new ObjectRecipe("com.example.plugins.RedPlugin");
+recpie.setProperty("myDateField","2008-04-17"); recpie.setProperty("myIntField","100");
+recpie.setProperty("myBooleanField","true");
+recpie.setProperty("myUrlField","http://www.theserverside.com");
+Plugin red = (Plugin) recpie.create();
+red.start();
+</code></pre>
+
+<p>Obviously, the above style to object creation couples really well to the <code>ResourceFinder</code> method
+that gives you Properties objects back. You put the class name and config for your plugin in the
+properties files and pass the properties right into the ObjectRecipe and more or less get a
+little do-it-yourself IoC plugin system.</p>
+
+<h1>OpenEJB/TomEE</h1>
+
+<p>Here is a grep of some of the calls made to <code>AnnotationFinder</code>.  Most of this code is in an OpenEJB class called
+<code>AnnotationDeployer</code> whose primary job is to merge the @annotation and <xml> metadata into one tree.</p>
+
+<pre><code>        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : finder.findMetaAnnotatedClasses(LocalClient.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : finder.findMetaAnnotatedClasses(RemoteClient.class)) {
+        List&lt;Class&lt;?&gt;&gt; connectorClasses = finder.findAnnotatedClasses(Connector.class);
+        List&lt;Class&lt;?&gt;&gt; classes = finder.findAnnotatedClasses(ConnectionDefinitions.class);
+        classes = finder.findAnnotatedClasses(ConnectionDefinition.class);
+        classes = finder.findAnnotatedClasses(Activation.class);
+        classes = finder.findAnnotatedClasses(AdministeredObject.class);
+        classes.addAll(finder.findAnnotatedClasses(WebService.class));
+        classes.addAll(finder.findAnnotatedClasses(WebServiceProvider.class));
+        for (Annotated&lt;Class&lt;?&gt;&gt; beanClass : finder.findMetaAnnotatedClasses(Singleton.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; beanClass : finder.findMetaAnnotatedClasses(Stateless.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; beanClass : finder.findMetaAnnotatedClasses(Stateful.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; beanClass : finder.findMetaAnnotatedClasses(ManagedBean.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; beanClass : finder.findMetaAnnotatedClasses(MessageDriven.class)) {
+        List&lt;Class&lt;?&gt;&gt; appExceptions = finder.findAnnotatedClasses(ApplicationException.class);
+                List&lt;Class&lt;?&gt;&gt; list = finder.findAnnotatedClasses(annotation);
+            final List&lt;Annotated&lt;Class&lt;?&gt;&gt;&gt; annotatedClasses = sortClasses(annotationFinder.findMetaAnnotatedClasses(Interceptors.class));
+            final List&lt;Annotated&lt;Method&gt;&gt; annotatedMethods = sortMethods(annotationFinder.findMetaAnnotatedMethods(Interceptors.class));
+            for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(ExcludeDefaultInterceptors.class)) {
+            for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(ExcludeClassInterceptors.class))) {
+                        if (annotationFinder.isAnnotationPresent(Path.class) || !annotationFinder.findAnnotatedMethods(Path.class).isEmpty()) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(Asynchronous.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(Asynchronous.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(RolesAllowed.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(PermitAll.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(DenyAll.class)) {
+        scheduleMethods.addAll(annotationFinder.findMetaAnnotatedMethods(javax.ejb.Schedules.class));
+        scheduleMethods.addAll(annotationFinder.findMetaAnnotatedMethods(javax.ejb.Schedule.class));
+            for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(PostConstruct.class))) {
+            for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(PreDestroy.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(javax.interceptor.AroundInvoke.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods((annotationFinder.findMetaAnnotatedMethods(javax.interceptor.AroundTimeout.class)))) {
+                List&lt;Annotated&lt;Method&gt;&gt; timeoutMethods = sortMethods(annotationFinder.findMetaAnnotatedMethods(javax.ejb.Timeout.class));
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(AfterBegin.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(BeforeCompletion.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(AfterCompletion.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(PostActivate.class))) {
+                for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(PrePassivate.class))) {
+            for (Annotated&lt;Method&gt; method : sortMethods(annotationFinder.findMetaAnnotatedMethods(Init.class))) {
+            List&lt;Annotated&lt;Method&gt;&gt; removeMethods = sortMethods(annotationFinder.findMetaAnnotatedMethods(Remove.class));
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(EJBs.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(EJB.class)) {
+        for (Annotated&lt;Field&gt; field : annotationFinder.findMetaAnnotatedFields(EJB.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(EJB.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(Resources.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(Resource.class)) {
+        for (Annotated&lt;Field&gt; field : annotationFinder.findMetaAnnotatedFields(Resource.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(Resource.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(WebServiceRefs.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(WebServiceRef.class)) {
+        for (Annotated&lt;Field&gt; field : annotationFinder.findMetaAnnotatedFields(WebServiceRef.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(WebServiceRef.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(PersistenceUnits.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(PersistenceUnit.class)) {
+        for (Annotated&lt;Field&gt; field : annotationFinder.findMetaAnnotatedFields(PersistenceUnit.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(PersistenceUnit.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(PersistenceContexts.class)) {
+        for (Annotated&lt;Class&lt;?&gt;&gt; clazz : annotationFinder.findMetaAnnotatedClasses(PersistenceContext.class)) {
+        for (Annotated&lt;Field&gt; field : annotationFinder.findMetaAnnotatedFields(PersistenceContext.class)) {
+        for (Annotated&lt;Method&gt; method : annotationFinder.findMetaAnnotatedMethods(PersistenceContext.class)) {
+        int ann = annotationFinder.findAnnotatedClasses(handler.getAnnotationClass()).size();
+        ann += annotationFinder.findAnnotatedMethods(handler.getAnnotationClass()).size();
+        List&lt;Annotated&lt;Class&lt;?&gt;&gt;&gt; types = sortClasses(annotationFinder.findMetaAnnotatedClasses(annotationClass));
+        List&lt;Annotated&lt;Method&gt;&gt; methods = annotationFinder.findMetaAnnotatedMethods(annotationClass);
+    List&lt;Class&lt;?&gt;&gt; annotatedClasses = finder.findAnnotatedClasses(Path.class);
+    methods.addAll(finder.findAnnotatedMethods(Path.class));
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

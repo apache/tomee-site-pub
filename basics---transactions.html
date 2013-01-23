@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="utf-8">
-      <title>Arquillian Test Porting Initiative</title>
+      <title>Basics - Transactions</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -13,9 +13,9 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="./../bootstrap.css" rel="stylesheet">
-    <link href="./../prettify.css" rel="stylesheet">
-    <link href="./../bootstrap-mods.css" rel="stylesheet">
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
 
     <style type="text/css">
         body {
@@ -28,7 +28,7 @@
             outline: medium none;
             text-indent: -999em;
             width: 24px;
-            background-image: url('./../images/sprites.png');
+            background-image: url('./images/sprites.png');
             background-repeat: no-repeat;
             overflow: hidden;
             cursor: pointer;
@@ -40,7 +40,7 @@
             outline: medium none;
             text-indent: -999em;
             width: 24px;
-            background-image: url('./../images/edit.png');
+            background-image: url('./images/edit.png');
             background-repeat: no-repeat;
             overflow: hidden;
             cursor: pointer;
@@ -71,23 +71,23 @@
       };
       function twshare () {
           window.open(
-                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Arquillian Test Porting Initiative",
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Basics - Transactions",
                   'Share on Twitter',
                   'width=800,height=526');
       };
     </script>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="./../images/favicon.ico">
-    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
 
-    <script src="./../javascript/prettify.js" type="text/javascript"></script>
-    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
-    <script src="./../javascript/common.js"></script>
-    <script src="./../javascript/prettyprint.js"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
 
     <script type="text/javascript">
 
@@ -110,12 +110,12 @@
     <div class="topbar">
       <div class="fill">
         <div class="container">
-          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <a class="brand" href="./index.html">Apache TomEE</a>
           <ul class="nav">
-            <li><a href="./../index.html">Home</a></li>
-            <li><a href="./../downloads.html">Downloads</a></li>
-            <li><a href="./../documentation.html">Documentation</a></li>
-            <li><a href="./../support.html">Support</a></li>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
           </ul>
 
             <!-- Google CSE Search Box Begins  -->
@@ -134,8 +134,8 @@
     
 
 <div class="page-header">
-<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
-<h1>Arquillian Test Porting Initiative
+<small><a href="./index.html">Home</a></small><br>
+<h1>Basics - Transactions
 
     <div style="float: right; position: relative; bottom: -10px; ">
         <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
@@ -146,87 +146,68 @@
 </h1>
 </div>
 
-<p>First things, first.  You can contribute your ideas by clicking the blue pencile icon in the upper right.  Edit this page and help shape the initiative!</p>
+<p>One of the many benefits of EJB, is that transactions within the EJB
+container are generally managed entirely automatically.  Any EJB component
+will, by default, partake in that transaction.</p>
 
-<h1>Unite the Armies to fight the Bugs!</h1>
+<p>Here are some basic rules to understand about transactions.  Keep note that
+this is the default behaviour, and the system can be configured to behave
+differently, depending on the needs of your system, bean, or individual
+methods of your beans.</p>
 
-<p>Testing is the most crucial part of any project.  A project that incorporates as much functionality as TomEE does needs a <em>lot</em> of tests.</p>
+<p><a name="Basics-Transactions-Participants"></a></p>
 
-<p>There's a saying that if it isn't documented it doesn't exist.  Likely more true is that if it isn't tested it it might as well not exist,
-documentation or not.</p>
+<h2>Participants</h2>
 
-<p>The simple truth is many of the critical tests that apply to functionality in TomEE actuall exist, but are spread across the numberous projects
-that TomEE incorporates.  Just as TomEE is about unifying and integrating all these projects together, the same vision and initative
-must be given into unifying and integrating all these tests.</p>
+<p>Various components and parts of the EJB system can be part of a
+transaction. Examples are</p>
 
-<p>If we could port them all to a common testing framework like Arquillian and consolidate them all into one codebase, the result would be nothing short
-of a marvel.  An unparalleled feat.</p>
+<ol>
+<li>Session bean</li>
+<li>Message Driven Bean</li>
+<li>EntityManager (a.k.a. Persistence context)</li>
+</ol>
 
-<p>Such a thing has never been done at the ASF.  Be ready to blaze some trails and be a pioneer.</p>
+<p><a name="Basics-Transactions-Behaviour"></a></p>
 
-<h1>The Kingdoms</h1>
+<h2>Behaviour</h2>
 
-<p>There are far more than 3,000 test classes we could port across the various projects, each using it's own flavor of home-made setup code.
-The coverage is also not what you'd expect.</p>
+<p>The basic default behaviours are
+1. A transaction starts at the beginning of the first EJB method call, in a
+chain of calls that are participating in the given transaction
+1. A transaction ends at the end of the first EJB method, in the same chain
+1. If a bean that has started a transaction, uses another bean, that bean
+will automatically use the same transaction as the calling bean.</p>
 
-<ul>
-<li>Activemq 1281</li>
-<li>CXF 979</li>
-<li>TomEE 802</li>
-<li>OpenEJB 215</li>
-<li>MyFaces 171</li>
-<li>OpenWebBeans 165</li>
-<li>Bval 56</li>
-<li>OpenJPA 33</li>
-<li>Tomcat 20</li>
-</ul>
+<p><a name="Basics-Transactions-Configuration"></a></p>
 
-<p>The above results are no dount eye-opening.  In all fairness, the projects with so few test are not as "untested" as they appear, they simply rely more heavily
-on the proprietary Java EE TCK which is closed source.  This is adequate, but not fantastic.  <strong>An open source project should have open tests.</strong></p>
+<h2>Configuration</h2>
 
-<h1>Generals Needed</h1>
+<p>You can configure your beans in a variety of ways.  Generally speaking, a
+transaction is started when a method is called, but can be configured using
+@TransactionAttribute(value = TransactionAttributeType.X), where X is one
+of...</p>
 
-<p>This is no small feet.  With over 3,000 tests porting them all is not realistc.  If we had 10 people working full time, that's till 300 tests each person
-would need to port.  This simply is not realistic.  More realistic would be for a person to port say 10 tests before they get an injury and need to leave the
-battlefield with hopes of joining the glorious fight another day -- aka. they get busy :)</p>
+<ol>
+<li>REQUIRED - the default, which is to start a transaction if one does not exist, but to use the existing one if it has already been started.</li>
+<li>REQUIRES_NEW - the transaction is created on every call, and ends when the call is completed.    Beans don't partake in transactions created by other parts of the system.</li>
+<li>MANDATORY - a transaction must always exist prior to the call, and it will be used.  It is an error otherwise</li>
+<li>NOT_SUPPORTED - component not included in the transaction</li>
+<li>SUPPORTS - transaction will be used if it exists, but will not be created if it does not exist</li>
+<li>NEVER - if a transaction exists, it is an error to call the method</li>
+</ol>
 
-<p>Even with 300 people each contributing 10 tests each, it's still quite a lot of patches for a small team to apply.  Organizing 300 people and shaping an initiative
-like this is als no small feat.  What we need are Generals.  Individuals to survey the land and plan attacks with small groups of soldiers.</p>
-
-<p>Porting 50 tests yourself is impressive.  Leading the charge on 500 tests being ported is astonishing.</p>
-
-<h1>Early stage</h1>
-
-<p>The tests in question are located more or less here:</p>
-
-<ul>
-<li>svn co http://svn.apache.org/repos/asf/activemq/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/bval/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/cxf/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/myfaces/core/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomee/tomee/trunk/itests</li>
-<li>svn co http://svn.apache.org/repos/asf/openjpa/branches/2.2.x</li>
-<li>svn co http://svn.apache.org/repos/asf/openwebbeans/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomcat/tc7.0.x/trunk</li>
-</ul>
-
-<p>While not part of TomEE, Wink has some wonderful JAX-RS tests we could use:</p>
-
-<ul>
-<li>svn co http://svn.apache.org/repos/asf/wink/trunk</li>
-</ul>
-
-<p>At this stage there's still quite a lot of information needed to mobilize the troops.  How to write Arquillian tests, which tests are most important, how should
-they be divided?</p>
-
-<p>The call goes out to all you would-be Generals!</p>
-
-<p>Any mode of cooperation is acceptable.  Discussions on the <code>dev (at) tomee.apache.org</code> list welcome.  This document can be edited by anyone.  As well there's a
-JIRA we can use to move the discussion along:</p>
-
-<ul>
-<li>https://issues.apache.org/jira/browse/TOMEE-746</li>
-</ul>
+<p>@TransactionAttribute applies to both methods and entire beans.  You may
+set one type of transaction behaviour (as seen above) on the bean, and a
+different one on a specific method of that same bean, which overrides the
+one configured for the overall bean.  For instance, maybe you want to make
+an audit entry in the database that you are about to attempt a credit card
+payment.  It really needs to be in it's own transaction so that it is
+IMMEDIATELY committed for audit purposes, if something goes wrong with the
+credit card payment.  So, perhaps you use MANDATORY on the bean, and
+REQUIRES_NEW on the method for audit logging.  As soon as the method that
+does the audit logging is complete, the transaction is committed, and the
+credit card payment transaction continues on it's way.</p>
 
 
 
@@ -253,7 +234,7 @@ JIRA we can use to move the discussion along:</p>
                 <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
             </div>
         </div>
-        <script src="./../javascript/bootstrap-modal.js"></script>
+        <script src="./javascript/bootstrap-modal.js"></script>
 
       <footer>
         <p>

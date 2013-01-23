@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Annotations, XML and Defaults</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Annotations, XML and Defaults",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Annotations, XML and Defaults
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<div id="PageContent">
+              <p>The following is a list of all annotations and their attributes, the xml tags that correspond to them (for overriding), and what the default values are when left unspecified.</p>
+
+<div >
+<table ><tbody>
+<tr>
+<th > Annotation </th>
+<th > xml element(s) </th>
+<th > default value </th>
+</tr>
+<tr>
+<td "> @Stateless </td>
+<td "><ul>
+    <li>&lt;session&gt;</li>
+    <li>&lt;ejb-class&gt;</li>
+    <li>&lt;session-type&gt;Stateless&lt;/session-type&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;ejb-name&gt; </td>
+<td "> The simple name of the bean class. For <em>org.acme.superfun.WidgetBean</em> the ejb-name will be <b>WidgetBean</b> </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>description</li>
+</ul>
+</td>
+<td "> &lt;description&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>mappedName</li>
+</ul>
+</td>
+<td "> &lt;mapped-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @Stateful </td>
+<td "><ul>
+    <li>&lt;session&gt;</li>
+    <li>&lt;ejb-class&gt;</li>
+    <li>&lt;session-type&gt;Stateful&lt;/session-type&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;ejb-name&gt; </td>
+<td "> The simple name of the bean class. For <em>org.acme.superfun.WidgetBean</em> the ejb-name will be <b>WidgetBean</b> </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>description</li>
+</ul>
+</td>
+<td "> &lt;description&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>mappedName</li>
+</ul>
+</td>
+<td "> &lt;mapped-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @MessageDriven </td>
+<td "><ul>
+    <li>&lt;message-driven&gt;</li>
+    <li>&lt;ejb-class&gt;</li>
+    <li>&lt;session-type&gt;Stateful&lt;/session-type&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;ejb-name&gt; </td>
+<td "> The simple name of the bean class. For <em>org.acme.superfun.WidgetBean</em> the ejb-name will be <b>WidgetBean</b> </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>description</li>
+</ul>
+</td>
+<td "> &lt;description&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>mappedName</li>
+</ul>
+</td>
+<td "> &lt;mapped-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>messageListenerInterface</li>
+</ul>
+</td>
+<td "> &lt;messaging-type&gt; </td>
+<td "> The interface the bean class implements.  When relying upon the default is illegal for the bean to implement more than one interface </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>activationConfig[]</li>
+</ul>
+</td>
+<td "> &lt;activation-config&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @ActivationConfigProperty </td>
+<td "> &lt;activation-config-property&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>propertyName</li>
+</ul>
+</td>
+<td "> &lt;activation-config-property-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>propertyValue</li>
+</ul>
+</td>
+<td "> &lt;activation-config-property-value&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @RemoteHome </td>
+<td "><ul>
+    <li>&lt;home&gt;</li>
+    <li>&lt;remote&gt;</li>
+</ul>
+</td>
+<td "> The home is inspected to determine the value of &lt;remote&gt;</td>
+</tr>
+<tr>
+<td "> @LocalHome </td>
+<td "><ul>
+    <li>&lt;local-home&gt;</li>
+    <li>&lt;local&gt;</li>
+</ul>
+</td>
+<td "> The local-home is inspected to determine the value of &lt;local&gt; </td>
+</tr>
+<tr>
+<td "> @TransactionManagement </td>
+<td "> &lt;transaction-type&gt; </td>
+<td "> TransactionManagementType.CONTAINER (xml value "Container") </td>
+</tr>
+<tr>
+<td "> @TransactionAttribute </td>
+<td "><ul>
+    <li>&lt;container-transaction&gt;</li>
+    <li>&lt;transaction-attribute&gt;</li>
+</ul>
+</td>
+<td "> All method default to TransactionAttributeType.REQUIRED (xml value "Required") </td>
+</tr>
+<tr>
+<td "> @RolesAllowed </td>
+<td "><ul>
+    <li>&lt;method-permission&gt;</li>
+    <li>&lt;role-name&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PermitAll </td>
+<td "><ul>
+    <li>&lt;method-permission&gt;</li>
+    <li>&lt;unchecked&gt;</li>
+</ul>
+</td>
+<td "> All methods default to unchecked </td>
+</tr>
+<tr>
+<td "> @DenyAll </td>
+<td "> &lt;exclude-list&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @RunAs </td>
+<td "><ul>
+    <li>&lt;security-identity&gt;</li>
+    <li>&lt;run-as&gt;</li>
+    <li>&lt;role-name&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @DeclareRoles </td>
+<td "> &lt;security-role-ref&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @Interceptors </td>
+<td "><ul>
+    <li>&lt;interceptor&gt;</li>
+    <li>&lt;interceptor-binding&gt;</li>
+    <li>&lt;interceptor-class&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @ExcludeDefaultInterceptors </td>
+<td "><ul>
+    <li>&lt;interceptor-binding&gt;</li>
+    <li>&lt;exclude-default-interceptors&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @ExcludeClassInterceptors </td>
+<td "><ul>
+    <li>&lt;interceptor-binding&gt;</li>
+    <li>&lt;exclude-class-interceptors&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @AroundInvoke </td>
+<td "> &lt;around-invoke&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PostConstruct </td>
+<td "> &lt;post-construct&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PreDestroy </td>
+<td "> &lt;pre-destroy&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PrePassivate </td>
+<td "> &lt;pre-passivate&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PostActivate </td>
+<td "> &lt;post-activate&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @Init </td>
+<td "> &lt;init-method&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @Remove </td>
+<td "> &lt;remove-method&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>retainIfException</li>
+</ul>
+</td>
+<td "> &lt;retain-if-exception&gt; </td>
+<td "> false </td>
+</tr>
+<tr>
+<td "> @Timeout </td>
+<td "> &lt;timeout-method&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @ApplicationException </td>
+<td "><ul>
+    <li>&lt;application-exception&gt;</li>
+    <li>&lt;exception-class&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>rollback</li>
+</ul>
+</td>
+<td "> &lt;rollback&gt; </td>
+<td "> false </td>
+</tr>
+<tr>
+<td "> @EJB </td>
+<td "><ul>
+    <li>&lt;ejb-ref&gt;</li>
+    <li>&lt;ejb-local-ref&gt;</li>
+    <li>&lt;injection-target&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "><ul>
+    <li>&lt;ejb-ref-name&gt;</li>
+</ul>
+</td>
+<td "><ul>
+    <li>on class: illegal to leave undefined</li>
+    <li>on field: {className}/{fieldName} as in <b>org.superbiz.Widget/myEjb</b></li>
+    <li>on setter: {className}/{propertyName} as in setMyEjb() defaults to <b>org.superbiz.Widget/myEjb</b></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>beanInterface</li>
+</ul>
+</td>
+<td "><ul>
+    <li>&lt;home&gt;</li>
+    <li>&lt;local-home&gt;</li>
+    <li>&lt;remote&gt;</li>
+    <li>&lt;local&gt;</li>
+</ul>
+</td>
+<td "><ul>
+    <li>on class: illegal to leave undefined</li>
+    <li>on field: the data type of the field</li>
+    <li>on setter: the data type of the first method param</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>beanName</li>
+</ul>
+</td>
+<td "> &lt;ejb-link&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>description</li>
+</ul>
+</td>
+<td "> &lt;description&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>mappedName</li>
+</ul>
+</td>
+<td "> &lt;mapped-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @Resource </td>
+<td "><ul>
+    <li>&lt;env-entry&gt;</li>
+    <li>&lt;resource-ref&gt;</li>
+    <li>&lt;resource-env-ref&gt;</li>
+    <li>&lt;injection-target&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "><ul>
+    <li>&lt;env-entry-name&gt;</li>
+    <li>&lt;res-ref-name&gt;</li>
+    <li>&lt;resource-env-ref-name&gt;</li>
+</ul>
+</td>
+<td "><ul>
+    <li>on class: illegal to leave undefined</li>
+    <li>on field: {className}/{fieldName} as in <b>org.superbiz.Widget/myDataSource</b></li>
+    <li>on setter: {className}/{propertyName} as in setMyDataSource() defaults to <b>org.superbiz.Widget/myDataSource</b></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>type</li>
+</ul>
+</td>
+<td "><ul>
+    <li>&lt;env-entry-type&gt;</li>
+    <li>&lt;res-type&gt;</li>
+    <li>&lt;resource-env-ref-type&gt;</li>
+</ul>
+</td>
+<td "><ul>
+    <li>on class: illegal to leave undefined</li>
+    <li>on field: the data type of the field</li>
+    <li>on setter: the data type of the first method param</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>description</li>
+</ul>
+</td>
+<td "> &lt;description&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>mappedName</li>
+</ul>
+</td>
+<td "> &lt;mapped-name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>shareable</li>
+</ul>
+</td>
+<td "> &lt;res-sharing-scope&gt; </td>
+<td "> true (xml value "Shareable") </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>authenticationType</li>
+</ul>
+</td>
+<td "> &lt;res-auth&gt; </td>
+<td "> AuthenticationType.CONTAINER (xml value "Container") </td>
+</tr>
+<tr>
+<td "> @PersistenceUnit </td>
+<td "><ul>
+    <li>&lt;persistence-unit-ref&gt;</li>
+    <li>&lt;injection-target&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;persistence-unit-ref-name&gt; </td>
+<td ">on class: illegal to leave undefined
+<ul>
+    <li>on field: {className}/{fieldName} as in <b>org.superbiz.Widget/myUnit</b></li>
+    <li>on setter: {className}/{propertyName} as in setMyUnit() defaults to <b>org.superbiz.Widget/myUnit</b></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>unitName</li>
+</ul>
+</td>
+<td "> &lt;persistence-unit-name&gt; </td>
+<td "> vendor specific </td>
+</tr>
+<tr>
+<td "> @PersistenceContext </td>
+<td "><ul>
+    <li>&lt;persistence-context-ref&gt;</li>
+    <li>&lt;injection-target&gt;</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;persistence-context-ref-name&gt; </td>
+<td ">on class: illegal to leave undefined
+<ul>
+    <li>on field: {className}/{fieldName} as in <b>org.superbiz.Widget/myContext</b></li>
+    <li>on setter: {className}/{propertyName} as in setMyContext() defaults to <b>org.superbiz.Widget/myContext</b></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>unitName</li>
+</ul>
+</td>
+<td "> &lt;persistence-unit-name&gt; </td>
+<td "> vendor specific </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>type</li>
+</ul>
+</td>
+<td "> &lt;persistence-context-type&gt; </td>
+<td "> PersistenceContextType.TRANSACTION (xml value "Transaction") </td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>properties[]</li>
+</ul>
+</td>
+<td ">&nbsp;</td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "> @PersistenceProperty </td>
+<td "> &lt;persistence-property&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>name</li>
+</ul>
+</td>
+<td "> &lt;name&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+<tr>
+<td "><ul type="square" class="alternate">
+    <li>value</li>
+</ul>
+</td>
+<td "> &lt;value&gt; </td>
+<td ">&nbsp;</td>
+</tr>
+</tbody></table>
+</div>
+
+            </div>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>TomEE and Hibernate</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=TomEE and Hibernate",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>TomEE and Hibernate
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Apache TomEE ships with OpenJPA as the default JPA provider, however any valid JPA provider can be used.</p>
+
+<p>The basic steps are:</p>
+
+<ol>
+<li>Add the Hibernate jars to <code>&lt;tomee-home&gt;/lib/</code></li>
+<li>Configure the webapp or the server to use Hibernate</li>
+</ol>
+
+<h1>Webapp Configuration</h1>
+
+<p>Any webapp can specify the JPA provider it would like to use via the <code>persistence.xml</code> file, which can be at any of the following locations in a webapp</p>
+
+<ul>
+<li><code>WEB-INF/persistence.xml</code> of the <code>.war</code> file</li>
+<li><code>META-INF/persistence.xml</code> in any jar located in <code>WEB-INF/lib/</code></li>
+</ul>
+
+<p>A single webapp may have many <code>persistence.xml</code> files and each may use whichever JPA provider it needs.</p>
+
+<p>The following is an example of a fairly common <code>persistence.xml</code> for Hibernate</p>
+
+<pre><code>&lt;persistence version="1.0"
+       xmlns="http://java.sun.com/xml/ns/persistence"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"&gt;
+
+  &lt;persistence-unit name="movie-unit"&gt;
+    &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+
+    &lt;properties&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<p>Note, TomEE will automatically add the following property unless it is explicitly configured:</p>
+
+<pre><code>      &lt;property name="hibernate.transaction.manager_lookup_class"
+                value="org.apache.openejb.hibernate.TransactionManagerLookup"/&gt;
+</code></pre>
+
+<h1>Server Configuration</h1>
+
+<p>The default JPA provider can be changed at the server level to favor Hibernate over OpenJPA.</p>
+
+<p>Using the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or any other valid means of setting <code>java.lang.System.getProperties()</code>, the following standard properties can set the detault for any <code>persistence.xml</code> file.</p>
+
+<ul>
+<li><code>javax.persistence.provider</code></li>
+<li><code>javax.persistence.transactionType</code></li>
+<li><code>javax.persistence.jtaDataSource</code></li>
+<li><code>javax.persistence.nonJtaDataSource</code></li>
+</ul>
+
+<p>So, for example, Hibernate can become the default provider via setting</p>
+
+<p><code>CATALINA_OPTS=-Djavax.persistence.provider=org.hibernate.ejb.HibernatePersistence</code></p>
+
+<p>You <strong>must</strong> of course add the Hibernate libraries to <code>&lt;tomee-home&gt;/lib/</code> for this to work.</p>
+
+<h1>Hibernate libraries</h1>
+
+<p>Jars needed for Hibernate 4.x:</p>
+
+<p>Add:</p>
+
+<ul>
+<li><code>&lt;tomee-home&gt;/lib/antlr-2.7.7.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/dom4j-1.6.1.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/hibernate-commons-annotations-4.0.1.Final.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/hibernate-core-4.1.4.Final.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/hibernate-entitymanager-4.1.4.Final.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/hibernate-validator-4.3.0.Final.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/jboss-logging-3.1.0.GA.jar</code></li>
+</ul>
+
+<p>Remove (optional):</p>
+
+<ul>
+<li><code>&lt;tomee-home&gt;/lib/asm-3.2.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/bval-core-0.4.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/bval-jsr303-0.4.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/commons-lang-2.6.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/openjpa-2.2.0.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/serp-1.13.1.jar</code></li>
+</ul>
+
+<h1>Ehcache (optional)</h1>
+
+<p>To use Hibernate with Ehcache, add:</p>
+
+<ul>
+<li><code>&lt;tomee-home&gt;/lib/hibernate-ehcache-4.1.4.Final.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/ehcache-core-2.5.1.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/ehcache-terracotta-2.5.1.jar</code></li>
+<li><code>&lt;tomee-home&gt;/lib/terracotta-toolkit-1.4-runtime-4.1.0.jar</code></li>
+</ul>
+
+<h1>Infinispan (optional)</h1>
+
+<p>To use Infinispan cache (default Hibernate 2nd level cache) you need the below jars:</p>
+
+<pre><code>
+    <lib>org.infinispan:infinispan-core:5.1.4.FINAL</lib>
+    <lib>org.hibernate:hibernate-infinispan:${hibernate.core.version}</lib>
+    <lib>org.jgroups:jgroups:3.0.9.Final</lib>
+    <lib>org.jboss.marshalling:jboss-marshalling-river:1.3.11.GA:</lib>
+    <lib>org.jboss.marshalling:jboss-marshalling:1.3.11.GA</lib>
+    <lib>org.codehaus.woodstox:woodstox-core-asl:4.1.1</lib>
+    <lib>org.codehaus.woodstox:stax2-api:3.1.1</lib>
+    <lib>org.rhq.helpers:rhq-pluginAnnotations:3.0.4</lib>
+    <lib>org.jboss.logmanager:jboss-logmanager:1.2.2.GA</lib>
+</code></pre>
+
+<p>There is many guides on how to use 2nd level cache with JPA 2.
+You can remove OpenJPA jar so less jars are in <code>&lt;tomee-home&gt;/lib</code> folder. Be sure to put your DB driver in <code>&lt;tomee-home&gt;/lib</code>.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

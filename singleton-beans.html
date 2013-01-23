@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Singleton Beans</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Singleton Beans",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Singleton Beans
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="SingletonBeans-SingletonOverview"></a></p>
+
+<h1>Singleton Overview</h1>
+
+<p>For the first time in years EJB has a new bean type, the <em>@Singleton</em>.  In
+my opinion, the javax.ejb.Singleton will replace a lot of what people are
+using @Stateless for today.  </p>
+
+<p>The Singleton is essentially what you get if you take a Stateless bean and
+adjust the pool size to be exactly 1 resulting in there being exactly one
+instance of the Singleton bean in the application which can be invoked
+concurrently by multiple threads, like a servlet.  It can do everything a
+Stateless can do such as support local and remote business interfaces, web
+services, security, transactions, and more.  Additionally, the Singleton
+can have its @PostConstruct method called with the application starts up
+and its @PreDestroy method called when the application shuts down.  This
+allows it to serve as an application lifecycle listener which is something
+only Servlets could do before.  It has an <em>@Startup</em> annotation which is
+similar in concept to the servlet <load-on-startup>, but unlike servlets it
+doesn't take a number as an argument.  Instead, you can use an <em>@DependsOn</em>
+annotation to say which other Singletons you need and the container will
+ensure they start before you.</p>
+
+<p>See the <a href="singleton-example.html">Singleton Example</a>
+ for sample bean code and client.</p>
+
+<p><a name="SingletonBeans-Concurrency"></a></p>
+
+<h2>Concurrency</h2>
+
+<p>Singletons support two modes of concurrent access, Container-Managed
+Concurrency (the default) and Bean-Managed Concurrency.</p>
+
+<p><a name="SingletonBeans-Bean-ManagedConcurrency"></a></p>
+
+<h3>Bean-Managed Concurrency</h3>
+
+<p>With Bean-Managed Concurrency, annotated as <em>@ConcurrencyManagement(BEAN)</em>,
+the container sends all invocations into the bean and lets the Singleton
+bean instance decide how and when to synchronize access, if at all.  Here
+the 'synchronization' keyword is allowed as well as the full
+javax.util.concurrent set of libraries.  </p>
+
+<p><a name="SingletonBeans-Container-ManagedConcurrency"></a></p>
+
+<h3>Container-Managed Concurrency</h3>
+
+<p>With Container-Managed Concurrency, annotated as
+<em>@ConcurrencyManagement(CONTAINER)</em>, the container will enforce concurrency
+for you via locking method access to the bean.  Two modes, called locks
+exist and can be assigned to both the bean class and methods of the bean
+class.</p>
+
+<p><a name="SingletonBeans-Locktype"></a></p>
+
+<h4>Lock type</h4>
+
+<p>The first and the default is a "write" lock, annotated as <em>@Lock(WRITE)</em>. 
+Essentially, with a write lock the caller holds an exclusive lock on the
+bean for the duration of the method call and all other threads for that or
+any other method must wait.  </p>
+
+<p>The second option is a "read" lock, annotated as <em>@Lock(READ)</em>.  The read
+lock allows full concurrent access to the methods (assuming no write locks
+are held).  The default mode of "write" essentially makes your bean a
+single-threaded bean, which is very slow.  The more conservative
+@Lock(WRITE) was chosen as the default as this is how all the other bean
+types work (only a single thread may access a bean instance at any given
+time).  Those that are aware of how to handle concurrent access can easily
+put @Lock(READ) on their bean class, thus changing the default, and then
+@Lock(WRITE) on specific methods if needed.  </p>
+
+<p>The locking modes of Container-Managed Concurrency map directly to the *<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReadWriteLock.html">java.util.concurrent.ReadWriteLock</a>
+* API which looks like this:</p>
+
+<pre><code>public interface ReadWriteLock {
+   /**
+    * Returns the lock used for reading.
+    *
+    * @return the lock used for reading.
+    */
+   Lock readLock();
+
+   /**
+    * Returns the lock used for writing.
+    *
+    * @return the lock used for writing.
+    */
+   Lock writeLock();
+}
+</code></pre>
+
+<p>Literally 100% of the Singleton locking we're talking about is taken from
+this interface and its javadoc is a great source of information.  It's safe
+to imagine that under the covers the Singleton Container has an instance of
+ReadWriteLock which it uses to enforce the locking for all the Singleton
+bean's methods.  Essentially:</p>
+
+<ul>
+<li>@Lock(READ) == theSingletonReadWriteLock.readLock().lock()</li>
+<li>@Lock(WRITE) == theSingletonReadWriteLock.writeLock().lock()</li>
+</ul>
+
+<p>The EJB container may use something other than ReadWriteLock but the
+semantics of a ReadWriteLock must be followed.  Internally, we use an
+instance of <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">java.util.concurrent.ReentrantReadWriteLock</a>
+ which supports correct memory synchronization, some reentrancy, lock
+downgrading, and [more|http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html]
+.</p>
+
+<p><a name="SingletonBeans-AcquiringtheLock"></a></p>
+
+<h4>Acquiring the Lock</h4>
+
+<p>The <em>@AccessTimetout</em> annotation can configure how long a thread will wait
+to acquire the read or write lock.  This annotation can be used on the bean
+class or individual methods.  The annotation maps directly to the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/Lock.html">java.util.concurrent.locks.Lock</a>
+ interface.</p>
+
+<pre><code>public interface Lock {
+
+    /**
+     * Blocks (potentially) forever
+     *
+     * @AccessTimout with a value of -1
+     */
+    void lock();
+
+    /**
+     * Non-blocking
+     *
+     * @AccessTimout with a value of 0
+     */
+    boolean tryLock();
+
+    /**
+     * Blocks (potentially) up to a limit
+     * 
+     * @AccessTimout(30, TimeUnit.SECONDS)
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+
+}
+</code></pre>
+
+<p>In the event it is not possible to acquire the lock a
+<em>javax.ejb.ConcurrentAccessException</em> or
+<em>javax.ejb.ConcurrentAccessTimeoutException</em> will be thrown.</p>
+
+<p><a name="SingletonBeans-DefaultTimeout"></a></p>
+
+<h4>Default Timeout</h4>
+
+<p>The default value of <em>@AccessTimeout</em> annotation is vendor specific.  In
+OpenEJB it defaults to the value of the <em>AccessTimeout</em> property which can
+be configured in many different scopes.  Here is the order of preference:</p>
+
+<ol>
+<li>bean-level in
+openejb-jar.xml/<openejb-jar>/<ejb-deployment>/<properties></li>
+<li>jar-level in openejb-jar.xml/<openejb-jar>/<properties></li>
+<li>container-level in openejb.xml/<openejb>/<Container></li>
+<li>boot-level via InitialContext(Properties) or
+EJBContainer.createEjbContainer(Map<Object,Object>)</li>
+<li>system-level in System.getProperties()</li>
+</ol>
+
+<p>The value of the property can be phrased in plain english such as "1 hour
+and 23 minutes and 17 seconds" see <a href="configuring-durations.html">Configuring Durations</a>
+ for details.</p>
+
+<p><a name="SingletonBeans-StartupandStartupOrdering"></a></p>
+
+<h2>Startup and Startup Ordering</h2>
+
+<p>Singletons have an <em>@Startup</em> annotation which can be applied to the bean
+class.  When used, the Container will instantiate the Singleton instance
+<em>eagerly</em> when the application starts up, otherwise the Container will
+instantiate the Singleton instance <em>lazily</em> when the bean is first
+accessed.</p>
+
+<p>If one Singleton refers to another Singleton in the @PostConstruct or
+@PreDestroy method, there must be some measure taken to ensure the other
+Singleton exists and is started.  This sort of ordering is achieved with
+the <em>@DependsOn</em> annotation which can be used to list the names of
+Singleton beans that must be started before the Singleton bean using the
+annotation.</p>
+
+<pre><code>@DependsOn({"SingletonB", "SingletonC"})
+@Singleton
+public class SingletonA {
+
+}
+</code></pre>
+
+<p>Circular references are not supported.  If BeanA uses @DependsOn to point
+to BeanB and BeanB also uses @DependsOn to point at BeanA, the result is a
+deployment exception.  Be aware that circular references can happen in less
+trivial ways such as A referring to B which refers to C which refers to D
+which refers back to A.  We will detect and print all circular dependencies
+(called circuits) at deploy time.</p>
+
+<p>Note that @DependsOn is only required (and should only be used) if a
+Singleton <em>uses</em> another Singleton in its @PostConstruct method or
+@PreDestroy method.  Simply having a reference to another Singleton and
+using it in other business methods does not require an @DependsOn
+declaration.  The @DependsOn allows the Container to calculate the correct
+startup order and shutdown order so that it can guarantee the Singletons
+you need are available in your @PostConstruct or @PreDestroy methods.  All
+Singletons will automatically be available to your business methods
+regardless if @DependsOn is used.  Because of the greater chance of
+creating circular dependencies, it is better not to use the @DependsOn
+annotation "just in case" and should only be used when truly needed.</p>
+
+<p><a name="SingletonBeans-XMLandAnnotationOverriding"></a></p>
+
+<h1>XML and Annotation Overriding</h1>
+
+<p>Singletons can be declared in the ejb-jar.xml as follows:</p>
+
+<pre><code>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;session&gt;
+      &lt;ejb-name&gt;MySingletonBean&lt;/ejb-name&gt;
+      &lt;ejb-class&gt;org.superbiz.MySingletonBean&lt;/ejb-class&gt;
+      &lt;session-type&gt;Singleton&lt;/session-type&gt;
+      &lt;load-on-startup/&gt;
+      &lt;depends-on&gt;
+          &lt;ejb-name&gt;SingletonFoo&lt;/ejb-name&gt;
+          &lt;ejb-name&gt;SingletonBar&lt;/ejb-name&gt;
+      &lt;/depends-on&gt;
+    &lt;/session&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

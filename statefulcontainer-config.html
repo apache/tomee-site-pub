@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>StatefulContainer Configuration</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=StatefulContainer Configuration",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>StatefulContainer Configuration
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>A StatefulContainer can be declared via xml in the <code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file using a declaration like the following.  All properties in the element body are optional.</p>
+
+<pre><code>&lt;Container id="myStatefulContainer" type="STATEFUL"&gt;
+    accessTimeout = 30 seconds
+    bulkPassivate = 100
+    cache = org.apache.openejb.core.stateful.SimpleCache
+    capacity = 1000
+    frequency = 60
+    passivator = org.apache.openejb.core.stateful.SimplePassivater
+    timeOut = 20
+&lt;/Container&gt;
+</code></pre>
+
+<p>Alternatively, a StatefulContainer can be declared via properties in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java VirtualMachine <code>-D</code> properties.  The properties can also be used when embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or <code>InitialContext</code></p>
+
+<pre><code>myStatefulContainer = new://Container?type=STATEFUL
+myStatefulContainer.accessTimeout = 30 seconds
+myStatefulContainer.bulkPassivate = 100
+myStatefulContainer.cache = org.apache.openejb.core.stateful.SimpleCache
+myStatefulContainer.capacity = 1000
+myStatefulContainer.frequency = 60
+myStatefulContainer.passivator = org.apache.openejb.core.stateful.SimplePassivater
+myStatefulContainer.timeOut = 20
+</code></pre>
+
+<p>Properties and xml can be mixed.  Properties will override the xml allowing for easy configuration change without the need for ${} style variable substitution.  Properties are not case sensitive.  If a property is specified that is not supported by the declared StatefulContainer a warning will be logged.  If a StatefulContainer is needed by the application and one is not declared, TomEE will create one dynamically using default settings.  Multiple StatefulContainer declarations are allowed.</p>
+
+<h1>Supported Properties</h1>
+
+<table>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+<tr>
+  <td><a href="#accessTimeout">accessTimeout</a></td>
+  <td><a href="configuring-durations.html">time</a></td>
+  <td>30&nbsp;seconds</td>
+  <td>
+Specifies the maximum time an invocation could wait for the
+`@Stateful` bean instance to become available before giving up.
+</td>
+</tr>
+<tr>
+  <td>bulkPassivate</td>
+  <td>int</td>
+  <td>100</td>
+  <td>
+Property name that specifies the number of instances
+to passivate at one time when doing bulk passivation.
+</td>
+</tr>
+<tr>
+  <td>cache</td>
+  <td>String</td>
+  <td>org.apache.openejb.core.stateful.SimpleCache</td>
+  <td>
+The cache is responsible for managing stateful bean
+instances.  The cache can page instances to disk as memory
+is filled and can destroy abandoned instances.  A different
+cache implementation can be used by setting this property
+to the fully qualified class name of the Cache implementation.
+</td>
+</tr>
+<tr>
+  <td>capacity</td>
+  <td>int</td>
+  <td>1000</td>
+  <td>
+Specifies the size of the bean pools for this
+stateful SessionBean container.
+</td>
+</tr>
+<tr>
+  <td>frequency</td>
+  <td>int</td>
+  <td>60</td>
+  <td>
+Specifies the frequency (in seconds) at which the bean cache is checked for 
+idle beans.
+</td>
+</tr>
+<tr>
+  <td><a href="#passivator">passivator</a></td>
+  <td>String</td>
+  <td>org.apache.openejb.core.stateful.SimplePassivater</td>
+  <td>
+The passivator is responsible for writing beans to disk
+at passivation time. Different passivators can be used
+by setting this property to the fully qualified class name
+of the `PassivationStrategy` implementation. The passivator
+is not responsible for invoking any callbacks or other
+processing, its only responsibly is to write the bean state
+to disk.
+</td>
+</tr>
+<tr>
+  <td><a href="#timeOut">timeOut</a></td>
+  <td><a href="configuring-durations.html">time</a></td>
+  <td>20</td>
+  <td>
+Specifies the time a bean can be idle before it is removed by the container.
+</td>
+</tr>
+</table>
+
+<p><a name="accessTimeout"></a></p>
+
+<h2>accessTimeout</h2>
+
+<p>Specifies the maximum time an invocation could wait for the
+<code>@Stateful</code> bean instance to become available before giving up.</p>
+
+<p>After the timeout is reached a <code>javax.ejb.ConcurrentAccessTimeoutException</code>
+will be thrown.</p>
+
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+"1 hour and 27 minutes and 10 seconds"</p>
+
+<p>Any usage of the <code>javax.ejb.AccessTimeout</code> annotation will
+override this setting for the bean or method where the
+annotation is used.</p>
+
+<p><a name="passivator"></a></p>
+
+<h2>passivator</h2>
+
+<p>The passivator is responsible for writing beans to disk
+at passivation time. Different passivators can be used
+by setting this property to the fully qualified class name
+of the <code>PassivationStrategy</code> implementation. The passivator
+is not responsible for invoking any callbacks or other
+processing, its only responsibly is to write the bean state
+to disk.</p>
+
+<p>Known implementations:</p>
+
+<ul>
+<li>org.apache.openejb.core.stateful.RAFPassivater</li>
+<li>org.apache.openejb.core.stateful.SimplePassivater</li>
+</ul>
+
+<p><a name="timeOut"></a></p>
+
+<h2>timeOut</h2>
+
+<p>Specifies the time a bean can be idle before it is removed by the container.</p>
+
+<p>This value is measured in minutes. A value of 5 would
+result in a time-out of 5 minutes between invocations.
+A value of -1 would mean no timeout.
+A value of 0 would mean a bean can be immediately removed by the container.</p>
+
+<p>Any usage of the <code>javax.ejb.StatefulTimeout</code> annotation will
+override this setting for the bean where the annotation is used.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

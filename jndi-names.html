@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>JNDI Names</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=JNDI Names",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>JNDI Names
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="JNDINames-What'sMyBean'sJNDIName?"></a></p>
+
+<h1>What's My Bean's JNDI Name?</h1>
+
+<p>There are two things to keep in mind before you start reading:</p>
+
+<p>1   OpenEJB provides a default JNDI name to your EJB. <br />
+2   You can customize the JNDI name.</p>
+
+<p><a name="JNDINames-DefaultJNDIname"></a></p>
+
+<h2>Default JNDI name</h2>
+
+<p>The default JNDI name is in the following format:</p>
+
+<pre><code>{deploymentId}{interfaceType.annotationName}
+</code></pre>
+
+<p>Lets try and understand the above format. Both <em>deploymentId</em> and
+<em>interfaceType.annotationName</em> are pre-defined variables. There are other
+pre-defined variables available which you could use to customize the JNDI
+name format.</p>
+
+<p><a name="JNDINames-JNDINameFormatting"></a></p>
+
+<h1>JNDI Name Formatting</h1>
+
+<p>The <em>openejb.jndiname.format</em> property allows you to supply a template for
+the global JNDI names of all your EJBs.  With it, you have complete control
+over the structure of the JNDI layout can institute a design pattern just
+right for your client apps.  See the <a href="service-locator.html">Service Locator</a>
+ doc for clever ways to use the JNDI name formatting functionality in
+client code.</p>
+
+<table>
+<tr><td>variable</td><td>    description</td></tr>
+<tr><td>moduleId</td><td>    Typically the name of the ejb-jar file<br> or the <ejb-jar id=""> id value if specified</td></tr>
+<tr><td>ejbType</td><td>     STATEFUL, STATELESS, BMP_ENTITY, CMP_ENTITY, or MESSAGE_DRIVEN</td></tr>
+<tr><td>ejbClass</td><td>    for a class named org.acme.superfun.WidgetBean results in org.acme.superfun.WidgetBean</td></tr>
+<tr><td>ejbClass.simpleName</td><td>     for a class named org.acme.superfun.WidgetBean results in WidgetBean</td></tr>
+<tr><td>ejbClass.packageName</td><td>    for a class named org.acme.superfun.WidgetBean results in org.acme.superfun</td></tr>
+<tr><td>ejbName</td><td>     The ejb-name as specified in xml or via the 'name' attribute in an @Stateful, @Stateless, or @MessageDriven annotation</td></tr>
+<tr><td>deploymentId</td><td>    The unique system id for the ejb. Typically the ejbName unless specified in the openejb-jar.xml or via changing the openejb.deploymentId.format</td></tr>
+<tr><td>interfaceType</td><td>   see interfaceType.annotationName</td></tr>
+<tr><td>interfaceType.annotationName</td><td>    Following the EJB 3 annotations @RemoteHome, @LocalHome, @Remote and @Local
+RemoteHome (EJB 2 EJBHome)
+LocalHome (EJB 2 EJBLocalHome)
+Remote (EJB 3 Business Remote)
+Local (EJB 3 Business Local)
+Endpoint (EJB webservice endpoint)</td></tr>
+<tr><td>interfaceType.annotationNameLC</td><td>  This is the same as interfaceType.annotationName, but all in lower case.</td></tr>
+<tr><td>interfaceType.xmlName</td><td>   Following the ejb-jar.xml descriptor elements <home>, <local-home>, <business-remote>, <business-local>, and <service-endpoint>:
+home (EJB 2 EJBHome)
+local-home (EJB 2 EJBLocalHome)
+business-remote (EJB 3 Business Remote)
+business-local (EJB 3 Business Local)
+service-endpoint (EJB webservice endpoint)</td></tr>
+<tr><td>interfaceType.xmlNameCc</td><td>     Camel-case version of interfaceType.xmlName:
+Home (EJB 2 EJBHome)
+LocalHome (EJB 2 EJBLocalHome)
+BusinessRemote (EJB 3 Business Remote)
+BusinessLocal (EJB 3 Business Local)
+ServiceEndpoint (EJB webservice endpoint)</td></tr>
+<tr><td>interfaceType.openejbLegacyName  Following the OpenEJB 1.0 hard-coded format:
+(empty string) (EJB 2 EJBHome)
+Local (EJB 2 EJBLocalHome)
+BusinessRemote (EJB 3 Business Remote)
+BusinessLocal (EJB 3 Business Local)
+ServiceEndpoint (EJB webservice endpoint)</td></tr>
+<tr><td>interfaceClass</td><td> 
+(business) for a class named org.acme.superfun.WidgetRemote results in org.acme.superfun.WidgetRemote<br>
+(home) for a class named org.acme.superfun.WidgetHome results in org.acme.superfun.WidgetHome</td></tr>
+<tr><td>interfaceClass.simpleName</td><td>
+(business) for a class named org.acme.superfun.WidgetRemote results in WidgetRemote
+(home) for a class named org.acme.superfun.WidgetHome results in WidgetHome</td></tr>
+<tr><td>interfaceClass.packageName</td><td>  for a class named org.acme.superfun.WidgetRemote results in org.acme.superfun</td></tr>
+</table>
+
+<p><a name="JNDINames-SettingtheJNDIname"></a></p>
+
+<h1>Setting the JNDI name</h1>
+
+<p>It's possible to set the desired jndi name format for the whole server
+level, an ejb-jar, an ejb, an ejb's "local" interface
+(local/remote/local-home/home), and for an individual interface the ejb
+implements.  More specific jndi name formats act as an override to any more
+general formats.  The most specific format dictates the jndi name that will
+be used for any given interface of an ejb.  It's possible to specify a
+general format for your server, override it at an ejb level and override
+that further for a specific interface of that ejb.</p>
+
+<p><a name="JNDINames-ViaSystemproperty"></a></p>
+
+<h2>Via System property</h2>
+
+<p>The jndi name format can be set on a server level via a <em>system property</em>,
+for example:</p>
+
+<pre><code>$ ./bin/openejb start
+-Dopenejb.jndiname.format=\{ejbName}/\{interfaceClass}"
+</code></pre>
+
+<p>As usual, other ways of specifying system properties are via the
+conf/system.properties file in a standalone server, or via the
+InitialContext properties when embedded.</p>
+
+<p><a name="JNDINames-Viapropertiesintheopenejb-jar.xml"></a></p>
+
+<h2>Via properties in the openejb-jar.xml</h2>
+
+<p>It's possible to set the openejb.jndiname.format for an ejb-jar jar in a
+META-INF/openejb-jar.xml file as follows:</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;properties&gt;
+     openejb.deploymentId.format = {ejbName}
+     openejb.jndiname.format = {deploymentId}{interfaceType.annotationName}
+  &lt;/properties&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p><a name="JNDINames-Viathe<jndi>tagforaspecificejb"></a></p>
+
+<h2>Via the <jndi> tag for a specific ejb</h2>
+
+<p>The following sets the name specifically for the interface
+org.superbiz.Foo.</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;jndi name="foo" interface="org.superbiz.Foo"/&gt;  
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>Or more generally...</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;jndi name="foo" interface="Remote"/&gt; 
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>Or more generally still...</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;jndi name="foo"/&gt; 
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>The 'name' attribute can still use templates if it likes, such as: </p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;jndi name="ejb/{interfaceClass.simpleName}" interface="org.superbiz.Foo"/&gt; 
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p><a name="JNDINames-Multiple<jndi>tags"></a></p>
+
+<h3>Multiple <jndi> tags</h3>
+
+<p>Multiple <jndi> tags are allowed making it possible for you to be as
+specific as you need about the jndi name of each interface or each logical
+group of iterfaces (Local, Remote, LocalHome, RemoteHome).  </p>
+
+<p>Given an ejb, FooBean, with the following interfaces:
+ - business-local: org.superbiz.LocalOne
+ - business-local: org.superbiz.LocalTwo
+ - business-remote: org.superbiz.RemoteOne
+ - business-remote: org.superbiz.RemoteTwo
+ - home: org.superbiz.FooHome
+ - local-home: org.superbiz.FooLocalHome</p>
+
+<p>The following four examples would yield the same jndi names.  The intention
+with these examples is to show the various ways you can isolate specific
+interfaces or types of interfaces to gain more specific control on how they
+are named.</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;jndi name="LocalOne" interface="org.superbiz.LocalOne"/&gt;
+    &lt;jndi name="LocalTwo" interface="org.superbiz.LocalTwo"/&gt;
+    &lt;jndi name="RemoteOne" interface="org.superbiz.RemoteOne"/&gt;
+    &lt;jndi name="RemoteTwo" interface="org.superbiz.RemoteTwo"/&gt;
+    &lt;jndi name="FooHome" interface="org.superbiz.FooHome"/&gt;
+    &lt;jndi name="FooLocalHome" interface="org.superbiz.FooLocalHome"/&gt;
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>Or</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;!-- applies to LocalOne and LocalTwo --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}" interface="Local"/&gt; 
+
+    &lt;!-- applies to RemoteOne and RemoteTwo --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}" interface="Remote"/&gt; 
+
+    &lt;!-- applies to FooHome --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}" interface="RemoteHome"/&gt; 
+
+    &lt;!-- applies to FooLocalHome --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}" interface="LocalHome"/&gt; 
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>Or</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;!-- applies to RemoteOne, RemoteTwo, FooHome, and FooLocalHome --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}"/&gt;
+
+    &lt;!-- these two would count as an override on the above format --&gt;
+    &lt;jndi name="LocalOne" interface="org.superbiz.LocalOne"/&gt;
+    &lt;jndi name="LocalTwo" interface="org.superbiz.LocalTwo"/&gt;
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p>or</p>
+
+<pre><code>&lt;openejb-jar&gt;
+  &lt;ejb-deployment ejb-name="FooBean"&gt;
+    &lt;!-- applies to LocalOne, LocalTwo, RemoteOne, RemoteTwo, FooHome, and FooLocalHome --&gt;
+    &lt;jndi name="{interfaceClass.simpleName}"/&gt; 
+  &lt;/ejb-deployment&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+
+<p><a name="JNDINames-ChangingtheDefaultSetting"></a></p>
+
+<h1>Changing the Default Setting</h1>
+
+<p><em>You are responsible for ensuring the names don't conflict.</em>  </p>
+
+<p><a name="JNDINames-Conservativesettings"></a></p>
+
+<h3>Conservative settings</h3>
+
+<p>A very conservative setting such as    </p>
+
+<p>"{deploymentId}/{interfaceClass}"    </p>
+
+<p>would guarantee that each and every single interface is bound to JNDI.  If
+your bean had a legacy EJBObject interface, three business remote
+interfaces, and two business local interfaces, this pattern would result in <br />
+<em>six</em> proxies bound into JNDI.      </p>
+
+<pre>  
+ - {deploymentId}/{interfaceClass.simpleName}    
+ - {moduleId}/{ejbName}/{interfaceClass}    
+ - {ejbName}/{interfaceClass}    
+ - {moduleId}/{ejbClass}/{interfaceClass}    
+ - {ejbClass}/{interfaceClass}    
+ - {ejbClass}/{interfaceClass.simpleName}    
+ - {ejbClass.simpleName}/{interfaceClass.simpleName}    
+ - {interfaceClass}/{ejbName}    
+</pre>
+
+<p>Bordeline optimistic:    </p>
+
+<pre>
+ - {moduleId}/{interfaceClass}    
+ - {interfaceClass}    
+</pre>
+
+<p>The above two settings would work if you the interface wasn't shared by
+other beans.</p>
+
+<p><a name="JNDINames-Pragmaticsettings"></a></p>
+
+<h3>Pragmatic settings</h3>
+
+<p>A more middle ground setting such as
+"{deploymentId}/{interfaceType.annotationName}" would guarantee that at
+least one proxy of each interface type is bound to JNDI.  If your bean had
+a legacy EJBObject interface, three business remote interfaces, and two
+business local interfaces, this pattern would result in <em>three</em> proxies
+bound into JNDI: one proxy dedicated to your EJBObject interface; one proxy
+implementing all three business remote interfaces; one proxy implementing
+the two business local interfaces.</p>
+
+<p>Similarly pragmatic settings would be    </p>
+
+<pre>
+ - {moduleId}/{ejbClass}/{interfaceType.annotationName}    
+ - {ejbClass}/{interfaceType.xmlName}    
+ - {ejbClass.simpleName}/{interfaceType.xmlNameCc}    
+ - {interfaceType}/{ejbName}    
+ - {interfaceType}/{ejbClass}    
+</pre>
+
+<p><a name="JNDINames-Optimisticsettings"></a></p>
+
+<h3>Optimistic settings</h3>
+
+<p>A very optimistic setting such as "{deploymentId}" would guarantee only
+one proxy for the bean will be bound to JNDI.  This would be fine if you
+knew you only had one type of interface in your beans.  For example, only
+business remote interfaces, or only business local interfaces, or only an
+EJBObject interface, or only an EJBLocalObject interface.</p>
+
+<p>If a bean in the app did have more than one interface type, one business
+local and one business remote for example, by default OpenEJB will reject
+the app when it detects that it cannot bind the second interface.  This
+strict behavior can be disabled by setting the
+<em>openejb.jndiname.failoncollision</em> system property to <em>false</em>.  When this
+property is set to false, we will simply log an error that the second proxy
+cannot be bound to JNDI, tell you which ejb is using that name, and
+continue loading your app.</p>
+
+<p>Similarly optimistic settings would be:    </p>
+
+<pre>
+ - {ejbName}    
+ - {ejbClass}    
+ - {ejbClass.simpleName}    
+ - {moduleId}/{ejbClass.simpleName}    
+ - {moduleId}/{ejbName}    
+</pre>
+
+<p><a name="JNDINames-AdvancedDetailsonEJB3.0BusinessProxies(thesimplepart)"></a></p>
+
+<h3>Advanced Details on EJB 3.0 Business Proxies (the simple part)</h3>
+
+<p>If you implement your business interfaces, your life is simple as your
+proxies will also implement your business interfaces of the same type. 
+Meaning any proxy OpenEJB creates for a business local interface will also
+implement your other business local interfaces.  Similarly, any proxy
+OpenEJB creates for a business remote interface will also implement your
+other business remote interfaces.</p>
+
+<p><a name="JNDINames-AdvancedDetailsonEJB3.0BusinessProxies(thecomplicatedpart)"></a></p>
+
+<h3>Advanced Details on EJB 3.0 Business Proxies (the complicated part)</h3>
+
+<p><em>Who should read?</em> <br />
+Read this section of either of these two apply to you: <br />
+ - You do not implement your business interfaces in your bean class <br />
+ - One or more of your business remote interfaces extend from javax.rmi.Remote</p>
+
+<p>If neither of these two items describe your apps, then there is no need to
+read further.  Go have fun.</p>
+
+<p><a name="JNDINames-Notimplementingbusinessinterfaces"></a></p>
+
+<h3>Not implementing business interfaces</h3>
+
+<p>If you do not implement your business interfaces it may not be possible for
+us to implement all your business interfaces in a single interface. 
+Conflicts in the throws clauses and the return values can occur as detailed <a href="openejb:multiple-business-interface-hazzards.html">here</a>
+.  When creating a proxy for an interface we will detect and remove any
+other business interfaces that would conflict with the main interface.</p>
+
+<p><a name="JNDINames-Businessinterfacesextendingjavax.rmi.Remote"></a></p>
+
+<h3>Business interfaces extending javax.rmi.Remote</h3>
+
+<p>Per spec rules many runtime exceptions (container or connection related)
+are thrown from javax.rmi.Remote proxies as java.rmi.RemoteException which
+is not a runtime exception and must be throwable via the proxy as a checked
+exception. The issue is that conflicting throws clauses are actually
+removed for two interfaces sharing the same method signature.  For example
+two methods such as these: <br />
+ - InterfaceA: void doIt() throws Foo; <br />
+ - InterfaceB: void doIt() throws RemoteException;    </p>
+
+<p>can be implemented by trimming out the conflicting throws clauses as
+follows: <br />
+  - Implementation: void doIt(){}    </p>
+
+<p>This is fine for a bean class as it does not need to throw the RMI required
+javax.rmi.RemoteException. However if we create a proxy from these two
+interfaces it will also wind up with a 'doIt(){}' method that cannot throw
+javax.rmi.RemoteException.  This is very bad as the container does need to
+throw RemoteException to any business interfaces extending java.rmi.Remote
+for any container related issues or connection issues.  If the container
+attempts to throw a RemoteException from the proxies 'doIt(){}' method, it
+will result in an UndeclaredThrowableException thrown by the VM.</p>
+
+<p>The only way to guarantee the proxy has the 'doIt() throws RemoteException{{{{{}' method of InterfaceB is to cut out InterfaceA when we create the proxy
+dedicated to InterfaceB.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

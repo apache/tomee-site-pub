@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Xbean usage in OpenEJB</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../bootstrap.css" rel="stylesheet">
+    <link href="./../prettify.css" rel="stylesheet">
+    <link href="./../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Xbean usage in OpenEJB",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+
+    <script src="./../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../javascript/common.js"></script>
+    <script src="./../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../index.html">Home</a></li>
+            <li><a href="./../downloads.html">Downloads</a></li>
+            <li><a href="./../documentation.html">Documentation</a></li>
+            <li><a href="./../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
+<h1>Xbean usage in OpenEJB
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="XbeanusageinOpenEJB-HowXBeanisusedinOpenEJB"></a></p>
+
+<h1>How XBean is used in OpenEJB</h1>
+
+<p>Below is an explanation by David Blevins on the usage of xbean in OpenEJB. This text was taken from an email conversation. To view the full conversation, click&nbsp;<a href="http://www.nabble.com/How-is-XBean-used-in-OpenEJB-3--tf2148639.html#a5959172">here</a></p>
+
+<p><a name="XbeanusageinOpenEJB-xbean-reflect"></a></p>
+
+<h2>xbean-reflect</h2>
+
+<p>xbean-reflect is a beefed up reflection library.</p>
+
+<p>Earlier all pluggable components had an "init(Properties props)" method?
+&nbsp;Same concept except now we throw the component class and the
+properties into an "ObjectRecipe" and call create(). &nbsp;The recipe will
+take the props out, convert them to the right data types,  and construct
+the object using the right constructor and setters.</p>
+
+<p>So our Containers and stuff now use constructors and setters. &nbsp;Same with anything in a &nbsp;<a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/resources/META-INF/org.apache.openejb/service-jar.xml?view=markup">service-jar.xml</a>
+ file.</p>
+
+<p><a name="XbeanusageinOpenEJB-Somecoderefs:"></a></p>
+
+<h4>Some code refs:</h4>
+
+<ol>
+<li><a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/java/org/apache/openejb/assembler/classic/Assembler.java?revision=546308&amp;view=markup">Assembler.java</a>
+We also use it to construct Stateful and Stateless session bean instances.</li>
+<li><a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/java/org/apache/openejb/core/stateful/StatefulInstanceManager.java?revision=546308&amp;view=markup">StatefulInstanceManager.java</a></li>
+<li><a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/java/org/apache/openejb/core/stateless/StatelessInstanceManager.java?revision=546308&amp;view=markup">StatelessInstanceManager.java</a></li>
+</ol>
+
+<p><a name="XbeanusageinOpenEJB-xbean-finder"></a></p>
+
+<h2>xbean-finder</h2>
+
+<p>xbean-finder is the second coolest library ever. &nbsp;It's a beefed
+up&nbsp; service finder for grabbing stuff in your classpath. &nbsp;We use
+it at a couple of places.</p>
+
+<p><a name="XbeanusageinOpenEJB-COMMANDLINETOOL:"></a></p>
+
+<h3>COMMAND LINE TOOL:</h3>
+
+<p>The available commands are in properties files in
+"META-INF/org.openejb.cli/{name}", where {name} is the name of the
+command. &nbsp;See:
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/resources/META-INF/org.apache.openejb.cli/">openejb cli</a>
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/itests/openejb-itests-client/src/main/resources/META-INF/org.openejb.cli/">openejb cli for itests</a></p>
+
+<p>Earlier we had the "test"&nbsp; command hardcoded in a script, but the
+person may have uninstalled&nbsp; the itests? &nbsp;Well now, if you have
+the itests jar, the "test" command&nbsp; will be available. &nbsp;If you
+don't have the itests jar, the "test" &nbsp;
+command won't be available. &nbsp;The "test" command itself is in the&nbsp;
+itests jar. &nbsp;You can put any command in any jar and it will&nbsp;
+automatically become available on the command line. &nbsp;Remove the
+jar&nbsp; and the command is gone.</p>
+
+<p>When someone types "java -jar openejb.jar start" this guy will look&nbsp;
+for "META-INF/org.openejb.cli/start". &nbsp;If he finds it, he'll
+create&nbsp; it and execute it. &nbsp;If he doesn't find it, he'll list the
+available&nbsp; commands by enumerating over all the files he see's in the
+classpath&nbsp; under the "META-INF/org.openejb.cli/" directory. See <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/container/openejb-core/src/main/java/org/apache/openejb/cli/MainImpl.java?revision=546308&amp;view=markup">MainImpl.java</a></p>
+
+<p>An extra cool thing is that each command has in it's properties a&nbsp;
+"description" property. &nbsp;This is localized, so if the VM locale
+is&nbsp; "pl" it will look for a "description.pl" property and use its
+value&nbsp; when printing command line help.
+I'd like to give Jeremy Whitlock a big shout-out for doing such a&nbsp;
+bang up job on this. &nbsp;He and I worked out the idea and
+white-boarded&nbsp; it in the wiki, then Jeremy went off and coded up the
+whole thing!&nbsp; It was fantastic.</p>
+
+<p><a name="XbeanusageinOpenEJB-SERVERSERVICES:"></a></p>
+
+<h3>SERVER SERVICES:</h3>
+
+<p>We also use the xbean-finder to create our Server Services (aka.&nbsp;
+protocols). &nbsp;Our ServerService implementations are in properties&nbsp;
+files under "META-INF/org.openejb.server.ServerService/{protocolName}.
+See:
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/server/openejb-server/src/main/resources/META-INF/org.apache.openejb.server.ServerService/">OpenEJB Server - ServerService</a>
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/server/openejb-ejbd/src/main/resources/META-INF/org.apache.openejb.server.ServerService/">OpenEJB ejbd - ServerService</a>
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/server/openejb-telnet/src/main/resources/META-INF/org.apache.openejb.server.ServerService/">OpenEJB Telnet - ServerService</a>
+1. <a href="http://svn.apache.org/viewvc/openejb/trunk/openejb3/server/openejb-http/src/main/resources/META-INF/org.apache.openejb.server.ServerService/">OpenEJB HTTP - ServerService</a></p>
+
+<p>The very first time a ServerService is constructed, we squirt the&nbsp;
+properties file into the openejb/conf/ directory so the user can edit&nbsp;
+it. &nbsp;The properties files for ServerServices are very xinet.d
+like.&nbsp; For example, here is the definition of the "admin" server
+service:</p>
+
+<p>&nbsp; &nbsp; &nbsp;server &nbsp; &nbsp; &nbsp;=
+org.openejb.server.admin.AdminDaemon
+&nbsp; &nbsp; &nbsp;bind &nbsp; &nbsp; &nbsp; &nbsp;= 127.0.0.1
+&nbsp; &nbsp; &nbsp;port &nbsp; &nbsp; &nbsp; &nbsp;= 4200
+&nbsp; &nbsp; &nbsp;disabled &nbsp; &nbsp;= false
+&nbsp; &nbsp; &nbsp;threads &nbsp; &nbsp; = 1
+&nbsp; &nbsp; &nbsp;only_from &nbsp; = localhost</p>
+
+<p>You can reconfigure the "admin" server service, for example, via the&nbsp;
+properties file in openejb/conf/admin.properties. &nbsp;Or you can do
+it&nbsp; on the command line as such:</p>
+
+<p><in-a-shell>
+$ ./bin/openejb start -Dadmin.bind=192.168.42.13
+OPENEJB_HOME=/Users/dblevins/work/openejb1/target/openejb-1.1-SNAPSHOT
+OpenEJB 1.1-SNAPSHOT &nbsp; &nbsp;build: 20060420-2356
+<a href="http://www.openejb.org">http://www.openejb.org</a>
+resources 1
+OpenEJB ready.
+[init](init.html)
+ OpenEJB Remote Server
+&nbsp; &nbsp;** Starting Services **
+&nbsp; &nbsp;NAME &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+IP &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;PORT
+&nbsp; &nbsp;webadmin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 127.0.0.1
+&nbsp; &nbsp; &nbsp; 4203
+&nbsp; &nbsp;httpejbd &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 127.0.0.1
+&nbsp; &nbsp; &nbsp; 4204
+&nbsp; &nbsp;telnet &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+127.0.0.1 &nbsp; &nbsp; &nbsp; 4202
+&nbsp; &nbsp;ejbd &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+127.0.0.1 &nbsp; &nbsp; &nbsp; 4201
+&nbsp; &nbsp;admin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;192.168.42.13 &nbsp; 4200
+-------
+Ready!
+</in-a-shell></p>
+
+<p>You can override any server service property in the same way.
+&nbsp;Here&nbsp; are a bunch more examples:</p>
+
+<p>&nbsp; Option: -D<service>.bind=<address>
+&nbsp; &nbsp; openejb start -Dejbd.bind=10.45.67.8
+&nbsp; &nbsp; openejb start -Dejbd.bind=myhost.foo.com
+&nbsp; &nbsp; openejb start -Dtelnet.bind=myhost.foo.com</p>
+
+<p>&nbsp; Option: -D<service>.port=<port>
+&nbsp; &nbsp; openejb start -Dejbd.port=8765
+&nbsp; &nbsp; &nbsp;openejb start -Dhttpejbd.port=8888</p>
+
+<p>&nbsp; Option: -D<service>.only_from=<addresses>
+&nbsp; &nbsp; &nbsp;openejb start -Dadmin.only_from=192.168.1.12
+&nbsp; &nbsp; &nbsp;openejb start
+-Dadmin.only_from=192.168.1.12,joe.foo.com,robert</p>
+
+<p>&nbsp; Option: -D<service>.threads=<max>
+&nbsp; &nbsp; &nbsp;openejb start -Dejbd.threads=200</p>
+
+<p>&nbsp; Option: -D<service>.disabled=<true/false>
+&nbsp; &nbsp; &nbsp;openejb start -Dtelnet.disabled=true</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="utf-8">
-      <title>Arquillian Test Porting Initiative</title>
+      <title>Writing Presentable Examples</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -71,7 +71,7 @@
       };
       function twshare () {
           window.open(
-                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Arquillian Test Porting Initiative",
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Writing Presentable Examples",
                   'Share on Twitter',
                   'width=800,height=526');
       };
@@ -135,7 +135,7 @@
 
 <div class="page-header">
 <small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
-<h1>Arquillian Test Porting Initiative
+<h1>Writing Presentable Examples
 
     <div style="float: right; position: relative; bottom: -10px; ">
         <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
@@ -146,87 +146,114 @@
 </h1>
 </div>
 
-<p>First things, first.  You can contribute your ideas by clicking the blue pencile icon in the upper right.  Edit this page and help shape the initiative!</p>
+<p>Writing an example is easy.  Any example is a good one.  The more the better.</p>
 
-<h1>Unite the Armies to fight the Bugs!</h1>
+<p>Writing examples that can be used in a presentations is hard.</p>
 
-<p>Testing is the most crucial part of any project.  A project that incorporates as much functionality as TomEE does needs a <em>lot</em> of tests.</p>
-
-<p>There's a saying that if it isn't documented it doesn't exist.  Likely more true is that if it isn't tested it it might as well not exist,
-documentation or not.</p>
-
-<p>The simple truth is many of the critical tests that apply to functionality in TomEE actuall exist, but are spread across the numberous projects
-that TomEE incorporates.  Just as TomEE is about unifying and integrating all these projects together, the same vision and initative
-must be given into unifying and integrating all these tests.</p>
-
-<p>If we could port them all to a common testing framework like Arquillian and consolidate them all into one codebase, the result would be nothing short
-of a marvel.  An unparalleled feat.</p>
-
-<p>Such a thing has never been done at the ASF.  Be ready to blaze some trails and be a pioneer.</p>
-
-<h1>The Kingdoms</h1>
-
-<p>There are far more than 3,000 test classes we could port across the various projects, each using it's own flavor of home-made setup code.
-The coverage is also not what you'd expect.</p>
+<p>Some basic guideliness of writing examples:</p>
 
 <ul>
-<li>Activemq 1281</li>
-<li>CXF 979</li>
-<li>TomEE 802</li>
-<li>OpenEJB 215</li>
-<li>MyFaces 171</li>
-<li>OpenWebBeans 165</li>
-<li>Bval 56</li>
-<li>OpenJPA 33</li>
-<li>Tomcat 20</li>
+<li>focus on one idea per example</li>
+<li>keep examples short
+<ul>
+<li>one test case</li>
+<li>minimal code to make the point</li>
+</ul></li>
+<li>avoid showing an entire API in one example, if possible</li>
+<li>be concious of the cost of "setting the stage"</li>
+<li>if examples get too big, split it</li>
 </ul>
 
-<p>The above results are no dount eye-opening.  In all fairness, the projects with so few test are not as "untested" as they appear, they simply rely more heavily
-on the proprietary Java EE TCK which is closed source.  This is adequate, but not fantastic.  <strong>An open source project should have open tests.</strong></p>
+<h1>Noise vs signal</h1>
 
-<h1>Generals Needed</h1>
+<p>It takes time to learn the example scenario (noise).  You need to learn the scenario before you can start to see the imporant parts (signal).</p>
 
-<p>This is no small feet.  With over 3,000 tests porting them all is not realistc.  If we had 10 people working full time, that's till 300 tests each person
-would need to port.  This simply is not realistic.  More realistic would be for a person to port say 10 tests before they get an injury and need to leave the
-battlefield with hopes of joining the glorious fight another day -- aka. they get busy :)</p>
+<p>Be very mindful of your noise to signal ratio.</p>
 
-<p>Even with 300 people each contributing 10 tests each, it's still quite a lot of patches for a small team to apply.  Organizing 300 people and shaping an initiative
-like this is als no small feat.  What we need are Generals.  Individuals to survey the land and plan attacks with small groups of soldiers.</p>
+<p>Example scenarios do not need to be believable and should not be elaborate.  Get to the point in as few classes as possible.</p>
 
-<p>Porting 50 tests yourself is impressive.  Leading the charge on 500 tests being ported is astonishing.</p>
+<p>You should be able to explain the entire example in two minutes.</p>
 
-<h1>Early stage</h1>
+<h1>Five ways to do the same thing</h1>
 
-<p>The tests in question are located more or less here:</p>
+<p>If there are five ways to do the same thing, avoid making five different scenarios.  Copy the example to a new directory, and tweak it to show the variation.</p>
+
+<p>So say you used objects <code>Green</code>, <code>Square</code> and <code>Checkers</code> to show the basic concept and you wish to show the next variation of that same concecpt.  It is tempting to add to the same
+example objects <code>Yellow</code>, <code>Triangle</code> and <code>PolkaDots</code>.</p>
+
+<p>Avoid that.  Copy <code>Green</code>, <code>Square</code> and <code>Checkers</code> to a new example, change the package name, and update the few lines needed to show the difference.</p>
+
+<p>Where does your eye focus?</p>
 
 <ul>
-<li>svn co http://svn.apache.org/repos/asf/activemq/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/bval/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/cxf/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/myfaces/core/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomee/tomee/trunk/itests</li>
-<li>svn co http://svn.apache.org/repos/asf/openjpa/branches/2.2.x</li>
-<li>svn co http://svn.apache.org/repos/asf/openwebbeans/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomcat/tc7.0.x/trunk</li>
+<li>934 + 55 = 989</li>
+<li>513 - 19 = 494</li>
+<li>468 * 44 = 20592</li>
+<li>708 / 89 = 7</li>
+<li>401 % 63 = 23</li>
 </ul>
 
-<p>While not part of TomEE, Wink has some wonderful JAX-RS tests we could use:</p>
+<p>How about now?</p>
 
 <ul>
-<li>svn co http://svn.apache.org/repos/asf/wink/trunk</li>
+<li>102 + 35 = 137</li>
+<li>102 - 35 = 67</li>
+<li>102 * 35 = 3570</li>
+<li>102 / 35 = 2</li>
+<li>102 % 35 = 32</li>
 </ul>
 
-<p>At this stage there's still quite a lot of information needed to mobilize the troops.  How to write Arquillian tests, which tests are most important, how should
-they be divided?</p>
+<p>The intent of the second set of numbers can be easily guessed.  An explanation that it is about the math operators confirms that and locks it in your brain.</p>
 
-<p>The call goes out to all you would-be Generals!</p>
+<p>When presenting, you only get so much time to show people ideas.  If they have to learn a new set of names and understand their relationship on each tiny variation, it severely
+impacts their ability to see what is supposed to be the same and what is supposed to be different.  As a presenter this means you must show less and what you do show will be shown
+less clearly.</p>
 
-<p>Any mode of cooperation is acceptable.  Discussions on the <code>dev (at) tomee.apache.org</code> list welcome.  This document can be edited by anyone.  As well there's a
-JIRA we can use to move the discussion along:</p>
+<p>When names and scenarios are consistent, the variations jump out quickly and with impact.</p>
+
+<p>If there are five ways to do the same thing, show the same thing five different ways.</p>
+
+<h1>Short Class Names</h1>
+
+<p>You don't need to document the example with the class name.  Class names that are a mouthful cannot be effectively used in presentations or screencasts.</p>
+
+<p>Try to stick with one or two word class names.  Three tops.</p>
+
+<p>Avoid:</p>
 
 <ul>
-<li>https://issues.apache.org/jira/browse/TOMEE-746</li>
+<li><code>BeanWithTwoDecoratorsAndOneProducerMethod</code></li>
 </ul>
+
+<p>Try instead:</p>
+
+<ul>
+<li><code>BlueBean</code></li>
+</ul>
+
+<p>Shorter names can be easier for all sorts of reasons.  Less words to keep "floating in the head" when trying to truly see an example.</p>
+
+<p>Using the numbers from the previous section, which is easier?</p>
+
+<ul>
+<li>102 + 35 = 137</li>
+<li>102 - 35 = 67</li>
+<li>102 * 35 = 3570</li>
+<li>102 / 35 = 2</li>
+<li>102 % 35 = 32</li>
+</ul>
+
+<p>Or:</p>
+
+<ul>
+<li>12 + 3 = 15</li>
+<li>12 - 3 = 9</li>
+<li>12 * 3 = 36</li>
+<li>12 / 3 = 4</li>
+<li>12 % 3 = 0</li>
+</ul>
+
+<p>There's a finite amount people can keep in their head, save space for the important stuff.</p>
 
 
 

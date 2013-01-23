@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Lookup of other EJBs Example</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Lookup of other EJBs Example",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Lookup of other EJBs Example
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="LookupofotherEJBsExample-Overview"></a></p>
+
+<h1>Overview</h1>
+
+<p>This example shows how to configure JNDI to lookup other EJBs using either
+the <em>@EJB</em> annotation or the <em>ejb-jar.xml</em> deployment descriptor.</p>
+
+<p>There are a couple interesting aspects in this example intended to flush
+out some of the more confusing, and perhaps frustrating, aspects of
+referring to EJBs.</p>
+
+<ul>
+<li>beans themselves do not have JNDI names (this was only recently added in
+Java EE 6)</li>
+</ul>
+
+<p>This is the most frustrating and hard to accept.  Java EE 5 does not have a
+global namespace and therefore there is no <em>singular</em> name for your EJB. 
+It does not matter what you do to your EJB, there is no standard way to
+"give" the bean a name that can be used by the application globally.</p>
+
+<ul>
+<li>each EJB owns its own private <em>java:comp/env</em> namespace
+(<em>java:comp/env</em> is not global and cannot be treated that way)</li>
+<li>names do not magically appear in <em>java:comp/env</em>, they must be
+explicitly added.</li>
+<li>to get a reference to bean <em>B</em> in the <em>java:comp/env</em> namespace of
+bean <em>A</em>, bean <em>A</em> must declare a reference to bean <em>B</em>.</li>
+</ul>
+
+<p>You read this right.  If you have 10 EJBs and all of them want to refer to
+bean <em>B</em>, then you must declare bean <em>B</em> as a reference 10 times (once
+for each of the 10 beans).  There is no standard way in Java EE 5 to do
+this just once for all beans.  In Java EE 6 there is a "<em>java:global</em>"
+namespace, a "<em>java:app</em>" namespace, and a "<em>java:module</em>" namespace
+where names can be defined with the desired scope.  Java EE 5 has only
+<em>java:comp</em>.</p>
+
+<p>There are two things which make this even more confusing:</p>
+
+<ul>
+<li>Servlets have always defined <em>java:comp/env</em> differently.    In a
+webapp, the <em>java:comp/env</em> namespace is shared by all servlets.  This is
+essentially equivalent to the <em>java:module</em> namespace in Java EE 6. 
+Understand there is a conflict in definition here and that for EJBs,
+<em>java:comp</em> is scoped at the component (the EJB itself) not the module as
+with webapps.</li>
+<li>All vendors have some proprietary concept of global JNDI.  So you may be
+able to lookup "<em>java:/MyBean</em>" or "<em>MyBeanLocal</em>", but these are
+vendor-specific and non-portable.</li>
+</ul>
+
+<p>As well this example shows some other interesting aspects of referring to
+EJBs:</p>
+
+<ul>
+<li>Two beans may use the same business interfaces, the interface alone does
+not necessarily identify the exact bean</li>
+<li>circular references are possible</li>
+</ul>
+
+<p>To illustrate all of this, we have two simple @Stateless beans, <em>RedBean</em>
+and <em>BlueBean</em>.  Both implement the same business local interface,
+<em>Friend</em>.  Both <em>RedBean</em> and <em>BlueBean</em> define
+<em>java:comp/env/myFriend</em> differently which is allowed as <em>java:comp</em> is
+a namespace that is private to each bean and not visible to other beans --
+so the names do not have to match. </p>
+
+<p><a name="LookupofotherEJBsExample-TheCode"></a></p>
+
+<h1>The Code</h1>
+
+<p>Here we show the code for <em>RedBean</em> and <em>BlueBean</em> and their shared
+business local interface <em>Friend</em>.<div class="snippet">:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/RedBean.java|lang=java}<div class="snippet">:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/BlueBean.java|lang=java}<div class="snippet">:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/Friend.java|lang=java}</p>
+
+<p>The key items in the above are the following:
+ - <em>@EJB</em> has been used at the <em>class level</em> to declare <em>myFriend</em> in
+the <em>java:comp/env</em> namespace of each EJB
+ - because both beans share the <em>same interface</em>, <em>Friend</em>, we need to
+add <strong>beanName</strong> to the <em>@EJB</em> usage to specify the exact EJB we want
+ - for <em>BlueBean</em> the <em>java:comp/env/myFriend</em> name has been configured
+to point to <em>RedBean</em>
+ - for <em>RedBean</em> the <em>java:comp/env/myFriend</em> name has been configured
+to point to <em>BlueBean</em></p>
+
+<p><a name="LookupofotherEJBsExample-Alternativetoannotations"></a></p>
+
+<h2>Alternative to annotations</h2>
+
+<p>If there is a desire to not use annotations, the above annotation usage is
+equivalent to the following ejb-jar.xml<div class="snippet">:url=openejb3/examples/lookup-of-ejbs-with-descriptor/src/main/resources/META-INF/ejb-jar.xml|lang=xml}</p>
+
+<p><a name="LookupofotherEJBsExample-Writingaunittestfortheexample"></a></p>
+
+<h1>Writing a unit test for the example</h1>
+
+<p>Writing an unit test for this example is quite simple. We need just to
+write a setup method to create and initialize the InitialContext, and then
+write our test methods
+<div class="snippet">:id=code|url=openejb3/examples/lookup-of-ejbs/src/test/java/org/superbiz/ejblookup/EjbDependencyTest.java|lang=java}</p>
+
+<p><a name="LookupofotherEJBsExample-Running"></a></p>
+
+<h1>Running</h1>
+
+<p>Running the example is fairly simple.  In the "lookup-of-ejbs" directory of
+the <a href="openejb:download.html">examples zip</a>
+, just run:</p>
+
+<blockquote>
+  <p>$ mvn clean install</p>
+</blockquote>
+
+<p>Which should create output like the following.</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.ejblookup.EjbDependencyTest
+Apache OpenEJB 3.1.5-SNAPSHOT    build: 20101129-09:51
+http://openejb.apache.org/
+INFO - openejb.home =
+</code></pre>
+
+<p>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs
+    INFO - openejb.base =
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs
+    INFO - Configuring Service(id=Default Security Service,
+type=SecurityService, provider-id=Default Security Service)
+    INFO - Configuring Service(id=Default Transaction Manager,
+type=TransactionManager, provider-id=Default Transaction Manager)
+    INFO - Found EjbModule in classpath:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+    INFO - Beginning load:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+    INFO - Configuring enterprise application: classpath.ear
+    INFO - Configuring Service(id=Default Stateless Container, type=Container,
+provider-id=Default Stateless Container)
+    INFO - Auto-creating a container for bean BlueBean:
+Container(type=STATELESS, id=Default Stateless Container)
+    INFO - Enterprise application "classpath.ear" loaded.
+    INFO - Assembling app: classpath.ear
+    INFO - Jndi(name=BlueBeanLocal) --> Ejb(deployment-id=BlueBean)
+    INFO - Jndi(name=RedBeanLocal) --> Ejb(deployment-id=RedBean)
+    INFO - Created Ejb(deployment-id=RedBean, ejb-name=RedBean,
+container=Default Stateless Container)
+    INFO - Created Ejb(deployment-id=BlueBean, ejb-name=BlueBean,
+container=Default Stateless Container)
+    INFO - Deployed Application(path=classpath.ear)
+    Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.244 sec</p>
+
+<pre><code>Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

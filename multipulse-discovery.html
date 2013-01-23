@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="utf-8">
-      <title>Arquillian Test Porting Initiative</title>
+      <title>MultiPulse (UDP) Discovery</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -13,9 +13,9 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="./../bootstrap.css" rel="stylesheet">
-    <link href="./../prettify.css" rel="stylesheet">
-    <link href="./../bootstrap-mods.css" rel="stylesheet">
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
 
     <style type="text/css">
         body {
@@ -28,7 +28,7 @@
             outline: medium none;
             text-indent: -999em;
             width: 24px;
-            background-image: url('./../images/sprites.png');
+            background-image: url('./images/sprites.png');
             background-repeat: no-repeat;
             overflow: hidden;
             cursor: pointer;
@@ -40,7 +40,7 @@
             outline: medium none;
             text-indent: -999em;
             width: 24px;
-            background-image: url('./../images/edit.png');
+            background-image: url('./images/edit.png');
             background-repeat: no-repeat;
             overflow: hidden;
             cursor: pointer;
@@ -71,23 +71,23 @@
       };
       function twshare () {
           window.open(
-                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Arquillian Test Porting Initiative",
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=MultiPulse (UDP) Discovery",
                   'Share on Twitter',
                   'width=800,height=526');
       };
     </script>
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="./../images/favicon.ico">
-    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
 
-    <script src="./../javascript/prettify.js" type="text/javascript"></script>
-    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
-    <script src="./../javascript/common.js"></script>
-    <script src="./../javascript/prettyprint.js"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
 
     <script type="text/javascript">
 
@@ -110,12 +110,12 @@
     <div class="topbar">
       <div class="fill">
         <div class="container">
-          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <a class="brand" href="./index.html">Apache TomEE</a>
           <ul class="nav">
-            <li><a href="./../index.html">Home</a></li>
-            <li><a href="./../downloads.html">Downloads</a></li>
-            <li><a href="./../documentation.html">Documentation</a></li>
-            <li><a href="./../support.html">Support</a></li>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
           </ul>
 
             <!-- Google CSE Search Box Begins  -->
@@ -134,8 +134,8 @@
     
 
 <div class="page-header">
-<small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
-<h1>Arquillian Test Porting Initiative
+<small><a href="./index.html">Home</a></small><br>
+<h1>MultiPulse (UDP) Discovery
 
     <div style="float: right; position: relative; bottom: -10px; ">
         <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
@@ -146,87 +146,98 @@
 </h1>
 </div>
 
-<p>First things, first.  You can contribute your ideas by clicking the blue pencile icon in the upper right.  Edit this page and help shape the initiative!</p>
+<p>MultiPulse is an alternative multicast lookup that does not use a regular heartbeat.
+Instead, servers listen for a multicast request packet (a pulse) to which a response
+is then sent. Multicast network traffic is effectively reduced to an absolute minimum.</p>
 
-<h1>Unite the Armies to fight the Bugs!</h1>
+<p>MultiPulse is only useful in network scenarios where both client and server can be
+configured to send multicast UDP packets.</p>
 
-<p>Testing is the most crucial part of any project.  A project that incorporates as much functionality as TomEE does needs a <em>lot</em> of tests.</p>
+<h1>Server Configuration</h1>
 
-<p>There's a saying that if it isn't documented it doesn't exist.  Likely more true is that if it isn't tested it it might as well not exist,
-documentation or not.</p>
+<p>After you boot the server for the first time the default configuration will create the
+file <code>conf/conf.d/multipulse.properties</code> containing:</p>
 
-<p>The simple truth is many of the critical tests that apply to functionality in TomEE actuall exist, but are spread across the numberous projects
-that TomEE incorporates.  Just as TomEE is about unifying and integrating all these projects together, the same vision and initative
-must be given into unifying and integrating all these tests.</p>
+<pre><code>server      = org.apache.openejb.server.discovery.MulticastPulseAgent
+bind        = 239.255.2.3
+port        = 6142
+disabled    = true
+group       = default
+</code></pre>
 
-<p>If we could port them all to a common testing framework like Arquillian and consolidate them all into one codebase, the result would be nothing short
-of a marvel.  An unparalleled feat.</p>
+<p>You just need to enable the agent by setting <code>disabled = false</code>. It is advisable to
+disable multicast in the <code>multicast.properties file</code>, or at least to use a different
+bind address or port should you wish to use both.</p>
 
-<p>Such a thing has never been done at the ASF.  Be ready to blaze some trails and be a pioneer.</p>
+<p>All of the above settings except <code>server</code> can be modified as required.
+The <code>port</code> and <code>bind</code> must be valid for general multicast/udp network communication.</p>
 
-<h1>The Kingdoms</h1>
+<p>The <code>group</code> setting can be changed to further group/cluster servers that may use
+the same multicast channel.  As shown below the client also has an optional <code>group</code>
+setting which can be used to select an appropriate server cluster from the multicast
+channel (See MultiPulse Client).</p>
 
-<p>There are far more than 3,000 test classes we could port across the various projects, each using it's own flavor of home-made setup code.
-The coverage is also not what you'd expect.</p>
+<p>The next step is to ensure that the advertised services are configured for discovery.
+Edit the <code>ejbd.properties</code> file (and any other enabled services such as http, etc.) and
+ensure that the <code>discovery</code> option is set to a value that remote clients will be able
+to resolve.</p>
 
-<ul>
-<li>Activemq 1281</li>
-<li>CXF 979</li>
-<li>TomEE 802</li>
-<li>OpenEJB 215</li>
-<li>MyFaces 171</li>
-<li>OpenWebBeans 165</li>
-<li>Bval 56</li>
-<li>OpenJPA 33</li>
-<li>Tomcat 20</li>
-</ul>
+<pre><code>server      = org.apache.openejb.server.ejbd.EjbServer
+bind        = 0.0.0.0
+port        = 4201
+disabled    = false
+threads     = 20
+discovery   = ejb:ejbd://{bind}:{port}
+</code></pre>
 
-<p>The above results are no dount eye-opening.  In all fairness, the projects with so few test are not as "untested" as they appear, they simply rely more heavily
-on the proprietary Java EE TCK which is closed source.  This is adequate, but not fantastic.  <strong>An open source project should have open tests.</strong></p>
+<p>NOTE: If either <code>0.0.0.0</code> (IPv4) or <code>[::]</code> (IPv6) wildcard bind addresses are used then the
+server will actually broadcast all of it's known public hosts to clients. Clients will then
+cycle though and attempt to connect to the provided hosts until successful.</p>
 
-<h1>Generals Needed</h1>
+<p>If <code>localhost</code> is used then only clients on the same physical machine will actually 'see' the
+server response.</p>
 
-<p>This is no small feet.  With over 3,000 tests porting them all is not realistc.  If we had 10 people working full time, that's till 300 tests each person
-would need to port.  This simply is not realistic.  More realistic would be for a person to port say 10 tests before they get an injury and need to leave the
-battlefield with hopes of joining the glorious fight another day -- aka. they get busy :)</p>
+<h1>MultiPulse Client</h1>
 
-<p>Even with 300 people each contributing 10 tests each, it's still quite a lot of patches for a small team to apply.  Organizing 300 people and shaping an initiative
-like this is als no small feat.  What we need are Generals.  Individuals to survey the land and plan attacks with small groups of soldiers.</p>
+<p>The multipulse functionality is not just for servers to find each other in a
+cluster, it can also be used for EJB clients to discover a server.  A
+special <code>multipulse://</code> URL can be used in the <code>InitialContext</code> properties to
+signify that multipulse should be used to seed the connection process.  Such
+as:</p>
 
-<p>Porting 50 tests yourself is impressive.  Leading the charge on 500 tests being ported is astonishing.</p>
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "multipulse://239.255.2.3:6142?group=default&amp;timeout=250");
+InitialContext remoteContext = new InitialContext(p);
+</code></pre>
 
-<h1>Early stage</h1>
+<p>The URL has optional query parameters such as <code>schemes</code> and <code>group</code> and
+<code>timeout</code> which allow you to zero in on a particular type of service of a
+particular cluster group as well as set how long you are willing to wait in
+the discovery process till finally giving up.  The first matching service
+that it sees "flowing" around on the UDP stream is the one it picks and
+sticks to for that and subsequent requests, ensuring UDP is only used when
+there are no other servers to talk to.</p>
 
-<p>The tests in question are located more or less here:</p>
+<p>Note that EJB clients do not need to use multipulse to find a server.  If
+the client knows the URL of a server in the cluster, it may use it and
+connect directly to that server, at which point that server will share the
+full list of its peers.</p>
 
-<ul>
-<li>svn co http://svn.apache.org/repos/asf/activemq/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/bval/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/cxf/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/myfaces/core/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomee/tomee/trunk/itests</li>
-<li>svn co http://svn.apache.org/repos/asf/openjpa/branches/2.2.x</li>
-<li>svn co http://svn.apache.org/repos/asf/openwebbeans/trunk</li>
-<li>svn co http://svn.apache.org/repos/asf/tomcat/tc7.0.x/trunk</li>
-</ul>
+<h1>Multicast Servers with TCP Clients</h1>
 
-<p>While not part of TomEE, Wink has some wonderful JAX-RS tests we could use:</p>
+<p>Note that clients do not need to use multipulse to communicate with servers.
+Servers can use multicast to discover each other, but clients are still
+free to connect to servers in the network using the server's TCP address.</p>
 
-<ul>
-<li>svn co http://svn.apache.org/repos/asf/wink/trunk</li>
-</ul>
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,  "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "ejbd://192.168.1.30:4201");
+InitialContext remoteContext = new InitialContext(p);
+</code></pre>
 
-<p>At this stage there's still quite a lot of information needed to mobilize the troops.  How to write Arquillian tests, which tests are most important, how should
-they be divided?</p>
-
-<p>The call goes out to all you would-be Generals!</p>
-
-<p>Any mode of cooperation is acceptable.  Discussions on the <code>dev (at) tomee.apache.org</code> list welcome.  This document can be edited by anyone.  As well there's a
-JIRA we can use to move the discussion along:</p>
-
-<ul>
-<li>https://issues.apache.org/jira/browse/TOMEE-746</li>
-</ul>
+<p>When the client connects, the server will send the URLs of all the servers
+in the group and failover will take place normally.</p>
 
 
 
@@ -253,7 +264,7 @@ JIRA we can use to move the discussion along:</p>
                 <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
             </div>
         </div>
-        <script src="./../javascript/bootstrap-modal.js"></script>
+        <script src="./javascript/bootstrap-modal.js"></script>
 
       <footer>
         <p>

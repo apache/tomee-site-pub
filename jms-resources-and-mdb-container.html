@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>JMS Resources and MDB Container</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=JMS Resources and MDB Container",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>JMS Resources and MDB Container
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<h1>External ActiveMQ Broker</h1>
+
+<pre><code>&lt;openejb&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        # Do not start the embedded ActiveMQ broker
+        BrokerXmlConfig  =
+        ServerUrl = tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/openejb&gt;
+</code></pre>
+
+<p>The <code>ServerUrl</code> would be changed to point to the host and port of the
+ActiveMQ process.  The various URL formats that ActiveMQ supports also
+work, such as 'failover:'.</p>
+
+<h1>Internal ActiveMQ Broker</h1>
+
+<pre><code>&lt;openejb&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  broker:(tcp://someHostName:61616)
+        ServerUrl       =  tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/openejb&gt;
+</code></pre>
+
+<p>The <code>BrokerXmlConfig</code> tells ActiveMQ to start on the tcp host/port <code>someHostName</code> and <code>61616</code></p>
+
+<h1>Internal ActiveMQ Broker with activemq.xml</h1>
+
+<p>The <code>activemq.xml</code> file format has a significant number of extra dependencies, such as Spring, and is therefore not included in the distribution by default.</p>
+
+<p>This support can be enabled by adding the right libraries and creating an <code>conf/activemq.xml</code> file.</p>
+
+<p>Add the following jars to the <code>tomee.home/lib/</code> directory:</p>
+
+<ul>
+<li><a href="http://repo1.maven.org/maven2/org/springframework/spring-beans/2.5.6/spring-beans-2.5.6.jar">spring-beans-2.5.6.jar</a></li>
+<li><a href="http://repo1.maven.org/maven2/org/springframework/spring-context/2.5.6/spring-context-2.5.6.jar">spring-context-2.5.6.jar</a></li>
+<li><a href="http://repo1.maven.org/maven2/org/springframework/spring-core/2.5.6/spring-core-2.5.6.jar">spring-core-2.5.6.jar</a></li>
+<li><a href="http://repo1.maven.org/maven2/org/springframework/spring-web/2.5.6/spring-web-2.5.6.jar">spring-web-2.5.6.jar</a></li>
+<li><a href="http://repo1.maven.org/maven2/org/apache/xbean/xbean-spring/3.9/xbean-spring-3.9.jar">xbean-spring-3.9.jar</a></li>
+</ul>
+
+<p>Create an <a href="http://activemq.apache.org/xml-configuration.html">activemq.xml file</a> a in <code>tomee.home/conf/activemq.xml</code>.</p>
+
+<p>Then use the <code>xbean:file:</code> url prefix in the <code>BrokerXmlConfig</code> as shown belog.</p>
+
+<pre><code>&lt;openejb&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  xbean:file:conf/activemq.xml
+        ServerUrl       =  tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/openejb&gt;
+</code></pre>
+
+<p>Finally, restart the server.</p>
+
+<h1>Configuration via System properties</h1>
+
+<p>The same can be done via properties in an embedded configuration, via the
+<code>conf/system.properties</code> file or on the command line via <code>-D</code> flags.</p>
+
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+
+p.put("MyJmsResourceAdapter", "new://Resource?type=ActiveMQResourceAdapter");
+p.put("MyJmsResourceAdapter.ServerUrl", "tcp://someHostName:61616");
+p.put("MyJmsResourceAdapter.BrokerXmlConfig", "");
+
+p.put("MyJmsConnectionFactory", "new://Resource?type=javax.jms.ConnectionFactory");
+p.put("MyJmsConnectionFactory.ResourceAdapter", "MyJmsResourceAdapter");
+
+p.put("MyJmsMdbContainer", "new://Container?type=MESSAGE");
+p.put("MyJmsMdbContainer.ResourceAdapter", "MyJmsResourceAdapter");
+
+p.put("FooQueue", "new://Resource?type=javax.jms.Queue");
+p.put("BarTopic", "new://Resource?type=javax.jms.Topic");
+
+InitialContext context = new InitialContext(p);
+</code></pre>
+
+<h1>Global lookup of JMS Resources</h1>
+
+<p>From anywhere in the same VM as the EJB Container you could lookup the
+above resources like so:</p>
+
+<pre><code>javax.jms.ConnectionFactory cf = (ConnectionFactory)
+        context.lookup("openejb:Resource/MyJmsConnectionFactory");
+
+javax.jms.Queue queue = (Queue) context.lookup("openejb:Resource/FooQueue");
+javax.jms.Topic topic = (Topic) context.lookup("openejb:Resource/BarTopic");
+</code></pre>
+
+<h1>MDB ActivationConfig</h1>
+
+<p>Here, the value for <code>destination</code> is the physical name of the desired destination. The value for
+<code>destinationType</code> is the class name that defines the type of destination. It should be <code>javax.jms.Queue</code> or <code>javax.jms.Topic</code>.</p>
+
+<p>The Activation Spec properties that can be configured are:</p>
+
+<p><TABLE><TBODY>
+<TR>
+<TH> Property Name </TH>
+<TH> Required </TH>
+<TH> Default Value </TH>
+<TH> Description </TH>
+</TR>
+<TR>
+<TD> acknowledgeMode </TD>
+<TD> no </TD>
+<TD> Auto-acknowledge </TD>
+<TD> The JMS Acknowledgement mode to use. Valid values are: Auto-acknowledge or Dups-ok-acknowledge </TD>
+</TR>
+<TR>
+<TD> clientId </TD>
+<TD> no </TD>
+<TD> set in resource adapter </TD>
+<TD> The JMS Client ID to use (only really required for durable topics) </TD>
+</TR>
+<TR>
+<TD> destinationType </TD>
+<TD> yes </TD>
+<TD> null </TD>
+<TD> The type of destination; a queue or topic </TD>
+</TR>
+<TR>
+<TD> destination </TD>
+<TD> yes </TD>
+<TD> null </TD>
+<TD> The destination name (queue or topic name) </TD>
+</TR>
+<TR>
+<TD> enableBatch </TD>
+<TD> no </TD>
+<TD> false </TD>
+<TD> Used to enable transaction batching for increased performance </TD>
+</TR>
+<TR>
+<TD> maxMessagesPerBatch </TD>
+<TD> no </TD>
+<TD> 10 </TD>
+<TD> The number of messages per transaction batch </TD>
+</TR>
+<TR>
+<TD> maxMessagesPerSessions </TD>
+<TD> no </TD>
+<TD> 10 </TD>
+<TD> This is actually the prefetch size for the subscription.  (Yes, badly named). </TD>
+</TR>
+<TR>
+<TD> maxSessions </TD>
+<TD> no </TD>
+<TD> 10 </TD>
+<TD> The maximum number of concurrent sessions to use </TD>
+</TR>
+<TR>
+<TD> messageSelector </TD>
+<TD> no </TD>
+<TD> null </TD>
+<TD>Message Selector</A> to use on the subscription to perform content based routing filtering the messages </TD>
+</TR>
+<TR>
+<TD> noLocal </TD>
+<TD> no </TD>
+<TD> false </TD>
+<TD> Only required for topic subscriptions; indicates if locally published messages should be included in the subscription or not </TD>
+</TR>
+<TR>
+<TD> password </TD>
+<TD> no </TD>
+<TD> set in resource adapter </TD>
+<TD> The password for the JMS connection </TD>
+</TR>
+<TR>
+<TD> subscriptionDurability </TD>
+<TD> no </TD>
+<TD> NonDurable </TD>
+<TD> Whether or not a durable (topic) subscription is required. Valid values are: Durable or NonDurable </TD>
+</TR>
+<TR>
+<TD> subscriptionName </TD>
+<TD> no </TD>
+<TD> null </TD>
+<TD> The name of the durable subscriber. Only used for durable topics and combined with the clientID to uniquely identify the durable topic subscription </TD>
+</TR>
+<TR>
+<TD> userName </TD>
+<TD> no </TD>
+<TD> set in resource adapter </TD>
+<TD> The user for the JMS connection </TD>
+</TR>
+<TR>
+<TD> useRAManagedTransaction </TD>
+<TD> no </TD>
+<TD> false </TD>
+<TD> Typically, a resource adapter delivers messages to an endpoint which is managed by a container.  Normally, this container likes to be the one that wants to control the transaction that the inbound message is being delivered on.  But sometimes, you want to deliver to a simpler container system that will not be controlling the inbound transaction.  In these cases, if you set useRAManagedTransaction to true, the resource adapter will commit the transaction if no exception was generated from the MessageListener and rollback if an exception is thrown. </TD>
+</TR>
+<TR>
+<TD> initialRedeliveryDelay </TD>
+<TD> no </TD>
+<TD> 1000 </TD>
+<TD> The delay before redeliveries start.  Also configurable on the ResourceAdapter </TD>
+</TR>
+<TR>
+<TD> maximumRedeliveries </TD>
+<TD> no </TD>
+<TD> 5 </TD>
+<TD> The maximum number of redeliveries or -1 for no maximum. Also configurable on the ResourceAdapter </TD>
+</TR>
+<TR>
+<TD> redeliveryBackOffMultiplier </TD>
+<TD> no </TD>
+<TD> 5 </TD>
+<TD> The multiplier to use if exponential back off is enabled. Also configurable on the ResourceAdapter </TD>
+</TR>
+<TR>
+<TD> redeliveryUseExponentialBackOff </TD>
+<TD> no </TD>
+<TD> false </TD>
+<TD> To enable exponential backoff. Also configurable on the ResourceAdapter </TD>
+</TR>
+</TBODY></TABLE></p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

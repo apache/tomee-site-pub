@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Functional testing with OpenEJB, Jetty and Selenium</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Functional testing with OpenEJB, Jetty and Selenium",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Functional testing with OpenEJB, Jetty and Selenium
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Obviously, OpenEJB is great for unit testing EJBs, but I wondered whether I
+might also be able to use this embedded functionality to functionally test
+my application. You can use tools like Selenium, or HtmlUnit to run
+functional tests as if the user were sat at their browser typing text, and
+clicking links and buttons. This however means you have to have your app
+running on your app server, and you need to have consistent test data -
+otherwise a test might pass on one developers machine, but fail on another.
+Here's one approach that you could take to completely deploy your webapp
+within a test, and functionally test it with a tool like Selenium. There's
+also some sample code demonstrating this, available <a href="http://people.apache.org/~jgallimore/PersonApp.zip">here</a>
+.</p>
+
+<p><a name="FunctionaltestingwithOpenEJB,JettyandSelenium-Creatinganembeddedserver"></a></p>
+
+<h3>Creating an embedded server</h3>
+
+<p>I created a class to start my embedded OpenEJB and Jetty instances and
+configure them to see the EJB and WAR modules of my application:</p>
+
+<pre><code>public class EmbeddedServer {
+    private static EmbeddedServer instance = new EmbeddedServer();
+    private Server server;
+
+    private EmbeddedServer() {
+    try {
+        // initialize OpenEJB &amp; add some test data
+        Properties properties = new Properties();
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
+        InitialContext ic = new InitialContext(properties);
+        PeopleFacade facade = (PeopleFacade) ic.lookup("PeopleFacadeEJBRemote");
+        new TestFixture(facade).addTestData();
+
+        // setup web app
+        WebAppContext context = new WebAppContext();
+        context.setWar(computeWarPath());
+        InitialContext initialContext = setupJndi(context);
+
+        // start the server
+        context.setServletHandler(new EmbeddedServerServletHandler(initialContext));
+        context.setContextPath("/");
+        server = new Server(9091);
+        server.addHandler(context);
+
+        server.start();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+    private InitialContext setupJndi(WebAppContext context) throws NamingException {
+    // setup local JNDI
+    InitialContext initialContext = new InitialContext();
+    WebApp webApp = getWebApp(context);
+    Collection&lt;EjbRef&gt; refs = webApp.getEjbRef();
+    for (EjbRef ref : refs) {
+        String ejbLink = ref.getEjbLink();
+
+        // get enterprise bean info
+        EnterpriseBeanInfo beanInfo = new EJBHelper().getEJBInfo(ejbLink);
+        if (beanInfo.jndiNames != null &amp;&amp; beanInfo.jndiNames.size() &gt; 0) {
+        String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+        initialContext.bind("java:comp/env/" + ref.getEjbRefName(), new LinkRef(jndiName));
+        }
+    }
+    return initialContext;
+    }
+
+    private String computeWarPath() {
+    String currentPath = new File(".").getAbsolutePath();
+    String warPath;
+
+        String[]  pathParts = currentPath.split("(\\\\|/)+");
+
+    int webPart = Arrays.asList(pathParts).indexOf("PersonWEB");
+    if (webPart == -1) {
+        warPath = "PersonWEB/src/main/webapp";
+    } else {
+        StringBuffer buffer = new StringBuffer();
+
+        for (int i = 0; i &lt; webPart; i++) {
+                buffer.append(pathParts[i]);
+        buffer.append(File.separator);
+        }
+
+        buffer.append("PersonWEB/src/main/webapp");
+        warPath = buffer.toString();
+    }
+    return warPath;
+    }
+
+    public static EmbeddedServer getInstance() {
+    return instance;
+    }
+
+    public Server getServer() {
+    return server;
+    }
+
+    public static void main(String[]  args) {
+    try {
+        EmbeddedServer.getInstance().getServer().join();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
+
+    private WebApp getWebApp(WebAppContext context) {
+    WebApp webApp = null;
+
+    try {
+        FileInputStream is = new FileInputStream(new File(context.getWar() + "/WEB-INF/web.xml").getAbsolutePath());
+        webApp = (WebApp) JaxbJavaee.unmarshal(WebApp.class, is);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return webApp;
+    }
+} 
+</code></pre>
+
+<p>This class sets up an embedded instance of Jetty, running on port 9091.
+You'll notice the setupJndi() method. This looks through the ejb-ref
+entries in web.xml (which we deserialize using the openejb-jee library),
+and adds relevant LinkRefs to the JNDI tree, so you can lookup beans using
+the java:comp/env/bean format. I've added a main() method here for
+convenience, so you can run this straight from an IDE, and record tests
+using tools like the Selenium Firefox plugin.</p>
+
+<p><a name="FunctionaltestingwithOpenEJB,JettyandSelenium-Supporting@EJBDependencyinjection"></a></p>
+
+<h3>Supporting @EJB Dependency injection</h3>
+
+<p>In the last code sample, we also set up a custom ServletHandler in Jetty -
+this is to perform dependency injection. The custom ServletHandler looks
+like this:</p>
+
+<pre><code>public class EmbeddedServerServletHandler extends ServletHandler {
+    private InitialContext initialContext;
+
+    public EmbeddedServerServletHandler(InitialContext initialContext) {
+    this.initialContext = initialContext;
+    }
+
+    public Servlet customizeServlet(Servlet servlet) throws Exception {
+    Class&lt;? extends Servlet&gt; servletClass = servlet.getClass();
+        Field[]
+</code></pre>
+
+<p>declaredFields = servletClass.getDeclaredFields();</p>
+
+<pre><code>    for (Field declaredField : declaredFields) {
+            Annotation[]
+</code></pre>
+
+<p>annotations = declaredField.getAnnotations();</p>
+
+<pre><code>        for (Annotation annotation : annotations) {
+        if (EJB.class.equals(annotation.annotationType())) {
+            // inject into this field
+            Class&lt;?&gt; fieldType = declaredField.getType();
+            EnterpriseBeanInfo beanInfo = getBeanFor(fieldType);
+            if (beanInfo == null) {
+            continue;
+            }
+
+            String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+            Object o = initialContext.lookup(jndiName);
+
+            declaredField.setAccessible(true);
+            declaredField.set(servlet, o);
+        }
+        }
+    }
+
+    return super.customizeServlet(servlet);
+    }
+
+    private EnterpriseBeanInfo getBeanFor(Class&lt;?&gt; fieldType) {
+    return new EJBHelper().getBeanInfo(fieldType);
+    }
+} 
+</code></pre>
+
+<p>This looks up deployed beans that match the field type, and uses reflection
+to set the field.</p>
+
+<p><a name="FunctionaltestingwithOpenEJB,JettyandSelenium-WritingaFunctionaltest"></a></p>
+
+<h3>Writing a Functional test</h3>
+
+<p>We can now write a functional test. I use a base abstract class to make
+sure the Embedded server is running, and start Selenium:</p>
+
+<pre><code>public abstract class FunctionalTestCase extends TestCase {
+    protected DefaultSelenium selenium;
+
+    protected void setUp() throws Exception {
+    super.setUp();
+    EmbeddedServer.getInstance();
+    selenium = new DefaultSelenium("localhost", 4444, "*iexplore", "http://localhost:9091/");
+    selenium.start();
+    }
+
+    protected void tearDown() throws Exception {
+    selenium.stop();
+    }
+}
+</code></pre>
+
+<p>and I can then I write a test like this:</p>
+
+<pre><code>public class AddPersonTest extends FunctionalTestCase {
+    public void testShouldAddAPerson() throws Exception {
+    selenium.open("/People");
+    selenium.type("firstname", "Jonathan");
+    selenium.type("lastname", "Gallimore");
+        selenium.click("//input[@name='add' and @value='Add']");
+    selenium.waitForPageToLoad("30000");
+    selenium.type("filter", "gallimore");
+    selenium.click("submit");
+    selenium.waitForPageToLoad("30000");
+        assertEquals(1, selenium.getXpathCount("//div[@id='people']/ul/li").intValue());
+        assertEquals("Jonathan Gallimore", selenium.getText("//div[@id='people']/ul/li[1]"));
+
+    }
+} 
+</code></pre>
+
+<p><a name="FunctionaltestingwithOpenEJB,JettyandSelenium-Samplecode"></a></p>
+
+<h3>Sample code</h3>
+
+<p>I've made a sample project which demonstrates this, source is available <a href="http://people.apache.org/~jgallimore/PersonApp.zip">here</a>
+. You'll need Maven to build it, and you can build it and run the tests by
+running 'mvn clean install'. If want to run the tests from your IDE, you'll
+need to have a Selenium server running, which you can do by running 'mvn
+selenium:start-server'. </p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

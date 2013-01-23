@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Basics - Getting Things</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Basics - Getting Things",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Basics - Getting Things
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="Basics-GettingThings-GettingStufffromtheContainer"></a></p>
+
+<h1>Getting Stuff from the Container</h1>
+
+<p>Generally speaking the only way to get a <a href="container-managed-resource.html">Container-Managed Resource</a>
+ is via <em>dependency injection</em> or <em>lookup</em> from within a [Container-Managed Component]
+.</p>
+
+<p>The <em>unbreakable rules</em>.  Read these over and over again when things don't
+work.</p>
+
+<ol>
+<li>java:comp/env is the spec defined namespace for lookup of any <a href="container-managed-resource.html">Container-Managed Resource</a></li>
+<li>java:comp/env is <em>empty</em> by default</li>
+<li>java:comp/env is <em>read-only</em> at runtime</li>
+<li>java:comp/env is populated by <a href="declaring-references.html">Declaring References</a>
+to [Container-Managed Resource]
+via xml or annotation</li>
+<li>only <a href="container-managed-component.html">Container-Managed Component</a>
+s, <em>not</em> their libraries, can [Declare References|Declaring References]
+via xml or annotation</li>
+<li>only <a href="container-managed-component.html">Container-Managed Component</a>
+s, <em>not</em> their libraries, can get dependency injection of [Container-Managed Resource]
+s</li>
+<li>only <a href="container-managed-component.html">Container-Managed Component</a>
+s, <em>and</em> their libraries, may lookup from java:comp/env</li>
+<li>you <em>must</em> use the <em>no-arg</em> 'new InitialContext()' constructor to
+lookup something from java:comp/env</li>
+<li>the annotations and xml for <a href="declaring-references.html">Declaring References</a>
+are <em>identical</em> in functionality, both <em>always</em> configure lookup with
+<em>optional</em> dependency injection</li>
+</ol>
+
+<p><a name="Basics-GettingThings-Commonmistakes,misunderstandings,andmyths"></a></p>
+
+<h2>Common mistakes, misunderstandings, and myths</h2>
+
+<ul>
+<li><em><em>"I tried it via annotation and it didn't work, so I used xml and then
+it did work"</em></em></li>
+</ul>
+
+<p>See rule 9.  If one form worked and the other didn't, it means you simply
+made a mistake in using one versus the other.  Use what works for you, but
+understand both annotations or xml will work for either lookup or injection
+if used correctly.</p>
+
+<ul>
+<li><em><em>"I need to use lookups, so I can't use the annotation"</em></em></li>
+</ul>
+
+<p>See rule 9.  Annotations are not just for injection, that is just how they
+are typically used.  Know that when you use an annotation for injection, it
+will <em>always</em> create an entry in java:comp/env.  As well you can use the
+annotation at the <em>class level</em> and it will cause no dependency injection
+and only the entry creation in java:comp/env.</p>
+
+<ul>
+<li><em><em>"I don't want injection, so I can't use the annotation"</em></em></li>
+</ul>
+
+<p>See rule 9 and the above.  You can use the annotation at the <em>class level</em>
+and it will cause no dependency injection and only the entry creation in
+java:comp/env.</p>
+
+<ul>
+<li><em><em>"I tried to list java:comp/env but it's empty?!"</em></em></li>
+</ul>
+
+<p>See rule 2 and rule 4.  There will be nothing in java:comp/env unless you <a href="declaring-references.html">Declare a Reference</a>
+ to it.  It does not matter if is a DataSource configured at the server
+level, etc.  Nothing is bound into java:comp/env unless you explicitly
+declare a reference to it.  The Java EE 5 TCK (Technology Compatibility
+Kit) tests for this extensively and is a rule we cannot break.  Java EE 6
+does finally offer some new namesaces (java:global, java:app, and
+java:module) which will offer some great new options for more global-style
+lookups.</p>
+
+<ul>
+<li><em><em>"I deployed the EJB but can't look it up, it's name is Foo"</em></em></li>
+</ul>
+
+<p>See rule 2 and the above.  Just creating an EJB doesn't cause it to be
+added to java:comp/env.  If a <a href="container-managed-component.html">Container-Managed Component</a>
+ wants to lookup the EJB they must [Declare a Reference|Declaring References]
+ to it via the @EJB annotionation or &lt;ejb-local-ref&gt; or &lt;ejb-ref&gt; in xml. 
+In Java EE 6, however, EJBs will be automatically bound to
+"java:global[/&lt;app-name&gt;]/&lt;module-name&gt;/&lt;bean-name&gt;[!&lt;fully-qualified-interface-name&gt;]"
+and can be looked up without declaring a reference first.</p>
+
+<ul>
+<li><em><em>"Which InitialContextFactory do I use for java:comp/env?"</em></em></li>
+</ul>
+
+<p>See rule 8.  You are not allowed to use an InitialContextFactory for
+java:comp/env lookups.  Setting an InitialContextFactory via
+'java.naming.factory.initial' in either System properties, InitialContext
+properties, or a jndi.properties file is illegal and will cause
+java:comp/env lookups to fail.</p>
+
+<ul>
+<li><em><em>"My Client can't lookup the EJB from java:comp/env"</em></em></li>
+</ul>
+
+<p>See rule 7.  A plain, standalone, Java application cannot use
+java:comp/env. There is the official concept of a Java EE Application
+Client which can be packaged in an ear and deployed into the Container.  In
+practice, most people find them restrictive, cumbersome, and hard to use
+and are therefore rarely employed in "real world" projects.  Most people
+opt to use the non-standard, vendor-specific, approach to looking up EJBs
+from their plain java clients.  In OpenEJB this can be done via either the
+RemoteInitialContextFactory (for remote clients) or the
+LocalInitialContextFactory (for local clients of an embedded container). 
+The JNDI names can be configured as <a href="jndi-names.html">shown here</a>
+.</p>
+
+<ul>
+<li><em><em>"I declared the reference, but still can't look it up"</em></em></li>
+</ul>
+
+<p>See all of the above and reread the rules a few times.  Always check the
+log output as well.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>TomEE and Arquillian</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=TomEE and Arquillian",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>TomEE and Arquillian
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Check out the <a href="arquillian-getting-started.html">Getting started</a> page if you are not familiar with Arquillian.</p>
+
+<p>All the Arquillian Adapters for TomEE support the following configuration options in the arquillian.xml:</p>
+
+<pre><code>&lt;container qualifier="tomee" default="true"&gt;
+    &lt;configuration&gt;
+        &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+        &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+    &lt;/configuration&gt;
+&lt;/container&gt;
+</code></pre>
+
+<p>The above can also be set as system properties rather than via the arquillian.xml file.</p>
+
+<pre><code>&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+      &lt;configuration&gt;
+        &lt;systemPropertyVariables&gt;
+          &lt;tomee.httpPort&gt;-1&lt;/tomee.httpPort&gt;
+          &lt;tomee.stopPort&gt;-1&lt;/tomee.stopPort&gt;
+        &lt;/systemPropertyVariables&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+
+<p>When a port is set to -1, a random port will be chosen.  This is key to avoiding port conflicts on CI systems or for just plain clean testing.</p>
+
+<p>The TomEE Arquillian adapters will export the actual port chosen back as a system propert using the same name.  The test case can use the property to retrieve the port and contact the server.</p>
+
+<pre><code>URL url = new URL("http://localhost:" + System.getProperty("tomee.httpPort");
+// use the URL to connect to the server
+</code></pre>
+
+<p>When you are actually using a test on the client side, you can use instead</p>
+
+<pre><code>@Arquillian private URL url;
+</code></pre>
+
+<p>The url will get injected by Arquillian. Be careful, that injection only works if your are on the client side (it does not make sense in the server side). So, if for a specific need to need it, just use the system property.</p>
+
+<h1>TomEE Embedded Adapter</h1>
+
+<p>The TomEE Embedded Adapter will boot TomEE right inside the testcase itself resulting in one JVM running both the application and the test case.
+This is generally much faster than the TomEE Remote Adapter and great for development.  That said, it is strongly recommended to also run all tests in a Continous Integration
+system using the TomEE Remote Adapter.</p>
+
+<p>To use the TomEE Embedded Arquillian Adapter, simply add this Maven dependency to your Arquillian setup:</p>
+
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;arquillian-tomee-embedded&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>As mentioned above the Embedded Adapter has the following properties which can be specified in the <code>arquillian.xml</code> file:</p>
+
+<ul>
+<li><code>httpPort</code></li>
+<li><code>stopPort</code></li>
+</ul>
+
+<p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
+
+<ul>
+<li><code>tomee.httpPort</code></li>
+<li><code>tomee.stopPort</code></li>
+</ul>
+
+<p>Or more specifically as a System properties only applicable to the Embedded Adapter:</p>
+
+<ul>
+<li><code>tomee.embedded.httpPort</code></li>
+<li><code>tomee.embedded.stopPort</code></li>
+</ul>
+
+<h1>TomEE Remote Adapter</h1>
+
+<p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus distribution.  Once setup, the server will execute in a separate process.  This will be slower, but
+with the added benefit it is 100% match with the production system.</p>
+
+<p>The following shows a typical configuration for testing against TomEE (webprofile version).  The same can be done against TomEE+ by changing <code>&lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;</code> to <code>&lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;</code></p>
+
+<pre><code>&lt;properties&gt;
+  &lt;tomee.version&gt;1.0.0&lt;/tomee.version&gt;
+  &lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;
+&lt;/properties&gt;
+&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+      &lt;configuration&gt;
+        &lt;systemPropertyVariables&gt;
+          &lt;tomee.classifier&gt;${tomee.classifier}&lt;/tomee.classifier&gt;
+          &lt;tomee.version&gt;${tomee.version}&lt;/tomee.version&gt;
+        &lt;/systemPropertyVariables&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+    &lt;artifactId&gt;arquillian-tomee-remote&lt;/artifactId&gt;
+    &lt;version&gt;${tomee.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-tomee&lt;/artifactId&gt;
+    &lt;version&gt;${tomee.version}&lt;/version&gt;
+    &lt;classifier&gt;${tomee.classifier}&lt;/classifier&gt;
+    &lt;type&gt;zip&lt;/type&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+
+<p>The Remote Adapter has the following properties which can be specified in the <code>arquillian.xml</code> file:</p>
+
+<ul>
+<li><code>httpPort</code></li>
+<li><code>stopPort</code></li>
+<li><code>version</code></li>
+<li><code>classifier</code> (must be either <code>webprofile</code> or  <code>plus</code>)</li>
+</ul>
+
+<p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
+
+<ul>
+<li><code>tomee.httpPort</code></li>
+<li><code>tomee.stopPort</code></li>
+<li><code>tomee.version</code></li>
+<li><code>tomee.classifier</code></li>
+</ul>
+
+<p>Or more specifically as a System properties only applicable to the Remote Adapter:</p>
+
+<ul>
+<li><code>tomee.remote.httpPort</code></li>
+<li><code>tomee.remote.stopPort</code></li>
+<li><code>tomee.remote.version</code></li>
+<li><code>tomee.remote.classifier</code></li>
+</ul>
+
+<h1>Maven Profiles</h1>
+
+<p>Setting up both adapters is quite easy via maven profiles.  Here the default adapter is the Embedded Adapter, the Remote Adapter will run with <code>-Ptomee-webprofile-remote</code> specified as a <code>mvn</code> command argument.</p>
+
+<pre><code>&lt;profiles&gt;
+
+  &lt;profile&gt;
+    &lt;id&gt;tomee-embedded&lt;/id&gt;
+    &lt;activation&gt;
+      &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+    &lt;/activation&gt;
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+        &lt;artifactId&gt;arquillian-tomee-embedded&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0&lt;/version&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/profile&gt;
+
+  &lt;profile&gt;
+    &lt;id&gt;tomee-webprofile-remote&lt;/id&gt;
+    &lt;properties&gt;
+      &lt;tomee.version&gt;1.0.0&lt;/tomee.version&gt;
+      &lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;
+    &lt;/properties&gt;
+    &lt;build&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+          &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+          &lt;configuration&gt;
+            &lt;systemPropertyVariables&gt;
+              &lt;tomee.classifier&gt;${tomee.classifier}&lt;/tomee.classifier&gt;
+              &lt;tomee.version&gt;${tomee.version}&lt;/tomee.version&gt;
+            &lt;/systemPropertyVariables&gt;
+          &lt;/configuration&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/build&gt;
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+        &lt;artifactId&gt;arquillian-tomee-remote&lt;/artifactId&gt;
+        &lt;version&gt;${tomee.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+        &lt;artifactId&gt;apache-tomee&lt;/artifactId&gt;
+        &lt;version&gt;${tomee.version}&lt;/version&gt;
+        &lt;classifier&gt;${tomee.classifier}&lt;/classifier&gt;
+        &lt;type&gt;zip&lt;/type&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/profile&gt;
+
+  &lt;profile&gt;
+    &lt;id&gt;tomee-plus-remote&lt;/id&gt;
+    &lt;properties&gt;
+      &lt;tomee.version&gt;1.0.0&lt;/tomee.version&gt;
+      &lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;
+    &lt;/properties&gt;
+    &lt;build&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+          &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+          &lt;configuration&gt;
+            &lt;systemPropertyVariables&gt;
+              &lt;tomee.classifier&gt;${tomee.classifier}&lt;/tomee.classifier&gt;
+              &lt;tomee.version&gt;${tomee.version}&lt;/tomee.version&gt;
+            &lt;/systemPropertyVariables&gt;
+          &lt;/configuration&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/build&gt;
+    &lt;dependencies&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+        &lt;artifactId&gt;arquillian-tomee-remote&lt;/artifactId&gt;
+        &lt;version&gt;${tomee.version}&lt;/version&gt;
+      &lt;/dependency&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+        &lt;artifactId&gt;apache-tomee&lt;/artifactId&gt;
+        &lt;version&gt;${tomee.version}&lt;/version&gt;
+        &lt;classifier&gt;${tomee.classifier}&lt;/classifier&gt;
+        &lt;type&gt;zip&lt;/type&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/profile&gt;
+
+&lt;/profiles&gt;
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

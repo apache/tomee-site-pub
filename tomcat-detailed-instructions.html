@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Tomcat Detailed Instructions</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Tomcat Detailed Instructions",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Tomcat Detailed Instructions
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><div class="composition-setup">}</p>
+
+<p><a name="TomcatDetailedInstructions-{anchor:detailedinstructions}DetailedInstallationInstructions"></a></p>
+
+<h1>{anchor:detailed instructions} Detailed Installation Instructions</h1>
+
+<p>These instructions assume you have a standard Tomcat installation running
+on port 8080.  If you do not have an existing Tomcat installation, or want
+to start with a fresh installation for OpenEJB, the <a href="tomcat-installation.html">Tomcat Installation</a>
+ will show you how to setup and verify a Tomcat installation.</p>
+
+<p><a name="TomcatDetailedInstructions-Addopenejb.wartoTomcat"></a></p>
+
+<h2>Add openejb.war to Tomcat</h2>
+
+<p>The OpenEJB plugin for Tomcat is distributed as a standalone war file
+containing all of the necessary files and an installer Servlet.  The war
+can be obtained from the <a href="openejb:download.html">OpenEJB download page</a>
+.  Once downloaded, simply copy the file into the Tomcat webapps directory. 
+<div class="deck">:id=Copy openejb.war}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>copy openejb.war apache-tomcat-6.0.14\webapps\openejb.war
+    1 file(s) copied.</p>
+
+<p>C:>dir apache-tomcat-6.0.14\webapps
+ Volume in drive C has no label.
+ Volume Serial Number is 0000-0000</p>
+
+<p>Directory of C:\apache-tomcat-6.0.14\webapps</p>
+
+<p>09/20/2007  03:03 PM    <DIR>          .
+09/20/2007  03:03 PM    <DIR>          ..
+09/20/2007  03:02 PM    <DIR>          docs
+09/20/2007  03:01 PM    <DIR>          examples
+09/20/2007  03:01 PM    <DIR>          host-manager
+09/20/2007  03:03 PM    <DIR>          manager
+09/19/2007  09:31 AM        13,394,733 openejb.war
+09/20/2007  03:01 PM    <DIR>          ROOT
+           1 File(s)     13,394,733 bytes
+           7 Dir(s)   5,100,126,208 bytes free</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ cp openejb.war apache-tomcat-6.0.14/webapps/openejb.war
+
+$ ls apache-tomcat-6.0.14/webapps/
+ROOT/         docs/     examples/     host-manager/ manager/     
+</code></pre>
+
+<p>openejb.war
+<div class="deck">}</p>
+
+<p><a name="TomcatDetailedInstructions-RunInstallerServlet"></a></p>
+
+<h2>Run Installer Servlet</h2>
+
+<p>The OpenEJB Plugin for Tomcat contains an installer servlet which adds the
+OpenEJB listener and JavaAgent to the Tomcat installation.  To run the
+installer, you must first start Tomcat.
+<div class="deck">:id=Start Tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>set JRE_HOME=C:\Program Files\Java\jre1.5.0_06</p>
+
+<p>C:>cd apache-tomcat-6.0.14\bin</p>
+
+<p>C:\apache-tomcat-6.0.14\bin>startup.bat
+Using CATALINA_BASE:   C:\apache-tomcat-6.0.14
+Using CATALINA_HOME:   C:\apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: C:\apache-tomcat-6.0.14\temp
+Using JRE_HOME:        C:\your\java\installation</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ cd apache-tomcat-6.0.14/bin
+
+apache-tomcat-6.0.14/bin$ chmod u+x *.sh
+
+apache-tomcat-6.0.14/bin$ ./startup.sh 
+Using CATALINA_BASE:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_HOME:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: /your/tomcat/installation/apache-tomcat-6.0.14/temp
+Using JRE_HOME:        /your/java/installation
+</code></pre>
+
+<p><div class="deck">}</p>
+
+<p><em>NOTE:</em> Your output will be different from the example above due to
+differences in installation locations.</p>
+
+<p>It is a good idea to wait a 5-60 seconds (depending on the speed of your
+computer) for Tomcat to fully start.  Once Tomcat is fully started, simply
+visit <a href="http://localhost:8080/openejb/installer">http://localhost:8080/openejb/installer</a>
+ and click the 'install' button to run the installer.  The installer should
+report that the installation was successful. If it didn't work click [OPENEJB:here|#problems]
+.
+<div class="warning">}
+The installer servlet adds the OpenEJB JavaAgent declaration to the
+catalina.sh and catalina.bat files.  If you are using an IDE or some other
+mechanism to start Tomcat, you will need to <a href="manual-installation#javaagent.html">manually</a>
+ add the JavaAgent declaration to the Java VM options of the launcher you
+are using. <div class="warning">}</p>
+
+<p><a name="TomcatDetailedInstructions-RestartTomcat"></a></p>
+
+<h2>Restart Tomcat</h2>
+
+<p>OpenEJB uses OpenJPA for persistence and OpenJPA currently requires a
+JavaAgent to function.  Unfortunately, there is no way to install a
+JavaAgent at runtime, so you will have to restart Tomcat to enable the
+JavaAgent.  Simply execute the shutdown command, wait 5-60 seconds
+(depending on the speed of your computer) for Tomcat to fully stop, and run
+the startup command to restart Tomcat.
+<div class="deck">:id=Start Tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>cd apache-tomcat-6.0.14\bin</p>
+
+<p>C:\apache-tomcat-6.0.14\bin>shutdown.bat
+Using CATALINA_BASE:   C:\apache-tomcat-6.0.14
+Using CATALINA_HOME:   C:\apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: C:\apache-tomcat-6.0.14\temp
+Using JRE_HOME:        C:\your\java\installation</p>
+
+<p>C:\apache-tomcat-6.0.14\bin>startup.bat
+Using CATALINA_BASE:   C:\apache-tomcat-6.0.14
+Using CATALINA_HOME:   C:\apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: C:\apache-tomcat-6.0.14\temp
+Using JRE_HOME:        C:\your\java\installation</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ cd apache-tomcat-6.0.14/bin
+
+apache-tomcat-6.0.14/bin$ ./shutdown.sh 
+Using CATALINA_BASE:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_HOME:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: /your/tomcat/installation/apache-tomcat-6.0.14/temp
+Using JRE_HOME:        /your/java/installation
+
+apache-tomcat-6.0.14/bin$ ./startup.sh 
+Using CATALINA_BASE:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_HOME:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: /your/tomcat/installation/apache-tomcat-6.0.14/temp
+Using JRE_HOME:        /your/java/installation
+</code></pre>
+
+<p><div class="deck">}</p>
+
+<p><em>NOTE:</em> Your output will be different from the example above due to
+differences in installation locations.</p>
+
+<p>Once Tomcat is fully started, simply visit <a href="http://localhost:8080/openejb/installer">http://localhost:8080/openejb/installer</a>
+ to verify the installation is complete.</p>
+
+<p><a name="TomcatDetailedInstructions-Examples,TutorialsandTests"></a></p>
+
+<h1>Examples, Tutorials and Tests</h1>
+
+<p><a name="TomcatDetailedInstructions-ejb-examples.war"></a></p>
+
+<h2>ejb-examples.war</h2>
+
+<p>Download the <a href="http://people.apache.org/~dain/openejb-temp/examples">ejb-examples.war</a>
+, copy it into the Tomcat webapps directory, and visit [http://localhost:8080/ejb-examples]
+.</p>
+
+<p><a name="TomcatDetailedInstructions-OpenEJBiTests"></a></p>
+
+<h2>OpenEJB iTests</h2>
+
+<p>OpenEJB uses a large test suite to verify the final server assembly, and
+you can use this to verify your OpenEJB installation.  Simply download the <a href="http://people.apache.org/~dain/openejb-temp/itests">openejb-itests.war and openejb-standalone-client.jar</a>
+ and copy it the war into the Tomcat webapps directory.  It will take a bit
+to load the application because it contains a huge number of EJBs. 
+Finally, run the test client executable jar.
+<div class="deck">:id=Start Tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>java -jar openejb-itests-standalone-client.jar tomcat</p>
+
+<hr />
+
+<table>
+<tr><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td><td>_</td></tr>
+</table>
+
+<p>Running EJB compliance tests on HTTP/Tomcat Server</p>
+
+<hr />
+
+<p>WARNING: No test suite configuration file specified, assuming system
+properties contain all 
+needed information.  To specify a test suite configuration file by setting
+its location using
+the system property "openejb.testsuite.properties" 
+test server = org.apache.openejb.test.TomcatRemoteTestServer
+entry = java.naming.provider.url:http://127.0.0.1:8080/openejb/ejb
+entry =
+java.naming.factory.initial:org.apache.openejb.client.RemoteInitialContextFactory
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+.........................................
+............................
+Time: 20.644</p>
+
+<p>OK (889 tests)</p>
+
+<hr />
+
+<p>CLIENT JNDI PROPERTIES
+java.naming.provider.url = http://127.0.0.1:8080/openejb/ejb
+java.naming.factory.initial =
+org.apache.openejb.client.RemoteInitialContextFactory</p>
+
+<hr />
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ java -jar openejb-itests-standalone-client.jar tomcat
+_________________________________________________
+|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|
+
+Running EJB compliance tests on HTTP/Tomcat Server
+_________________________________________________
+WARNING: No test suite configuration file specified, assuming system
+</code></pre>
+
+<p>properties contain all
+    needed information.  To specify a test suite configuration file by setting
+its location using
+    the system property "openejb.testsuite.properties"
+    test server = org.apache.openejb.test.TomcatRemoteTestServer
+    entry = java.naming.provider.url:http://127.0.0.1:8080/openejb/ejb
+    entry =
+java.naming.factory.initial:org.apache.openejb.client.RemoteInitialContextFactory
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    .........................................
+    ............................
+    Time: 12.186</p>
+
+<pre><code>OK (889 tests)
+
+
+_________________________________________________
+CLIENT JNDI PROPERTIES
+java.naming.provider.url = http://127.0.0.1:8080/openejb/ejb
+java.naming.factory.initial =
+</code></pre>
+
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+    <strong><em><em></em><strong></em>_____________________________________</strong></strong>
+<div class="deck">}
+<div class="tip">:title=Failures}The tests should completely pass the first time they
+are run.  If you execute the test client a second time, 21 tests fail for
+some unknown reason.{tip}</p>
+
+<p><a name="TomcatDetailedInstructions-{anchor:problems}Problems?"></a></p>
+
+<h1>{anchor:problems} Problems?</h1>
+
+<p><a name="TomcatDetailedInstructions-HTTPStatus403"></a></p>
+
+<h2>HTTP Status 403</h2>
+
+<p>Did you get a "HTTP Status 403" error page containing the description
+"Access to the specified resource () has been forbidden." when visiting <a href="http://localhost:8080/openejb">http://localhost:8080/openejb</a>
+?</p>
+
+<p>The openejb.war is protected by a Tomcat valve that restricts access to the
+application to the computer on which Tomcat is running.  If your browser is
+running on the same computer as Tomcat, try accessing OpenEJB using this
+link instead <a href="http://127.0.0.1:8080/openejb">http://127.0.0.1:8080/openejb</a>
+.</p>
+
+<p>If you want to access the openejb.war from another computer, you will need
+to either remove the valve, or modify the IP list in the valve declaration.
+ The easiest way to remove the valve it to simply delete the
+webapps/openejb/META-INF/context.xml file and and the webapps/openejb.war
+file <em>while Tomcat is stopped</em>.  The openejb.war file must be removed
+because some versions of Tomcat will use the context.xml file packed in the
+openejb.war file regardless of what is in the unpacked directory.</p>
+
+<p><a name="TomcatDetailedInstructions-OtherIssues"></a></p>
+
+<h2>Other Issues</h2>
+
+<p>If you are having problems with the installation, please send a message to
+the OpenEJB users <a href="openejb:mailing-lists.html">mailing list</a>
+ containing any error message(s) and the following information:</p>
+
+<ul>
+<li>OpenEJB Version</li>
+<li>Tomcat Version</li>
+<li>Java Version (execute java -version)</li>
+<li>Operating System Type and Version</li>
+</ul>
+
+<p><a name="TomcatDetailedInstructions-Limitations"></a></p>
+
+<h1>Limitations</h1>
+
+<p><em>Tomcat 6.x</em> - Currently, only Tomcat 6.x is supported due to API
+difference between 5.5.x and 6.x.  It is expected that 5.5 will be
+supported in the future, but there are no plans to support 5.0.x due to the
+lack of annotation support in 5.0.x.</p>
+
+<p><em>Security</em> - Unfortunately, at this time security with Tomcat/OpenEJB is
+not integrated, but is being worked on.</p>
+
+<p><em>EAR Files</em> - The integration only supports war (and collapsed-ear) files.
+ EAR, EJB Jar, and RAR files will be supported in a future release.</p>
+
+<p><em>JavaAgent</em> - OpenEJB uses OpenJPA to provide JPA and CMP persistence, and
+OpenJPA currently requires a JavaAgent to function properly.  This
+requirement is something that the OpenJPA project is working on removing. 
+Once removed, the OpenEJB plugin for Tomcat will no longer need to modify
+the startup shell scripts and you will not need to restart Tomcat after the
+OpenEJB installation.</p>
+
+<p><a name="TomcatDetailedInstructions-Misc"></a></p>
+
+<h1>Misc</h1>
+
+<p>This document is a starting point for using OpenEJB in Tomcat and will
+evolve based on user contributions. If you wish to contribute to this
+document, feel very welcome to click the 'Edit' link in the upper right and
+make changes and add new HOWTO's and other docs.  </p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

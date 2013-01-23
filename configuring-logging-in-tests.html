@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Configuring Logging in Tests</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Configuring Logging in Tests",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Configuring Logging in Tests
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="ConfiguringLogginginTests-embedded.logging.properties"></a></p>
+
+<h1>embedded.logging.properties</h1>
+
+<p>When in embedded mode OpenEJB uses an embedded.logging.properties file
+packed in our openejb-core jar which use to configure the logging.  This
+logging configuration is a bit lighter than the conf/logging.properties
+file created in a full standalone OpenEJB setup.</p>
+
+<p>When searching for any config file in the classpath, multiple files with
+the same name may exist.  OpenEJB will always attempt to favor the one
+closest to the openejb.base variable.  This variable is set by default to
+the current directory where your vm is executing, which is more than likely
+the directory of your current module.  So simply adding a file named
+embedded.logging.properties to your module may be all that you need to
+specify a new logging configuration for your tests.</p>
+
+<p>Alternatively, you can set "openejb.logger.external" to "true" as a system
+property (will not work as an InitialContext property).  Then OpenEJB will
+not attempt to configure logging at all and you can configure logging with
+Log4j directly using any of its APIs; xml, properties, or code.</p>
+
+<p>There are a couple good reasons for <em>not</em> replacing the
+embedded.logging.properties file.</p>
+
+<ol>
+<li>If you want to just change 5% of the logging settings, why take control
+over the other 95% as well.</li>
+<li>We do occasionally add new logging categories.  If you are not replacing
+the embedded.logging.properties you will pick these up automatically when
+you upgrade.</li>
+</ol>
+
+<p><a name="ConfiguringLogginginTests-Overriding(recommended)"></a></p>
+
+<h1>Overriding (recommended)</h1>
+
+<p>As mentioned in <a href="embedded-configuration.html">Embedded Configuration</a>
+ much can be done with simple overriding.  The default
+embedded.logging.properties is quite good and there is really no need to
+replace it completely if all you want to do is tweak a few values. </p>
+
+<p>You can also put logging tweaks right in your InitialContext properties
+like so:</p>
+
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+
+p.put("log4j.rootLogger", "fatal,C");
+p.put("log4j.category.OpenEJB", "warn");
+p.put("log4j.category.OpenEJB.options", "info");
+p.put("log4j.category.OpenEJB.server", "info");
+p.put("log4j.category.OpenEJB.startup", "info");
+p.put("log4j.category.OpenEJB.startup.service", "warn");
+p.put("log4j.category.OpenEJB.startup.config", "info");
+p.put("log4j.category.OpenEJB.hsql", "info");
+p.put("log4j.category.CORBA-Adapter", "info");
+p.put("log4j.category.Transaction", "warn");
+p.put("log4j.category.org.apache.activemq", "error");
+p.put("log4j.category.org.apache.geronimo", "error");
+p.put("log4j.category.openjpa", "error");
+p.put("log4j.appender.C", "org.apache.log4j.ConsoleAppender");
+p.put("log4j.appender.C.layout", "org.apache.log4j.SimpleLayout");
+
+Context context = new InitialContext(p);
+</code></pre>
+
+<p>Essentially, everything starting with "log4j." gets applied as overrides on
+top of the embedded.logging.properties we find in the classpath.  This
+makes it possible to easily tweak the log levels while debugging a
+particular test.</p>
+
+<p>Note, that InitialContext properties can also be supplied in a
+jndi.properties file in the classpath or via system properties. The
+overriding order is as follows: 1 = highest, 4 = lowest.</p>
+
+<ol>
+<li>InitialContext properties</li>
+<li>jndi.properties in classpath</li>
+<li>system propertes</li>
+<li>embedded.logging.properties in classpath</li>
+</ol>
+
+<p>By default there are no logging settings in 1-3, so #4 is the only source
+of logging information.</p>
+
+<p><a name="ConfiguringLogginginTests-Defaultembedded.logging.propertiescontents"></a></p>
+
+<h1>Default embedded.logging.properties contents</h1>
+
+<p>For your purposes, here are the contents of the default
+embedded.logging.properties file contained in OpenEJB 3.1.1</p>
+
+<pre><code>log4j.rootLogger           = fatal,C
+log4j.category.OpenEJB         = warn
+log4j.category.OpenEJB.server      = info
+log4j.category.OpenEJB.startup     = info
+log4j.category.OpenEJB.startup.service = warn
+log4j.category.OpenEJB.startup.config = info
+log4j.category.OpenEJB.hsql    = info
+log4j.category.CORBA-Adapter       = info
+log4j.category.Transaction     = warn
+log4j.category.org.apache.activemq = error
+log4j.category.org.apache.geronimo = error
+log4j.category.openjpa         = error
+
+log4j.appender.C           = org.apache.log4j.ConsoleAppender
+log4j.appender.C.layout        = org.apache.log4j.SimpleLayout
+</code></pre>
+
+<p>Here is that file's location in svn as well as all of the previous
+versions.  Future versions will follow the same pattern.</p>
+
+<ul>
+<li><a href="http://svn.apache.org/repos/asf/openejb/tags/openejb-3.1.1/container/openejb-core/src/main/resources/embedded.logging.properties">http://svn.apache.org/repos/asf/openejb/tags/openejb-3.1.1/container/openejb-core/src/main/resources/embedded.logging.properties</a></li>
+<li><a href="http://svn.apache.org/repos/asf/openejb/tags/openejb-3.1/container/openejb-core/src/main/resources/embedded.logging.properties">http://svn.apache.org/repos/asf/openejb/tags/openejb-3.1/container/openejb-core/src/main/resources/embedded.logging.properties</a></li>
+<li><a href="http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0/container/openejb-core/src/main/resources/embedded.logging.properties">http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0/container/openejb-core/src/main/resources/embedded.logging.properties</a></li>
+<li><a href="http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0-beta-2/container/openejb-core/src/main/resources/embedded.logging.properties">http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0-beta-2/container/openejb-core/src/main/resources/embedded.logging.properties</a></li>
+<li><a href="http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0-beta-1/container/openejb-core/src/main/resources/embedded.logging.properties">http://svn.apache.org/repos/asf/openejb/tags/openejb-3.0-beta-1/container/openejb-core/src/main/resources/embedded.logging.properties</a></li>
+</ul>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

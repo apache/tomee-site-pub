@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Simple Stateless Example</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Simple Stateless Example",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Simple Stateless Example
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><a name="SimpleStatelessExample-Overview"></a></p>
+
+<h1>Overview</h1>
+
+<p><object width="400" height="250"><param name="movie"
+value="http://www.youtube.com/v/aLx2jta96xU?fs=1&amp;hl=en_US"></param><param
+name="allowFullScreen" value="true"></param><param name="allowscriptaccess"
+value="always"></param><embed
+src="http://www.youtube.com/v/aLx2jta96xU?fs=1&amp;hl=en_US"
+type="application/x-shockwave-flash" allowscriptaccess="always"
+allowfullscreen="true" width="400" height="250"></embed></object></p>
+
+<p>This example shows how to create a Stateless session EJB using annotations.
+ As stated in the "JSR 220: Enterprise JavaBeansTM,Version 3.0 - EJB Core
+Contracts and Requirements",</p>
+
+<p>"Stateless session beans are session beans whose instances have no
+conversational state. This means that all bean instances are equivalent
+when they are not involved in servicing a client-invoked method. The term
+'stateless' signifies that an instance has no state for a specific client."</p>
+
+<p>What this means is quite simply that stateless beans are <em>shared</em>.  They do
+in fact have state as you can assign values to the variables, etc. in the
+bean instance.  The only catch is there are a <em>pool</em> of identical instances
+and you are not guaranteed to get the exact same instance on every call. 
+For each call, you get whatever instance happens to be available.  This is
+identical to checking out a book from the library or renting a movie from
+the video store.  You are essentially checking out or renting a new bean
+instance on each method call.</p>
+
+<p>With EJB 3.0, it's now possible to write stateless session bean without
+specifying a deployment descriptor; you basically have to write just a
+remote or local business interface, which is a plain-old-java-interface,
+annotated with the @Remote or @Local annotation the stateless session bean
+implementation, a plain-old-java-object which implements the remote or the
+local business interface and is annotated with the @Stateless annotation</p>
+
+<p><a name="SimpleStatelessExample-TheCode"></a></p>
+
+<h1>The Code</h1>
+
+<p>In this example we develop a simple EJB 3 Stateless session EJB.  Every
+stateless session bean implementation must be annotated using the
+annotation <em>@Stateless</em> or marked that way in the ejb-jar.xml file.</p>
+
+<p>Our Stateless bean has 2 business interfaces: CalculatorRemote, a remote
+business interface, and CalculatorLocal, a local business interface.  A
+minimum of one business interface is required.</p>
+
+<p><a name="SimpleStatelessExample-Bean"></a></p>
+
+<h2>Bean</h2>
+
+<p>In EJB 3.0 session beans do not need to implement the javax.ejb.SessionBean
+interface.  You can simply annotate it as @Stateless if you want it to be a
+stateless session bean.</p>
+
+<p>Users of EJB 2.x may notice the bean actually implements the business
+interfaces! In the prior version of EJB implementing the remote interface
+(which derives from javax.ejb.EJBObject) in your bean was just not allowed.
+Now there is no javax.ejb.EJBObject requirement, so implementing the
+business interfaces is standard practice for EJB 3.0.</p>
+
+<p><a name="SimpleStatelessExample-Localbusinessinterface"></a></p>
+
+<h2>Local business interface</h2>
+
+<p>Local interfaces in EJB are <em>pass-by-reference</em> interfaces.  Meaning that
+<em>normal java semantics</em> are used for passing arguments, return values and
+exceptions.  A business local interface can be any plain java interface. 
+There are no restrictions on the method arguments, return types, or throws
+clauses.  </p>
+
+<p>Unless specified otherwise, every interface your bean implements (and it's
+parent class implements and so on) is considered to be a local business
+interface.  You can use the <em>@Local</em> annotation to explicitly state that an
+interface is a local interface, but this is not required.</p>
+
+<p>You'll notice that in EJB 3.0 the Local Business Interface of a stateless
+session bean does not need to extend from javax.ejb.EJBLocalObject and does
+not need a javax.ejb.EJBLocalHome interface as they did in EJB 2.x and
+prior.  Per the vocabulary of the EJB spec, interfaces that implement
+javax.ejb.EJBLocalObject or javax.ejb.EJBLocalHome are considered Component
+Interfaces and the plain java interface above is considered a Business
+Interface.</p>
+
+<p><a name="SimpleStatelessExample-Remotebusinessinterface"></a></p>
+
+<h2>Remote business interface</h2>
+
+<p>Remote interfaces are <em>pass-by-value</em> interfaces.  Meaning that all method
+parameters, return values, and exceptions are <em>serialized</em> on every call. 
+The result is that you get a copy of the original object and not the
+original object.  The advantage is of course that Remote interfaces can be
+used to invoke an EJB across a network in a client-server fashion.  There
+are no restrictions on the Remote interface itself, but there are on the
+data passed in and out of the remote interface.  The <em>values</em> passed into a
+method or returned from a method of a Remote interface <em>must be
+serializable</em>.  It is fine for the method signature to be, for example,
+"public Object myMethod(Object myParam)" as long as the <em>value</em> passed in
+and returned implements <em>java.io.Serializable</em>.</p>
+
+<p>As stated above, the Remote Business Interface of a bean can be any plain
+old interface.  It does not need to extend javax.ejb.EJBObject, it does not
+need a javax.ejb.EJBHome, the methods do not need to throw
+javax.rmi.RemoteException, and the bean class <em>can</em> implement it!</p>
+
+<p>At minimum the interface must be annotated with <em>@Remote</em> either in the
+interface itself or in the bean class, or the interface must be declared
+via <business-remote> in the ejb-jar.xml.</p>
+
+<p><a name="SimpleStatelessExample-Writingaunittestfortheexample"></a></p>
+
+<h1>Writing a unit test for the example</h1>
+
+<p>Writing an unit test for the stateless session EJb is quite simple. We need
+just to write a setup method to create and initialize the InitialContext,
+and then write our test methods</p>
+
+<p><a name="SimpleStatelessExample-setUp"></a></p>
+
+<h2>setUp</h2>
+
+<p><a name="SimpleStatelessExample-Testthelocalbusinessinterface"></a></p>
+
+<h2>Test the local business interface</h2>
+
+<p><a name="SimpleStatelessExample-Testtheremotebusinessinterface"></a></p>
+
+<h2>Test the remote business interface</h2>
+
+<p>Note that JNDI names for Java SE clients are not standardized by the EJB
+spec.  This is unfortunate and something being addressed in EJB 3.1.  The
+default schema that OpenEJB uses is ejbName + interfaceType (i.e. Local,
+Remote, LocalHome, RemoteHome), so in our example "CalculatorImpl" +
+"Local" and "CalculatorImpl" + "Remote".  You can in fact change this
+default to be absolutely <a href="jndi-names.html">anything you want</a>
+ including interface class name, ejb class name, and more.</p>
+
+<h2>CalculatorBean</h2>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class CalculatorBean {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        return a / b;
+    }
+
+    public int remainder(int a, int b) {
+        return a % b;
+    }
+}
+</code></pre>
+
+<h2>CalculatorTest</h2>
+
+<p>Our <code>CalculatorBean</code> can be easily tested using the <code>EJBContainer</code> API in EJB 3.1</p>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import junit.framework.TestCase;
+
+import javax.ejb.embeddable.EJBContainer;
+
+public class CalculatorTest extends TestCase {
+
+    private CalculatorBean calculator;
+
+    /**
+     * Bootstrap the Embedded EJB Container
+     *
+     * @throws Exception
+     */
+    protected void setUp() throws Exception {
+
+        EJBContainer ejbContainer = EJBContainer.createEJBContainer();
+
+        Object object = ejbContainer.getContext().lookup("java:global/simple-stateless/CalculatorBean");
+
+        assertTrue(object instanceof CalculatorBean);
+
+        calculator = (CalculatorBean) object;
+    }
+
+    /**
+     * Test Add method
+     */
+    public void testAdd() {
+
+        assertEquals(10, calculator.add(4, 6));
+    }
+
+    /**
+     * Test Subtract method
+     */
+    public void testSubtract() {
+
+        assertEquals(-2, calculator.subtract(4, 6));
+    }
+
+    /**
+     * Test Multiply method
+     */
+    public void testMultiply() {
+
+        assertEquals(24, calculator.multiply(4, 6));
+    }
+
+    /**
+     * Test Divide method
+     */
+    public void testDivide() {
+
+        assertEquals(2, calculator.divide(12, 6));
+    }
+
+    /**
+     * Test Remainder method
+     */
+    public void testRemainder() {
+
+        assertEquals(4, calculator.remainder(46, 6));
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<p>Running the example should generate output similar to the following</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.stateless.basic.CalculatorTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/simple-stateless
+INFO - openejb.base = /Users/dblevins/examples/simple-stateless
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/simple-stateless/target/classes
+INFO - Beginning load: /Users/dblevins/examples/simple-stateless/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/simple-stateless
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean CalculatorBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.stateless.basic.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/examples/simple-stateless" loaded.
+INFO - Assembling app: /Users/dblevins/examples/simple-stateless
+INFO - Jndi(name="java:global/simple-stateless/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean")
+INFO - Jndi(name="java:global/simple-stateless/CalculatorBean")
+INFO - Jndi(name="java:global/EjbModule181871104/org.superbiz.stateless.basic.CalculatorTest!org.superbiz.stateless.basic.CalculatorTest")
+INFO - Jndi(name="java:global/EjbModule181871104/org.superbiz.stateless.basic.CalculatorTest")
+INFO - Created Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.stateless.basic.CalculatorTest, ejb-name=org.superbiz.stateless.basic.CalculatorTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.stateless.basic.CalculatorTest, ejb-name=org.superbiz.stateless.basic.CalculatorTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/simple-stateless)
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.068 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Tomcat Installation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./bootstrap.css" rel="stylesheet">
+    <link href="./prettify.css" rel="stylesheet">
+    <link href="./bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Tomcat Installation",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/apple-touch-icon-114x114.png">
+
+    <script src="./javascript/prettify.js" type="text/javascript"></script>
+    <script src="./javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./javascript/common.js"></script>
+    <script src="./javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./downloads.html">Downloads</a></li>
+            <li><a href="./documentation.html">Documentation</a></li>
+            <li><a href="./support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+<small><a href="./index.html">Home</a></small><br>
+<h1>Tomcat Installation
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><div class="composition-setup">}<div class="composition-setup">}</p>
+
+<p><a name="TomcatInstallation-Overview"></a></p>
+
+<h1>Overview</h1>
+
+<p>Tomcat installation is very simple, and can be describes as "Unpack and
+Run".  These instructions were written using Tomcat 6.0.14 but any recent
+6.x version should work.  If you are comfortable with the CLI, these the
+following quick instructions will get you going ASAP; otherwise skip to the <a href="#download.html">OPENEJB:Download Tomcat</a>
+ section.</p>
+
+<ol>
+<li>Download Tomcat zip or tar.gz</li>
+<li>Unpack archive</li>
+<li>Platform specific setup
+<em>* [OPENEJB:Unix](openejb:unix.html)
+If zip was unpacked, <em>chmod u+x bin/</em>.sh</em>
+<em>* [OPENEJB:Windows](openejb:windows.html)
+*set JAVA_HOME =C:\your\java\installation</em> </li>
+<li>Run bin/startup.sh or bin/startup.bat</li>
+<li>Visit http://localhost:8080/</li>
+<li>Run bin/shutdown.sh or bin/shutdown.bat</li>
+</ol>
+
+<p><a name="TomcatInstallation-{anchor:download}DownloadTomcat"></a></p>
+
+<h1>{anchor:download} Download Tomcat</h1>
+
+<p>Download Tomcat 6 zip file from <a href="http://tomcat.apache.org/download-60.cgi#6.0.14">here</a>
+.    </p>
+
+<p><a name="TomcatInstallation-UnpackTomcat"></a></p>
+
+<h1>Unpack Tomcat</h1>
+
+<p>Unpack the Tomcat zip file  which will create a new directory containing
+the complete Tomcat installation.
+<div class="deck">:id=unpack tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>jar -xvf apache-tomcat-6.0.14.zip
+  created: apache-tomcat-6.0.14/
+  created: apache-tomcat-6.0.14/bin/
+  created: apache-tomcat-6.0.14/conf/
+...snip...</p>
+
+<p>C:>dir apache-tomcat-6.0.14
+ Volume in drive C has no label.
+ Volume Serial Number is 0000-0000</p>
+
+<p>Directory of C:\apache-tomcat-6.0.14</p>
+
+<p>09/20/2007  09:14 PM    <DIR>          .
+09/20/2007  09:14 PM    <DIR>          ..
+09/20/2007  09:15 PM    <DIR>          bin
+09/20/2007  09:15 PM    <DIR>          conf
+09/20/2007  09:15 PM    <DIR>          lib
+07/20/2007  04:20 AM        11,560 LICENSE
+09/20/2007  09:14 PM    <DIR>          logs
+07/20/2007  04:20 AM           556 NOTICE
+07/20/2007  04:20 AM         6,656 RELEASE-NOTES
+07/20/2007  04:20 AM         5,829 RUNNING.txt
+09/20/2007  09:14 PM    <DIR>          temp
+09/20/2007  09:14 PM    <DIR>          webapps
+09/20/2007  09:14 PM    <DIR>          work
+           4 File(s)     24,601 bytes
+           9 Dir(s)   5,085,085,696 bytes free</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ jar -xvf apache-tomcat-6.0.14.zip 
+  created: apache-tomcat-6.0.14/
+  created: apache-tomcat-6.0.14/bin/
+  created: apache-tomcat-6.0.14/conf/
+...snip...
+
+$ ls apache-tomcat-6.0.14/  
+LICENSE        RELEASE-NOTES  bin/       lib/       temp/     
+</code></pre>
+
+<p>work/
+    NOTICE         RUNNING.txt    conf/      logs/      webapps/
+<div class="deck">}</p>
+
+<h1>[OPENEJB:Windows](openejb:windows.html)</h1>
+
+<p>Set JAVA_HOME environment variable</p>
+
+<p>For Windows users, the Tomcat shell scripts must know the location of the
+Java installation, and this is done with environment variables.  The
+following command will set the JAVA_HOME environment variable:
+<div class="deck">:id=unpack tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>set JAVA_HOME =C:\your\java\installation</p>
+
+<pre><code>{deck}
+</code></pre>
+
+<h1>[OPENEJB:Unix]</h1>
+
+<p>Make shell scripts executable</p>
+
+<pre><code>For Unix users, the shell scripts in the Tomcat installation are not
+</code></pre>
+
+<p>executable by default, so in order to execute them, you must set mark them
+as executable.  If you unpacked the Tomcat tar.gz file, the scripts are
+already executable.  The following command will make all shell scripts
+executable:</p>
+
+<pre><code>{deck:id=unpack tomcat}
+{card:label=Unix}{noformat:nopanel=true}
+apache-tomcat-6.0.14$ chmod u+x bin/*.sh
+</code></pre>
+
+<p><div class="deck">}</p>
+
+<p><a name="TomcatInstallation-StartTomcat"></a></p>
+
+<h1>Start Tomcat</h1>
+
+<p>Execute the following command to start the Tomcat server:
+<div class="deck">:id=Start Tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:>cd apache-tomcat-6.0.14\bin</p>
+
+<p>C:\apache-tomcat-6.0.14\bin>startup.bat
+Using CATALINA_BASE:   C:\apache-tomcat-6.0.14
+Using CATALINA_HOME:   C:\apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: C:\apache-tomcat-6.0.14\temp
+Using JRE_HOME:        C:\your\java\installation</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+$ cd apache-tomcat-6.0.14/bin
+
+apache-tomcat-6.0.14/bin$ ./startup.sh 
+Using CATALINA_BASE:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_HOME:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: /your/tomcat/installation/apache-tomcat-6.0.14/temp
+Using JRE_HOME:        /your/java/installation
+</code></pre>
+
+<p><div class="deck">}</p>
+
+<p><em>NOTE:</em> Your output will be different from the example above due to
+differences in installation location.</p>
+
+<p><a name="TomcatInstallation-VerifyTomcatisRunning"></a></p>
+
+<h1>Verify Tomcat is Running</h1>
+
+<p>Visit <a href="http://localhost:8080/">http://localhost:8080/</a>
+ and you should see the Tomcat welcome page.</p>
+
+<p><a name="TomcatInstallation-StopTomcat"></a></p>
+
+<h1>Stop Tomcat</h1>
+
+<p>Shutdown Tomcat by executing the following command:
+<div class="deck">:id=Start Tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
+C:\apache-tomcat-6.0.14\bin>shutdown.bat
+Using CATALINA_BASE:   C:\apache-tomcat-6.0.14
+Using CATALINA_HOME:   C:\apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: C:\apache-tomcat-6.0.14\temp
+Using JRE_HOME:        C:\your\java\installation</p>
+
+<pre><code>{card:label=Unix}{noformat:nopanel=true}
+apache-tomcat-6.0.14/bin$ ./shutdown.sh 
+Using CATALINA_BASE:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_HOME:   /your/tomcat/installation/apache-tomcat-6.0.14
+Using CATALINA_TMPDIR: /your/tomcat/installation/apache-tomcat-6.0.14/temp
+Using JRE_HOME:        /your/java/installation
+</code></pre>
+
+<p><div class="deck">}</p>
+
+<p><em>NOTE:</em> Your output will be different from the example above due to
+differences in installation locations.</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
