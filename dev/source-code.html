@@ -146,41 +146,33 @@
 </h1>
 </div>
 
-<p><a name="SourceCode-Browsing"></a></p>
-
-<h1>Browsing</h1>
-
-<p>You can browse the source code via the <a href="http://svn.apache.org/viewvc/openejb/trunk/">web interface</a>
+<p>You can browse the source code via the <a href="http://svn.apache.org/viewvc/tomee/tomee/trunk/">web interface</a>
 .</p>
 
-<p><a name="SourceCode-Downloading"></a></p>
-
-<h1>Downloading</h1>
-
-<p>You can download (aka checkout) the sources of Apache OpenEJB with
-Subversion client using the following URL <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb">http://svn.apache.org/repos/asf/openejb/trunk/openejb</a>
+<p>You can download (aka checkout) the sources of Apache TomEE with
+Subversion client using the following URL <a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk">http://svn.apache.org/repos/asf/tomee/tomee/trunk</a>
 .</p>
 
 <p>Performing the checkout from the command line using the subversion client
 is as easy as executing the following command:</p>
 
 <blockquote>
-  <p>$ svn co <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb">http://svn.apache.org/repos/asf/openejb/trunk/openejb</a></p>
+  <p>$ svn co <a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk">http://svn.apache.org/repos/asf/tomee/tomee/trunk</a></p>
 </blockquote>
 
 <p>If you are experiencing problems with errors like "400 Bad Request
 (http://svn.apache.org)", try using:</p>
 
 <blockquote>
-  <p>$ svn co <a href="https://svn.apache.org/repos/asf/openejb/trunk/openejb">https://svn.apache.org/repos/asf/openejb/trunk/openejb</a></p>
+  <p>$ svn co <a href="https://svn.apache.org/repos/asf/tomee/tomee/trunk">https://svn.apache.org/repos/asf/tomee/tomee/trunk</a></p>
 </blockquote>
 
 <p>or alternatively with Apache Maven 2 or later:</p>
 
 <blockquote>
   <p>mvn scm:checkout
-  -DconnectionUrl=scm:svn:http://svn.apache.org/repos/asf/openejb/trunk/openejb
-  -DcheckoutDirectory=openejb</p>
+  -DconnectionUrl=scm:svn:http://svn.apache.org/repos/asf/tomee/tomee/trunk
+  -DcheckoutDirectory=tomee</p>
 </blockquote>
 
 <p>It's not yet known how to see the progress of the checkout as mvn
@@ -191,15 +183,13 @@ about the command, though, as it doesn't require the subversion client.</p>
 
 <h1>Continuous integration</h1>
 
-<p>Apache OpenEJB continuous integration relies on <a href="http://ci.apache.org/">Apache Buildbot</a>
-.
-All builders are available <a href="http://ci.apache.org/builders">from the page</a>
-.</p>
+<p>Apache TomEE continuous integration relies on <a href="http://ci.apache.org/">Apache Buildbot</a>.
+All builders are available <a href="http://ci.apache.org/builders">from the page</a>.</p>
 
 <ul>
-<li><a href="http://ci.apache.org/builders/openejb-trunk-ubuntu">Apache OpenEJB under Ubuntu</a></li>
-<li><a href="http://ci.apache.org/builders/openejb-trunk-win-sunjdk">Apache OpenEJB under Windows using a Sun/Oracle JDK</a></li>
-<li><a href="http://ci.apache.org/builders/openejb-trunk-win-ibmjdk6">Apache OpenEJB under Windows using an IBM JDK</a></li>
+<li><a href="http://ci.apache.org/builders/tomee-trunk-ubuntu">Apache TomEE under Ubuntu</a></li>
+<li><a href="http://ci.apache.org/builders/tomee-trunk-win-sunjdk">Apache TomEE under Windows using a Sun/Oracle JDK</a></li>
+<li><a href="http://ci.apache.org/builders/tomee-trunk-win-ibmjdk6">Apache TomEE under Windows using an IBM JDK</a></li>
 </ul>
 
 <p><a name="SourceCode-Building"></a></p>
@@ -207,436 +197,42 @@ All builders are available <a href="http://ci.apache.org/builders">from the page
 <h1>Building</h1>
 
 <p>To build the code, you'll need to grab a copy of <a href="http://maven.apache.org">Apache Maven</a>
- version 2.0.4 or later.  The standard build command is as follows:</p>
+ version 3.0 or later.  The standard build command is as follows:</p>
 
-<pre><code>
-$ cd openejb3
-$ mvn -Dassemble clean install
-or alternatively when on Unix-like OSes
-$ cd openejb3
-$ mvn \-o \-Dmaven.\{test,itest\}.skip \-Dassemble clean install
+<pre><code>$ cd tomee
+$ mvn clean install -DskipTests -DfailIfNoTests=false
 </code></pre>
 
-<p>Running with the <em>assemble</em> option turned on enables a profile that builds
-OpenEJB's assemblies (distros). They live in <em>assembly</em> directory. You can
-remove it from the command line if you're not interested in them - just
-remove -Dassemble from the command line and you're ready to go.</p>
+<p>Alternatively, if you've made changes to the code and want to verify them, you can run with tests on:</p>
 
-<p><em>NOTE:</em> When importing a project into an IDE (Eclipse, NetBeans, IDEA) you
-should run with the assemble profile on. It's because the assembly modules
-are only included in the M2 run when the property is set.
-<div class="info">:title=Solution for a possible OutOfMemoryError}
-It's likely you run into the infamous OutOfMemoryError and the solution is
-to increase the available memory for Apache Maven. Depending on the system
-you're working on, the fix can be as easy as <em>export MAVEN</em>OPTS=-Xmx512m_
-on MacOS and Unices or <em>set MAVEN</em>OPTS=-Xmx512m_ on MS Windows.<div class="info">}</p>
+<pre><code>$ cd tomee
+$ mvn clean install
+</code></pre>
 
 <p>The output of that command should end with "BUILD SUCCESSFUL"</p>
 
-<pre><code>
-    [INFO]
- ------------------------------------------------------------------------
-    [INFO]
- Reactor Summary:
-    [INFO]
- ------------------------------------------------------------------------
-    [INFO]
- OpenEJB ............................................... SUCCESS [3.722s]
-    [INFO]
- OpenEJB :: Dependencies ............................... SUCCESS [0.086s]
-    [INFO]
- OpenEJB :: Dependencies :: JavaEE API ................. SUCCESS [8.045s]
-    [INFO]
- OpenEJB :: iTests ..................................... SUCCESS [0.125s]
-    [INFO]
- OpenEJB :: iTests Beans ............................... SUCCESS [9.072s]
-    [INFO]
- OpenEJB :: iTests Servlets ............................ SUCCESS [3.372s]
-    [INFO]
- OpenEJB :: iTests Client .............................. SUCCESS [8.105s]
-    [INFO]
- OpenEJB :: iTests Interceptor Beans ................... SUCCESS [0.578s]
-    [INFO]
- OpenEJB :: iTests App ................................. SUCCESS [4.260s]
-    [INFO]
- OpenEJB :: iTests Web ................................. SUCCESS [1.110s]
-    [INFO]
- OpenEJB :: Container .................................. SUCCESS [0.050s]
-    [INFO]
- OpenEJB :: Container :: API ........................... SUCCESS [0.316s]
-    [INFO]
- OpenEJB :: Container :: Loader ........................ SUCCESS [1.050s]
-    [INFO]
- OpenEJB :: Container :: Java Agent .................... SUCCESS [0.600s]
-    [INFO]
- OpenEJB :: Container :: Java EE ....................... SUCCESS [11.098s]
-    [INFO]
- OpenEJB :: Container :: Core .......................... SUCCESS [18.659s]
-    [INFO]
- OpenEJB :: Container :: Spring ........................ SUCCESS [1.565s]
-    [INFO]
- OpenEJB :: Container :: Core :: OSGi .................. SUCCESS [1.285s]
-    [INFO]
- OpenEJB :: Container :: Core :: OSGi .................. SUCCESS [1.594s]
-    [INFO]
- OpenEJB :: Container :: ActiveMQ4 ..................... SUCCESS [1.169s]
-    [INFO]
- OpenEJB :: Container :: JUnit ......................... SUCCESS [1.321s]
-    [INFO]
- OpenEJB :: Server ..................................... SUCCESS [0.085s]
-    [INFO]
- OpenEJB :: Server :: Client ........................... SUCCESS [1.882s]
-    [INFO]
- OpenEJB :: Server :: Core ............................. SUCCESS [1.311s]
-    [INFO]
- OpenEJB :: Server :: Multicast Discovery .............. SUCCESS [0.835s]
-    [INFO]
- OpenEJB :: Server :: EJBd ............................. SUCCESS [1.102s]
-    [INFO]
- OpenEJB :: Server :: Admin ............................ SUCCESS [0.702s]
-    [INFO]
- OpenEJB :: Server :: Http ............................. SUCCESS [1.228s]
-    [INFO]
- OpenEJB :: Server :: WebAdmin ......................... SUCCESS [1.398s]
-    [INFO]
- OpenEJB :: Server :: Telnet ........................... SUCCESS [0.839s]
-    [INFO]
- OpenEJB :: Server :: ActiveMQ ......................... SUCCESS [0.475s]
-    [INFO]
- OpenEJB :: Server :: CORBA ............................ SUCCESS [0.478s]
-    [INFO]
- OpenEJB :: Server :: Derby Network Service ............ SUCCESS [0.643s]
-    [INFO]
- OpenEJB :: Server :: Hsql ............................. SUCCESS [0.700s]
-    [INFO]
- OpenEJB :: Server :: Webservices ...................... SUCCESS [1.289s]
-    [INFO]
- OpenEJB :: Server :: Axis ............................. SUCCESS [1.588s]
-    [INFO]
- OpenEJB :: Server :: Axis2 ............................ SUCCESS [9.477s]
-    [INFO]
- OpenEJB :: Server :: CXF .............................. SUCCESS [2.384s]
-    [INFO]
- OpenEJB :: Examples :: @ApplicationException inheritance  SUCCESS [0.535s]
-    [INFO]
- OpenEJB :: Examples :: Simple Stateful Pojo ........... SUCCESS [0.312s]
-    [INFO]
- OpenEJB :: Examples :: Simple Stateless Pojo .......... SUCCESS [0.163s]
-    [INFO]
- OpenEJB :: Examples :: Simple Stateless With Deployment Descriptor 
-SUCCESS [0.123s]
-    [INFO]
- OpenEJB :: Examples :: Simple Singleton ............... SUCCESS [0.177s]
-    [INFO]
- OpenEJB :: Examples :: Simple MDB Example ............. SUCCESS [0.145s]
-    [INFO]
- OpenEJB :: Examples :: Simple MDB Using Deployment Descriptor Example 
-SUCCESS [0.133s]
-    [INFO]
- OpenEJB :: Examples :: Simple CMP2 Entity ............. SUCCESS [0.201s]
-    [INFO]
- OpenEJB :: Examples :: Simple Webservice .............. SUCCESS [0.523s]
-    [INFO]
- OpenEJB :: Examples :: EJB 2.1 Component Interfaces ... SUCCESS [0.162s]
-    [INFO]
- OpenEJB :: Examples :: @EJB Injection ................. SUCCESS [0.152s]
-    [INFO]
- OpenEJB :: Examples :: @Resource env-entry Injection .. SUCCESS [0.414s]
-    [INFO]
- OpenEJB :: Examples :: @Resource DataSource Injection . SUCCESS [0.211s]
-    [INFO]
- OpenEJB :: Examples :: @PersistenceContext EntityManager Injection 
-SUCCESS [0.271s]
-    [INFO]
- OpenEJB :: Examples :: @Resource javax.jms.ConnectionFactory  SUCCESS [0.142s]
-    [INFO]
- OpenEJB :: Examples :: Testing Transactions ........... SUCCESS [0.168s]
-    [INFO]
- OpenEJB :: Examples :: Testing Security ............... SUCCESS [0.159s]
-    [INFO]
- OpenEJB :: Examples :: Testing Security ............... SUCCESS [0.129s]
-    [INFO]
- OpenEJB :: Examples :: TestCase Injection ............. SUCCESS [0.148s]
-    [INFO]
- OpenEJB :: Examples :: Alternate Descriptors .......... SUCCESS [0.168s]
-    [INFO]
- OpenEJB :: Examples :: Ear Testing .................... SUCCESS [0.820s]
-    [INFO]
- OpenEJB :: Examples :: Ear Testing :: Business Model .. SUCCESS [0.170s]
-    [INFO]
- OpenEJB :: Examples :: Ear Testing :: Business Logic .. SUCCESS [0.168s]
-    [INFO]
- OpenEJB :: Examples :: Interceptors ................... SUCCESS [0.193s]
-    [INFO]
- OpenEJB :: Examples :: Expanded support for Env Entries  SUCCESS [0.207s]
-    [INFO]
- OpenEJB :: Examples :: Hello World - Weblogic ......... SUCCESS [0.115s]
-    [INFO]
- OpenEJB :: Examples :: JPA with Hibernate ............. SUCCESS [0.248s]
-    [INFO]
- OpenEJB :: Examples :: JPA with EclipseLink ........... SUCCESS [0.327s]
-    [INFO]
- OpenEJB :: Examples :: Spring Integration ............. SUCCESS [0.309s]
-    [INFO]
- OpenEJB :: Examples :: Telephone Stateful Pojo ........ SUCCESS [0.324s]
-    [INFO]
- Quartz App ............................................ SUCCESS [0.019s]
-    [INFO]
- Quartz Resource Adapter ............................... SUCCESS [0.117s]
-    [INFO]
- Quartz Beans .......................................... SUCCESS [0.246s]
-    [INFO]
- OpenEJB :: Examples :: Webservice Attachments ......... SUCCESS [0.168s]
-    [INFO]
- OpenEJB :: Web Examples :: EJB Examples War ........... SUCCESS [5.999s]
-    [INFO]
- OpenEJB :: Web Examples :: EJB WebService ............. SUCCESS [0.293s]
-    [INFO]
- OpenEJB :: Examples ................................... SUCCESS [0.086s]
-    [INFO]
- OpenEJB :: Web Examples ............................... SUCCESS [0.117s]
-    [INFO]
- OpenEJB :: Web Examples :: JSF with MyFaces ........... SUCCESS [3.766s]
-    [INFO]
- OpenEJB :: Web Examples :: Struts ..................... SUCCESS [3.711s]
-    [INFO]
- OpenEJB :: Web Examples :: EJB WebService ............. SUCCESS [0.462s]
-    [INFO]
- OpenEJB :: Web Examples :: EJB WebService with Security  SUCCESS [0.328s]
-    [INFO]
- OpenEJB :: Web Examples :: EJB WebService with WS-Security  SUCCESS [8.771s]
-    [INFO]
- OpenEJB :: Examples :: Webservice Inheritance ......... SUCCESS [0.251s]
-    [INFO]
- OpenEJB :: Examples :: Transaction Rollback ........... SUCCESS [0.184s]
-    [INFO]
- OpenEJB :: Examples :: Troubleshooting ................ SUCCESS [0.298s]
-    [INFO]
- OpenEJB :: Assembly ................................... SUCCESS [0.050s]
-    [INFO]
- OpenEJB :: Assembly :: WebApp :: Common ............... SUCCESS [0.892s]
-    [INFO]
- OpenEJB :: Assembly :: iTests Standalone Client ....... SUCCESS [33.361s]
-    [INFO]
- OpenEJB :: Assembly :: Standalone ..................... SUCCESS [1:15.053s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat ......................... SUCCESS [0.082s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat :: Loader ............... SUCCESS [0.375s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat :: Common ............... SUCCESS [2.010s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat :: Catalina ............. SUCCESS [8.560s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat :: Webapp ............... SUCCESS [15.255s]
-    [INFO]
- OpenEJB :: Assembly :: Tomcat :: Bundle ............... SUCCESS [44.881s]
-    [INFO]
- OpenEJB :: Assembly :: Jetty .......................... SUCCESS [0.267s]
-    [INFO]
- OpenEJB :: Assembly :: Jetty :: Loader ................ SUCCESS [0.221s]
-    [INFO]
- OpenEJB :: Assembly :: Jetty :: Common ................ SUCCESS [0.455s]
-    [INFO]
- OpenEJB :: Assembly :: Jetty :: Webapp ................ SUCCESS [8.406s]
-    [INFO]
- OpenEJB :: Assembly :: Webapp ......................... SUCCESS [7.104s]
-    [INFO]
- OpenEJB :: Assembly :: Java EE API Libraries .......... SUCCESS [1.787s]
-    [INFO]
- ------------------------------------------------------------------------
-    [INFO]
- ------------------------------------------------------------------------
-    [INFO]
- BUILD SUCCESSFUL
-    [INFO]
- ------------------------------------------------------------------------
-    [INFO]
- Total time: 5 minutes 40 seconds
-    [INFO]
- Finished at: Sat Jun 19 20:49:51 CEST 2010
-    [INFO]
- Final Memory: 153M/338M
-    [INFO]
- ------------------------------------------------------------------------
+<h2>Memory Settings</h2>
+
+<p>It's likely you run into the infamous <code>OutOfMemoryError</code> and the solution is
+to increase the available memory for Apache Maven. Depending on the system
+you're working on, the fix can be as easy as <code>_export MAVEN_OPTS=-Xmx512m</code>
+on MacOS and Unices or <code>set MAVEN_OPTS=-Xmx512m</code> on MS Windows.</p>
+
+<h2>Binary locations</h2>
+
+<p>Once built, the TomEE binaries will be located at:</p>
+
+<pre><code>$ ls tomee/apache-tomee/target/*.zip
+tomee/apache-tomee/target/apache-tomee-jaxrs-1.5.2-SNAPSHOT.zip
+tomee/apache-tomee/target/apache-tomee-plus-1.5.2-SNAPSHOT.zip
+tomee/apache-tomee/target/apache-tomee-webprofile-1.5.2-SNAPSHOT.zip
 </code></pre>
 
-<p><a name="SourceCode-Running"></a></p>
+<p>The OpenEJB standalone binaries will be located at:</p>
 
-<h1>Running</h1>
-
-<p>Provided you have successfully built OpenEJB with the assemble option
-turned on, you can find assemblies in the <em>target</em> directories beneath the
-<em>assembly</em> directory of each custom assembly. Go to the assembly directory
-and have a look at its content.</p>
-
-<pre><code>
-    jacek@devmac /Users/jacek/oss/openejb3/assembly
-    $ ls -l
-    total 8
-    drwxr-xr-x   6 jacek  staff   204 Jun 19 20:49 javaee-api-libs
-    drwxr-xr-x   6 jacek  staff   204 Jun 19 20:46
-openejb-itests-standalone-client
-    drwxr-xr-x   8 jacek  staff   272 Jun 19 20:49 openejb-jetty
-    drwxr-xr-x   9 jacek  staff   306 Jun 19 20:47 openejb-standalone
-    drwxr-xr-x  12 jacek  staff   408 Jun 19 20:48 openejb-tomcat
-    drwxr-xr-x   6 jacek  staff   204 Jun 19 20:49 openejb-webapp
-    drwxr-xr-x   6 jacek  staff   204 Jun 19 20:46 openejb-webapp-common
-    -rw-r--r--   1 jacek  staff  1726 Jun  1 22:51 pom.xml
-    drwxr-xr-x   4 jacek  staff   136 Jun 19 20:46 target
-    drwxr-xr-x   4 jacek  staff   136 Jun  1 22:51 test
+<pre><code>$ ls assembly/openejb-standalone/target/*.zip
+assembly/openejb-standalone/target/apache-openejb-4.5.2-SNAPSHOT.zip
 </code></pre>
-
-<p>The most common choice is to go to openejb-standalone which is exactly what
-the name stands for - it lets you get OpenEJB up and running from a command
-line with no additional configuration - in other words you can play with
-your EJBs right away. Looking at the <em>openejb-standalone/target</em> directory
-reveals the tar.gz'ed and zip'ed distributions. Unpack one and give it a
-go.</p>
-
-<pre><code>
-    jacek@devmac /Users/jacek/oss/openejb3/assembly/openejb-standalone/target
-    $ jar -xvf openejb-3.2-SNAPSHOT.zip
-     created: openejb-3.2-SNAPSHOT/
-     ...
-
-    jacek@devmac /Users/jacek/oss/openejb3/assembly/openejb-standalone/target
-    $ cd openejb-3.2-SNAPSHOT
-
-    jacek@devmac
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    $ chmod +x ./bin/openejb
-
-    jacek@devmac
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    $ ./bin/openejb start
-    ERROR - Logging may not operate as expected.  The directories for the
-following files do not exist so no file can be created.  See the list
-below.
-    ERROR - [0]
-
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT/conf/logs/transaction.log
-    ERROR - [1]
-
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT/conf/logs/openejb.log
-    Apache OpenEJB 3.2-SNAPSHOT    build: 20100619-08:45
-    http://openejb.apache.org/
-    log4j:WARN No appenders could be found for logger
-(org.apache.openejb.resource.activemq.ActiveMQResourceAdapter).
-    log4j:WARN Please initialize the log4j system properly.
-    [init]
- OpenEJB Remote Server
-    Jun 19, 2010 9:00:58 PM org.apache.cxf.bus.spring.BusApplicationContext
-getConfigResources
-    INFO: No cxf.xml configuration file detected, relying on defaults.
-      ** Starting Services **
-      NAME             IP          PORT  
-      httpejbd         127.0.0.1       4204  
-      admin thread         127.0.0.1       4200  
-      ejbd             127.0.0.1       4201  
-      ejbd             127.0.0.1       4203  
-      hsql             127.0.0.1       9001  
-      telnet           127.0.0.1       4202  
-    -------
-    Ready!
-</code></pre>
-
-<p>There's another, slightly less error-prone approach using a shell script -
-<em>try.sh</em> - that's tailor-made for that particular task - running OpenEJB 3
-right after it's been built locally. No need to remember these
-aforementioned steps but the mere name of the script itself</p>
-
-<pre><code>
-    jacek@devmac /Users/jacek/oss/openejb3/assembly/openejb-standalone
-    $ ./try.sh
-    x openejb-3.2-SNAPSHOT/lib/xmlsec-1.4.3.jar
-    ...
-    ERROR - Logging may not operate as expected.  The directories for the
-following files do not exist so no file can be created.  See the list
-below.
-    ERROR - [0]
-
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT/conf/logs/transaction.log
-    ERROR - [1]
-
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT/conf/logs/openejb.log
-    Apache OpenEJB 3.2-SNAPSHOT    build: 20100619-08:45
-    http://openejb.apache.org/
-    2010-06-19 21:09:35,780 - INFO  - openejb.home =
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    2010-06-19 21:09:35,782 - INFO  - openejb.base =
-/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    ...
-    2010-06-19 21:09:53,376 - INFO  - [Server@230cc23b]
-: [Thread[main,5,main]
-]: checkRunning(false) entered
-    2010-06-19 21:09:53,376 - INFO  - [Server@230cc23b]
-: [Thread[main,5,main]
-]: checkRunning(false) exited
-      ** Starting Services **
-      NAME             IP          PORT  
-      httpejbd         127.0.0.1       4204  
-      admin thread         127.0.0.1       4200  
-      ejbd             127.0.0.1       4201  
-      ejbd             127.0.0.1       4203  
-    2010-06-19 21:09:54,475 - INFO  - [Server@230cc23b]
-: Initiating startup sequence...
-    2010-06-19 21:09:54,479 - INFO  - [Server@230cc23b]
-: Server socket opened successfully in 1 ms.
-    2010-06-19 21:09:54,651 - INFO  - [Server@230cc23b]
-: Database [index=0, id=0, db=file:/Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT/data/hsqldb/hsqldb, alias=hsqldb]
- opened sucessfully in 171 ms.
-    2010-06-19 21:09:54,651 - INFO  - [Server@230cc23b]
-: Startup sequence completed in 175 ms.
-    2010-06-19 21:09:54,656 - INFO  - [Server@230cc23b]
-: 2010-06-19 21:09:54.656 HSQLDB server 1.8.0 is online
-    2010-06-19 21:09:54,656 - INFO  - [Server@230cc23b]
-: To close normally, connect and execute SHUTDOWN SQL
-    2010-06-19 21:09:54,656 - INFO  - [Server@230cc23b]
-: From command line, use [Ctrl]
-+[C] to abort abruptly
-      hsql             127.0.0.1       9001  
-      telnet           127.0.0.1       4202  
-    -------
-    Ready!
-
-</code></pre>
-
-<p>The old 2 finger salute - Ctrl-C - stops the OpenEJB instance.</p>
-
-<p><a name="SourceCode-Debugging"></a></p>
-
-<h1>Debugging</h1>
-
-<p>Once you have built the source, you may debug it by starting OpenEJB with
-debug options. There are essentially two modes of operation.</p>
-
-<p>Debug without suspending, so that the server can fully start up, and be
-debugged at any point you wish. If you are in the directory where you
-extracted the assembly to, just issue the following command...</p>
-
-<pre><code>
-    jacek@devmac
-Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    $ OPENEJB_OPTS="-Xdebug
--Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8001"
-./bin/openejb start
-</code></pre>
-
-<p>Debug and suspend until a debugger has been attached. This is helpful if
-the code that is to be debugged happens to be some of the startup code. The
-following command would achieve this mode...</p>
-
-<pre><code>
-    jacek@devmac
-Users/jacek/oss/openejb3/assembly/openejb-standalone/target/openejb-3.2-SNAPSHOT
-    $ OPENEJB_OPTS="-Xdebug
--Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8001"
-./bin/openejb start
-</code></pre>
-
-<p>Once either mode is started, just attach your favourite development IDE or
-debugger, and away you go.</p>
 
 
 
