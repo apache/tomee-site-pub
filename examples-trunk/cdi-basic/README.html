@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>CDI @Inject</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=CDI @Inject",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/cdi-basic/">Cdi Basic</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>CDI @Inject
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>To use <code>@Inject</code>, the first thing you need is a <code>META-INF/beans.xml</code> file in the module
+or jar.  This effectively turns on CDI and allows the <code>@Inject</code> references to work.
+No <code>META-INF/beans.xml</code> no injection, period.  This may seem overly strict,
+but it is not without reason.  The CDI API is a bit greedy and does consume a fair
+about of resources by design.</p>
+
+<p>When the container constructs a bean with an <code>@Inject</code> reference,
+it will first find or create the object that will be injected.  For the sake of
+simplicity, the is example has a basic <code>Faculty</code> pojo with a no-arg constructor.  Anyone
+referencing <code>@Inject Faculty</code> will get their own instance of <code>Faculty</code>.  If the desire
+is to share the same instance of <code>Faculty</code>, see the concept of <code>scopes</code> -- this is
+exactly what scopes are for.</p>
+
+<h1>Example</h1>
+
+<p>In this example we have an <code>@Stateless</code> bean <code>Course</code> with an <code>@Inject</code> reference to an
+object of type <code>Faculty</code>.  When <code>Course</code> is created, the container will also create an
+instance of <code>Faculty</code>.  The <code>@PostConstruct</code> will be called on the <code>Faculty</code>,
+then the <code>Faculty</code> instance will be injected into the <code>Course</code> bean.  Finally, the
+<code>@PostConstruct</code> will be invoked on <code>Course</code> and then we're done.  All instances will
+have been created.</p>
+
+<p>The <code>CourseTest</code> test case drives this creation process by having <code>Course</code> injected
+into it in its <code>@Setup</code> method.  By the time our <code>@Test</code> method is invoked,
+all the real work should be done and we should be ready to go.  In the test case we do
+some basic asserts to ensure everything was constructed, all <code>@PostConstruct</code> methods
+called and everyting injected.</p>
+
+<h2>Faculty <small>a basic injectable pojo</small></h2>
+
+<pre><code>public class Faculty {
+
+    private List&lt;String&gt; facultyMembers;
+
+    private String facultyName;
+
+    @PostConstruct
+    public void initialize() {
+        this.facultyMembers = new ArrayList&lt;String&gt;();
+        facultyMembers.add("Ian Schultz");
+        facultyMembers.add("Diane Reyes");
+        facultyName = "Computer Science";
+    }
+
+    public List&lt;String&gt; getFacultyMembers() {
+        return facultyMembers;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
+    }
+
+}
+</code></pre>
+
+<h2>Course <small>a simple session bean</small></h2>
+
+<pre><code>@Stateless
+public class Course {
+
+    @Inject
+    private Faculty faculty;
+
+    private String courseName;
+
+    private int capacity;
+
+    @PostConstruct
+    private void init() {
+        assert faculty != null;
+
+        // These strings can be externalized
+        // We'll see how to do that later
+        this.courseName = "CDI 101 - Introduction to CDI";
+        this.capacity = 100;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+}
+</code></pre>
+
+<h1>Test Case</h1>
+
+<pre><code>public class CourseTest extends TestCase {
+
+    @EJB
+    private Course course;
+
+    @Before
+    public void setUp() throws Exception {
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
+    }
+
+    @Test
+    public void test() {
+
+        // Was the EJB injected?
+        assertTrue(course != null);
+
+        // Was the Course @PostConstruct called?
+        assertNotNull(course.getCourseName());
+        assertTrue(course.getCapacity() &gt; 0);
+
+        // Was a Faculty instance injected into Course?
+        final Faculty faculty = course.getFaculty();
+        assertTrue(faculty != null);
+
+        // Was the @PostConstruct called on Faculty?
+        assertEquals(faculty.getFacultyName(), "Computer Science");
+        assertEquals(faculty.getFacultyMembers().size(), 2);
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cdi.basic.CourseTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/cdi-basic
+INFO - openejb.base = /Users/dblevins/examples/cdi-basic
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/cdi-basic/target/classes
+INFO - Beginning load: /Users/dblevins/examples/cdi-basic/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/cdi-basic
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean cdi-basic.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean Course: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Enterprise application "/Users/dblevins/examples/cdi-basic" loaded.
+INFO - Assembling app: /Users/dblevins/examples/cdi-basic
+INFO - Jndi(name="java:global/cdi-basic/cdi-basic.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/cdi-basic/cdi-basic.Comp")
+INFO - Jndi(name="java:global/cdi-basic/Course!org.superbiz.cdi.basic.Course")
+INFO - Jndi(name="java:global/cdi-basic/Course")
+INFO - Jndi(name="java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest!org.superbiz.cdi.basic.CourseTest")
+INFO - Jndi(name="java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest")
+INFO - Created Ejb(deployment-id=Course, ejb-name=Course, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=cdi-basic.Comp, ejb-name=cdi-basic.Comp, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=org.superbiz.cdi.basic.CourseTest, ejb-name=org.superbiz.cdi.basic.CourseTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Course, ejb-name=Course, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=cdi-basic.Comp, ejb-name=cdi-basic.Comp, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=org.superbiz.cdi.basic.CourseTest, ejb-name=org.superbiz.cdi.basic.CourseTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/cdi-basic)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.126 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/PostConstruct.html">javax.annotation.PostConstruct</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJB.html">javax.ejb.EJB</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html">javax.inject.Inject</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-basic">cdi-basic</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/cdi-basic">cdi-basic</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-basic
+cd cdi-basic
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

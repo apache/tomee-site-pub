@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Simple Webservice Without Interface</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Simple Webservice Without Interface",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/simple-webservice-without-interface/">Simple Webservice Without Interface</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Simple Webservice Without Interface
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>Calculator</h2>
+
+<pre><code>package org.superbiz.calculator;
+
+import javax.ejb.Stateless;
+import javax.jws.WebService;
+
+@Stateless
+@WebService(
+        portName = "CalculatorPort",
+        serviceName = "CalculatorWsService",
+        targetNamespace = "http://superbiz.org/wsdl")
+public class Calculator {
+    public int sum(int add1, int add2) {
+        return add1 + add2;
+    }
+
+    public int multiply(int mul1, int mul2) {
+        return mul1 * mul2;
+    }
+}
+</code></pre>
+
+<h2>ejb-jar.xml</h2>
+
+<pre><code>&lt;ejb-jar/&gt;
+</code></pre>
+
+<h2>CalculatorTest</h2>
+
+<pre><code>package org.superbiz.calculator;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.NamingException;
+import java.net.URL;
+import java.util.Properties;
+
+import static org.junit.Assert.assertTrue;
+
+public class CalculatorTest {
+    private static EJBContainer container;
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        final Properties properties = new Properties();
+        properties.setProperty("openejb.embedded.remotable", "true");
+
+        container = EJBContainer.createEJBContainer(properties);
+    }
+
+    @Before
+    public void inject() throws NamingException {
+        if (container != null) {
+            container.getContext().bind("inject", this);
+        }
+    }
+
+    @AfterClass
+    public static void close() {
+        if (container != null) {
+            container.close();
+        }
+    }
+
+    @Test
+    public void wsdlExists() throws Exception {
+        final URL url = new URL("http://127.0.0.1:4204/Calculator?wsdl");
+        assertTrue(IOUtils.readLines(url.openStream()).size() &gt; 0);
+        assertTrue(IOUtils.readLines(url.openStream()).toString().contains("CalculatorWsService"));
+    }
+}
+</code></pre>
+
+<h2>ejb-jar.xml</h2>
+
+<pre><code>&lt;ejb-jar/&gt;
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/jws/WebService.html">javax.jws.WebService</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/simple-webservice-without-interface">simple-webservice-without-interface</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/simple-webservice-without-interface">simple-webservice-without-interface</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/simple-webservice-without-interface
+cd simple-webservice-without-interface
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

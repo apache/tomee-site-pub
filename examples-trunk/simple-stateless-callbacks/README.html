@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Simple Stateless with callback methods</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Simple Stateless with callback methods",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/simple-stateless-callbacks/">Simple Stateless Callbacks</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Simple Stateless with callback methods
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>This example shows how to create a stateless session bean that uses the @PostConstruct, @PreDestroy and @AroundInvoke annotations.</p>
+
+<h2>CalculatorBean</h2>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+@Stateless
+public class CalculatorBean {
+
+    @PostConstruct
+    public void postConstruct() {
+        ExecutionChannel.getInstance().notifyObservers("postConstruct");
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        ExecutionChannel.getInstance().notifyObservers("preDestroy");
+    }
+
+    @AroundInvoke
+    public Object intercept(InvocationContext ctx) throws Exception {
+        ExecutionChannel.getInstance().notifyObservers(ctx.getMethod().getName());
+        return ctx.proceed();
+    }
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        return a / b;
+    }
+
+    public int remainder(int a, int b) {
+        return a % b;
+    }
+
+}
+</code></pre>
+
+<h2>ExecutionChannel</h2>
+
+<pre><code>package org.superbiz.counter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExecutionChannel {
+    private static final ExecutionChannel INSTANCE = new ExecutionChannel();
+
+    private final List&lt;ExecutionObserver&gt; observers = new ArrayList&lt;ExecutionObserver&gt;();
+
+    public static ExecutionChannel getInstance() {
+        return INSTANCE;
+    }
+
+    public void addObserver(ExecutionObserver observer) {
+        this.observers.add(observer);
+    }
+
+    public void notifyObservers(Object value) {
+        for (ExecutionObserver observer : this.observers) {
+            observer.onExecution(value);
+        }
+    }
+}
+</code></pre>
+
+<h2>ExecutionObserver</h2>
+
+<pre><code>package org.superbiz.counter;
+
+public interface ExecutionObserver {
+
+    void onExecution(Object value);
+
+}
+</code></pre>
+
+<h2>CalculatorTest</h2>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+public class CalculatorTest implements ExecutionObserver {
+    private static final String JNDI = "java:global/simple-stateless-callbacks/CalculatorBean";
+
+    private List&lt;Object&gt; received = new ArrayList&lt;Object&gt;();
+
+    public Context getContext() throws NamingException {
+        final Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        return new InitialContext(p);
+
+    }
+
+    @Test
+    public void test() throws Exception {
+        ExecutionChannel.getInstance().addObserver(this);
+
+        final EJBContainer container = EJBContainer.createEJBContainer();
+
+        {
+            final CalculatorBean calculator = (CalculatorBean) getContext().lookup(JNDI);
+
+            Assert.assertEquals(10, calculator.add(4, 6));
+
+            //the bean is constructed only when it is used for the first time
+            Assert.assertEquals("postConstruct", this.received.remove(0));
+            Assert.assertEquals("add", this.received.remove(0));
+
+            Assert.assertEquals(-2, calculator.subtract(4, 6));
+            Assert.assertEquals("subtract", this.received.remove(0));
+
+            Assert.assertEquals(24, calculator.multiply(4, 6));
+            Assert.assertEquals("multiply", this.received.remove(0));
+
+            Assert.assertEquals(2, calculator.divide(12, 6));
+            Assert.assertEquals("divide", this.received.remove(0));
+
+            Assert.assertEquals(4, calculator.remainder(46, 6));
+            Assert.assertEquals("remainder", this.received.remove(0));
+        }
+
+        {
+            final CalculatorBean calculator = (CalculatorBean) getContext().lookup(JNDI);
+
+            Assert.assertEquals(10, calculator.add(4, 6));
+            Assert.assertEquals("add", this.received.remove(0));
+
+        }
+
+        container.close();
+        Assert.assertEquals("preDestroy", this.received.remove(0));
+        Assert.assertTrue(this.received.isEmpty());
+    }
+
+    @Override
+    public void onExecution(Object value) {
+        System.out.println("Test step -&gt; " + value);
+        this.received.add(value);
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.stateless.basic.CalculatorTest
+INFO - ********************************************************************************
+INFO - OpenEJB http://openejb.apache.org/
+INFO - Startup: Sat Jul 21 09:23:38 EDT 2012
+INFO - Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 4.1.0
+INFO - Build date: 20120721
+INFO - Build time: 04:06
+INFO - ********************************************************************************
+INFO - openejb.home = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
+INFO - openejb.base = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
+INFO - Succeeded in installing singleton service
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Beginning load: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks/target/classes
+INFO - Configuring enterprise application: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
+INFO - Auto-deploying ejb CalculatorBean: EjbDeployment(deployment-id=CalculatorBean)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean CalculatorBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Creating Container(id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.stateless.basic.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks" loaded.
+INFO - Assembling app: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
+INFO - Jndi(name="java:global/simple-stateless-callbacks/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean")
+INFO - Jndi(name="java:global/simple-stateless-callbacks/CalculatorBean")
+INFO - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points are validated successfully.
+INFO - OpenWebBeans Container has started, it took 111 ms.
+INFO - Created Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Deployed Application(path=/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks)
+Test step -&gt; postConstruct
+Test step -&gt; add
+Test step -&gt; subtract
+Test step -&gt; multiply
+Test step -&gt; divide
+Test step -&gt; remainder
+Test step -&gt; add
+INFO - Undeploying app: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
+Test step -&gt; preDestroy
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.884 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/PostConstruct.html">javax.annotation.PostConstruct</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/PreDestroy.html">javax.annotation.PreDestroy</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/AroundInvoke.html">javax.interceptor.AroundInvoke</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/InvocationContext.html">javax.interceptor.InvocationContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/InitialContext.html">javax.naming.InitialContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateless-callbacks">simple-stateless-callbacks</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/simple-stateless-callbacks">simple-stateless-callbacks</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateless-callbacks
+cd simple-stateless-callbacks
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>@Asynchronous Methods</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=@Asynchronous Methods",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/async-methods/">Async Methods</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>@Asynchronous Methods
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>The @Asynchronous annotation was introduced in EJB 3.1 as a simple way of creating asynchronous processing.</p>
+
+<p>Every time a method annotated <code>@Asynchronous</code> is invoked by anyone it will immediately return regardless of how long the method actually takes.  Each invocation returns a <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html">Future</a> object that essentially starts out <em>empty</em> and will later have its value filled in by the container when the related method call actually completes.  Returning a <code>Future</code> object is not required and <code>@Asynchronous</code> methods can of course return <code>void</code>.</p>
+
+<h1>Example</h1>
+
+<p>Here, in <code>JobProcessorTest</code>,</p>
+
+<p><code>final Future&lt;String&gt; red = processor.addJob("red");</code>
+proceeds to the next statement,</p>
+
+<p><code>final Future&lt;String&gt; orange = processor.addJob("orange");</code></p>
+
+<p>without waiting for the addJob() method to complete. And later we could ask for the result using the <code>Future&lt;?&gt;.get()</code> method like</p>
+
+<p><code>assertEquals("blue", blue.get());</code></p>
+
+<p>It waits for the processing to complete (if its not completed already) and gets the result. If you did not care about the result, you could simply have your asynchronous method as a void method.</p>
+
+<p><a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html">Future</a> Object from docs,</p>
+
+<blockquote>
+  <p>A Future represents the result of an asynchronous computation. Methods are provided to check if the computation is complete, to wait for its completion, and to retrieve the result of the computation. The result can only be retrieved using method get when the computation has completed, blocking if necessary until it is ready. Cancellation is performed by the cancel method. Additional methods are provided to determine if the task completed normally or was cancelled. Once a computation has completed, the computation cannot be cancelled. If you would like to use a Future for the sake of cancellability but not provide a usable result, you can declare types of the form Future<?> and return null as a result of the underlying task</p>
+</blockquote>
+
+<h1>The code</h1>
+
+<pre><code>@Singleton
+public class JobProcessor {
+@Asynchronous
+@Lock(READ)
+@AccessTimeout(-1)
+public Future&lt;String&gt; addJob(String jobName) {
+
+    // Pretend this job takes a while
+    doSomeHeavyLifting();
+
+    // Return our result
+    return new AsyncResult&lt;String&gt;(jobName);
+}
+
+private void doSomeHeavyLifting() {
+    try {
+        Thread.sleep(SECONDS.toMillis(10));
+    } catch (InterruptedException e) {
+        Thread.interrupted();
+        throw new IllegalStateException(e);
+    }
+  }
+}
+</code></pre>
+
+<h1>Test</h1>
+
+<pre><code>public class JobProcessorTest extends TestCase {
+
+public void test() throws Exception {
+
+    final Context context = EJBContainer.createEJBContainer().getContext();
+
+    final JobProcessor processor = (JobProcessor) context.lookup("java:global/async-methods/JobProcessor");
+
+    final long start = System.nanoTime();
+
+    // Queue up a bunch of work
+    final Future&lt;String&gt; red = processor.addJob("red");
+    final Future&lt;String&gt; orange = processor.addJob("orange");
+    final Future&lt;String&gt; yellow = processor.addJob("yellow");
+    final Future&lt;String&gt; green = processor.addJob("green");
+    final Future&lt;String&gt; blue = processor.addJob("blue");
+    final Future&lt;String&gt; violet = processor.addJob("violet");
+
+    // Wait for the result -- 1 minute worth of work
+    assertEquals("blue", blue.get());
+    assertEquals("orange", orange.get());
+    assertEquals("green", green.get());
+    assertEquals("red", red.get());
+    assertEquals("yellow", yellow.get());
+    assertEquals("violet", violet.get());
+
+    // How long did it take?
+    final long total = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start);
+
+    // Execution should be around 9 - 21 seconds
+    assertTrue("" + total, total &gt; 9);
+    assertTrue("" + total, total &lt; 21);
+
+  }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.async.JobProcessorTest
+Apache OpenEJB 4.0.0-SNAPSHOT    build: 20110801-04:02
+http://openejb.apache.org/
+INFO - openejb.home = G:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - openejb.base = G:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: g:\Workspace\fullproject\openejb3\examples\async-methods\target\classes
+INFO - Beginning load: g:\Workspace\fullproject\openejb3\examples\async-methods\target\classes
+INFO - Configuring enterprise application: g:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean JobProcessor: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.async.JobProcessorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "g:\Workspace\fullproject\openejb3\examples\async-methods" loaded.
+INFO - Assembling app: g:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Jndi(name="java:global/async-methods/JobProcessor!org.superbiz.async.JobProcessor")
+INFO - Jndi(name="java:global/async-methods/JobProcessor")
+INFO - Jndi(name="java:global/EjbModule100568296/org.superbiz.async.JobProcessorTest!org.superbiz.async.JobProcessorTest")
+INFO - Jndi(name="java:global/EjbModule100568296/org.superbiz.async.JobProcessorTest")
+INFO - Created Ejb(deployment-id=org.superbiz.async.JobProcessorTest, ejb-name=org.superbiz.async.JobProcessorTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=org.superbiz.async.JobProcessorTest, ejb-name=org.superbiz.async.JobProcessorTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Deployed Application(path=g:\Workspace\fullproject\openejb3\examples\async-methods)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.305 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 21.097s
+[INFO] Finished at: Wed Aug 03 22:48:26 IST 2011
+[INFO] Final Memory: 13M/145M
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+
+<h1>How it works <small>under the covers</small></h1>
+
+<p>Under the covers what makes this work is:</p>
+
+<ul>
+<li>The <code>JobProcessor</code> the caller sees is not actually an instance of <code>JobProcessor</code>.  Rather it's a subclass or proxy that has all the methods overridden.  Methods that are supposed to be asynchronous are handled differently.</li>
+<li>Calls to an asynchronous method simply result in a <code>Runnable</code> being created that wraps the method and parameters you gave.  This runnable is given to an <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html">Executor</a> which is simply a work queue attached to a thread pool.</li>
+<li>After adding the work to the queue, the proxied version of the method returns an implementation of <code>Future</code> that is linked to the <code>Runnable</code> which is now waiting on the queue.</li>
+<li>When the <code>Runnable</code> finally executes the method on the <em>real</em> <code>JobProcessor</code> instance, it will take the return value and set it into the <code>Future</code> making it available to the caller.</li>
+</ul>
+
+<p>Important to note that the <code>AsyncResult</code> object the <code>JobProcessor</code> returns is not the same <code>Future</code> object the caller is holding.  It would have been neat if the real <code>JobProcessor</code> could just return <code>String</code> and the caller's version of <code>JobProcessor</code> could return <code>Future&lt;String&gt;</code>, but we didn't see any way to do that without adding more complexity.  So the <code>AsyncResult</code> is a simple wrapper object.  The container will pull the <code>String</code> out, throw the <code>AsyncResult</code> away, then put the <code>String</code> in the <em>real</em> <code>Future</code> that the caller is holding.</p>
+
+<p>To get progress along the way, simply pass a thread-safe object like <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html">AtomicInteger</a> to the <code>@Asynchronous</code> method and have the bean code periodically update it with the percent complete.</p>
+
+<h1>Related Examples</h1>
+
+<p>For complex asynchronous processing, JavaEE's answer is <code>@MessageDrivenBean</code>. Have a look at the <a href="../simple-mdb/README.html">simple-mdb</a> example</p>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/AccessTimeout.html">javax.ejb.AccessTimeout</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/AsyncResult.html">javax.ejb.AsyncResult</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Asynchronous.html">javax.ejb.Asynchronous</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Lock.html">javax.ejb.Lock</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/LockType.html#READ">javax.ejb.LockType.READ</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/async-methods">async-methods</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/async-methods">async-methods</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/async-methods
+cd async-methods
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

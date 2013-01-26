@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Simple Stateful</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Simple Stateful",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/simple-stateful/">Simple Stateful</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Simple Stateful
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>This example demonstrates a simple deployment of a Stateful session bean.</p>
+
+<blockquote>
+  <p>"As its name suggests, a stateful session bean is similar to an interactive session. A stateful session bean is not shared; 
+  it can have only one client, in the same way that an interactive session can have only one user. 
+  When the client terminates, its stateful session bean appears to terminate and is no longer associated with the client."</p>
+</blockquote>
+
+<p>The <code>Counter</code> class is a Stateful session bean that maintains a state in a form of a <code>count</code> integer field.
+It exposes three methods: <code>count()</code>, <code>increment()</code> and <code>reset()</code> to manipulate and view its state.</p>
+
+<p>Typically, Stateful and Stateless beans implement Local and/or Remote interfaces to determine which methods should
+be exposed. In this case, the bean is using a no-interface view, which means that all public methods are exposed
+as a local view. </p>
+
+<h2>Counter</h2>
+
+<pre><code>package org.superbiz.counter;
+
+import javax.ejb.Stateful;
+
+/**
+ * This is an EJB 3 style pojo stateful session bean
+ * Every stateful session bean implementation must be annotated
+ * using the annotation @Stateful
+ * This EJB has 2 business interfaces: CounterRemote, a remote business
+ * interface, and CounterLocal, a local business interface
+ * &lt;p/&gt;
+ * Per EJB3 rules when the @Remote or @Local annotation isn't present
+ * in the bean class (this class), all interfaces are considered
+ * local unless explicitly annotated otherwise.  If you look
+ * in the CounterRemote interface, you'll notice it uses the @Remote
+ * annotation while the CounterLocal interface is not annotated relying
+ * on the EJB3 default rules to make it a local interface.
+ */
+//START SNIPPET: code
+@Stateful
+public class Counter {
+
+    private int count = 0;
+
+    public int count() {
+        return count;
+    }
+
+    public int increment() {
+        return ++count;
+    }
+
+    public int reset() {
+        return (count = 0);
+    }
+}
+</code></pre>
+
+<h2>CounterTest</h2>
+
+<p>The <code>Counter</code> class is tested by obtaining a <code>Context</code> object and performing a JNDI lookup on it, to retrieve
+an instance of the <code>Counter</code> bean. After some state manipulation, a new instance is fetched from the container
+and we can see that it's a new instance.</p>
+
+<pre><code>package org.superbiz.counter;
+
+import junit.framework.TestCase;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+
+public class CounterTest extends TestCase {
+
+    //START SNIPPET: local
+    public void test() throws Exception {
+
+        final Context context = EJBContainer.createEJBContainer().getContext();
+
+        Counter counterA = (Counter) context.lookup("java:global/simple-stateful/Counter");
+
+        assertEquals(0, counterA.count());
+        assertEquals(0, counterA.reset());
+        assertEquals(1, counterA.increment());
+        assertEquals(2, counterA.increment());
+        assertEquals(0, counterA.reset());
+
+        counterA.increment();
+        counterA.increment();
+        counterA.increment();
+        counterA.increment();
+
+        assertEquals(4, counterA.count());
+
+        // Get a new counter
+        Counter counterB = (Counter) context.lookup("java:global/simple-stateful/Counter");
+
+        // The new bean instance starts out at 0
+        assertEquals(0, counterB.count());
+    }
+    //END SNIPPET: local
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.counter.CounterTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/simple-stateful
+INFO - openejb.base = /Users/dblevins/examples/simple-stateful
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/simple-stateful/target/classes
+INFO - Beginning load: /Users/dblevins/examples/simple-stateful/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/simple-stateful
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean Counter: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.counter.CounterTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/examples/simple-stateful" loaded.
+INFO - Assembling app: /Users/dblevins/examples/simple-stateful
+INFO - Jndi(name="java:global/simple-stateful/Counter!org.superbiz.counter.Counter")
+INFO - Jndi(name="java:global/simple-stateful/Counter")
+INFO - Jndi(name="java:global/EjbModule309142400/org.superbiz.counter.CounterTest!org.superbiz.counter.CounterTest")
+INFO - Jndi(name="java:global/EjbModule309142400/org.superbiz.counter.CounterTest")
+INFO - Created Ejb(deployment-id=Counter, ejb-name=Counter, container=Default Stateful Container)
+INFO - Created Ejb(deployment-id=org.superbiz.counter.CounterTest, ejb-name=org.superbiz.counter.CounterTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Counter, ejb-name=Counter, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=org.superbiz.counter.CounterTest, ejb-name=org.superbiz.counter.CounterTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/simple-stateful)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.098 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateful.html">javax.ejb.Stateful</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateful">simple-stateful</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/simple-stateful">simple-stateful</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateful
+cd simple-stateful
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

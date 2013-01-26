@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>CDI Produces Disposes</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=CDI Produces Disposes",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/cdi-produces-disposes/">Cdi Produces Disposes</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>CDI Produces Disposes
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>ConsoleHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+public class ConsoleHandler implements LogHandler {
+
+    private String name;
+
+    public ConsoleHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the console!\n", getName());
+    }
+}
+</code></pre>
+
+<h2>DatabaseHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+public class DatabaseHandler implements LogHandler {
+
+    private String name;
+
+    public DatabaseHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the database!\n", getName());
+        // Use connection to write log to database
+    }
+}
+</code></pre>
+
+<h2>FileHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+public class FileHandler implements LogHandler {
+
+    private String name;
+
+    public FileHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the file!\n", getName());
+        // Write to log file
+    }
+}
+</code></pre>
+
+<h2>LogFactory</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+import javax.enterprise.inject.Disposes;
+import javax.enterprise.inject.Produces;
+
+public class LogFactory {
+
+    private int type = 2;
+
+    @Produces
+    public LogHandler getLogHandler() {
+        switch (type) {
+            case 1:
+                return new FileHandler("@Produces created FileHandler!");
+            case 2:
+                return new DatabaseHandler("@Produces created DatabaseHandler!");
+            case 3:
+            default:
+                return new ConsoleHandler("@Produces created ConsoleHandler!");
+        }
+    }
+
+    public void closeLogHandler(@Disposes LogHandler handler) {
+        switch (type) {
+            case 1:
+                System.out.println("Closing File handler!");
+                break;
+            case 2:
+                System.out.println("Closing DB handler!");
+                break;
+            case 3:
+            default:
+                System.out.println("Closing Console handler!");
+        }
+    }
+}
+</code></pre>
+
+<h2>Logger</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+public interface Logger {
+
+    public void log(String s);
+
+    public LogHandler getHandler();
+}
+</code></pre>
+
+<h2>LoggerImpl</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@Named("logger")
+public class LoggerImpl implements Logger {
+
+    @Inject
+    private LogHandler handler;
+
+    @Override
+    public void log(String s) {
+        getHandler().writeLog(s);
+    }
+
+    public LogHandler getHandler() {
+        return handler;
+    }
+}
+</code></pre>
+
+<h2>LogHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+public interface LogHandler {
+
+    public String getName();
+
+    public void writeLog(String s);
+}
+</code></pre>
+
+<h2>beans.xml</h2>
+
+<pre><code>&lt;beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                            http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"&gt;
+
+&lt;/beans&gt;
+</code></pre>
+
+<h2>LoggerTest</h2>
+
+<pre><code>package org.superbiz.cdi.produces.disposes;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.inject.Inject;
+import javax.naming.Context;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class LoggerTest {
+
+    @Inject
+    Logger logger;
+
+    private Context ctxt;
+
+    @Before
+    public void setUp() {
+        try {
+            ctxt = EJBContainer.createEJBContainer().getContext();
+            ctxt.bind("inject", this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @After
+    public void cleanUp() {
+        try {
+            ctxt.unbind("inject");
+            ctxt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testLogHandler() {
+        assertNotNull(logger);
+        assertFalse("Handler should not be a ConsoleHandler", logger.getHandler() instanceof ConsoleHandler);
+        assertFalse("Handler should not be a FileHandler", logger.getHandler() instanceof FileHandler);
+        assertTrue("Handler should be a DatabaseHandler", logger.getHandler() instanceof DatabaseHandler);
+        logger.log("##### Testing write\n");
+        logger = null;
+    }
+
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cdi.produces.disposes.LoggerTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/cdi-produces-disposes
+INFO - openejb.base = /Users/dblevins/examples/cdi-produces-disposes
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/cdi-produces-disposes/target/classes
+INFO - Beginning load: /Users/dblevins/examples/cdi-produces-disposes/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/cdi-produces-disposes
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean cdi-produces-disposes.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/examples/cdi-produces-disposes" loaded.
+INFO - Assembling app: /Users/dblevins/examples/cdi-produces-disposes
+INFO - Jndi(name="java:global/cdi-produces-disposes/cdi-produces-disposes.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/cdi-produces-disposes/cdi-produces-disposes.Comp")
+INFO - Jndi(name="java:global/EjbModule10202458/org.superbiz.cdi.produces.disposes.LoggerTest!org.superbiz.cdi.produces.disposes.LoggerTest")
+INFO - Jndi(name="java:global/EjbModule10202458/org.superbiz.cdi.produces.disposes.LoggerTest")
+INFO - Created Ejb(deployment-id=cdi-produces-disposes.Comp, ejb-name=cdi-produces-disposes.Comp, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=org.superbiz.cdi.produces.disposes.LoggerTest, ejb-name=org.superbiz.cdi.produces.disposes.LoggerTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=cdi-produces-disposes.Comp, ejb-name=cdi-produces-disposes.Comp, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=org.superbiz.cdi.produces.disposes.LoggerTest, ejb-name=org.superbiz.cdi.produces.disposes.LoggerTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/cdi-produces-disposes)
+##### Handler: @Produces created DatabaseHandler!, Writing to the database!
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.02 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/enterprise/inject/Disposes.html">javax.enterprise.inject.Disposes</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/enterprise/inject/Produces.html">javax.enterprise.inject.Produces</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html">javax.inject.Inject</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Named.html">javax.inject.Named</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-produces-disposes">cdi-produces-disposes</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/cdi-produces-disposes">cdi-produces-disposes</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-produces-disposes
+cd cdi-produces-disposes
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

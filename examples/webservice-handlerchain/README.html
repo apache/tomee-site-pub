@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>@WebService handlers with @HandlerChain</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=@WebService handlers with @HandlerChain",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/webservice-handlerchain/">Webservice Handlerchain</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>@WebService handlers with @HandlerChain
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>In this example we see a basic JAX-WS <code>@WebService</code> component use a handler chain to alter incoming and outgoing SOAP messages.  SOAP Handlers are similar to Servlet Filters or EJB/CDI Interceptors.</p>
+
+<p>At high level, the steps involved are:</p>
+
+<ol>
+<li>Create handler(s) implementing <code>javax.xml.ws.handler.soap.SOAPHandler</code></li>
+<li>Declare and order them in an xml file via <code>&lt;handler-chain&gt;</code></li>
+<li>Associate the xml file with an <code>@WebService</code> component via <code>@HandlerChain</code></li>
+</ol>
+
+<h2>The @HandlerChain</h2>
+
+<p>First we'll start with our plain <code>@WebService</code> bean, called <code>Calculator</code>, which is annotated with <code>@HandlerChain</code></p>
+
+<pre><code>@Singleton
+@WebService(
+        portName = "CalculatorPort",
+        serviceName = "CalculatorService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.wsh.CalculatorWs")
+@HandlerChain(file = "handlers.xml")
+public class Calculator implements CalculatorWs {
+
+    public int sum(int add1, int add2) {
+        return add1 + add2;
+    }
+
+    public int multiply(int mul1, int mul2) {
+        return mul1 * mul2;
+    }
+}
+</code></pre>
+
+<p>Here we see <code>@HandlerChain</code> pointing to a file called <code>handlers.xml</code>.  This file could be called anything, but it must be in the same jar and java package as our <code>Calculator</code> component.</p>
+
+<h2>The &lt;handler-chains> file</h2>
+
+<p>Our <code>Calculator</code> service is in the package <code>org.superbiz.calculator.wsh</code>, which means our handler chain xml file must be at <code>org/superbiz/calculator/wsh/handlers.xml</code> in our application's classpath or the file will not be found and no handlers will be used.</p>
+
+<p>In maven we achieve this by putting our handlers.xml in <code>src/main/resources</code> like so:</p>
+
+<ul>
+<li><code>src/main/resources/org/superbiz/calculator/wsh/handlers.xml</code></li>
+</ul>
+
+<p>With this file we declare and <strong>order</strong> our handler chain.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;handler-chains xmlns="http://java.sun.com/xml/ns/javaee"&gt;
+  &lt;handler-chain&gt;
+    &lt;handler&gt;
+      &lt;handler-name&gt;org.superbiz.calculator.wsh.Inflate&lt;/handler-name&gt;
+      &lt;handler-class&gt;org.superbiz.calculator.wsh.Inflate&lt;/handler-class&gt;
+    &lt;/handler&gt;
+    &lt;handler&gt;
+      &lt;handler-name&gt;org.superbiz.calculator.wsh.Increment&lt;/handler-name&gt;
+      &lt;handler-class&gt;org.superbiz.calculator.wsh.Increment&lt;/handler-class&gt;
+    &lt;/handler&gt;
+  &lt;/handler-chain&gt;
+&lt;/handler-chains&gt;
+</code></pre>
+
+<p>The order as you might suspect is:</p>
+
+<ul>
+<li><code>Inflate</code></li>
+<li><code>Increment</code></li>
+</ul>
+
+<h2>The SOAPHandler implementation</h2>
+
+<p>Our <code>Inflate</code> handler has the job of monitoring <em>responses</em> to the <code>sum</code> and <code>multiply</code> operations and making them 1000 times better.  Manipulation of the message is done by walking the <code>SOAPBody</code> and editing the nodes.  The <code>handleMessage</code> method is invoked for both requests and responses, so it is important to check the <code>SOAPBody</code> before attempting to naviage the nodes.</p>
+
+<pre><code>import org.w3c.dom.Node;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.util.Collections;
+import java.util.Set;
+
+public class Inflate implements SOAPHandler&lt;SOAPMessageContext&gt; {
+
+    public boolean handleMessage(SOAPMessageContext mc) {
+        try {
+            final SOAPMessage message = mc.getMessage();
+            final SOAPBody body = message.getSOAPBody();
+            final String localName = body.getFirstChild().getLocalName();
+
+            if ("sumResponse".equals(localName) || "multiplyResponse".equals(localName)) {
+                final Node responseNode = body.getFirstChild();
+                final Node returnNode = responseNode.getFirstChild();
+                final Node intNode = returnNode.getFirstChild();
+
+                final int value = new Integer(intNode.getNodeValue());
+                intNode.setNodeValue(Integer.toString(value * 1000));
+            }
+
+            return true;
+        } catch (SOAPException e) {
+            return false;
+        }
+    }
+
+    public Set&lt;QName&gt; getHeaders() {
+        return Collections.emptySet();
+    }
+
+    public void close(MessageContext mc) {
+    }
+
+    public boolean handleFault(SOAPMessageContext mc) {
+        return true;
+    }
+}
+</code></pre>
+
+<p>The <code>Increment</code> handler is identical in code and therefore not shown.  Instead of multiplying by 1000, it simply adds 1.</p>
+
+<h2>The TestCase</h2>
+
+<p>We use the JAX-WS API to create a Java client for our <code>Calculator</code> web service and use it to invoke both the <code>sum</code> and <code>multiply</code> operations.  Note the clever use of math to assert both the existence and order of our handlers.  If <code>Inflate</code> and <code>Increment</code> were reversed, the responses would be 11000 and 13000 respectively.</p>
+
+<pre><code>public class CalculatorTest {
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty("openejb.embedded.remotable", "true");
+        EJBContainer.createEJBContainer(properties);
+    }
+
+    @Test
+    public void testCalculatorViaWsInterface() throws Exception {
+        final Service calculatorService = Service.create(
+                new URL("http://127.0.0.1:4204/Calculator?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorService"));
+
+        assertNotNull(calculatorService);
+
+        final CalculatorWs calculator = calculatorService.getPort(CalculatorWs.class);
+
+        // we expect our answers to come back 1000 times better, plus one!
+        assertEquals(10001, calculator.sum(4, 6));
+        assertEquals(12001, calculator.multiply(3, 4));
+    }
+}
+</code></pre>
+
+<h2>Running the example</h2>
+
+<p>Simply run <code>mvn clean install</code> and you should see output similar to the following:</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.calculator.wsh.CalculatorTest
+INFO - openejb.home = /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - openejb.base = /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers/target/test-classes
+INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Auto-deploying ejb Calculator: EjbDeployment(deployment-id=Calculator)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean Calculator: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Creating Container(id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.calculator.wsh.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers" loaded.
+INFO - Assembling app: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Created Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Singleton Container)
+INFO - Deployed Application(path=/Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers)
+INFO - Initializing network services
+INFO - Creating ServerService(id=httpejbd)
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+INFO -   ** Starting Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       4204
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from class org.superbiz.calculator.wsh.CalculatorWs
+INFO - Setting the server's publish address to be http://nopath:80
+INFO - Webservice(wsdl=http://127.0.0.1:4204/Calculator, qname={http://superbiz.org/wsdl}CalculatorService) --&gt; Ejb(id=Calculator)
+INFO -   admin thread         127.0.0.1       4200
+INFO -   ejbd                 127.0.0.1       4201
+INFO -   ejbd                 127.0.0.1       4203
+INFO - -------
+INFO - Ready!
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Default SAAJ universe not set
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.783 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+<h2>Inspecting the messages</h2>
+
+<p>The above would generate the following messages.</p>
+
+<h3>Calculator wsdl</h3>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  name="CalculatorService" targetNamespace="http://superbiz.org/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://superbiz.org/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;wsdl:types&gt;
+    &lt;xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                targetNamespace="http://superbiz.org/wsdl" xmlns:tns="http://superbiz.org/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;xsd:element name="multiply" type="tns:multiply"/&gt;
+      &lt;xsd:complexType name="multiply"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="multiplyResponse" type="tns:multiplyResponse"/&gt;
+      &lt;xsd:complexType name="multiplyResponse"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="sum" type="tns:sum"/&gt;
+      &lt;xsd:complexType name="sum"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="sumResponse" type="tns:sumResponse"/&gt;
+      &lt;xsd:complexType name="sumResponse"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+    &lt;/xsd:schema&gt;
+  &lt;/wsdl:types&gt;
+  &lt;wsdl:message name="multiplyResponse"&gt;
+    &lt;wsdl:part element="tns:multiplyResponse" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="sumResponse"&gt;
+    &lt;wsdl:part element="tns:sumResponse" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="sum"&gt;
+    &lt;wsdl:part element="tns:sum" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="multiply"&gt;
+    &lt;wsdl:part element="tns:multiply" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:portType name="CalculatorWs"&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;wsdl:input message="tns:multiply" name="multiply"&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output message="tns:multiplyResponse" name="multiplyResponse"&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;wsdl:input message="tns:sum" name="sum"&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output message="tns:sumResponse" name="sumResponse"&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:portType&gt;
+  &lt;wsdl:binding name="CalculatorServiceSoapBinding" type="tns:CalculatorWs"&gt;
+    &lt;soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="multiply"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name="multiplyResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="sum"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name="sumResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:binding&gt;
+  &lt;wsdl:service name="CalculatorService"&gt;
+    &lt;wsdl:port binding="tns:CalculatorServiceSoapBinding" name="CalculatorPort"&gt;
+      &lt;soap:address location="http://127.0.0.1:4204/Calculator?wsdl"/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;
+</code></pre>
+
+<h3>SOAP sum and sumResponse</h3>
+
+<p>Request:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sum xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;arg0&gt;4&lt;/arg0&gt;
+      &lt;arg1&gt;6&lt;/arg1&gt;
+    &lt;/ns1:sum&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+<p>Response:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;return&gt;10001&lt;/return&gt;
+    &lt;/ns1:sumResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+<h3>SOAP multiply and multiplyResponse</h3>
+
+<p>Request:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiply xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;arg0&gt;3&lt;/arg0&gt;
+      &lt;arg1&gt;4&lt;/arg1&gt;
+    &lt;/ns1:multiply&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+<p>Response:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiplyResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;return&gt;12001&lt;/return&gt;
+    &lt;/ns1:multiplyResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/jws/HandlerChain.html">javax.jws.HandlerChain</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/jws/WebService.html">javax.jws.WebService</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/namespace/QName.html">javax.xml.namespace.QName</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/soap/SOAPBody.html">javax.xml.soap.SOAPBody</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/soap/SOAPException.html">javax.xml.soap.SOAPException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/soap/SOAPMessage.html">javax.xml.soap.SOAPMessage</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/Service.html">javax.xml.ws.Service</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/handler/MessageContext.html">javax.xml.ws.handler.MessageContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/handler/soap/SOAPHandler.html">javax.xml.ws.handler.soap.SOAPHandler</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/handler/soap/SOAPMessageContext.html">javax.xml.ws.handler.soap.SOAPMessageContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/webservice-handlerchain">webservice-handlerchain</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/webservice-handlerchain">webservice-handlerchain</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/webservice-handlerchain
+cd webservice-handlerchain
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Applet</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Applet",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/applet/">Applet</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Applet
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>Calculator</h2>
+
+<pre><code>package org.superbiz.applet;
+
+import javax.ejb.Remote;
+
+@Remote
+public interface Calculator {
+    public double add(double x, double y);
+}
+</code></pre>
+
+<h2>CalculatorApplet</h2>
+
+<pre><code>package org.superbiz.applet;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.rmi.PortableRemoteObject;
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Properties;
+
+public class CalculatorApplet extends JApplet {
+    JTextArea area;
+
+    JTextField field1;
+    JTextField field2;
+    JLabel label1;
+    JLabel label2;
+    JButton button;
+    JLabel label3;
+    Context ctx;
+
+    public void init() {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    createUI();
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("createGUI didn't successfully complete");
+        }
+    }
+
+    private void createUI() {
+        field1 = new JTextField();
+        field2 = new JTextField();
+        label1 = new JLabel("Enter first number");
+        label2 = new JLabel("Enter second number");
+        label3 = new JLabel("RESULT=");
+        button = new JButton("Add");
+
+        setLayout(new GridLayout(3, 2));
+        add(label1);
+        add(field1);
+        add(label2);
+        add(field2);
+        add(button);
+        add(label3);
+        Properties props = new Properties();
+        props.put(Context.INITIAL_CONTEXT_FACTORY,
+                "org.apache.openejb.client.RemoteInitialContextFactory");
+        props.put(Context.PROVIDER_URL, "http://127.0.0.1:8080/applet/ejb");
+        try {
+            ctx = new InitialContext(props);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        button.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    final Object ref = ctx.lookup("CalculatorImplRemote");
+                    Calculator calc = (Calculator) PortableRemoteObject.narrow(
+                            ref, Calculator.class);
+                    String text1 = field1.getText();
+                    String text2 = field2.getText();
+                    int num1 = Integer.parseInt(text1);
+                    int num2 = Integer.parseInt(text2);
+                    double result = calc.add(num1, num2);
+                    label3.setText("RESULT=" + result);
+                } catch (NamingException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+}
+</code></pre>
+
+<h2>CalculatorImpl</h2>
+
+<pre><code>package org.superbiz.applet;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class CalculatorImpl implements Calculator {
+
+    public double add(double x, double y) {
+        return x + y;
+    }
+}
+</code></pre>
+
+<h2>web.xml</h2>
+
+<pre><code>&lt;web-app&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.apache.openejb.server.httpd.ServerServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/ejb/*&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+
+<h2>JNDILookupTest</h2>
+
+<pre><code>package org.superbiz;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.superbiz.applet.Calculator;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.rmi.PortableRemoteObject;
+import java.util.Properties;
+
+
+public class JNDILookupTest {
+
+    @Test
+    public void test() {
+        Properties props = new Properties();
+        props.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+        props.put(Context.PROVIDER_URL, "http://127.0.0.1:8080/tomee/ejb");
+        try {
+            Context ctx = new InitialContext(props);
+            System.out.println("Found context " + ctx);
+            final Object ref = ctx.lookup("CalculatorImplRemote");
+            Calculator calc = (Calculator) PortableRemoteObject.narrow(ref, Calculator.class);
+            double result = calc.add(10, 30);
+            Assert.assertEquals(40, result, 0.5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Remote.html">javax.ejb.Remote</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/InitialContext.html">javax.naming.InitialContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/rmi/PortableRemoteObject.html">javax.rmi.PortableRemoteObject</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/JApplet.html">javax.swing.JApplet</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/JButton.html">javax.swing.JButton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/JLabel.html">javax.swing.JLabel</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/JTextArea.html">javax.swing.JTextArea</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/JTextField.html">javax.swing.JTextField</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/swing/SwingUtilities.html">javax.swing.SwingUtilities</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/applet">applet</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/applet">applet</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/applet
+cd applet
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

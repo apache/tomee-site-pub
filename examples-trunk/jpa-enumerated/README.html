@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>JPA and Enums via @Enumerated</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=JPA and Enums via @Enumerated",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/jpa-enumerated/">Jpa Enumerated</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>JPA and Enums via @Enumerated
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>It can sometimes be desirable to have a Java <code>enum</code> type to represent a particular column in a database. JPA supports converting database data to and from Java <code>enum</code> types via the <code>@javax.persistence.Enumerated</code> annotation.</p>
+
+<p>This example will show basic <code>@Enumerated</code> usage in a field of an <code>@Entity</code> as well as <code>enum</code>s as the parameter of a <code>Query</code>.  We'll also see that the actual database representation can be effectively <code>String</code> or <code>int</code>.</p>
+
+<h2>Enum</h2>
+
+<p>For our example we will leverage the familiar <code>Movie</code> entity and add a new field to represent the MPAA.org rating of the movie.  This is defined via a simple <code>enum</code> that requires no JPA specific annotations.</p>
+
+<pre><code>public enum Rating {
+    UNRATED,
+    G,
+    PG,
+    PG13,
+    R,
+    NC17
+}
+</code></pre>
+
+<h2>@Enumerated</h2>
+
+<p>In our <code>Movie</code> entity, we add a <code>rating</code> field of the enum type <code>Rating</code> and annotate it with <code>@Enumerated(EnumType.STRING)</code> to declare that its value should be converted from what is effectively a <code>String</code> in the database to the <code>Rating</code> type.</p>
+
+<pre><code>@Entity
+public class Movie {
+
+    @Id
+    @GeneratedValue
+    private int id;
+    private String director;
+    private String title;
+    private int year;
+
+    @Enumerated(EnumType.STRING)
+    private Rating rating;
+
+    public Movie() {
+    }
+
+    public Movie(String director, String title, int year, Rating rating) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+        this.rating = rating;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+}
+</code></pre>
+
+<p>The above is enough and we are effectively done.  For the sake of completeness we'll show a sample <code>Query</code></p>
+
+<h2>Enum in JPQL Query</h2>
+
+<p>Note the <code>findByRating</code> method which creates a <code>Query</code> with a <code>rating</code> named parameter.  The key thing to notice is that the <code>rating</code> enum instance itself is passed into the
+ <code>query.setParameter</code> method, <strong>not</strong> <code>rating.name()</code> or <code>rating.ordinal()</code>.</p>
+
+<p>Regardless if you use <code>EnumType.STRING</code> or <code>EnumType.ORDINAL</code>, you still always pass the enum itself in calls to <code>query.setParameter</code>.</p>
+
+<pre><code>@Stateful
+public class Movies {
+
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
+
+    public void addMovie(Movie movie) {
+        entityManager.persist(movie);
+    }
+
+    public void deleteMovie(Movie movie) {
+        entityManager.remove(movie);
+    }
+
+    public List&lt;Movie&gt; findByRating(Rating rating) {
+        final Query query = entityManager.createQuery("SELECT m FROM Movie as m WHERE m.rating = :rating");
+        query.setParameter("rating", rating);
+        return query.getResultList();
+    }
+
+    public List&lt;Movie&gt; getMovies() throws Exception {
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
+        return query.getResultList();
+    }
+
+}
+</code></pre>
+
+<h2>EnumType.STRING vs EnumType.ORDINAL</h2>
+
+<p>It is a matter of style how you would like your <code>enum</code> data represented in the database.  Either <code>name()</code> or <code>ordinal()</code> are supported:</p>
+
+<ul>
+<li><code>@Enumerated(EnumType.STRING) Rating rating</code> the value of <code>rating.name()</code> is written and read from the corresponding database column; e.g. <code>G</code>, <code>PG</code>, <code>PG13</code></li>
+<li><code>@Enumerated(EnumType.ORDINAL) Rating rating</code> the value of <code>rating.ordinal()</code> is written and read from the corresponding database column; e.g. <code>0</code>, <code>1</code>, <code>2</code></li>
+</ul>
+
+<p>The default is <code>EnumType.ORDINAL</code></p>
+
+<p>There are advantages and disadvantages to each.</p>
+
+<h3>Disadvantage of EnumType.ORDINAL</h3>
+
+<p>A disadvantage of <code>EnumType.ORDINAL</code> is the effect of time and the desire to keep <code>enums</code> in a logical order.  With <code>EnumType.ORDINAL</code> any new enum elements must be added to the
+<strong>end</strong> of the list or you will accidentally change the meaning of all your records.</p>
+
+<p>Let's use our <code>Rating</code> enum and see how it would have had to evolve over time to keep up with changes in the MPAA.org ratings system.</p>
+
+<p><strong>1980</strong></p>
+
+<pre><code>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED
+}
+</code></pre>
+
+<p><strong>1984</strong> PG-13 is added</p>
+
+<pre><code>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED,
+    PG13
+}
+</code></pre>
+
+<p><strong>1990</strong> NC-17 is added</p>
+
+<pre><code>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED,
+    PG13,
+    NC17
+}
+</code></pre>
+
+<p>If <code>EnumType.STRING</code> was used, then the enum could be reordered at anytime and would instead look as we have defined it originally with ratings starting at <code>G</code> and increasing in severity to <code>NC17</code> and eventually <code>UNRATED</code>.  With <code>EnumType.ORDINAL</code> the logical ordering would not have withstood the test of time as new values were added.</p>
+
+<p>If the order of the enum values is significant to your code, avoid <code>EnumType.ORDINAL</code></p>
+
+<h2>Unit Testing the JPA @Enumerated</h2>
+
+<pre><code>public class MoviesTest extends TestCase {
+
+    public void test() throws Exception {
+
+        final Properties p = new Properties();
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+
+        EJBContainer container = EJBContainer.createEJBContainer(p);
+        final Context context = container.getContext();
+
+        final Movies movies = (Movies) context.lookup("java:global/jpa-scratch/Movies");
+
+        movies.addMovie(new Movie("James Frawley", "The Muppet Movie", 1979, Rating.G));
+        movies.addMovie(new Movie("Jim Henson", "The Great Muppet Caper", 1981, Rating.G));
+        movies.addMovie(new Movie("Frank Oz", "The Muppets Take Manhattan", 1984, Rating.G));
+        movies.addMovie(new Movie("James Bobin", "The Muppets", 2011, Rating.PG));
+
+        assertEquals("List.size()", 4, movies.getMovies().size());
+
+        assertEquals("List.size()", 3, movies.findByRating(Rating.G).size());
+
+        assertEquals("List.size()", 1, movies.findByRating(Rating.PG).size());
+
+        assertEquals("List.size()", 0, movies.findByRating(Rating.R).size());
+
+        container.close();
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<p>To run the example via maven:</p>
+
+<pre><code>cd jpa-enumerated
+mvn clean install
+</code></pre>
+
+<p>Which will generate output similar to the following:</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.jpa.enums.MoviesTest
+Apache OpenEJB 4.0.0-beta-2    build: 20120115-08:26
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - openejb.base = /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/openejb/examples/jpa-enumerated/target/classes
+INFO - Beginning load: /Users/dblevins/openejb/examples/jpa-enumerated/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.jpa.enums.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=movie-unit)
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
+INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/openejb/examples/jpa-enumerated" loaded.
+INFO - Assembling app: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 406ms
+INFO - Jndi(name="java:global/jpa-enumerated/Movies!org.superbiz.jpa.enums.Movies")
+INFO - Jndi(name="java:global/jpa-enumerated/Movies")
+INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Deployed Application(path=/Users/dblevins/openejb/examples/jpa-enumerated)
+INFO - Undeploying app: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Closing DataSource: movieDatabase
+INFO - Closing DataSource: movieDatabaseNonJta
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.831 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateful.html">javax.ejb.Stateful</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EnumType.html">javax.persistence.EnumType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Enumerated.html">javax.persistence.Enumerated</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Id.html">javax.persistence.Id</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContextType.html">javax.persistence.PersistenceContextType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Query.html">javax.persistence.Query</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/jpa-enumerated">jpa-enumerated</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/jpa-enumerated">jpa-enumerated</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/jpa-enumerated
+cd jpa-enumerated
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

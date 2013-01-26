@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>@WebService OUT params via javax.xml.ws.Holder</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=@WebService OUT params via javax.xml.ws.Holder",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/webservice-holder/">Webservice Holder</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>@WebService OUT params via javax.xml.ws.Holder
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>With SOAP it is possible to return multiple values in a single request.  This is impossible in Java as a method can only return one object.</p>
+
+<p>JAX-WS solves this problem with the concept of Holders.  A <code>javax.xml.ws.Holder</code> is a simple wrapper object that can be passed into the <code>@WebService</code> method as a parameter.  The application sets the value of the holder during the request and the server will send the value back as an OUT parameter.</p>
+
+<h2>Using @WebParam and javax.xml.ws.Holder</h2>
+
+<p>The <code>@WebParam</code> annotation allows us to declare the <code>sum</code> and <code>multiply</code> Holders as <code>WebParam.Mode.OUT</code> parameters.  As mentioned, these holders are simply empty buckets the application can fill in with data to have sent to the client.  The server will pass them in uninitialized.</p>
+
+<pre><code>@Stateless
+@WebService(
+        portName = "CalculatorPort",
+        serviceName = "CalculatorService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.ws.out.CalculatorWs")
+public class Calculator implements CalculatorWs {
+
+    public void sumAndMultiply(int a, int b,
+                               @WebParam(name = "sum", mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; sum,
+                               @WebParam(name = "multiply", mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; multiply) {
+        sum.value = a + b;
+        multiply.value = a * b;
+    }
+}
+</code></pre>
+
+<p>If the Holders were specified as <code>WebParam.Mode.INOUT</code> params, then the client could use them to send data and the application as well.  The <code>Holder</code> instances would then be initialized with the data from the client request.  The application could check the data before eventually overriting it with the response values.</p>
+
+<h2>The WSDL</h2>
+
+<p>The above JAX-WS <code>@WebService</code> component results in the folliwing WSDL that will be created automatically.  Note the <code>sumAndMultiplyResponse</code> complext type returns two elements.  These match the <code>@WebParam</code> declarations and our two <code>Holder&lt;Integer&gt;</code> params.</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  name="CalculatorService"
+                  targetNamespace="http://superbiz.org/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://superbiz.org/wsdl"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;wsdl:types&gt;
+    &lt;xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                targetNamespace="http://superbiz.org/wsdl"
+                xmlns:tns="http://superbiz.org/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;xsd:element name="sumAndMultiply" type="tns:sumAndMultiply"/&gt;
+      &lt;xsd:complexType name="sumAndMultiply"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="sumAndMultiplyResponse" type="tns:sumAndMultiplyResponse"/&gt;
+      &lt;xsd:complexType name="sumAndMultiplyResponse"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element minOccurs="0" name="sum" type="xsd:int"/&gt;
+          &lt;xsd:element minOccurs="0" name="multiply" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+    &lt;/xsd:schema&gt;
+  &lt;/wsdl:types&gt;
+  &lt;wsdl:message name="sumAndMultiplyResponse"&gt;
+    &lt;wsdl:part element="tns:sumAndMultiplyResponse" name="parameters"/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="sumAndMultiply"&gt;
+    &lt;wsdl:part element="tns:sumAndMultiply" name="parameters"/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:portType name="CalculatorWs"&gt;
+    &lt;wsdl:operation name="sumAndMultiply"&gt;
+      &lt;wsdl:input message="tns:sumAndMultiply" name="sumAndMultiply"/&gt;
+      &lt;wsdl:output message="tns:sumAndMultiplyResponse" name="sumAndMultiplyResponse"/&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:portType&gt;
+  &lt;wsdl:binding name="CalculatorServiceSoapBinding" type="tns:CalculatorWs"&gt;
+    &lt;soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    &lt;wsdl:operation name="sumAndMultiply"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="sumAndMultiply"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name="sumAndMultiplyResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:binding&gt;
+  &lt;wsdl:service name="CalculatorService"&gt;
+    &lt;wsdl:port binding="tns:CalculatorServiceSoapBinding" name="CalculatorPort"&gt;
+      &lt;soap:address location="http://127.0.0.1:4204/Calculator?wsdl"/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;
+</code></pre>
+
+<h2>Testing the OUT params</h2>
+
+<p>Here we see a JAX-WS client executing the <code>sumAndMultiply</code> operation.  Two empty <code>Holder</code> instances are created and passed in as parameters.  The data from the <code>sumAndMultiplyResponse</code> is placed in the <code>Holder</code> instances and is then available to the client after the operation completes.</p>
+
+<p>The holders themselves are not actually sent in the request unless they are configured as INOUT params via WebParam.Mode.INOUT on <code>@WebParam</code></p>
+
+<pre><code>import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Holder;
+import javax.xml.ws.Service;
+import java.net.URL;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class CalculatorTest {
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty("openejb.embedded.remotable", "true");
+        //properties.setProperty("httpejbd.print", "true");
+        //properties.setProperty("httpejbd.indent.xml", "true");
+        EJBContainer.createEJBContainer(properties);
+    }
+
+    @Test
+    public void outParams() throws Exception {
+        final Service calculatorService = Service.create(
+                new URL("http://127.0.0.1:4204/Calculator?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorService"));
+
+        assertNotNull(calculatorService);
+
+        final CalculatorWs calculator = calculatorService.getPort(CalculatorWs.class);
+
+        final Holder&lt;Integer&gt; sum = new Holder&lt;Integer&gt;();
+        final Holder&lt;Integer&gt; multiply = new Holder&lt;Integer&gt;();
+
+        calculator.sumAndMultiply(4, 6, sum, multiply);
+
+        assertEquals(10, (int) sum.value);
+        assertEquals(24, (int) multiply.value);
+    }
+}
+</code></pre>
+
+<h2>Inspecting the messages</h2>
+
+<p>The above execution results in the following SOAP message.</p>
+
+<h3>SOAP sumAndMultiply <small>client request</small></h3>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumAndMultiply xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;arg0&gt;4&lt;/arg0&gt;
+      &lt;arg1&gt;6&lt;/arg1&gt;
+    &lt;/ns1:sumAndMultiply&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+<h3>SOAP sumAndMultiplyResponse <small>server response</small></h3>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumAndMultiplyResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;sum&gt;10&lt;/sum&gt;
+      &lt;multiply&gt;24&lt;/multiply&gt;
+    &lt;/ns1:sumAndMultiplyResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/jws/WebParam.html">javax.jws.WebParam</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/jws/WebService.html">javax.jws.WebService</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/namespace/QName.html">javax.xml.namespace.QName</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/Holder.html">javax.xml.ws.Holder</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/ws/Service.html">javax.xml.ws.Service</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/webservice-holder">webservice-holder</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/webservice-holder">webservice-holder</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/webservice-holder
+cd webservice-holder
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

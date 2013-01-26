@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Simple Stateless</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Simple Stateless",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/simple-stateless/">Simple Stateless</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Simple Stateless
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<blockquote>
+  <p>"Stateless session beans are session beans whose instances have no conversational state.
+  This means that all bean instances are equivalent when they are not involved in servicing
+  a client-invoked method. The term 'stateless' signifies that an instance has no state for a
+  specific client."</p>
+</blockquote>
+
+<p>What this means is quite simply that stateless beans are shared. They do in fact have state
+as you can assign values to the variables, etc. in the bean instance. The only catch is there
+are a pool of identical instances and you are not guaranteed to get the exact same instance on
+every call. For each call, you get whatever instance happens to be available. This is identical
+to checking out a book from the library or renting a movie from the video store. You are essentially
+checking out or renting a new bean instance on each method call.</p>
+
+<h2>CalculatorBean</h2>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class CalculatorBean {
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        return a / b;
+    }
+
+    public int remainder(int a, int b) {
+        return a % b;
+    }
+}
+</code></pre>
+
+<h2>CalculatorTest</h2>
+
+<p>Our <code>CalculatorBean</code> can be easily tested using the <code>EJBContainer</code> API in EJB 3.1</p>
+
+<pre><code>package org.superbiz.stateless.basic;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.NamingException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class CalculatorTest {
+
+    private static EJBContainer ejbContainer;
+
+    private CalculatorBean calculator;
+
+    @BeforeClass
+    public static void startTheContainer() {
+        ejbContainer = EJBContainer.createEJBContainer();
+    }
+
+    @Before
+    public void lookupABean() throws NamingException {
+        Object object = ejbContainer.getContext().lookup("java:global/simple-stateless/CalculatorBean");
+
+        assertTrue(object instanceof CalculatorBean);
+
+        calculator = (CalculatorBean) object;
+    }
+
+    @AfterClass
+    public static void stopTheContainer() {
+        if (ejbContainer != null) {
+            ejbContainer.close();
+        }
+    }
+
+    /**
+     * Test Add method
+     */
+    @Test
+    public void testAdd() {
+
+        assertEquals(10, calculator.add(4, 6));
+
+    }
+
+    /**
+     * Test Subtract method
+     */
+    @Test
+    public void testSubtract() {
+
+        assertEquals(-2, calculator.subtract(4, 6));
+
+    }
+
+    /**
+     * Test Multiply method
+     */
+    @Test
+    public void testMultiply() {
+
+        assertEquals(24, calculator.multiply(4, 6));
+
+    }
+
+    /**
+     * Test Divide method
+     */
+    @Test
+    public void testDivide() {
+
+        assertEquals(2, calculator.divide(12, 6));
+
+    }
+
+    /**
+     * Test Remainder method
+     */
+    @Test
+    public void testRemainder() {
+
+        assertEquals(4, calculator.remainder(46, 6));
+
+    }
+
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<p>Running the example should generate output similar to the following</p>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.stateless.basic.CalculatorTest
+Infos - ********************************************************************************
+Infos - OpenEJB http://openejb.apache.org/
+Infos - Startup: Tue Aug 14 13:28:12 CEST 2012
+Infos - Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+Infos - Version: 4.1.0
+Infos - Build date: 20120814
+Infos - Build time: 01:06
+Infos - ********************************************************************************
+Infos - openejb.home = /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
+Infos - openejb.base = /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
+Infos - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@33bb11
+Infos - Succeeded in installing singleton service
+Infos - Using 'javax.ejb.embeddable.EJBContainer=true'
+Infos - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+Infos - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+Infos - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+Infos - Creating TransactionManager(id=Default Transaction Manager)
+Infos - Creating SecurityService(id=Default Security Service)
+Infos - Beginning load: /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless/target/classes
+Infos - Configuring enterprise application: /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
+Infos - Auto-deploying ejb CalculatorBean: EjbDeployment(deployment-id=CalculatorBean)
+Infos - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+Infos - Auto-creating a container for bean CalculatorBean: Container(type=STATELESS, id=Default Stateless Container)
+Infos - Creating Container(id=Default Stateless Container)
+Infos - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+Infos - Auto-creating a container for bean org.superbiz.stateless.basic.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+Infos - Creating Container(id=Default Managed Container)
+Infos - Using directory /tmp for stateful session passivation
+Infos - Enterprise application "/home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless" loaded.
+Infos - Assembling app: /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
+Infos - Jndi(name="java:global/simple-stateless/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean")
+Infos - Jndi(name="java:global/simple-stateless/CalculatorBean")
+Infos - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@33bb11
+Infos - OpenWebBeans Container is starting...
+Infos - Adding OpenWebBeansPlugin : [CdiPlugin]
+Infos - All injection points are validated successfully.
+Infos - OpenWebBeans Container has started, it took 135 ms.
+Infos - Created Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+Infos - Started Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+Infos - Deployed Application(path=/home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless)
+Infos - Undeploying app: /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.068 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateless">simple-stateless</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/simple-stateless">simple-stateless</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/simple-stateless
+cd simple-stateless
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Using EnvEntries</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Using EnvEntries",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/injection-of-env-entry/">Injection Of Env Entry</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Using EnvEntries
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>The <code>@Resource</code> annotation can be used to inject several things including
+DataSources, Topics, Queues, etc.  Most of these are container supplied objects.</p>
+
+<p>It is possible, however, to supply your own values to be injected via an <code>&lt;env-entry&gt;</code>
+in your <code>ejb-jar.xml</code> or <code>web.xml</code> deployment descriptor.  Java EE 6 supported <code>&lt;env-entry&gt;</code> types
+are limited to the following:</p>
+
+<ul>
+<li>java.lang.String</li>
+<li>java.lang.Integer</li>
+<li>java.lang.Short</li>
+<li>java.lang.Float</li>
+<li>java.lang.Double</li>
+<li>java.lang.Byte</li>
+<li>java.lang.Character</li>
+<li>java.lang.Boolean</li>
+<li>java.lang.Class</li>
+<li>java.lang.Enum (any enum)</li>
+</ul>
+
+<p>See also the <a href="../custom-injection">Custom Injection</a> exmaple for a TomEE and OpenEJB feature that will let you
+use more than just the above types as well as declare <code>&lt;env-entry&gt;</code> items with a plain properties file.</p>
+
+<h1>Using @Resource for basic properties</h1>
+
+<p>The use of the <code>@Resource</code> annotation isn't limited to setters.  For
+example, this annotation could have been used on the corresponding <em>field</em>
+like so:</p>
+
+<pre><code>@Resource
+private int maxLineItems;
+</code></pre>
+
+<p>A fuller example might look like this:</p>
+
+<pre><code>package org.superbiz.injection.enventry;
+
+import javax.annotation.Resource;
+import javax.ejb.Singleton;
+import java.util.Date;
+
+@Singleton
+public class Configuration {
+
+    @Resource
+    private String color;
+
+    @Resource
+    private Shape shape;
+
+    @Resource
+    private Class strategy;
+
+    @Resource(name = "date")
+    private long date;
+
+    public String getColor() {
+        return color;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public Class getStrategy() {
+        return strategy;
+    }
+
+    public Date getDate() {
+        return new Date(date);
+    }
+}
+</code></pre>
+
+<p>Here we have an <code>@Singleton</code> bean called <code>Confuration</code> that has the following properties (<code>&lt;env-entry&gt;</code> items)</p>
+
+<ul>
+<li>String color</li>
+<li>Shape shape</li>
+<li>Class strategy</li>
+<li>long date</li>
+</ul>
+
+<h2>Supplying @Resource values for <env-entry> items in ejb-jar.xml</h2>
+
+<p>The values for our <code>color</code>, <code>shape</code>, <code>strategy</code> and <code>date</code> properties are supplied via <code>&lt;env-entry&gt;</code> elements in the <code>ejb-jar.xml</code> file or the
+<code>web.xml</code> file like so:</p>
+
+<pre><code>&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" version="3.0" metadata-complete="false"&gt;
+  &lt;enterprise-beans&gt;
+    &lt;session&gt;
+      &lt;ejb-name&gt;Configuration&lt;/ejb-name&gt;
+      &lt;env-entry&gt;
+        &lt;env-entry-name&gt;org.superbiz.injection.enventry.Configuration/color&lt;/env-entry-name&gt;
+        &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;
+        &lt;env-entry-value&gt;orange&lt;/env-entry-value&gt;
+      &lt;/env-entry&gt;
+      &lt;env-entry&gt;
+        &lt;env-entry-name&gt;org.superbiz.injection.enventry.Configuration/shape&lt;/env-entry-name&gt;
+        &lt;env-entry-type&gt;org.superbiz.injection.enventry.Shape&lt;/env-entry-type&gt;
+        &lt;env-entry-value&gt;TRIANGLE&lt;/env-entry-value&gt;
+      &lt;/env-entry&gt;
+      &lt;env-entry&gt;
+        &lt;env-entry-name&gt;org.superbiz.injection.enventry.Configuration/strategy&lt;/env-entry-name&gt;
+        &lt;env-entry-type&gt;java.lang.Class&lt;/env-entry-type&gt;
+        &lt;env-entry-value&gt;org.superbiz.injection.enventry.Widget&lt;/env-entry-value&gt;
+      &lt;/env-entry&gt;
+      &lt;env-entry&gt;
+        &lt;description&gt;The name was explicitly set in the annotation so the classname prefix isn't required&lt;/description&gt;
+        &lt;env-entry-name&gt;date&lt;/env-entry-name&gt;
+        &lt;env-entry-type&gt;java.lang.Long&lt;/env-entry-type&gt;
+        &lt;env-entry-value&gt;123456789&lt;/env-entry-value&gt;
+      &lt;/env-entry&gt;
+    &lt;/session&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+
+<h3>Using the @Resource 'name' attribute</h3>
+
+<p>Note that <code>date</code> was referenced by <code>name</code> as:</p>
+
+<pre><code>@Resource(name = "date")
+private long date;
+</code></pre>
+
+<p>When the <code>@Resource(name)</code> is used, you do not need to specify the full class name of the bean and can do it briefly like so:</p>
+
+<pre><code>  &lt;env-entry&gt;
+    &lt;description&gt;The name was explicitly set in the annotation so the classname prefix isn't required&lt;/description&gt;
+    &lt;env-entry-name&gt;date&lt;/env-entry-name&gt;
+    &lt;env-entry-type&gt;java.lang.Long&lt;/env-entry-type&gt;
+    &lt;env-entry-value&gt;123456789&lt;/env-entry-value&gt;
+  &lt;/env-entry&gt;
+</code></pre>
+
+<p>Conversly, <code>color</code> was not referenced by <code>name</code></p>
+
+<pre><code>@Resource
+private String color;
+</code></pre>
+
+<p>When something is not referenced by <code>name</code> in the <code>@Resource</code> annotation a default name is created.  The format is essentially this:</p>
+
+<pre><code>bean.getClass() + "/" + field.getName()
+</code></pre>
+
+<p>So the default <code>name</code> of the above <code>color</code> property ends up being <code>org.superbiz.injection.enventry.Configuration/color</code>.  This is the name
+we must use when we attempt to decalre a value for it in xml.</p>
+
+<pre><code>  &lt;env-entry&gt;
+    &lt;env-entry-name&gt;org.superbiz.injection.enventry.Configuration/color&lt;/env-entry-name&gt;
+    &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;
+    &lt;env-entry-value&gt;orange&lt;/env-entry-value&gt;
+  &lt;/env-entry&gt;
+</code></pre>
+
+<h3>@Resource and Enum (Enumerations)</h3>
+
+<p>The <code>shape</code> field is actually a custom Java Enum type</p>
+
+<pre><code>package org.superbiz.injection.enventry;
+
+public enum Shape {
+
+    CIRCLE,
+    TRIANGLE,
+    SQUARE
+}
+</code></pre>
+
+<p>As of Java EE 6, java.lang.Enum types are allowed as <code>&lt;env-entry&gt;</code> items.  Declaring one in xml is done using the actual enum's class name like so:</p>
+
+<pre><code>      &lt;env-entry&gt;
+        &lt;env-entry-name&gt;org.superbiz.injection.enventry.Configuration/shape&lt;/env-entry-name&gt;
+        &lt;env-entry-type&gt;org.superbiz.injection.enventry.Shape&lt;/env-entry-type&gt;
+        &lt;env-entry-value&gt;TRIANGLE&lt;/env-entry-value&gt;
+      &lt;/env-entry&gt;
+</code></pre>
+
+<p>Do not use <code>&lt;env-entry-type&gt;java.lang.Enum&lt;/env-entry-type&gt;</code> or it will not work!</p>
+
+<h2>ConfigurationTest</h2>
+
+<pre><code>package org.superbiz.injection.enventry;
+
+import junit.framework.TestCase;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import java.util.Date;
+
+public class ConfigurationTest extends TestCase {
+
+
+    public void test() throws Exception {
+        final Context context = EJBContainer.createEJBContainer().getContext();
+
+        final Configuration configuration = (Configuration) context.lookup("java:global/injection-of-env-entry/Configuration");
+
+        assertEquals("orange", configuration.getColor());
+
+        assertEquals(Shape.TRIANGLE, configuration.getShape());
+
+        assertEquals(Widget.class, configuration.getStrategy());
+
+        assertEquals(new Date(123456789), configuration.getDate());
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.enventry.ConfigurationTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/injection-of-env-entry
+INFO - openejb.base = /Users/dblevins/examples/injection-of-env-entry
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/injection-of-env-entry/target/classes
+INFO - Beginning load: /Users/dblevins/examples/injection-of-env-entry/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/injection-of-env-entry
+WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean Configuration: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.injection.enventry.ConfigurationTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/examples/injection-of-env-entry" loaded.
+INFO - Assembling app: /Users/dblevins/examples/injection-of-env-entry
+INFO - Jndi(name="java:global/injection-of-env-entry/Configuration!org.superbiz.injection.enventry.Configuration")
+INFO - Jndi(name="java:global/injection-of-env-entry/Configuration")
+INFO - Jndi(name="java:global/EjbModule1355224018/org.superbiz.injection.enventry.ConfigurationTest!org.superbiz.injection.enventry.ConfigurationTest")
+INFO - Jndi(name="java:global/EjbModule1355224018/org.superbiz.injection.enventry.ConfigurationTest")
+INFO - Created Ejb(deployment-id=org.superbiz.injection.enventry.ConfigurationTest, ejb-name=org.superbiz.injection.enventry.ConfigurationTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=Configuration, ejb-name=Configuration, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=org.superbiz.injection.enventry.ConfigurationTest, ejb-name=org.superbiz.injection.enventry.ConfigurationTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Configuration, ejb-name=Configuration, container=Default Singleton Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/injection-of-env-entry)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.664 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/Resource.html">javax.annotation.Resource</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/injection-of-env-entry">injection-of-env-entry</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/injection-of-env-entry">injection-of-env-entry</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/injection-of-env-entry
+cd injection-of-env-entry
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>CDI field producer</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=CDI field producer",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/cdi-produces-field/">Cdi Produces Field</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>CDI field producer
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>This example shows the usage of the @Produces annotation. @Produces is a CDI mechanism which allows defining a source
+ for injection. This example shows one of two ways of declaring a producer. Instead of a producer method (see CDI-produces-disposes example)
+a producer field can be used. A producer field can be used instead of a simple getter method. It could be used to
+inject resources, such as persistence contexts. One caveat to using producer fields over producer
+ methods is that a @Disposes method cannot be used in conjunction with @Produces field.</p>
+
+<h2>ConsoleHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class ConsoleHandler implements LogHandler {
+
+    private String name;
+
+    public ConsoleHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the console!\n", getName());
+    }
+}
+</code></pre>
+
+<h2>DatabaseHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class DatabaseHandler implements LogHandler {
+
+    private String name;
+
+    public DatabaseHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the database!\n", getName());
+        // Use connection to write log to database
+    }
+}
+</code></pre>
+
+<h2>FileHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class FileHandler implements LogHandler {
+
+    private String name;
+
+    public FileHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf("##### Handler: %s, Writing to the file!\n", getName());
+        // Write to log file
+    }
+}
+</code></pre>
+
+<h2>LogFactory</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import javax.enterprise.inject.Produces;
+
+public class LogFactory {
+
+    private int type = 2;
+
+    @Produces
+    LogHandler handler;
+
+    public LogFactory(){
+        handler = getLogHandler();
+    }
+
+    public LogHandler getLogHandler() {
+        switch (type) {
+            case 1:
+                return new FileHandler("@Produces created FileHandler!");
+            case 2:
+                return new DatabaseHandler("@Produces created DatabaseHandler!");
+            case 3:
+            default:
+                return new ConsoleHandler("@Produces created ConsoleHandler!");
+        }
+
+    }
+}
+</code></pre>
+
+<h2>Logger</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public interface Logger {
+
+    public void log(String s);
+
+    public LogHandler getHandler();
+}
+</code></pre>
+
+<h2>LoggerImpl</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@Named("logger")
+public class LoggerImpl implements Logger {
+
+    @Inject
+    private LogHandler handler;
+
+    @Override
+    public void log(String s) {
+        getHandler().writeLog(s);
+    }
+
+    public LogHandler getHandler() {
+        return handler;
+    }
+}
+</code></pre>
+
+<h2>LogHandler</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public interface LogHandler {
+
+    public String getName();
+
+    public void writeLog(String s);
+}
+</code></pre>
+
+<h2>beans.xml</h2>
+
+<pre><code>&lt;beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                            http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"&gt;
+
+&lt;/beans&gt;
+</code></pre>
+
+<h2>LoggerTest</h2>
+
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.inject.Inject;
+import javax.naming.Context;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class LoggerTest {
+
+    @Inject
+    Logger logger;
+
+    private Context ctxt;
+
+    @Before
+    public void setUp() {
+        try {
+            ctxt = EJBContainer.createEJBContainer().getContext();
+            ctxt.bind("inject", this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @After
+    public void cleanUp() {
+        try {
+            ctxt.unbind("inject");
+            ctxt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testLogHandler() {
+        assertNotNull(logger);
+        assertFalse("Handler should not be a ConsoleHandler", logger.getHandler() instanceof ConsoleHandler);
+        assertFalse("Handler should not be a FileHandler", logger.getHandler() instanceof FileHandler);
+        assertTrue("Handler should be a DatabaseHandler", logger.getHandler() instanceof DatabaseHandler);
+        logger.log("##### Testing write\n");
+        logger = null;
+    }
+
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cdi.produces.field.LoggerTest
+INFO - ********************************************************************************
+INFO - OpenEJB http://openejb.apache.org/
+INFO - Startup: Thu May 10 01:28:19 CDT 2012
+INFO - Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 4.0.0-beta-3-SNAPSHOT
+INFO - Build date: 20120510
+INFO - Build time: 04:06
+INFO - ********************************************************************************
+INFO - openejb.home = /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - openejb.base = /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@a81b1fb
+INFO - succeeded in installing singleton service
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Inspecting classpath for applications: 26 urls. Consider adjusting your exclude/include.  Current settings: openejb.deployments.classpath.exclude='', openejb.deployments.classpath.include='.*'
+INFO - Searched 26 classpath urls in 2015 milliseconds.  Average 77 milliseconds per url.
+INFO - Beginning load: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field/target/classes
+INFO - Configuring enterprise application: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - Auto-deploying ejb cdi-produces-field.Comp: EjbDeployment(deployment-id=cdi-produces-field.Comp)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean cdi-produces-field.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field" loaded.
+INFO - Assembling app: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - ignoreXmlConfiguration == true
+INFO - ignoreXmlConfiguration == true
+INFO - existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@a81b1fb
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took [69] ms.
+INFO - Deployed Application(path=/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field)
+##### Handler: @Produces created DatabaseHandler!, Writing to the database!
+INFO - Undeploying app: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.79 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer;.html">javax.ejb.embeddable.EJBContainer;</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/enterprise/inject/Produces;.html">javax.enterprise.inject.Produces;</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Inject;.html">javax.inject.Inject;</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Named;.html">javax.inject.Named;</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/cdi-produces-field">cdi-produces-field</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/cdi-produces-field">cdi-produces-field</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/cdi-produces-field
+cd cdi-produces-field
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

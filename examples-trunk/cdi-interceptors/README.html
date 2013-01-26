@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>CDI Interceptors</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=CDI Interceptors",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/cdi-interceptors/">Cdi Interceptors</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>CDI Interceptors
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Let's write a simple application that would allow us to book tickets for a movie show. As with all applications, logging is one cross-cutting concern that we have. Apart from that, there are some methods in our application, that can be accessed only in the working hours. If accessed at non-working-hours we'll throw out an AccessDeniedException.</p>
+
+<p>How do we mark which methods are to be intercepted? Wouldn't it be handy to annotate a method like</p>
+
+<pre><code>@Log
+public void aMethod(){...}
+</code></pre>
+
+<p>or</p>
+
+<pre><code>@TimeRestricted
+public void bMethod(){...}
+</code></pre>
+
+<p>Let's create these annotations that would "mark" a method for interception.</p>
+
+<pre><code>@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+public @interface Log {
+}
+</code></pre>
+
+<p>And</p>
+
+<pre><code>@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+public @interface TimeRestricted {
+}
+</code></pre>
+
+<p>Sure, you haven't missed the <code>@InterceptorBinding</code> annotation above! Now that our custom annotations are created, lets attach them (or to use a better term for it, "bind them") to interceptors.</p>
+
+<p>So here's our logging interceptor. An <code>@AroundInvoke</code> method and we are almost done.</p>
+
+<pre><code>@Interceptor
+@Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
+public class BookForAShowLoggingInterceptor implements Serializable {
+    private static final long serialVersionUID = 8139854519874743530L;
+    private Logger logger = Logger.getLogger("BookForAShowApplicationLogger");
+    @AroundInvoke
+    public Object logMethodEntry(InvocationContext ctx) throws Exception {
+        logger.info("Before entering method:" + ctx.getMethod().getName());
+        InterceptionOrderTracker.getMethodsInterceptedList().add(ctx.getMethod().getName());
+        InterceptionOrderTracker.getInterceptedByList().add(this.getClass().getSimpleName());
+        return ctx.proceed();
+    }
+}
+</code></pre>
+
+<p>Now the <code>@Log</code> annotation we created is bound to this interceptor. (Likewise we bind <code>@TimeRestrict</code> for <code>TimeBasedRestrictingInterceptor</code>. See links below for source)</p>
+
+<p>That done, let's annotate at class-level or method-level and have fun intercepting!</p>
+
+<pre><code>@Log
+@Stateful
+public class BookForAShowOneInterceptorApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
+        return moviesAvailable;
+    }
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+    // assume more methods are present
+}
+</code></pre>
+
+<p>The <code>@Log</code> annotation applied at class level denotes that all the methods should be intercepted with <code>BookForAShowLoggingInterceptor</code>.</p>
+
+<p>Before we say "all done" there's one last thing we are left with! To enable the interceptors!</p>
+
+<p>Lets quickly put up a <code>beans.xml</code> file like the following in <code>src/main/resources/META-INF/beans.xml</code>:</p>
+
+<pre><code>&lt;beans&gt;
+  &lt;interceptors&gt;
+    &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.BookForAShowLoggingInterceptor
+    &lt;/class&gt;
+    &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.TimeBasedRestrictingInterceptor
+    &lt;/class&gt;
+  &lt;/interceptors&gt;
+&lt;/beans&gt;
+</code></pre>
+
+<p>By default, a bean archive has no enabled interceptors bound via interceptor
+bindings. An interceptor must be explicitly enabled by listing its class
+in the <code>beans.xml</code>.</p>
+
+<p>Those lines in <code>beans.xml</code> not only "enable" the interceptors, but also define the "order of execution" of the interceptors.</p>
+
+<p>The order in with a method is annotated has no real significance.
+Eg:</p>
+
+<pre><code>@TimeRestrict
+@Log
+void cMethod(){}
+</code></pre>
+
+<p>Here the <code>BookForAShowLoggingInterceptor</code> would be applied first and then <code>TimeBasedRestrictingInterceptor</code></p>
+
+<p>So now you know that the order is only determined by the order of definition in <code>beans.xml</code>. Interceptors which occur earlier in the list are called first.</p>
+
+<p>Also note that a method can be marked for interception by multiple interceptors by applying multiple annotations as above.</p>
+
+<p>This brings us to another question. In the above case there were two interceptors applied together. What if I would require about 4 such interceptors that would go along.... Having to annotate so much makes the code a little clumsy?</p>
+
+<p>No worries! Just create a custom annotation which inherits from others</p>
+
+<pre><code>@Inherited
+@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+@Log
+@TimeRestricted
+public @interface TimeRestrictAndLog {
+}
+</code></pre>
+
+<p>This is interceptor binding inheritance.</p>
+
+<p>The code below demonstrates the many cases that we have discussed.</p>
+
+<p>Not to forget, the old style binding with <code>@Interceptors(WhicheverInterceptor.class)</code> is also supported. Have a look at <code>BookForAShowOldStyleInterceptorBinding</code> where the comments explain how the newer way discussed above is better.</p>
+
+<h1>The Code</h1>
+
+<h2>BookForAShowOneInterceptorApplied</h2>
+
+<p><code>BookForAShowOneInterceptorApplied</code> shows a simple <code>@Log</code> interceptor applied.</p>
+
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.Log;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Log
+@Stateful
+public class BookForAShowOneInterceptorApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
+        return moviesAvailable;
+    }
+
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+
+<h2>BookForAShowTwoInterceptorsApplied</h2>
+
+<p><code>BookForAShowTwoInterceptorsApplied</code> shows both <code>@Log</code> and <code>@TimeRestricted</code> being applied.</p>
+
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.Log;
+import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestricted;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Log
+@Stateful
+public class BookForAShowTwoInterceptorsApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
+        return moviesAvailable;
+    }
+
+    @TimeRestricted
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+
+<h2>BookShowInterceptorBindingInheritanceExplored</h2>
+
+<p><code>BookShowInterceptorBindingInheritanceExplored</code> shows how <code>@TimeRestrictAndLog</code> (interceptor-binding-inheritance) can  be used as an alternative for annotating a method with multiple annotations explicitly.</p>
+
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestrictAndLog;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Stateful
+public class BookShowInterceptorBindingInheritanceExplored implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
+        return moviesAvailable;
+    }
+
+    @TimeRestrictAndLog
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/ApplicationException.html">javax.ejb.ApplicationException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJB.html">javax.ejb.EJB</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateful.html">javax.ejb.Stateful</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/AroundInvoke.html">javax.interceptor.AroundInvoke</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/Interceptor.html">javax.interceptor.Interceptor</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/InterceptorBinding.html">javax.interceptor.InterceptorBinding</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/Interceptors.html">javax.interceptor.Interceptors</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/InvocationContext.html">javax.interceptor.InvocationContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-interceptors">cdi-interceptors</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/cdi-interceptors">cdi-interceptors</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/cdi-interceptors
+cd cdi-interceptors
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

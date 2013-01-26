@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>REST on EJB</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=REST on EJB",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/rest-on-ejb/">Rest On Ejb</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>REST on EJB
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>User</h2>
+
+<pre><code>package org.superbiz.rest;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "user.list", query = "select u from User u")
+}
+</code></pre>
+
+<h2>UserService</h2>
+
+<pre><code>package org.superbiz.rest;
+
+import javax.ejb.Lock;
+import javax.ejb.LockType;
+import javax.ejb.Singleton;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Outputs are copied because of the enhancement of OpenJPA.
+ *
+ */
+@Singleton
+@Lock(LockType.WRITE)
+@Path("/user")
+@Produces(MediaType.APPLICATION_XML)
+public class UserService {
+    @PersistenceContext
+    private EntityManager em;
+
+    @Path("/create")
+    @PUT
+    public User create(@QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
+        User user = new User();
+        user.setFullname(name);
+        user.setPassword(pwd);
+        user.setEmail(mail);
+        em.persist(user);
+        return user;
+    }
+
+    @Path("/list")
+    @GET
+    public List&lt;User&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
+        List&lt;User&gt; users = new ArrayList&lt;User&gt;();
+        List&lt;User&gt; found = em.createNamedQuery("user.list", User.class).setFirstResult(first).setMaxResults(max).getResultList();
+        for (User u : found) {
+            users.add(u.copy());
+        }
+        return users;
+    }
+
+    @Path("/show/{id}")
+    @GET
+    public User find(@PathParam("id") long id) {
+        User user = em.find(User.class, id);
+        if (user == null) {
+            return null;
+        }
+        return user.copy();
+    }
+
+    @Path("/delete/{id}")
+    @DELETE
+    public void delete(@PathParam("id") long id) {
+        User user = em.find(User.class, id);
+        if (user != null) {
+            em.remove(user);
+        }
+    }
+
+    @Path("/update/{id}")
+    @POST
+    public Response update(@PathParam("id") long id,
+                           @QueryParam("name") String name,
+                           @QueryParam("pwd") String pwd,
+                           @QueryParam("mail") String mail) {
+        User user = em.find(User.class, id);
+        if (user == null) {
+            throw new IllegalArgumentException("user id " + id + " not found");
+        }
+
+        user.setFullname(name);
+        user.setPassword(pwd);
+        user.setEmail(mail);
+        em.merge(user);
+
+        return Response.ok(user.copy()).build();
+    }
+}
+</code></pre>
+
+<h2>persistence.xml</h2>
+
+<pre><code>&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="user"&gt;
+    &lt;jta-data-source&gt;My DataSource&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;My Unmanaged DataSource&lt;/non-jta-data-source&gt;
+    &lt;class&gt;org.superbiz.rest.User&lt;/class&gt;
+    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<h2>UserServiceTest</h2>
+
+<pre><code>package org.superbiz.rest;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.openejb.OpenEjbContainer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
+
+public class UserServiceTest {
+    private static Context context;
+    private static UserService service;
+    private static List&lt;User&gt; users = new ArrayList&lt;User&gt;();
+
+    @BeforeClass
+    public static void start() throws NamingException {
+        Properties properties = new Properties();
+        properties.setProperty(OpenEjbContainer.OPENEJB_EMBEDDED_REMOTABLE, "true");
+        context = EJBContainer.createEJBContainer(properties).getContext();
+
+        // create some records
+        service = (UserService) context.lookup("java:global/rest-on-ejb/UserService");
+        users.add(service.create("foo", "foopwd", "foo@foo.com"));
+        users.add(service.create("bar", "barpwd", "bar@bar.com"));
+    }
+
+    @AfterClass
+    public static void close() throws NamingException {
+        if (context != null) {
+            context.close();
+        }
+    }
+
+    @Test
+    public void create() {
+        int expected = service.list(0, 100).size() + 1;
+        Response response = WebClient.create("http://localhost:4204")
+                .path("/user/create")
+                .query("name", "dummy")
+                .query("pwd", "unbreakable")
+                .query("mail", "foo@bar.fr")
+                .put(null);
+        List&lt;User&gt; list = service.list(0, 100);
+        for (User u : list) {
+            if (!users.contains(u)) {
+                service.delete(u.getId());
+                return;
+            }
+        }
+        fail("user was not added");
+    }
+
+    @Test
+    public void delete() throws Exception {
+        User user = service.create("todelete", "dontforget", "delete@me.com");
+
+        WebClient.create("http://localhost:4204").path("/user/delete/" + user.getId()).delete();
+
+        user = service.find(user.getId());
+        assertNull(user);
+    }
+
+    @Test
+    public void show() {
+        User user = WebClient.create("http://localhost:4204")
+                .path("/user/show/" + users.iterator().next().getId())
+                .get(User.class);
+        assertEquals("foo", user.getFullname());
+        assertEquals("foopwd", user.getPassword());
+        assertEquals("foo@foo.com", user.getEmail());
+    }
+
+    @Test
+    public void list() throws Exception {
+        String users = WebClient.create("http://localhost:4204")
+                .path("/user/list")
+                .get(String.class);
+        assertEquals(
+                "&lt;users&gt;" +
+                        "&lt;user&gt;" +
+                        "&lt;email&gt;foo@foo.com&lt;/email&gt;" +
+                        "&lt;fullname&gt;foo&lt;/fullname&gt;" +
+                        "&lt;id&gt;1&lt;/id&gt;" +
+                        "&lt;password&gt;foopwd&lt;/password&gt;" +
+                        "&lt;/user&gt;" +
+                        "&lt;user&gt;" +
+                        "&lt;email&gt;bar@bar.com&lt;/email&gt;" +
+                        "&lt;fullname&gt;bar&lt;/fullname&gt;" +
+                        "&lt;id&gt;2&lt;/id&gt;" +
+                        "&lt;password&gt;barpwd&lt;/password&gt;" +
+                        "&lt;/user&gt;" +
+                        "&lt;/users&gt;", users);
+    }
+
+    @Test
+    public void update() throws Exception {
+        User created = service.create("name", "pwd", "mail");
+        Response response = WebClient.create("http://localhost:4204")
+                .path("/user/update/" + created.getId())
+                .query("name", "corrected")
+                .query("pwd", "userpwd")
+                .query("mail", "it@is.ok")
+                .post(null);
+
+        JAXBContext ctx = JAXBContext.newInstance(User.class);
+        Unmarshaller unmarshaller = ctx.createUnmarshaller();
+        User modified = (User) unmarshaller.unmarshal(InputStream.class.cast(response.getEntity()));
+
+        assertEquals("corrected", modified.getFullname());
+        assertEquals("userpwd", modified.getPassword());
+        assertEquals("it@is.ok", modified.getEmail());
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.rest.UserServiceTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/rest-on-ejb
+INFO - openejb.base = /Users/dblevins/examples/rest-on-ejb
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/rest-on-ejb/target/classes
+INFO - Beginning load: /Users/dblevins/examples/rest-on-ejb/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/rest-on-ejb
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean UserService: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.rest.UserServiceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=user)
+INFO - Configuring Service(id=Default JDBC Database, type=Resource, provider-id=Default JDBC Database)
+INFO - Auto-creating a Resource with id 'Default JDBC Database' of type 'DataSource for 'user'.
+INFO - Configuring Service(id=Default Unmanaged JDBC Database, type=Resource, provider-id=Default Unmanaged JDBC Database)
+INFO - Auto-creating a Resource with id 'Default Unmanaged JDBC Database' of type 'DataSource for 'user'.
+INFO - Adjusting PersistenceUnit user &lt;jta-data-source&gt; to Resource ID 'Default JDBC Database' from 'My DataSource'
+INFO - Adjusting PersistenceUnit user &lt;non-jta-data-source&gt; to Resource ID 'Default Unmanaged JDBC Database' from 'My Unmanaged DataSource'
+INFO - Enterprise application "/Users/dblevins/examples/rest-on-ejb" loaded.
+INFO - Assembling app: /Users/dblevins/examples/rest-on-ejb
+INFO - PersistenceUnit(name=user, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 407ms
+INFO - Jndi(name="java:global/rest-on-ejb/UserService!org.superbiz.rest.UserService")
+INFO - Jndi(name="java:global/rest-on-ejb/UserService")
+INFO - Jndi(name="java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest!org.superbiz.rest.UserServiceTest")
+INFO - Jndi(name="java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest")
+INFO - Created Ejb(deployment-id=org.superbiz.rest.UserServiceTest, ejb-name=org.superbiz.rest.UserServiceTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=UserService, ejb-name=UserService, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=org.superbiz.rest.UserServiceTest, ejb-name=org.superbiz.rest.UserServiceTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=UserService, ejb-name=UserService, container=Default Singleton Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/rest-on-ejb)
+INFO - Initializing network services
+INFO - Creating ServerService(id=httpejbd)
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Creating ServerService(id=cxf-rs)
+INFO - Initializing network services
+  ** Starting Services **
+  NAME                 IP              PORT  
+  httpejbd             127.0.0.1       4204  
+  admin thread         127.0.0.1       4200  
+  ejbd                 127.0.0.1       4201  
+  ejbd                 127.0.0.1       4203  
+-------
+Ready!
+WARN - Query "select u from User u" is removed from cache  excluded permanently. Query "select u from User u" is not cached because it uses pagination..
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.102 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Lock.html">javax.ejb.Lock</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/LockType.html">javax.ejb.LockType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Id.html">javax.persistence.Id</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQueries.html">javax.persistence.NamedQueries</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQuery.html">javax.persistence.NamedQuery</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/DELETE.html">javax.ws.rs.DELETE</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/DefaultValue.html">javax.ws.rs.DefaultValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/GET.html">javax.ws.rs.GET</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/POST.html">javax.ws.rs.POST</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/PUT.html">javax.ws.rs.PUT</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/Path.html">javax.ws.rs.Path</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/PathParam.html">javax.ws.rs.PathParam</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/Produces.html">javax.ws.rs.Produces</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/QueryParam.html">javax.ws.rs.QueryParam</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/core/MediaType.html">javax.ws.rs.core.MediaType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/core/Response.html">javax.ws.rs.core.Response</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/JAXBContext.html">javax.xml.bind.JAXBContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/Unmarshaller.html">javax.xml.bind.Unmarshaller</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/annotation/XmlRootElement.html">javax.xml.bind.annotation.XmlRootElement</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/rest-on-ejb">rest-on-ejb</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/rest-on-ejb">rest-on-ejb</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/rest-on-ejb
+cd rest-on-ejb
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

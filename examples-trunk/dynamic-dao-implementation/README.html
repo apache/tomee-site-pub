@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Dynamic DAO Implementation</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Dynamic DAO Implementation",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/dynamic-dao-implementation/">Dynamic Dao Implementation</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Dynamic DAO Implementation
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Many aspects of Data Access Objects (DAOs) are very repetitive and boiler plate.  As a fun and experimental feature, TomEE supports dynamically implementing an interface
+that is seen to have standard DAO-style methods.</p>
+
+<p>The interface has to be annotated with @PersistenceContext to define which EntityManager to use.</p>
+
+<p>Methods should respect these conventions:</p>
+
+<ul>
+<li>void save(Foo foo): persist foo</li>
+<li>Foo update(Foo foo): merge foo</li>
+<li>void delete(Foo foo): remove foo, if foo is detached it tries to attach it</li>
+<li>Collection<Foo>|Foo namedQuery(String name[, Map<String, ?> params, int first, int max]): run the named query called name, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
+<li>Collection<Foo>|Foo nativeQuery(String name[, Map<String, ?> params, int first, int max]): run the native query called name, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
+<li>Collection<Foo>|Foo query(String value [, Map<String, ?> params, int first, int max]): run the query put as first parameter, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
+<li>Collection<Foo> findAll([int first, int max]): find all Foo, parameters are used for pagination</li>
+<li>Collection<Foo> findByBar1AndBar2AndBar3(<bar 1 type> bar1, <bar 2 type> bar2, <bar3 type> bar3 [, int first, int max]): find all Foo with specified field values for bar1, bar2, bar3.</li>
+</ul>
+
+<p>Dynamic finder can have as much as you want field constraints. For String like is used and for other type equals is used.</p>
+
+<h1>Example</h1>
+
+<h2>User</h2>
+
+<pre><code>package org.superbiz.dynamic;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "dynamic-ejb-impl-test.query", query = "SELECT u FROM User AS u WHERE u.name LIKE :name"),
+        @NamedQuery(name = "dynamic-ejb-impl-test.all", query = "SELECT u FROM User AS u")
+})
+public class User {
+    @Id
+    @GeneratedValue
+    private long id;
+    private String name;
+    private int age;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+</code></pre>
+
+<h2>UserDao</h2>
+
+<pre><code>package org.superbiz.dynamic;
+
+
+import javax.ejb.Stateless;
+import javax.persistence.PersistenceContext;
+import java.util.Collection;
+import java.util.Map;
+
+@Stateless
+@PersistenceContext(name = "dynamic")
+public interface UserDao {
+    User findById(long id);
+
+    Collection&lt;User&gt; findByName(String name);
+
+    Collection&lt;User&gt; findByNameAndAge(String name, int age);
+
+    Collection&lt;User&gt; findAll();
+
+    Collection&lt;User&gt; findAll(int first, int max);
+
+    Collection&lt;User&gt; namedQuery(String name, Map&lt;String, ?&gt; params, int first, int max);
+
+    Collection&lt;User&gt; namedQuery(String name, int first, int max, Map&lt;String, ?&gt; params);
+
+    Collection&lt;User&gt; namedQuery(String name, Map&lt;String, ?&gt; params);
+
+    Collection&lt;User&gt; namedQuery(String name);
+
+    Collection&lt;User&gt; query(String value, Map&lt;String, ?&gt; params);
+
+    void save(User u);
+
+    void delete(User u);
+
+    User update(User u);
+}
+</code></pre>
+
+<h2>persistence.xml</h2>
+
+<pre><code>&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+      http://java.sun.com/xml/ns/persistence
+      http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="dynamic" transaction-type="JTA"&gt;
+    &lt;jta-data-source&gt;jdbc/dynamicDB&lt;/jta-data-source&gt;
+    &lt;class&gt;org.superbiz.dynamic.User&lt;/class&gt;
+    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<h2>DynamicUserDaoTest</h2>
+
+<pre><code>package org.superbiz.dynamic;
+
+import junit.framework.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.EJBException;
+import javax.ejb.Stateless;
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+public class DynamicUserDaoTest {
+    private static UserDao dao;
+    private static Util util;
+
+    @BeforeClass
+    public static void init() throws Exception {
+        final Properties p = new Properties();
+        p.put("jdbc/dynamicDB", "new://Resource?type=DataSource");
+        p.put("jdbc/dynamicDB.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("jdbc/dynamicDB.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        p.put("jdbc/dynamicDB.UserName", "sa");
+        p.put("jdbc/dynamicDB.Password", "");
+
+        final Context context = EJBContainer.createEJBContainer(p).getContext();
+        dao = (UserDao) context.lookup("java:global/dynamic-dao-implementation/UserDao");
+        util = (Util) context.lookup("java:global/dynamic-dao-implementation/Util");
+
+        util.init(); // init database
+    }
+
+    @Test
+    public void simple() {
+        User user = dao.findById(1);
+        assertNotNull(user);
+        assertEquals(1, user.getId());
+    }
+
+    @Test
+    public void findAll() {
+        Collection&lt;User&gt; users = dao.findAll();
+        assertEquals(10, users.size());
+    }
+
+    @Test
+    public void pagination() {
+        Collection&lt;User&gt; users = dao.findAll(0, 5);
+        assertEquals(5, users.size());
+
+        users = dao.findAll(6, 1);
+        assertEquals(1, users.size());
+        assertEquals(7, users.iterator().next().getId());
+    }
+
+    @Test
+    public void persist() {
+        User u = new User();
+        dao.save(u);
+        assertNotNull(u.getId());
+        util.remove(u);
+    }
+
+    @Test
+    public void remove() {
+        User u = new User();
+        dao.save(u);
+        assertNotNull(u.getId());
+        dao.delete(u);
+        try {
+            dao.findById(u.getId());
+            Assert.fail();
+        } catch (EJBException ee) {
+            assertTrue(ee.getCause() instanceof NoResultException);
+        }
+    }
+
+    @Test
+    public void merge() {
+        User u = new User();
+        u.setAge(1);
+        dao.save(u);
+        assertEquals(1, u.getAge());
+        assertNotNull(u.getId());
+
+        u.setAge(2);
+        dao.update(u);
+        assertEquals(2, u.getAge());
+
+        dao.delete(u);
+    }
+
+    @Test
+    public void oneCriteria() {
+        Collection&lt;User&gt; users = dao.findByName("foo");
+        assertEquals(4, users.size());
+        for (User user : users) {
+            assertEquals("foo", user.getName());
+        }
+    }
+
+    @Test
+    public void twoCriteria() {
+        Collection&lt;User&gt; users = dao.findByNameAndAge("bar-1", 1);
+        assertEquals(1, users.size());
+
+        User user = users.iterator().next();
+        assertEquals("bar-1", user.getName());
+        assertEquals(1, user.getAge());
+    }
+
+    @Test
+    public void query() {
+        Map&lt;String, Object&gt; params = new HashMap&lt;String, Object&gt;();
+        params.put("name", "foo");
+
+        Collection&lt;User&gt; users = dao.namedQuery("dynamic-ejb-impl-test.query", params, 0, 100);
+        assertEquals(4, users.size());
+
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", params);
+        assertEquals(4, users.size());
+
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", params, 0, 2);
+        assertEquals(2, users.size());
+
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", 0, 2, params);
+        assertEquals(2, users.size());
+
+        users = dao.namedQuery("dynamic-ejb-impl-test.all");
+        assertEquals(10, users.size());
+
+        params.remove("name");
+        params.put("age", 1);
+        users = dao.query("SELECT u FROM User AS u WHERE u.age = :age", params);
+        assertEquals(3, users.size());
+    }
+
+    @Stateless
+    public static class Util {
+        @PersistenceContext
+        private EntityManager em;
+
+        public void remove(User o) {
+            em.remove(em.find(User.class, o.getId()));
+        }
+
+        public void init() {
+            for (int i = 0; i &lt; 10; i++) {
+                User u = new User();
+                u.setAge(i % 4);
+                if (i % 3 == 0) {
+                    u.setName("foo");
+                } else {
+                    u.setName("bar-" + i);
+                }
+                em.persist(u);
+            }
+        }
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.dynamic.DynamicUserDaoTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/dynamic-dao-implementation
+INFO - openejb.base = /Users/dblevins/examples/dynamic-dao-implementation
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=jdbc/dynamicDB, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/dynamic-dao-implementation/target/classes
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/dynamic-dao-implementation/target/test-classes
+INFO - Beginning load: /Users/dblevins/examples/dynamic-dao-implementation/target/classes
+INFO - Beginning load: /Users/dblevins/examples/dynamic-dao-implementation/target/test-classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/dynamic-dao-implementation
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean UserDao: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.dynamic.DynamicUserDaoTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=dynamic)
+INFO - Auto-creating a Resource with id 'jdbc/dynamicDBNonJta' of type 'DataSource for 'dynamic'.
+INFO - Configuring Service(id=jdbc/dynamicDBNonJta, type=Resource, provider-id=jdbc/dynamicDB)
+INFO - Adjusting PersistenceUnit dynamic &lt;non-jta-data-source&gt; to Resource ID 'jdbc/dynamicDBNonJta' from 'null'
+INFO - Enterprise application "/Users/dblevins/examples/dynamic-dao-implementation" loaded.
+INFO - Assembling app: /Users/dblevins/examples/dynamic-dao-implementation
+INFO - PersistenceUnit(name=dynamic, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 417ms
+INFO - Jndi(name="java:global/dynamic-dao-implementation/UserDao!org.superbiz.dynamic.UserDao")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/UserDao")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/Util!org.superbiz.dynamic.DynamicUserDaoTest$Util")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/Util")
+INFO - Jndi(name="java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest!org.superbiz.dynamic.DynamicUserDaoTest")
+INFO - Jndi(name="java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest")
+INFO - Created Ejb(deployment-id=UserDao, ejb-name=UserDao, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=Util, ejb-name=Util, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.dynamic.DynamicUserDaoTest, ejb-name=org.superbiz.dynamic.DynamicUserDaoTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=UserDao, ejb-name=UserDao, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=Util, ejb-name=Util, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.dynamic.DynamicUserDaoTest, ejb-name=org.superbiz.dynamic.DynamicUserDaoTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/dynamic-dao-implementation)
+WARN - Meta class "org.superbiz.dynamic.User_" for entity class org.superbiz.dynamic.User can not be registered with following exception "java.security.PrivilegedActionException: java.lang.ClassNotFoundException: org.superbiz.dynamic.User_"
+WARN - Query "SELECT u FROM User AS u WHERE u.name LIKE :name" is removed from cache  excluded permanently. Query "SELECT u FROM User AS u WHERE u.name LIKE :name" is not cached because it uses pagination..
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.471 sec
+
+Results :
+
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJBException.html">javax.ejb.EJBException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Id.html">javax.persistence.Id</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQueries.html">javax.persistence.NamedQueries</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQuery.html">javax.persistence.NamedQuery</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NoResultException.html">javax.persistence.NoResultException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/dynamic-dao-implementation">dynamic-dao-implementation</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/dynamic-dao-implementation">dynamic-dao-implementation</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/dynamic-dao-implementation
+cd dynamic-dao-implementation
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

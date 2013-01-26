@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>REST Example</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=REST Example",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/rest-example/">Rest Example</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>REST Example
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>CommentDAO</h2>
+
+<pre><code>package org.superbiz.rest.dao;
+
+import org.superbiz.rest.model.Comment;
+import org.superbiz.rest.model.Post;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import java.util.Collections;
+import java.util.List;
+
+@Stateless
+public class CommentDAO extends DAO {
+    @EJB
+    private DAO dao;
+
+    public List&lt;Comment&gt; list(long postId) {
+        Post post = dao.find(Post.class, postId);
+        if (post == null) {
+            throw new IllegalArgumentException("post with id " + postId + " not found");
+        }
+        return Collections.unmodifiableList(post.getComments());
+    }
+
+    public Comment create(String author, String content, long postId) {
+        Post post = dao.find(Post.class, postId);
+        if (post == null) {
+            throw new IllegalArgumentException("post with id " + postId + " not found");
+        }
+
+        Comment comment = new Comment();
+        comment.setAuthor(author);
+        comment.setContent(content);
+        dao.create(comment);
+        comment.setPost(post);
+        return comment;
+    }
+
+    public void delete(long id) {
+        dao.delete(Comment.class, id);
+    }
+
+    public Comment update(long id, String author, String content) {
+        Comment comment = dao.find(Comment.class, id);
+        if (comment == null) {
+            throw new IllegalArgumentException("comment with id " + id + " not found");
+        }
+
+        comment.setAuthor(author);
+        comment.setContent(content);
+        return dao.update(comment);
+    }
+}
+</code></pre>
+
+<h2>DAO</h2>
+
+<pre><code>package org.superbiz.rest.dao;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
+
+/**
+ * Simply maps the entitymanager.
+ * It simplifies refactoring (unitName change) and wraps some logic (limited queries).
+ *
+ */
+@Stateless
+public class DAO {
+    @PersistenceContext(unitName = "blog")
+    private EntityManager em;
+
+    public &lt;E&gt; E create(E e) {
+        em.persist(e);
+        return e;
+    }
+
+    public &lt;E&gt; E update(E e) {
+        return em.merge(e);
+    }
+
+    public &lt;E&gt; void delete(Class&lt;E&gt; clazz, long id) {
+        em.remove(em.find(clazz, id));
+    }
+
+    public &lt;E&gt; E find(Class&lt;E&gt; clazz, long id) {
+        return em.find(clazz, id);
+    }
+
+    public &lt;E&gt; List&lt;E&gt; find(Class&lt;E&gt; clazz, String query, int min, int max) {
+        return queryRange(em.createQuery(query, clazz), min, max).getResultList();
+    }
+
+    public &lt;E&gt; List&lt;E&gt; namedFind(Class&lt;E&gt; clazz, String query, int min, int max) {
+        return queryRange(em.createNamedQuery(query, clazz), min, max).getResultList();
+    }
+
+    private static Query queryRange(Query query, int min, int max) {
+        if (max &gt;= 0) {
+            query.setMaxResults(max);
+        }
+        if (min &gt;= 0) {
+            query.setFirstResult(min);
+        }
+        return query;
+    }
+}
+</code></pre>
+
+<h2>PostDAO</h2>
+
+<pre><code>package org.superbiz.rest.dao;
+
+import org.superbiz.rest.model.Post;
+import org.superbiz.rest.model.User;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import java.util.List;
+
+@Stateless
+public class PostDAO {
+    @EJB
+    private DAO dao;
+
+    public Post create(String title, String content, long userId) {
+        User user = dao.find(User.class, userId);
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setUser(user);
+        return dao.create(post);
+    }
+
+    public Post find(long id) {
+        return dao.find(Post.class, id);
+    }
+
+    public List&lt;Post&gt; list(int first, int max) {
+        return dao.namedFind(Post.class, "post.list", first, max);
+    }
+
+    public void delete(long id) {
+        dao.delete(Post.class, id);
+    }
+
+    public Post update(long id, long userId, String title, String content) {
+        User user = dao.find(User.class, userId);
+        if (user == null) {
+            throw new IllegalArgumentException("user id " + id + " not found");
+        }
+
+        Post post = dao.find(Post.class, id);
+        if (post == null) {
+            throw new IllegalArgumentException("post id " + id + " not found");
+        }
+
+        post.setTitle(title);
+        post.setContent(content);
+        post.setUser(user);
+        return dao.update(post);
+    }
+}
+</code></pre>
+
+<h2>UserDAO</h2>
+
+<pre><code>package org.superbiz.rest.dao;
+
+import org.superbiz.rest.model.User;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import java.util.List;
+
+@Stateless
+public class UserDAO {
+    @EJB
+    private DAO dao;
+
+    public User create(String name, String pwd, String mail) {
+        User user = new User();
+        user.setFullname(name);
+        user.setPassword(pwd);
+        user.setEmail(mail);
+        return dao.create(user);
+    }
+
+    public List&lt;User&gt; list(int first, int max) {
+        return dao.namedFind(User.class, "user.list", first, max);
+    }
+
+    public User find(long id) {
+        return dao.find(User.class, id);
+    }
+
+    public void delete(long id) {
+        dao.delete(User.class, id);
+    }
+
+    public User update(long id, String name, String pwd, String mail) {
+        User user = dao.find(User.class, id);
+        if (user == null) {
+            throw new IllegalArgumentException("setUser id " + id + " not found");
+        }
+
+        user.setFullname(name);
+        user.setPassword(pwd);
+        user.setEmail(mail);
+        return dao.update(user);
+    }
+}
+</code></pre>
+
+<h2>Comment</h2>
+
+<pre><code>package org.superbiz.rest.model;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "comment.list", query = "select c from Comment c")
+}
+</code></pre>
+
+<h2>DatedModel</h2>
+
+<pre><code>package org.superbiz.rest.model;
+
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import java.util.Date;
+
+@MappedSuperclass
+public abstract class DatedModel extends Model {
+    private Date created;
+
+    @PrePersist
+    public void create() {
+        created = new Date();
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+}
+</code></pre>
+
+<h2>Model</h2>
+
+<pre><code>package org.superbiz.rest.model;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
+@MappedSuperclass
+@Access(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
+public abstract class Model {
+
+    @Id
+    @GeneratedValue
+    protected long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+}
+</code></pre>
+
+<h2>Post</h2>
+
+<pre><code>package org.superbiz.rest.model;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "post.list", query = "select p from Post p")
+}
+</code></pre>
+
+<h2>User</h2>
+
+<pre><code>package org.superbiz.rest.model;
+
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@Entity
+@NamedQueries({
+        @NamedQuery(name = "user.list", query = "select u from User u")
+}
+</code></pre>
+
+<h2>CommentService</h2>
+
+<pre><code>package org.superbiz.rest.service;
+
+import org.superbiz.rest.dao.CommentDAO;
+import org.superbiz.rest.model.Comment;
+
+import javax.ejb.EJB;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.util.List;
+
+@Path("/api/comment")
+@Produces({"text/xml", "application/json"})
+public class CommentService {
+    @EJB
+    private CommentDAO commentDao;
+
+    @Path("/create")
+    @PUT
+    public Comment create(@QueryParam("author") String author,
+                          @QueryParam("content") String content,
+                          @QueryParam("postId") long postId) {
+        return commentDao.create(author, content, postId);
+    }
+
+    @Path("/list/{postId}")
+    @GET
+    public List&lt;Comment&gt; list(@PathParam("postId") long postId) {
+        return commentDao.list(postId);
+    }
+
+    @Path("/delete/{id}")
+    @DELETE
+    public void delete(@PathParam("id") long id) {
+        commentDao.delete(id);
+    }
+
+    @Path("/update/{id}")
+    @POST
+    public Comment update(@PathParam("id") long id,
+                          @QueryParam("author") String author,
+                          @QueryParam("content") String content) {
+        return commentDao.update(id, author, content);
+    }
+}
+</code></pre>
+
+<h2>PostService</h2>
+
+<pre><code>package org.superbiz.rest.service;
+
+import org.superbiz.rest.dao.PostDAO;
+import org.superbiz.rest.model.Post;
+
+import javax.ejb.EJB;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.util.List;
+
+@Path("/api/post")
+@Produces({"text/xml", "application/json"})
+public class PostService {
+    @EJB
+    private PostDAO dao;
+
+    @Path("/create")
+    @PUT
+    public Post create(@QueryParam("title") String title,
+                       @QueryParam("content") String content,
+                       @QueryParam("userId") long userId) {
+        return dao.create(title, content, userId);
+    }
+
+    @Path("/list")
+    @GET
+    public List&lt;Post&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
+        return dao.list(first, max);
+    }
+
+    @Path("/show/{id}")
+    @GET
+    public Post show(@PathParam("id") long id) {
+        return dao.find(id);
+    }
+
+    @Path("/delete/{id}")
+    @DELETE
+    public void delete(@PathParam("id") long id) {
+        dao.delete(id);
+    }
+
+    @Path("/update/{id}")
+    @POST
+    public Post update(@PathParam("id") long id,
+                       @QueryParam("userId") long userId,
+                       @QueryParam("title") String title,
+                       @QueryParam("content") String content) {
+        return dao.update(id, userId, title, content);
+    }
+}
+</code></pre>
+
+<h2>UserService</h2>
+
+<pre><code>package org.superbiz.rest.service;
+
+import org.superbiz.rest.dao.UserDAO;
+import org.superbiz.rest.model.User;
+
+import javax.ejb.EJB;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.util.List;
+
+@Path("/api/user")
+@Produces({"text/xml", "application/json"})
+public class UserService {
+    @EJB
+    private UserDAO dao;
+
+    @Path("/create")
+    @PUT
+    public User create(@QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
+        return dao.create(name, pwd, mail);
+    }
+
+    @Path("/list")
+    @GET
+    public List&lt;User&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
+        return dao.list(first, max);
+    }
+
+    @Path("/show/{id}")
+    @GET
+    public User show(@PathParam("id") long id) {
+        return dao.find(id);
+    }
+
+    @Path("/delete/{id}")
+    @DELETE
+    public void delete(@PathParam("id") long id) {
+        dao.delete(id);
+    }
+
+    @Path("/update/{id}")
+    @POST
+    public User update(@PathParam("id") long id,
+                       @QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
+        return dao.update(id, name, pwd, mail);
+    }
+}
+</code></pre>
+
+<h2>persistence.xml</h2>
+
+<pre><code>&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="blog"&gt;
+    &lt;jta-data-source&gt;My DataSource&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;My Unmanaged DataSource&lt;/non-jta-data-source&gt;
+    &lt;class&gt;org.superbiz.rest.model.User&lt;/class&gt;
+    &lt;class&gt;org.superbiz.rest.model.Post&lt;/class&gt;
+    &lt;class&gt;org.superbiz.rest.model.Comment&lt;/class&gt;
+    &lt;class&gt;org.superbiz.rest.model.Model&lt;/class&gt;
+    &lt;class&gt;org.superbiz.rest.model.DatedModel&lt;/class&gt;
+    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<h2>web.xml</h2>
+
+<pre><code>&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         metadata-complete="false"
+         version="2.5"&gt;
+
+  &lt;display-name&gt;OpenEJB REST Example&lt;/display-name&gt;
+&lt;/web-app&gt;
+</code></pre>
+
+<h2>UserDaoTest</h2>
+
+<pre><code>packagenull
+}
+</code></pre>
+
+<h2>UserServiceTest</h2>
+
+<pre><code>packagenull
+}
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/PostConstruct.html">javax.annotation.PostConstruct</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/DependsOn.html">javax.ejb.DependsOn</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJB.html">javax.ejb.EJB</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Lock.html">javax.ejb.Lock</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/LockType.html">javax.ejb.LockType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Schedule.html">javax.ejb.Schedule</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Startup.html">javax.ejb.Startup</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/enterprise/inject/Typed.html">javax.enterprise.inject.Typed</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/inject/Inject.html">javax.inject.Inject</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/NamingException.html">javax.naming.NamingException</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Access.html">javax.persistence.Access</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/AccessType.html">javax.persistence.AccessType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/FetchType.html">javax.persistence.FetchType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Id.html">javax.persistence.Id</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/JoinColumn.html">javax.persistence.JoinColumn</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Lob.html">javax.persistence.Lob</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/ManyToOne.html">javax.persistence.ManyToOne</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/MappedSuperclass.html">javax.persistence.MappedSuperclass</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQueries.html">javax.persistence.NamedQueries</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/NamedQuery.html">javax.persistence.NamedQuery</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/OneToMany.html">javax.persistence.OneToMany</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PrePersist.html">javax.persistence.PrePersist</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Query.html">javax.persistence.Query</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/validation/Valid.html">javax.validation.Valid</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/validation/constraints/NotNull.html">javax.validation.constraints.NotNull</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/validation/constraints/Pattern.html">javax.validation.constraints.Pattern</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/validation/constraints/Size.html">javax.validation.constraints.Size</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/DELETE.html">javax.ws.rs.DELETE</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/DefaultValue.html">javax.ws.rs.DefaultValue</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/GET.html">javax.ws.rs.GET</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/POST.html">javax.ws.rs.POST</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/PUT.html">javax.ws.rs.PUT</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/Path.html">javax.ws.rs.Path</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/PathParam.html">javax.ws.rs.PathParam</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/Produces.html">javax.ws.rs.Produces</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ws/rs/QueryParam.html">javax.ws.rs.QueryParam</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/annotation/XmlAccessType.html">javax.xml.bind.annotation.XmlAccessType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/annotation/XmlAccessorType.html">javax.xml.bind.annotation.XmlAccessorType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/annotation/XmlRootElement.html">javax.xml.bind.annotation.XmlRootElement</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/xml/bind/annotation/XmlTransient.html">javax.xml.bind.annotation.XmlTransient</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/rest-example">rest-example</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/rest-example">rest-example</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/rest-example
+cd rest-example
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

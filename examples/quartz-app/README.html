@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Quartz Resource Adapter usage</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Quartz Resource Adapter usage",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/quartz-app/">Quartz App</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Quartz Resource Adapter usage
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Note this example is somewhat dated.  It predates the schedule API which was added to EJB 3.1.  Modern applications should use the schedule API which has many, if not all,
+the same features as Quartz.  In fact, Quartz is the engine that drives the <code>@Schedule</code> and <code>ScheduleExpression</code> support in OpenEJB and TomEE.</p>
+
+<p>Despite being dated from a scheduling perspective it is still an excellent reference for how to plug-in and test a custom Java EE Resource Adapter.</p>
+
+<h1>Project structure</h1>
+
+<p>As <code>.rar</code> files do not do well on a standard classpath structure the goal is to effectively "unwrap" the <code>.rar</code> so that its dependencies are on the classpath and its <code>ra.xml</code> file
+can be found in scanned by OpenEJB.</p>
+
+<p>We do this by creating a mini maven module to represent the rar in maven terms.  The <code>pom.xml</code> of the "rar module" declares all of the jars that would be inside <code>.rar</code> as maven
+dependencies.  The <code>ra.xml</code> file is added to the project in <code>src/main/resources/META-INF/ra.xml</code> where it will be visible to other modules.</p>
+
+<pre><code>quartz-app
+quartz-app/pom.xml
+quartz-app/quartz-beans
+quartz-app/quartz-beans/pom.xml
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/JobBean.java
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/JobScheduler.java
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/QuartzMdb.java
+quartz-app/quartz-beans/src/main/resources/META-INF
+quartz-app/quartz-beans/src/main/resources/META-INF/ejb-jar.xml
+quartz-app/quartz-beans/src/test/java/org/superbiz/quartz/QuartzMdbTest.java
+quartz-app/quartz-ra
+quartz-app/quartz-ra/pom.xml
+quartz-app/quartz-ra/src/main/resources/META-INF
+quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml
+</code></pre>
+
+<h2>ra.xml</h2>
+
+<p>The connector in question has both inbound and outbound Resource Adapters.  The inbound Resource Adapter can be used to drive message driven beans (MDBs)</p>
+
+<p>the outbound Resource Adapter, <code>QuartzResourceAdapter</code>, can be injected into any component via <code>@Resource</code> and used to originate and send messages or events.</p>
+
+<pre><code>&lt;connector xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+           http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+           version="1.5"&gt;
+
+  &lt;description&gt;Quartz ResourceAdapter&lt;/description&gt;
+  &lt;display-name&gt;Quartz ResourceAdapter&lt;/display-name&gt;
+
+  &lt;vendor-name&gt;OpenEJB&lt;/vendor-name&gt;
+  &lt;eis-type&gt;Quartz Adapter&lt;/eis-type&gt;
+  &lt;resourceadapter-version&gt;1.0&lt;/resourceadapter-version&gt;
+
+  &lt;resourceadapter id="QuartzResourceAdapter"&gt;
+    &lt;resourceadapter-class&gt;org.apache.openejb.resource.quartz.QuartzResourceAdapter&lt;/resourceadapter-class&gt;
+
+    &lt;inbound-resourceadapter&gt;
+      &lt;messageadapter&gt;
+        &lt;messagelistener&gt;
+          &lt;messagelistener-type&gt;org.quartz.Job&lt;/messagelistener-type&gt;
+          &lt;activationspec&gt;
+            &lt;activationspec-class&gt;org.apache.openejb.resource.quartz.JobSpec&lt;/activationspec-class&gt;
+          &lt;/activationspec&gt;
+        &lt;/messagelistener&gt;
+      &lt;/messageadapter&gt;
+    &lt;/inbound-resourceadapter&gt;
+
+  &lt;/resourceadapter&gt;
+&lt;/connector&gt;
+</code></pre>
+
+<h1>Using the Outbound Resource Adapter</h1>
+
+<p>Here we see the outbound resource adapter used in a stateless session bean to schedule a job that will be executed by the MDB</p>
+
+<pre><code>package org.superbiz.quartz;
+
+import org.apache.openejb.resource.quartz.QuartzResourceAdapter;
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.SimpleTrigger;
+
+import javax.ejb.Stateless;
+import javax.naming.InitialContext;
+import java.util.Date;
+
+@Stateless
+public class JobBean implements JobScheduler {
+
+    @Override
+    public Date createJob() throws Exception {
+
+        final QuartzResourceAdapter ra = (QuartzResourceAdapter) new InitialContext().lookup("java:openejb/Resource/QuartzResourceAdapter");
+        final Scheduler s = ra.getScheduler();
+
+        //Add a job type
+        final JobDetail jd = new JobDetail("job1", "group1", JobBean.MyTestJob.class);
+        jd.getJobDataMap().put("MyJobKey", "MyJobValue");
+
+        //Schedule my 'test' job to run now
+        final SimpleTrigger trigger = new SimpleTrigger("trigger1", "group1", new Date());
+        return s.scheduleJob(jd, trigger);
+    }
+
+    public static class MyTestJob implements Job {
+
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+            System.out.println("This is a simple test job to get: " + context.getJobDetail().getJobDataMap().get("MyJobKey"));
+        }
+    }
+}
+</code></pre>
+
+<h1>Recieving data from the Inbound Resource Adapter</h1>
+
+<pre><code>package org.superbiz.quartz;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+import javax.ejb.ActivationConfigProperty;
+import javax.ejb.MessageDriven;
+
+@MessageDriven(activationConfig = {
+        @ActivationConfigProperty(propertyName = "cronExpression", propertyValue = "* * * * * ?")})
+public class QuartzMdb implements Job {
+
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        System.out.println("Executing Job");
+    }
+}
+</code></pre>
+
+<h1>Test case</h1>
+
+<pre><code>package org.superbiz.quartz;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Date;
+import java.util.Properties;
+
+public class QuartzMdbTest {
+
+    private static InitialContext initialContext = null;
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+
+        if (null == initialContext) {
+            Properties properties = new Properties();
+            properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+
+            initialContext = new InitialContext(properties);
+        }
+    }
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        if (null != initialContext) {
+            initialContext.close();
+            initialContext = null;
+        }
+    }
+
+    @Test
+    public void testLookup() throws Exception {
+
+        final JobScheduler jbi = (JobScheduler) initialContext.lookup("JobBeanLocal");
+        final Date d = jbi.createJob();
+        Thread.sleep(500);
+        System.out.println("Scheduled test job should have run at: " + d.toString());
+    }
+
+    @Test
+    public void testMdb() throws Exception {
+        // Sleep 3 seconds and give quartz a chance to execute our MDB
+        Thread.sleep(3000);
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.quartz.QuartzMdbTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/quartz-app/quartz-beans
+INFO - openejb.base = /Users/dblevins/examples/quartz-app/quartz-beans
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found ConnectorModule in classpath: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/quartz-app/quartz-beans/target/classes
+INFO - Beginning load: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Extracting jar: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Extracted path: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0
+INFO - Beginning load: /Users/dblevins/examples/quartz-app/quartz-beans/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean JobBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=QuartzResourceAdapter, type=Resource, provider-id=QuartzResourceAdapter)
+INFO - Configuring Service(id=quartz-ra-1.0, type=Container, provider-id=Default MDB Container)
+INFO - Enterprise application "/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear" loaded.
+INFO - Assembling app: /Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear
+INFO - Jndi(name=JobBeanLocal) --&gt; Ejb(deployment-id=JobBean)
+INFO - Jndi(name=global/classpath.ear/quartz-beans/JobBean!org.superbiz.quartz.JobScheduler) --&gt; Ejb(deployment-id=JobBean)
+INFO - Jndi(name=global/classpath.ear/quartz-beans/JobBean) --&gt; Ejb(deployment-id=JobBean)
+INFO - Created Ejb(deployment-id=JobBean, ejb-name=JobBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=QuartzMdb, ejb-name=QuartzMdb, container=quartz-ra-1.0)
+Executing Job
+INFO - Started Ejb(deployment-id=JobBean, ejb-name=JobBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=QuartzMdb, ejb-name=QuartzMdb, container=quartz-ra-1.0)
+INFO - Deployed Application(path=/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear)
+This is a simple test job to get: MyJobValue
+Scheduled test job should have run at: Fri Oct 28 17:05:12 PDT 2011
+Executing Job
+Executing Job
+Executing Job
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.971 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/ActivationConfigProperty.html">javax.ejb.ActivationConfigProperty</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Local.html">javax.ejb.Local</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/MessageDriven.html">javax.ejb.MessageDriven</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/InitialContext.html">javax.naming.InitialContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/quartz-app">quartz-app</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/quartz-app">quartz-app</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/quartz-app
+cd quartz-app
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

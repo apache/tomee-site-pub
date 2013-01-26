@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Application Composer</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Application Composer",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/application-composer/">Application Composer</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Application Composer
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>The <code>org.apache.openejb.junit.ApplicationComposer</code> is JUnit test runner modeled after the way we've done testing internally in OpenEJB for years (since about 2006).
+It involves no classpath scanning at all.  If you want something to be in the app, you must build it directly in your testcase.</p>
+
+<p>With the <code>ApplicationComposer</code> you can do identical testing that OpenEJB uses internally, but with limited dependency on OpenEJB itself.  The main dependency is on the code
+that is used to build the actual applications:</p>
+
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-jee&lt;/artifactId&gt;
+  &lt;version&gt;4.0.0-beta-1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h1>Composing an Application</h1>
+
+<p>The main difference to the embedded <code>EJBContainer</code> API is building the application in the test code.  This is done with one or more methods in the test case annotated
+with <code>org.apache.openejb.junit.Module</code> using the following format:</p>
+
+<pre><code>@Module
+public &lt;return-value&gt; &lt;module-name&gt;() {
+</code></pre>
+
+<p>Where <strong>module-name</strong> is the name you wish to use for that module and <strong>return-value</strong> can be any one of the following:</p>
+
+<ul>
+<li>java.lang.Class</li>
+<li>java.lang.Class[]</li>
+<li>org.apache.openejb.jee.EjbJar</li>
+<li>org.apache.openejb.jee.EnterpriseBean</li>
+<li>org.apache.openejb.jee.Application</li>
+<li>org.apache.openejb.jee.Connector</li>
+<li>org.apache.openejb.jee.Beans</li>
+<li>org.apache.openejb.jee.jpa.unit.Persistence</li>
+<li>org.apache.openejb.jee.jpa.unit.PersistenceUnit</li>
+</ul>
+
+<h1>Example</h1>
+
+<p>Used in an actual testcase, that might look like so:</p>
+
+<pre><code>import junit.framework.TestCase;
+import org.apache.openejb.jee.EjbJar;
+import org.apache.openejb.jee.StatefulBean;
+import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
+import org.apache.openejb.junit.ApplicationComposer;
+import org.apache.openejb.junit.Configuration;
+import org.apache.openejb.junit.Module;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
+import java.util.List;
+import java.util.Properties;
+
+@RunWith(ApplicationComposer.class)
+public class MoviesTest extends TestCase {
+
+    @EJB
+    private Movies movies;
+
+    @Resource
+    private UserTransaction userTransaction;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Module
+    public PersistenceUnit persistence() {
+        PersistenceUnit unit = new PersistenceUnit("movie-unit");
+        unit.setJtaDataSource("movieDatabase");
+        unit.setNonJtaDataSource("movieDatabaseUnmanaged");
+        unit.getClazz().add(Movie.class.getName());
+        unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+        return unit;
+    }
+
+    @Module
+    public EjbJar beans() {
+        EjbJar ejbJar = new EjbJar("movie-beans");
+        ejbJar.addEnterpriseBean(new StatefulBean(MoviesImpl.class));
+        return ejbJar;
+    }
+
+    @Configuration
+    public Properties config() throws Exception {
+        Properties p = new Properties();
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        return p;
+    }
+
+    @Test
+    public void test() throws Exception {
+
+        userTransaction.begin();
+
+        try {
+            entityManager.persist(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+            entityManager.persist(new Movie("Joel Coen", "Fargo", 1996));
+            entityManager.persist(new Movie("Joel Coen", "The Big Lebowski", 1998));
+
+            List&lt;Movie&gt; list = movies.getMovies();
+            assertEquals("List.size()", 3, list.size());
+
+            for (Movie movie : list) {
+                movies.deleteMovie(movie);
+            }
+
+            assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+
+        } finally {
+            userTransaction.commit();
+        }
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.composed.MoviesTest
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring enterprise application: /Users/dblevins/examples/application-composer/MoviesTest
+WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.composed.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean MoviesImpl: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring PersistenceUnit(name=movie-unit)
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
+INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/examples/application-composer/MoviesTest" loaded.
+INFO - Assembling app: /Users/dblevins/examples/application-composer/MoviesTest
+INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 449ms
+INFO - Jndi(name=org.superbiz.composed.MoviesTestLocalBean) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest!org.superbiz.composed.MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+INFO - Jndi(name=MoviesImplLocal) --&gt; Ejb(deployment-id=MoviesImpl)
+INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl!org.superbiz.composed.Movies) --&gt; Ejb(deployment-id=MoviesImpl)
+INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl) --&gt; Ejb(deployment-id=MoviesImpl)
+INFO - Created Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/application-composer/MoviesTest)
+INFO - Undeploying app: /Users/dblevins/examples/application-composer/MoviesTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.221 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/Resource.html">javax.annotation.Resource</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJB.html">javax.ejb.EJB</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateful.html">javax.ejb.Stateful</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/TransactionAttribute.html">javax.ejb.TransactionAttribute</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/TransactionAttributeType.html#MANDATORY">javax.ejb.TransactionAttributeType.MANDATORY</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContextType.html">javax.persistence.PersistenceContextType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Query.html">javax.persistence.Query</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/transaction/UserTransaction.html">javax.transaction.UserTransaction</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/application-composer">application-composer</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/application-composer">application-composer</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/application-composer
+cd application-composer
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

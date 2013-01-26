@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Telephone Stateful</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Telephone Stateful",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/telephone-stateful/">Telephone Stateful</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Telephone Stateful
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<p>This example shows how to use OpenEJB's remoting capabilities in an embedded scenario.</p>
+
+<p>The basic recipe is the same for a standard embedded scenario but with these added
+ingreditents:</p>
+
+<ul>
+<li><code>openejb.embedded.remotable</code> property</li>
+<li><code>openejb-ejbd</code> jar</li>
+</ul>
+
+<p>While creating the InitialContext, pass in the openejb.embedded.remotable property with
+the value of "true".  When this is seen by the LocalInitialContextFactory, it will boot up
+the Server ServiceManager in the VM which will in turn look for ServerServices in the
+classpath.</p>
+
+<p>Provided you have the openejb-ejbd jar in your classpath along with it's dependencies
+(openejb-server, openejb-client, openejb-core), then those services will be brought online
+and remote clients will be able to connect into your vm and invoke beans.</p>
+
+<p>If you want to add more ServerServices such as the http version of the ejbd protocol you'd
+simply add the openejb-httpejbd jar to your classpath.  A number of ServerServices are
+available currently:</p>
+
+<ul>
+<li>openejb-ejbd</li>
+<li>openejb-http</li>
+<li>openejb-telnet</li>
+<li>openejb-derbynet</li>
+<li>openejb-hsql</li>
+<li>openejb-activemq</li>
+</ul>
+
+<h2>Telephone</h2>
+
+<pre><code>package org.superbiz.telephone;
+
+public interface Telephone {
+
+    void speak(String words);
+
+    String listen();
+}
+</code></pre>
+
+<h2>TelephoneBean</h2>
+
+<pre><code>package org.superbiz.telephone;
+
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+import java.util.ArrayList;
+import java.util.List;
+
+@Remote
+@Stateful
+public class TelephoneBean implements Telephone {
+
+    private static final String[] answers = {
+            "How nice.",
+            "Oh, of course.",
+            "Interesting.",
+            "Really?",
+            "No.",
+            "Definitely.",
+            "I wondered about that.",
+            "Good idea.",
+            "You don't say!",
+    };
+
+    private List&lt;String&gt; conversation = new ArrayList&lt;String&gt;();
+
+    public void speak(String words) {
+        conversation.add(words);
+    }
+
+    public String listen() {
+        if (conversation.size() == 0) {
+            return "Nothing has been said";
+        }
+
+        String lastThingSaid = conversation.get(conversation.size() - 1);
+        return answers[Math.abs(lastThingSaid.hashCode()) % answers.length];
+    }
+}
+</code></pre>
+
+<h2>TelephoneTest</h2>
+
+<pre><code>package org.superbiz.telephone;
+
+import junit.framework.TestCase;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+public class TelephoneTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.embedded.remotable", "true");
+        // Uncomment these properties to change the defaults
+        //properties.setProperty("ejbd.port", "4202");
+        //properties.setProperty("ejbd.bind", "localhost");
+        //properties.setProperty("ejbd.threads", "200");
+        //properties.setProperty("ejbd.disabled", "false");
+        //properties.setProperty("ejbd.only_from", "127.0.0.1,192.168.1.1");
+
+        new InitialContext(properties);
+    }
+
+    /**
+     * Lookup the Telephone bean via its remote interface but using the LocalInitialContextFactory
+     *
+     * @throws Exception
+     */
+    public void testTalkOverLocalNetwork() throws Exception {
+
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        InitialContext localContext = new InitialContext(properties);
+
+        Telephone telephone = (Telephone) localContext.lookup("TelephoneBeanRemote");
+
+        telephone.speak("Did you know I am talking directly through the embedded container?");
+
+        assertEquals("Interesting.", telephone.listen());
+
+
+        telephone.speak("Yep, I'm using the bean's remote interface but since the ejb container is embedded " +
+                "in the same vm I'm just using the LocalInitialContextFactory.");
+
+        assertEquals("Really?", telephone.listen());
+
+
+        telephone.speak("Right, you really only have to use the RemoteInitialContextFactory if you're in a different vm.");
+
+        assertEquals("Oh, of course.", telephone.listen());
+    }
+
+    /**
+     * Lookup the Telephone bean via its remote interface using the RemoteInitialContextFactory
+     *
+     * @throws Exception
+     */
+    public void testTalkOverRemoteNetwork() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+        properties.setProperty(Context.PROVIDER_URL, "ejbd://localhost:4201");
+        InitialContext remoteContext = new InitialContext(properties);
+
+        Telephone telephone = (Telephone) remoteContext.lookup("TelephoneBeanRemote");
+
+        telephone.speak("Is this a local call?");
+
+        assertEquals("No.", telephone.listen());
+
+
+        telephone.speak("This would be a lot cooler if I was connecting from another VM then, huh?");
+
+        assertEquals("I wondered about that.", telephone.listen());
+
+
+        telephone.speak("I suppose I should hangup and call back over the LocalInitialContextFactory.");
+
+        assertEquals("Good idea.", telephone.listen());
+
+
+        telephone.speak("I'll remember this though in case I ever have to call you accross a network.");
+
+        assertEquals("Definitely.", telephone.listen());
+    }
+}
+</code></pre>
+
+<h1>Running</h1>
+
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.telephone.TelephoneTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://openejb.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/telephone-stateful
+INFO - openejb.base = /Users/dblevins/examples/telephone-stateful
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/telephone-stateful/target/classes
+INFO - Beginning load: /Users/dblevins/examples/telephone-stateful/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/telephone-stateful/classpath.ear
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean TelephoneBean: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Enterprise application "/Users/dblevins/examples/telephone-stateful/classpath.ear" loaded.
+INFO - Assembling app: /Users/dblevins/examples/telephone-stateful/classpath.ear
+INFO - Jndi(name=TelephoneBeanRemote) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Jndi(name=global/classpath.ear/telephone-stateful/TelephoneBean!org.superbiz.telephone.Telephone) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Jndi(name=global/classpath.ear/telephone-stateful/TelephoneBean) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Created Ejb(deployment-id=TelephoneBean, ejb-name=TelephoneBean, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=TelephoneBean, ejb-name=TelephoneBean, container=Default Stateful Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/telephone-stateful/classpath.ear)
+INFO - Initializing network services
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+  ** Starting Services **
+  NAME                 IP              PORT  
+  admin thread         127.0.0.1       4200  
+  ejbd                 127.0.0.1       4201  
+  ejbd                 127.0.0.1       4203  
+-------
+Ready!
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.448 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Remote.html">javax.ejb.Remote</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateful.html">javax.ejb.Stateful</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/InitialContext.html">javax.naming.InitialContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/telephone-stateful">telephone-stateful</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/telephone-stateful">telephone-stateful</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/telephone-stateful
+cd telephone-stateful
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Struts</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=Struts",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/struts/">Struts</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>Struts
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+
+<h2>AddUser</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Properties;
+
+
+public class AddUser {
+
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String errorMessage;
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String execute() {
+
+        try {
+            UserService service = null;
+            Properties props = new Properties();
+            props.put(Context.INITIAL_CONTEXT_FACTORY,
+                    "org.apache.openejb.core.LocalInitialContextFactory");
+            Context ctx = new InitialContext(props);
+            service = (UserService) ctx.lookup("UserServiceImplLocal");
+            service.add(new User(id, firstName, lastName));
+        } catch (Exception e) {
+            this.errorMessage = e.getMessage();
+            return "failure";
+        }
+
+        return "success";
+    }
+}
+</code></pre>
+
+<h2>AddUserForm</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+
+public class AddUserForm extends ActionSupport {
+}
+</code></pre>
+
+<h2>FindUser</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Properties;
+
+public class FindUser {
+
+    private int id;
+    private String errorMessage;
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String execute() {
+
+        try {
+            UserService service = null;
+            Properties props = new Properties();
+            props.put(Context.INITIAL_CONTEXT_FACTORY,
+                    "org.apache.openejb.core.LocalInitialContextFactory");
+            Context ctx = new InitialContext(props);
+            service = (UserService) ctx.lookup("UserServiceImplLocal");
+            this.user = service.find(id);
+        } catch (Exception e) {
+            this.errorMessage = e.getMessage();
+            return "failure";
+        }
+
+        return "success";
+    }
+}
+</code></pre>
+
+<h2>FindUserForm</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+
+public class FindUserForm extends ActionSupport {
+}
+</code></pre>
+
+<h2>ListAllUsers</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.List;
+import java.util.Properties;
+
+public class ListAllUsers {
+
+    private int id;
+    private String errorMessage;
+    private List&lt;User&gt; users;
+
+    public List&lt;User&gt; getUsers() {
+        return users;
+    }
+
+    public void setUsers(List&lt;User&gt; users) {
+        this.users = users;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String execute() {
+
+        try {
+            UserService service = null;
+            Properties props = new Properties();
+            props.put(Context.INITIAL_CONTEXT_FACTORY,
+                    "org.apache.openejb.core.LocalInitialContextFactory");
+            Context ctx = new InitialContext(props);
+            service = (UserService) ctx.lookup("UserServiceImplLocal");
+            this.users = service.findAll();
+        } catch (Exception e) {
+            this.errorMessage = e.getMessage();
+            return "failure";
+        }
+
+        return "success";
+    }
+}
+</code></pre>
+
+<h2>User</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "USER")
+public class User implements Serializable {
+    private long id;
+    private String firstName;
+    private String lastName;
+
+    public User(long id, String firstName, String lastName) {
+        super();
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public User() {
+    }
+
+    @Id
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+}
+</code></pre>
+
+<h2>UserService</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import java.util.List;
+
+public interface UserService {
+    public void add(User user);
+
+    public User find(int id);
+
+    public List&lt;User&gt; findAll();
+}
+</code></pre>
+
+<h2>UserServiceImpl</h2>
+
+<pre><code>package org.superbiz.struts;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+@Stateless
+public class UserServiceImpl implements UserService {
+
+    @PersistenceContext(unitName = "user")
+    private EntityManager manager;
+
+    public void add(User user) {
+        manager.persist(user);
+    }
+
+    public User find(int id) {
+        return manager.find(User.class, id);
+    }
+
+    public List&lt;User&gt; findAll() {
+        return manager.createQuery("select u from User u").getResultList();
+    }
+}
+</code></pre>
+
+<h2>persistence.xml</h2>
+
+<pre><code>&lt;/persistence-unit&gt;
+
+  --&gt;
+&lt;/persistence&gt;
+</code></pre>
+
+<h2>struts.xml</h2>
+
+<pre><code>&lt;struts&gt;
+  &lt;constant name="struts.devMode" value="true"&gt;&lt;/constant&gt;
+  &lt;package name="default" namespace="/" extends="struts-default"&gt;
+    &lt;action name="addUserForm" class="org.superbiz.struts.AddUserForm"&gt;
+      &lt;result&gt;/addUserForm.jsp&lt;/result&gt;
+    &lt;/action&gt;
+    &lt;action name="addUser" class="org.superbiz.struts.AddUser"&gt;
+      &lt;result name="success"&gt;/addedUser.jsp&lt;/result&gt;
+      &lt;result name='failure'&gt;/addUserForm.jsp&lt;/result&gt;
+    &lt;/action&gt;
+    &lt;action name="findUserForm" class="org.superbiz.struts.FindUserForm"&gt;
+      &lt;result&gt;/findUserForm.jsp&lt;/result&gt;
+    &lt;/action&gt;
+    &lt;action name="findUser" class="org.superbiz.struts.FindUser"&gt;
+      &lt;result name='success'&gt;/displayUser.jsp&lt;/result&gt;
+      &lt;result name='failure'&gt;/findUserForm.jsp&lt;/result&gt;
+    &lt;/action&gt;
+    &lt;action name="listAllUsers" class="org.superbiz.struts.ListAllUsers"&gt;
+      &lt;result&gt;/displayUsers.jsp&lt;/result&gt;
+    &lt;/action&gt;
+
+  &lt;/package&gt;
+&lt;/struts&gt;
+</code></pre>
+
+<h2>decorators.xml</h2>
+
+<pre><code>&lt;decorators defaultdir="/decorators"&gt;
+  &lt;decorator name="main" page="layout.jsp"&gt;
+    &lt;pattern&gt;/*&lt;/pattern&gt;
+  &lt;/decorator&gt;
+&lt;/decorators&gt;
+</code></pre>
+
+<h2>web.xml</h2>
+
+<pre><code>&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"&gt;
+  &lt;display-name&gt;Learn EJB3 and Struts2&lt;/display-name&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;struts2&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;actionPackages&lt;/param-name&gt;
+      &lt;param-value&gt;com.lq&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/filter&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;struts-cleanup&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.struts2.dispatcher.ActionContextCleanUp&lt;/filter-class&gt;
+  &lt;/filter&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;filter-class&gt;com.opensymphony.module.sitemesh.filter.PageFilter&lt;/filter-class&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;struts-cleanup&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;sitemesh&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;struts2&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+  &lt;welcome-file-list&gt;
+    &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+  &lt;/welcome-file-list&gt;
+  &lt;jsp-config&gt;
+    &lt;jsp-property-group&gt;
+      &lt;description&gt;JSP configuration of all the JSP's&lt;/description&gt;
+      &lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;
+      &lt;include-prelude&gt;/prelude.jspf&lt;/include-prelude&gt;
+    &lt;/jsp-property-group&gt;
+  &lt;/jsp-config&gt;
+&lt;/web-app&gt;
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Stateless.html">javax.ejb.Stateless</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/InitialContext.html">javax.naming.InitialContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Entity.html">javax.persistence.Entity</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Id.html">javax.persistence.Id</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/persistence/Table.html">javax.persistence.Table</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb//examples/struts">struts</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree//examples/struts">struts</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb//examples/struts
+cd struts
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>@AccessTimeout the Meta-Annotation Way</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../bootstrap.css" rel="stylesheet">
+    <link href="./../../prettify.css" rel="stylesheet">
+    <link href="./../../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=@AccessTimeout the Meta-Annotation Way",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../images/apple-touch-icon-114x114.png">
+
+    <script src="./../../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../javascript/common.js"></script>
+    <script src="./../../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../../index.html">Home</a></li>
+            <li><a href="./../../downloads.html">Downloads</a></li>
+            <li><a href="./../../documentation.html">Documentation</a></li>
+            <li><a href="./../../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/">Examples Trunk</a>&nbsp;&raquo&nbsp;<a href="./../../examples-trunk/access-timeout-meta/">Access Timeout Meta</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>@AccessTimeout the Meta-Annotation Way
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Any annotation that takes parameters can benefit from meta-annotations.  Here we see how <code>@AccessTimeout</code> can be far more understandable and manageable through meta-annotations.
+We'll use the <a href="../access-timeout/README.html">access-timeout</a> example as our use-case.</p>
+
+<p>The value of the parameters supplied to <code>@AccessTimeout</code> have a dramatic affect on how what that annotation actually does.  Moreover, <code>@AccessTimeout</code> has one of those designs
+where <code>-1</code> and <code>0</code> have signifcantly different meanings.  One means "wait forever", the other means "never wait".  Only a lucky few can remember which is which on a daily basis.
+For the rest of us it is a constant source of bugs.</p>
+
+<p>Meta-Annotations to the rescue!</p>
+
+<h1>Creating the Meta-Annotations</h1>
+
+<p>As a matter of best-practices, we will put our meta-annotations in a package called <code>api</code>, for this example that gives us <code>org.superbiz.accesstimeout.api</code>.  The package <code>org.superbiz.api</code> would work just as well.</p>
+
+<p>The basic idea is to have a package where "approved' annotations are used and to prohibit usage of the non-meta versions of the annotations.  All the real configuration will
+then be centralized in the <code>api</code> package and changes to timeout values will be localized to that package and automatically be reflected throuhout the application.</p>
+
+<p>An interesting side-effect of this approach is that if the <code>api</code> package where the meta-annotation definitions exist is kept in a separate jar as well, then one can effectively
+change the configuration of an entire application by simply replacing the <code>api</code> jar.</p>
+
+<h2>@Metatype <small>The "root" Meta-Annotation</small></h2>
+
+<p>As with all meta-annotation usage, you first need to create your own "root" meta-annotation.  This is as easy as creating an annotation
+named <code>Metatype</code> that is annotated with itself and has <code>ElementType.ANNOTATION_TYPE</code> as its target.</p>
+
+<pre><code>package org.superbiz.accesstimeout.api;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface Metatype {
+}
+</code></pre>
+
+<h2>@AwaitNever</h2>
+
+<p>When the <code>@AccessTimeout</code> annotation has the value of <code>0</code> that has the implication that one should never wait to access the bean.  If the bean is busy, the caller will immediately
+receive an <code>ConcurrentAccessException</code>.  This is hard to remember and definitely not self-documenting for those that never knew the details.</p>
+
+<p>To create a meta-annotation version of <code>@AccessTimeout(0)</code> we simply need to think of a good annotation name, create that annotation, and annotate it with both <code>@AccessTimeout</code>
+and <code>@Metatype</code></p>
+
+<pre><code>package org.superbiz.accesstimeout.api;
+
+import javax.ejb.AccessTimeout;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AccessTimeout(0)
+public @interface AwaitNever {
+}
+</code></pre>
+
+<h2>@AwaitForever</h2>
+
+<p>Just as <code>0</code> carries the special meaning of "never wait", a value of <code>-1</code> means "wait forever."</p>
+
+<p>As long as we're being picky, which we can be with meta-annotations,
+Technically "wait forever" is not the best description.  The actual methods of the <code>javax.util.concurrent</code> APIs use "await" rather than "wait".  One (wait) perphaps implies a
+command to wait, which this is not, and the other (await) perhaps better implies that waiting is possible but not a certainty.  So we will use "await" in our annotation names.</p>
+
+<p>We make our own <code>@AwaitForever</code> and annotate it with <code>@AccessTimeout(0)</code> and <code>@Metatype</code></p>
+
+<pre><code>package org.superbiz.accesstimeout.api;
+
+import javax.ejb.AccessTimeout;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AccessTimeout(-1)
+public @interface AwaitForever {
+}
+</code></pre>
+
+<h2>@AwaitBriefly</h2>
+
+<p>Non <code>-1</code> and <code>0</code> values to <code>@AccessTimeout</code> actually involve the full breadth of the annotation.  Here is where you get to specify the maximum number minutes, seconds,
+milliseconds, etc. where one might await access to the bean instance.</p>
+
+<pre><code>@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+
+@AccessTimeout(value = 5, unit = TimeUnit.SECONDS)
+public @interface AwaitBriefly {
+}
+</code></pre>
+
+<h1>Configuration vs Operation</h1>
+
+<p>Once you create a few meta-annotations and the fun becomes common-place, questoins start to raise in your mind on how to best get the benefits of meta-annotations.</p>
+
+<p>You have to really start thinking about how you want to approach your usage of meta-annotation and really put your designer hat on.  The fundamental question is
+<strong>configuration vs operation</strong> and the answer is subjective; how much flexibility do you want to design into your applications and where?</p>
+
+<h2>Configuration names <small>describing the configuration</small></h2>
+
+<p>The simplest approach is to name your meta-annotations after the <strong>configuration</strong> they encapsulate. We've been following that format so far with <code>@AwaitNever</code> and <code>@AwaitForever</code>
+to clearly reflect the contents of each meta-annotation (<code>@AccessTimeout(-1)</code> and <code>@AccessTimeout(0)</code> respectively).</p>
+
+<p>The <strong>cons</strong> of this approach is that should you want to change the configuration of the application by only changing the meta-annotations -- this is one of the potential benefits
+of meta-annotations.  Certainly, the <code>@AwaitNever</code> meta-annotation can have no other value than <code>0</code> if it is to live up to its name.</p>
+
+<h2>Operation names <small>describing the code</small></h2>
+
+<p>The alternate approach is to name your meta-annotations after the <strong>operations</strong> they apply to.  In short, to describe the code itself and not the configuration.  So, names like
+<code>@OrderCheckTimeout</code> or <code>@TwitterUpdateTimeout</code>.  These names are configuration-change-proof.  They would not change if the configuration changes and in fact they can facilitate
+finder-grained control over the configuration of an application.</p>
+
+<p>The <strong>cons</strong> are of course it is requires far more deliberation and consideration, not to mention more annotations.  Your skills as an architect, designer and ability to think as
+a administrator will be challenged.  You must be good at wearing your dev-opts hat.</p>
+
+<h2>Pragmatism  <small>best of both worlds</small></h2>
+
+<p>Fortunately, meta-annotations are recursive.  You can do a little of both.</p>
+
+<pre><code>@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AwaitBriefly
+public @interface TwitterUpdateTimeout {
+}
+</code></pre>
+
+<p>Of course you still need to be very deliberate on how your annotations are used.  When using a "configuration" named meta-annotation in code it can help to say to yourself,
+"I do not want to reconfigure this later."  If that doesn't feel quite right, put the extra effort into creating an operation named annotation and use in that code.</p>
+
+<h1>Applying the Meta-Annotations</h1>
+
+<p>Putting it all together, here's how we might apply our meta-annotations to the <a href="../access-timeout/README.html">access-timeout</a> example.</p>
+
+<h2>Before</h2>
+
+<pre><code>package org.superbiz.accesstimeout;
+
+import javax.ejb.AccessTimeout;
+import javax.ejb.Asynchronous;
+import javax.ejb.Lock;
+import javax.ejb.Singleton;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static javax.ejb.LockType.WRITE;
+
+/**
+ * @version $Revision$ $Date$
+ */
+@Singleton
+@Lock(WRITE)
+public class BusyBee {
+
+    @Asynchronous
+    public Future stayBusy(CountDownLatch ready) {
+        ready.countDown();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+
+        return null;
+    }
+
+    @AccessTimeout(0)
+    public void doItNow() {
+        // do something
+    }
+
+    @AccessTimeout(value = 5, unit = TimeUnit.SECONDS)
+    public void doItSoon() {
+        // do something
+    }
+
+    @AccessTimeout(-1)
+    public void justDoIt() {
+        // do something
+    }
+
+}
+</code></pre>
+
+<h2>After</h2>
+
+<pre><code>package org.superbiz.accesstimeout;
+
+import org.superbiz.accesstimeout.api.AwaitBriefly;
+import org.superbiz.accesstimeout.api.AwaitForever;
+import org.superbiz.accesstimeout.api.AwaitNever;
+
+import javax.ejb.Asynchronous;
+import javax.ejb.Lock;
+import javax.ejb.Singleton;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+
+import static javax.ejb.LockType.WRITE;
+
+/**
+ * @version $Revision$ $Date$
+ */
+@Singleton
+@Lock(WRITE)
+public class BusyBee {
+
+    @Asynchronous
+    public Future stayBusy(CountDownLatch ready) {
+        ready.countDown();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+
+        return null;
+    }
+
+    @AwaitNever
+    public void doItNow() {
+        // do something
+    }
+
+    @AwaitBriefly
+    public void doItSoon() {
+        // do something
+    }
+
+    @AwaitForever
+    public void justDoIt() {
+        // do something
+    }
+
+}
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/AccessTimeout.html">javax.ejb.AccessTimeout</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Asynchronous.html">javax.ejb.Asynchronous</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Lock.html">javax.ejb.Lock</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/LockType.html#WRITE">javax.ejb.LockType.WRITE</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/naming/Context.html">javax.naming.Context</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/access-timeout-meta">access-timeout-meta</a></li>
+      <li>Github <a href="https://github.com/apache/openejb/tree/trunk/openejb/examples/access-timeout-meta">access-timeout-meta</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/openejb/trunk/openejb/examples/access-timeout-meta
+cd access-timeout-meta
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
