@@ -146,7 +146,52 @@
 </h1>
 </div>
 
+<h1>set( $url = "https://issues.apache.org/jira/secure/IssueNavigator.jspa?view=rss&amp;&amp;pid=OPENEJB&amp;pid=TOMEE&amp;status=Open&amp;tempMax=1000&amp;reset=true&amp;decorator=none" )</h1>
 
+<h1>set( $jirarss = $rss.fetch( $url ) )</h1>
+
+<h1>set( $issues = $jirarss.fillAttachments() )</h1>
+
+<h1>set( $void = $date.format("yyyy-MM-dd") )</h1>
+
+<h1>#</h1>
+
+<h1>foreach( $issue in $issues )</h1>
+
+<h1>set( $issue.attributes.totalAttachments = $issue.attachments.size() )</h1>
+
+<h1>end</h1>
+
+<h1>set( $issues = $issues.greater("@totalAttachments", 0) )</h1>
+
+<h1>foreach( $issue in $issues )</h1>
+
+<h1>set( $issue.attributes.firstPatch = $issue.attachments.min("created").created )</h1>
+
+<h1>end</h1>
+
+<h1>#</h1>
+
+<p><strong>${issues.size()} patches in the queue</strong></p>
+
+<p>Generated $date.as("EEEE, MMMM d, yyyy")</p>
+
+<p>(sorted oldest to newest)</p>
+
+<h1>foreach( $issue in $issues.sort("@firstPatch") )</h1>
+
+<p><a href="$issue.link">$issue.key</a> $issue.summary</p>
+
+<ul>
+<li>$date.format($issue.created)  <strong>$issue.reporter</strong> -  <em>${issue.type}</em></p>
+
+<h1>foreach ( $attachment in $issue.attachments.sort("created") )</h1></li>
+<li>$date.format($attachment.created)  $attachment.author   <a href="$attachment.url">$attachment.fileName</a></p>
+
+<h1>end</h1></li>
+</ul>
+
+<h1>end</h1>
 
 
 
