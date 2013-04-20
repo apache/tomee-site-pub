@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title>Apache TomEE 1.0.0-beta-2</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../bootstrap.css" rel="stylesheet">
+    <link href="./../prettify.css" rel="stylesheet">
+    <link href="./../bootstrap-mods.css" rel="stylesheet">
+
+    <style type="text/css">
+        body {
+          padding-top: 60px;
+        }
+        .sprite {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/sprites.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .edit-page {
+            display: inline-block;
+            height: 20px;
+            margin: 0 auto 4px;
+            outline: medium none;
+            text-indent: -999em;
+            width: 24px;
+            background-image: url('./../images/edit.png');
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .fb-share {
+            background-position: 0px -40px;
+        }
+        .gp-share {
+            background-position: 0px 0px;
+        }
+        .tw-share {
+            background-position: 0px -80px;
+        }
+    </style>
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../images/apple-touch-icon-114x114.png">
+
+    <script src="./../javascript/prettify.js" type="text/javascript"></script>
+    <script src="./../javascript/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../javascript/common.js"></script>
+    <script src="./../javascript/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+            <li><a href="./../index.html">Home</a></li>
+            <li><a href="./../downloads.html">Downloads</a></li>
+            <li><a href="./../documentation.html">Documentation</a></li>
+            <li><a href="./../support.html">Support</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+<section>
+
+    <div class="alert-message">
+      <strong>We need your feedback!</strong>
+        We use your feedback to focus efforts, develop new features, and to make TomEE better for everyone.  <a href="mailto:users@openejb.apache.org?subject=Feedback on TomEE 1.0.0-beta-2&body=We'd%20like%20to%20hear%20about%20anything%20you'd%20like%20to%20tell%20us.%20%20If%20you're%20short%20on%20ideas%2C%20here%20are%20some%3A%0A%0A%20-%20Ways%20we%20can%20speed%20up%20or%20improve%20your%20ability%20to%20evaluate%20TomEE%0A%20-%20Anything%20you%20found%20difficult%20or%20inconvenient%20about%20using%20TomEE%0A%20-%20Documentation%20you%20would%20like%20to%20see%0A%20-%20Features%20you%20would%20like%20to%20have%0A%20-%20Anything%20in%20general%20to%20improve%20TomEE%20or%20help%20us%20grow%0A%0AKeep%20in%20mind%20that%20out%20of%20every%20100%20people%20that%20try%20something%20out%2C%20maybe%20one%20will%20actually%20post%20about%20it.%20%20Feel%20incredibly%20encouraged%20to%20let%20us%20know%20about%20your%20experiences%20with%20TomEE%20even%20if%20you%20think%20we've%20heard%20it%20a%20hundred%20times.%20%20Odds%20are%20we%20have%20not%20heard%20it%20and%2C%20if%20we%20have%2C%20the%20most%20requested%20things%20are%20done%20first.%20%20So%20definitely%20let%20us%20know!%0A%0AApache%20TomEE%20is%20free%2C%20but%20you%20can%20pay%20us%20with%20feedback%20%3A)%0A%0ABest%20regards%2C%0AThe%20Apache%20TomEE%20community%0A">Help us grow!</a>
+    </div>
+
+    <div class="page-header">
+        <h1>Apache TomEE 1.0.0-beta-2
+            <small>January 23rd, 2012</small>
+        </h1>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <h2>Web Profile</h2>
+
+            <p>Apache TomEE Web Profile delivers Servlets, JSP, JSF, JTA, JPA, CDI, Bean Validation and EJB Lite</p>
+
+            <p><a href="../comparison.html">Comparison &raquo;</a></p>
+        </div>
+        <div class="span12">
+            <h2>
+                <small>Java EE6 Certified</small>
+            </h2>
+            <ul>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.tar.gz">apache-tomee-1.0.0-beta-2-webprofile.tar.gz</a>
+                    (<a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.tar.gz.asc">asc</a> <a
+                            href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.tar.gz.md5">md5</a>)
+                </li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.zip">apache-tomee-1.0.0-beta-2-webprofile.zip</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.zip.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-webprofile.zip.md5">md5</a>)
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h2>Plus</h2>
+
+            <p>Apache TomEE Plus delivers all that is in the Web Profile, plus EJB Full, Java EE Connector Architecture, JMS, JAX-WS and and JAX-RS.</p>
+
+            <p><a href="../comparison.html">Comparison &raquo;</a></p>
+        </div>
+        <div class="span12">
+            <h2>
+                <small>NOT Java EE6 Certified</small>
+            </h2>
+            <ul>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.tar.gz">apache-tomee-1.0.0-beta-2-plus.tar.gz</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.tar.gz.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.tar.gz.md5">md5</a>)
+                </li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.zip">apache-tomee-1.0.0-beta-2-plus.zip</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.zip.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/apache-tomee-1.0.0-beta-2-plus.zip.md5">md5</a>)
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div class="span24">&nbsp;</div>
+</div>
+<section>
+    <div class="page-header">
+        <h2>Apache OpenEJB 4.0.0-beta-2
+            <small>January 23rd, 2012</small>
+        </h2>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <h3>Standalone</h3>
+
+            <p>An "EJB" Server that can be run as a separate, standalone, server process. Contains EJB Full, CDI, JPA, JMS, JAX-WS, JAX-RS</p>
+
+            <p><a href="../comparison.html">Comparison &raquo;</a></p>
+        </div>
+        <div class="span12">
+            <h3>&nbsp;</h3>
+            <ul>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.tar.gz">openejb-standalone-4.0.0-beta-2.tar.gz</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.tar.gz.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.tar.gz.md5">md5</a>)
+                </li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.zip">openejb-standalone-4.0.0-beta-2.zip</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.zip.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-standalone-4.0.0-beta-2.zip.md5">md5</a>)
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <h3>Drop-in WARs</h3>
+
+            <p>A version of Apache OpenEJB that can be dropped into any Tomcat 7.x install effectively creating your own Apache TomEE Web Profile or Apache TomEE Plus.</p>
+        </div>
+        <div class="span12">
+            <h3>&nbsp;</h3>
+            <ul>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-webapp-4.0.0-beta-2.war">tomee-webapp-4.0.0-beta-2.war</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-webapp-4.0.0-beta-2.war.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-webapp-4.0.0-beta-2.war.md5">md5</a>)
+                </li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-plus-webapp-4.0.0-beta-2.war">tomee-plus-webapp-4.0.0-beta-2.war</a>
+                    (<a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-plus-webapp-4.0.0-beta-2.war.asc">asc</a> <a
+                            href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/tomee-plus-webapp-4.0.0-beta-2.war.md5">md5</a>)
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div class="span24">&nbsp;</div>
+</div>
+<section>
+    <div class="page-header">
+        <h2>Other</h2>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <h3>Source</h3>
+
+            <p>Should you want to build any of the above binaries, this source bundle is the right one covers them all.</p>
+
+        </div>
+        <div class="span12">
+            <h3>&nbsp;</h3>
+            <ul>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-4.0.0-beta-2-source-release.zip">openejb-4.0.0-beta-2-source-release.zip</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-4.0.0-beta-2-source-release.zip.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/openejb-4.0.0-beta-2-source-release.zip.md5">md5</a>)
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h3>Examples</h3>
+
+            <p>Currently, we have over 50 examples of various aspects of Java EE 6 ranging from EJB, CDI, JAX-RS and more.  If you're learning Java EE, this is your secret weapon.</p>
+        </div>
+        <div class="span12">
+            <h3>&nbsp;</h3>
+            <ul>
+                <li><a href="examples-trunk">Browse Online</a></li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.tar.gz">examples-4.0.0-beta-2-src.tar.gz</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.tar.gz.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.tar.gz.md5">md5</a>)
+                </li>
+                <li><a href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.zip">examples-4.0.0-beta-2-src.zip</a> (<a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.zip.asc">asc</a> <a
+                        href="http://archive.apache.org/dist/openejb/4.0.0-beta-2/examples-4.0.0-beta-2-src.zip.md5">md5</a>)
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div class="span24">&nbsp;</div>
+</div>
+<section>
+    <div class="page-header">
+        <h1>Changelog</h1>
+    </div>
+
+    <div class="row">
+        <div class="span24">
+
+    <h2>Upgrades</h2>
+
+    <ul>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-81">TOMEE-81</a> Upgrade HSQLDB to 2.2.4</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-109">TOMEE-109</a> Upgrade to XBean 3.9</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-112">TOMEE-112</a> Upgrade wss4j to 1.6.3</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-117">TOMEE-117</a> Upgrade OpenWebBeans to 1.1.3</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-118">TOMEE-118</a> Upgrade CXF to 2.5.1</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-119">TOMEE-119</a> Upgrade ActiveMQ to 5.5.1</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-113">TOMEE-113</a> Upgrade Commons Fileupload to 1.2.2</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-114">TOMEE-114</a> Upgrade Commons Discovery to 0.5</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-116">TOMEE-116</a> Upgrade Commons Pool to 1.5.7</li>
+    </ul>
+
+    <h2>New Features</h2>
+
+    <ul>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-6">TOMEE-6</a> Arquillian adapter</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-84">TOMEE-84</a> TomEE Embedded Container</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-86">TOMEE-86</a> Implementation of EJBContainer.createEJBContainer for TomEE Embedded</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-96">TOMEE-96</a> All-in-one TomEE Embedded jar</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-95">TOMEE-95</a> Command line 'java -jar tomee-embedded.jar myAwesome.war' launching</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-58">TOMEE-58</a> New concept of persistence-fragment.xml file</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-71">TOMEE-71</a> Ability to reload Persistence units via JMX</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-72">TOMEE-72</a> Example: Reloading Persistence unit properties dynamically</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-104">TOMEE-104</a> Allow custom JAX-RS providers to be used</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-99">TOMEE-99</a> Example: CDI @Alternative and @Stereotype</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-101">TOMEE-101</a> Example: CDI Events and @Observes</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-97">TOMEE-97</a> Beginning documentation for Meta-Annotation support</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-37">TOMEE-37</a> TomEE webapps based Deployer implementation</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1454">OPENEJB-1454</a> Meta Annotation Support</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1691">OPENEJB-1691</a> Dynamic @Proxy beans</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1430">OPENEJB-1430</a> Scanning an JMX Registration of @ObjectName mbeans in applications</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1737">OPENEJB-1737</a> Example: Dynamic JMX MBean example</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1517">OPENEJB-1517</a> EJBContainer.createEJBContainer MODULES supports various org.apache.openejb.jee.* types
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1571">OPENEJB-1571</a> CDI Injection for clients of EJBContainer and tests using ApplicationComposer</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1706">OPENEJB-1706</a> CDI Injection support for MDBs</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1744">OPENEJB-1744</a> Example: MDBs as CDI beans</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1705">OPENEJB-1705</a> Example: Simple CDI Interceptor</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1654">OPENEJB-1654</a> System property overrides for MDB ActivationConfig</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1690">OPENEJB-1690</a> Ability to define DataSources, Topics, Queues and other resources in applications with a
+            META-INF/resources.xml file
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1453">OPENEJB-1453</a> Metatyping for EJB and Dependency Injection Annotations</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-621">OWB-621</a> Alternative configuration method for buggy container or pre servlet api 2.5 container</li>
+    </ul>
+
+    <h2>Improvements</h2>
+
+    <ul>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-102">TOMEE-102</a> Cleaned up error handling of closed jars at shutdown</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-107">TOMEE-107</a> Reduced logging of harmless "Could not install our singleton service" message</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-106">TOMEE-106</a> Better handling of DataSource "maxWait" property, supports ints</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-108">TOMEE-108</a> Smarter default of Log4j, Slf4j and JULI logging implementation selection</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-100">TOMEE-100</a> Trim internal objects from logging</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-93">TOMEE-93</a> Ensure JAX-RS @HeaderParam matching is case insensitive</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-91">TOMEE-91</a> Improved error handling and resolving of REST @Path URLs</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-82">TOMEE-82</a> SQLLoginModule support for HSQLDB 2.x</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-83">TOMEE-83</a> Improved ability to imply type of
+            <env-entry>
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-87">TOMEE-87</a> Expanded scope of Global JNDI</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-123">TOMEE-123</a> Eliminate webapp lib scanning from known libs</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-73">TOMEE-73</a> Example: JAX-RS example with Application</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-60">TOMEE-60</a> More Optimization in scanning of webapp libs</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-122">TOMEE-122</a> WebService subcontext mapping adjustable with tomee.jaxws.subcontext property</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-121">TOMEE-121</a> WebServices mapped into /
+            <webappcontext>/webservices/
+                <name>
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-75">TOMEE-75</a> Resolve default persistence provider before Assembly</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1755">OPENEJB-1755</a> Repackaging LocalInitialContextFactory into org.apache.openejb.core</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1746">OPENEJB-1746</a> More helpful information on ConcurrentAccessTimeoutException</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-48">OPENEJB-48</a> Log the location of the openejb.conf file being used</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1747">OPENEJB-1747</a> Avoid NPE when a custom mdb container uses badly defined activation properties</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1749">OPENEJB-1749</a> Better logging of @Stateful @PreDestroy exceptions</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1701">OPENEJB-1701</a> Improved Multipoint and Multicast discovery logging</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1750">OPENEJB-1750</a> Improved documentation on Windows Service installer</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1700">OPENEJB-1700</a> deploying rest ejb as ejb when it is returned by Application.getClasses()/getSingletons()
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1754">OPENEJB-1754</a> Reduce logging of failed security checks due to being unauthorized</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1753">OPENEJB-1753</a> New 'openejb.descriptors.output.folder' property for location of generated descriptors
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1722">OPENEJB-1722</a> manage JtaPlatform instead of TransactionManagerLookup when hibernate 4 as JPA provider
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1752">OPENEJB-1752</a> Tolerate toString() issues with ejb method return values when logging on DEBUG</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1751">OPENEJB-1751</a> Ability to deactivate all internal JMX MBeans</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1742">OPENEJB-1742</a> Respect 'openjpa.Specification' persistence.xml property</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1743">OPENEJB-1743</a> Better MDB/CDI support</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1741">OPENEJB-1741</a> Faster jar scanning at deploy</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1699">OPENEJB-1699</a> managing @ApplicationPath for rest</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1738">OPENEJB-1738</a> MDB Queue/Topic name defaults to MappedName</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1715">OPENEJB-1715</a> Add ServiceTracker in Activator class to wait till we find the ServiceManagerProxy</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-623">OWB-623</a> Relax check on @AroundInvoke Interceptors 'throws Exception'</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-627">OWB-627</a> Automatically destroy @Dependent contextual instances created with Instance
+            <T>
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-475">OWB-475</a> support for optional beans</li>
+    </ul>
+
+    <h2>Bugs</h2>
+
+    <ul>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-56">TOMEE-56</a> jsp group properties order not respected</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-103">TOMEE-103</a> Further reduction of possible LinkageError in log files</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-105">TOMEE-105</a> fixing contextroot in TomcatWebAppBuilder for windows</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-51">TOMEE-51</a> Deployment without web.xml not possible. With web.xml, tests do not run.</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-11">TOMEE-11</a> conf/logging.properties conflicts with juli configuration for Tomcat</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-10">TOMEE-10</a> JNDI Browser in the openejb.war does not show @LocalBean views as EJBs</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-94">TOMEE-94</a> context.xml ignored in internally created Tomcat StandardContexts</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-90">TOMEE-90</a> Fixed REST Service undeployment issue</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-98">TOMEE-98</a> Possible name conflict with internal "Comp" bean</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-47">TOMEE-47</a> ServletContext.getResource(path).getInputStream() fails</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-43">TOMEE-43</a> library-directory ignored</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-42">TOMEE-42</a> TCCL.getResources() returns duplicated when deploying with OpenEJB deployer</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-80">TOMEE-80</a> Avoid hibernate HHH015010 at startup</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-89">TOMEE-89</a> Fixed lifecycle issue in CDI BeforeBeanDiscovery</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-85">TOMEE-85</a> Fixed issues with rootUrl in persistence units of webapps</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-39">TOMEE-39</a> context.xml of WAR not loaded</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-88">TOMEE-88</a> Possible EL related issue prevents startup</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-30">TOMEE-30</a> OpenEJBLifecycle.startApplication brutly cast Object in StartupObject</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-33">TOMEE-33</a> seam-international-timeanddate fails to deploy</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-34">TOMEE-34</a> seam-remoting-helloworld fails to deploy</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-35">TOMEE-35</a> Unable to lookup BeanManager from JNDI</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-36">TOMEE-36</a> NullPointerException when Missing required persistence.xml for @PersistenceUnit</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-120">TOMEE-120</a> Fixed issue preventing serveral Web Service applications from being deployed simultaneously</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-77">TOMEE-77</a> Ignore REST Applications without default constructor</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-1">TOMEE-1</a> TomEE Beta 1.0.0 doesn't start with MyFaces CODI</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-27">TOMEE-27</a> UnknownModuleTypeException thrown when no-web.xml webapp deployed</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-76">TOMEE-76</a> Avoid NullPointerException in no-web.xml applications</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-29">TOMEE-29</a> Applications always seem to be refreshed/redployed</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-74">TOMEE-74</a> Fixed serialization issue with ValidationFactory references</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-79">TOMEE-79</a> Fixed "no root logger" warning</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-78">TOMEE-78</a> Issue finding openejb.war in Tomcat</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-110">TOMEE-110</a> Fixed Tomcat issue with JSF code/prelude ordering</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-111">TOMEE-111</a> Avoid overriting files in Tomcat installer if already installed</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-61">TOMEE-61</a> allow ROOT to contain rest service</li>
+        <li><a href="https://issues.apache.org/jira/browse/TOMEE-115">TOMEE-115</a> Issue in OWB preventing CDI Extensions from adding Interceptors to EJBs</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1523">OPENEJB-1523</a> TomEE 6.0.26 / 3.1.4: NPE in org.apache.catalina.startup.HostConfig.manageApp</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1730">OPENEJB-1730</a> Reliability of multipoint discovery heartrates less than 1 second</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1745">OPENEJB-1745</a> Fix null pointer in discardInstance when releaseInstance has already been called</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1748">OPENEJB-1748</a> Fixed undeploy race condition</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1710">OPENEJB-1710</a> ClassCastException when deploying ear files containing persistence.xml</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1709">OPENEJB-1709</a> TomEE webapps (See rest-example) doesn't work under Windows (Path - Problem with backslash
+            "\")
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1708">OPENEJB-1708</a> Servlet Injection</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1443">OPENEJB-1443</a> EntityManager in non-transactional business methods using queries can be used only once
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1729">OPENEJB-1729</a> Reliability of Multipoint remove event when last peer disappears</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1702">OPENEJB-1702</a> Multicast and Multipoint 'heart_rate' property ignored</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1704">OPENEJB-1704</a> undeploy or shutdown call ejbCreate() on stateless session beans</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1711">OPENEJB-1711</a> Multithreaded filling of @Stateless pools to PoolMin at bean startup</li>
+        <li><a href="https://issues.apache.org/jira/browse/OPENEJB-1733">OPENEJB-1733</a> Parameters are not always available in custom interceptor when the bean is a webservice
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-620">OWB-620</a> any disabled bean of passivating scope will wrongly be detected as 'not passivatable'</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-622">OWB-622</a> beanmanager injection in afterBeanDiscovery method parameter</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-624">OWB-624</a> AnnotatedTypes registered in BeforeBeanDiscovery might get processed twice</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-615">OWB-615</a> remove @Overrides for interfaces to be java5 compatible</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-597">OWB-597</a> StackOverFlow when injecting product in same bean where @Produces is placed</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-589">OWB-589</a> " ... requires a passivation capable dependency ..." for producer method with return type String and
+            non serializable injected dependency
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-616">OWB-616</a> javax.el.ExpressionFactory has final methods! CDI doesn't allow that. - Test on final <strong>PRIVATE</strong>
+            methods too?
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-619">OWB-619</a> @New beans must only exist if there is at least one injection point for them</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-618">OWB-618</a> we sometimes invoke a dispose method without having created the bean upfront</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-562">OWB-562</a> non-enabled alternative beans with passivating scope fail validation during deployment</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-630">OWB-630</a> AmbiguousResolutionException thrown for Decorators that Decorate multiple beans where any of those
+            beans are passivation capable.
+        </li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-631">OWB-631</a> openwebbeans-resource misses openwebbeans.properties</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-565">OWB-565</a> missing check for producer methods</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-625">OWB-625</a> BeanManager.resolve throw java.util.NoSuchElementException with an empty set parameter</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-629">OWB-629</a> NoClassDefFoundError for optional dependencies</li>
+        <li><a href="https://issues.apache.org/jira/browse/OWB-515">OWB-515</a> interceptors don't support inheritance without an overridden method annotated with @AroundInvoke
+        </li>
+    </ul>
+    </div>
+    </div>
+
+</section>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documention!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../javascript/bootstrap-modal.js"></script>
+
+      <footer>
+        <p>
+        Copyright &copy; 2011 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+        Apache and the Apache feather logo are trademarks of The Apache Software Foundation.
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
