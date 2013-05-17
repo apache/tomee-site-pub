@@ -127,7 +127,7 @@
 
 <h1>External ActiveMQ Broker</h1>
 
-<pre><code>&lt;openejb&gt;
+<pre><code>&lt;tomee&gt;
     &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
         # Do not start the embedded ActiveMQ broker
         BrokerXmlConfig  =
@@ -144,7 +144,7 @@
 
     &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
     &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
-&lt;/openejb&gt;
+&lt;/tomee&gt;
 </code></pre>
 
 <p>The <code>ServerUrl</code> would be changed to point to the host and port of the
@@ -153,7 +153,7 @@ work, such as 'failover:'.</p>
 
 <h1>Internal ActiveMQ Broker</h1>
 
-<pre><code>&lt;openejb&gt;
+<pre><code>&lt;tomee&gt;
     &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
         BrokerXmlConfig =  broker:(tcp://someHostName:61616)
         ServerUrl       =  tcp://someHostName:61616
@@ -169,10 +169,31 @@ work, such as 'failover:'.</p>
 
     &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
     &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
-&lt;/openejb&gt;
+&lt;/tomee&gt;
 </code></pre>
 
 <p>The <code>BrokerXmlConfig</code> tells ActiveMQ to start on the tcp host/port <code>someHostName</code> and <code>61616</code></p>
+
+<h2>Internal ActiveMQ Broker with JDBC Persistence</h2>
+
+<p>Adding the <code>DataSource</code> property to your <code>ActiveMQResourceAdapter</code> config will automatically setup JDBC Persistence using the
+<code>org.apache.activemq.store.jdbc.JDBCPersistenceAdapter</code></p>
+
+<pre><code>&lt;tomee&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  broker:(tcp://someHostName:61616)
+        ServerUrl       =  tcp://someHostName:61616
+        DataSource      =  MyDataSource
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyDataSource" type="javax.sql.DataSource"&gt;
+        JdbcDriver  = org.hsqldb.jdbcDriver.
+        JdbcUrl     = jdbc:hsqldb:file:data/hsqldb/hsqldb.
+        UserName    = sa
+        Password    = foo
+    &lt;/Resource&gt;
+&lt;/tomee&gt;
+</code></pre>
 
 <h1>Internal ActiveMQ Broker with activemq.xml</h1>
 
@@ -194,7 +215,7 @@ work, such as 'failover:'.</p>
 
 <p>Then use the <code>xbean:file:</code> url prefix in the <code>BrokerXmlConfig</code> as shown belog.</p>
 
-<pre><code>&lt;openejb&gt;
+<pre><code>&lt;tomee&gt;
     &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
         BrokerXmlConfig =  xbean:file:conf/activemq.xml
         ServerUrl       =  tcp://someHostName:61616
@@ -210,7 +231,7 @@ work, such as 'failover:'.</p>
 
     &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
     &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
-&lt;/openejb&gt;
+&lt;/tomee&gt;
 </code></pre>
 
 <p>Finally, restart the server.</p>
