@@ -29,7 +29,7 @@ import java.util.Locale;
 import static java.util.Arrays.asList;
 
 /**
- * @version $Rev: 1090810 $ $Date: 2011-04-10 14:49:26 +0000 (Sun, 10 Apr 2011) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 //START SNIPPET: code
 public class StratocasterTest extends TestCase {
@@ -57,7 +57,6 @@ public class StratocasterTest extends TestCase {
 
         File file = new File("/tmp/strat-certificate.txt");
         assertEquals("Strat.getCertificateOfAuthenticity()", file, strat.getCertificateOfAuthenticity());
-
 
     }
 }

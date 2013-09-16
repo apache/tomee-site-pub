@@ -19,9 +19,10 @@ package org.superbiz.interceptors;
 import java.util.List;
 
 /**
- * @version $Rev: 607320 $ $Date: 2007-12-28 20:15:06 +0000 (Fri, 28 Dec 2007) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public interface ThirdSLSBeanLocal {
+
     List<String> businessMethod();
 
     List<String> anotherBusinessMethod();

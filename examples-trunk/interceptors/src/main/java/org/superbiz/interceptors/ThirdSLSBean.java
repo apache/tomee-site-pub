@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version $Rev: 1090810 $ $Date: 2011-04-10 14:49:26 +0000 (Sun, 10 Apr 2011) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 @Stateless
 @Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
@@ -47,7 +47,6 @@ public class ThirdSLSBean implements ThirdSLSBeanLocal {
         list.add("anotherBusinessMethod");
         return list;
     }
-
 
     @AroundInvoke
     protected Object beanClassBusinessMethodInterceptor(InvocationContext ic) throws Exception {

@@ -17,9 +17,10 @@
 package org.superbiz.injection;
 
 /**
- * @version $Revision: 607077 $ $Date: 2007-12-27 14:55:23 +0000 (Thu, 27 Dec 2007) $
+ * @version $Revision: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public class Movie {
+
     private String director;
     private String title;
     private int year;
@@ -56,6 +57,5 @@ public class Movie {
     public void setYear(int year) {
         this.year = year;
     }
-
 
 }

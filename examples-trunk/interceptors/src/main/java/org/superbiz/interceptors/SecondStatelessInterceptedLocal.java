@@ -19,8 +19,9 @@ package org.superbiz.interceptors;
 import java.util.List;
 
 /**
- * @version $Rev: 808273 $ $Date: 2009-08-27 03:42:06 +0000 (Thu, 27 Aug 2009) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public interface SecondStatelessInterceptedLocal {
+
     List<String> methodWithDefaultInterceptorsExcluded();
 }
