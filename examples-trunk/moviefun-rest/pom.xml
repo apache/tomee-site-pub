@@ -16,14 +16,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.superbiz</groupId>
-  <artifactId>moviefun</artifactId>
+  <artifactId>moviefun-rest</artifactId>
   <packaging>war</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>OpenEJB :: Web Examples :: Moviefun</name>
+  <name>OpenEJB :: Web Examples :: Moviefun Rest</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomee.version>1.6.0-SNAPSHOT</tomee.version>
-    <version.shrinkwrap.resolver>2.0.0-alpha-5</version.shrinkwrap.resolver>
   </properties>
   <repositories>
     <repository>
@@ -37,33 +36,26 @@
     <defaultGoal>install</defaultGoal>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.1</version>
+        <groupId>com.googlecode.jslint4java</groupId>
+        <artifactId>jslint4java-maven-plugin</artifactId>
+        <version>2.0.5</version>
+        <configuration>
+          <failOnError>true</failOnError>
+          <options>
+            <vars>true</vars>
+            <unparam>true</unparam>
+            <predef>define,require,requirejs,window,Backbone,_,$,Handlebars,APP_CONFIG</predef>
+            <indent>4</indent>
+          </options>
+          <sourceFolders>
+            <sourceFolder>${basedir}/src/main/webapp/app/js</sourceFolder>
+          </sourceFolders>
+        </configuration>
         <executions>
           <execution>
-            <id>copy-test-libs</id>
-            <phase>process-test-resources</phase>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>javax.servlet</groupId>
-                  <artifactId>jstl</artifactId>
-                  <version>1.2</version>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>taglibs</groupId>
-                  <artifactId>standard</artifactId>
-                  <version>1.1.2</version>
-                </artifactItem>
-              </artifactItems>
-              <outputDirectory>
-                ${project.build.directory}/test-libs
-              </outputDirectory>
-              <stripVersion>true</stripVersion>
-            </configuration>
+            <phase>install</phase>
             <goals>
-              <goal>copy</goal>
+              <goal>lint</goal>
             </goals>
           </execution>
         </executions>
@@ -86,16 +78,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.8</version>
-        <configuration>
-          <configuration>
-            <wtpapplicationxml>true</wtpapplicationxml>
-            <wtpversion>2.0</wtpversion>
-          </configuration>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.openejb.maven</groupId>
         <artifactId>tomee-maven-plugin</artifactId>
         <version>1.6.0-SNAPSHOT</version>
@@ -106,27 +88,6 @@
       </plugin>
     </plugins>
   </build>
-  <dependencyManagement>
-    <dependencies>
-      <!-- Override dependency resolver with test version. This must go *BEFORE*
-        the Arquillian BOM. -->
-      <dependency>
-        <groupId>org.jboss.shrinkwrap.resolver</groupId>
-        <artifactId>shrinkwrap-resolver-bom</artifactId>
-        <version>${version.shrinkwrap.resolver}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-      <!-- Now pull in our server-based unit testing framework -->
-      <dependency>
-        <groupId>org.jboss.arquillian</groupId>
-        <artifactId>arquillian-bom</artifactId>
-        <version>1.0.3.Final</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.apache.openejb</groupId>
@@ -141,49 +102,21 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>tomee-embedded</artifactId>
+      <version>${tomee.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.openejb</groupId>
-      <artifactId>openejb-core</artifactId>
+      <artifactId>openejb-cxf-rs</artifactId>
       <version>4.6.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>taglibs</groupId>
-      <artifactId>standard</artifactId>
-      <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.htmlunit</groupId>
-      <artifactId>htmlunit</artifactId>
-      <version>2.8</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.openejb</groupId>
-      <artifactId>tomee-embedded</artifactId>
-      <version>1.6.0-SNAPSHOT</version>
-      <!--<classifier>uber</classifier> -->
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-container</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-      <artifactId>shrinkwrap-resolver-depchain</artifactId>
-      <type>pom</type>
+      <artifactId>tomee-jaxrs</artifactId>
+      <version>${tomee.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -191,6 +124,46 @@
       <artifactId>ziplock</artifactId>
       <version>1.6.0-SNAPSHOT</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>backbone</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>jquery</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>handlebars</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>json2</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>lessjs</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>requirejs</artifactId>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb.staticweb</groupId>
+      <artifactId>underscorejs</artifactId>
+      <version>${tomee.version}</version>
     </dependency>
   </dependencies>
   <!-- This section allows you to configure where to publish libraries for
@@ -206,31 +179,4 @@
       <url>file://${basedir}/target/snapshot-repo/</url>
     </snapshotRepository>
   </distributionManagement>
-  <profiles>
-    <profile>
-      <id>arquillian-tomee-embedded</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.openejb</groupId>
-          <artifactId>arquillian-tomee-embedded</artifactId>
-          <version>${tomee.version}</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>arquillian-tomee-remote</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.openejb</groupId>
-          <artifactId>arquillian-tomee-remote</artifactId>
-          <version>${tomee.version}</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 </project>

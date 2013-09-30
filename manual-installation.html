@@ -126,9 +126,6 @@
     </h1>
 </div>
 
-<p><div class="composition-setup">}<div class="composition-setup">}
-<a name="ManualInstallation-Overview"></a></p>
-
 <h1>Overview</h1>
 
 <p>The manual installation process is significantly harder then the <a href="tomcat.html">automatic installation</a>
@@ -137,102 +134,99 @@ following:</p>
 
 <ol>
 <li>Install openejb.war</li>
-<li># Download openejb.war from the <a href="http://people.apache.org/~dain/openejb-temp">OpenEJB download page</a></li>
-<li># Make webapps/openejb directory</li>
-<li># Change to new webapps/openejb directory</li>
-<li># Unpack the openejb.war file in the new directory</li>
+<li>Download openejb.war from the <a href="http://tomee.apache.org/downloads.html">download page</a></li>
+<li>Make webapps/openejb directory</li>
+<li>Change to new webapps/openejb directory</li>
+<li>Unpack the openejb.war file in the new directory</li>
 <li>Add the OpenEJB listener the conf/server.xml file</li>
 <li>Update the non-compliant Tomcat annotations-api.jar</li>
 <li>Add the OpenEJB JavaAgent to the bin/catalina.bat or bin/catalina.bat
 script</li>
 </ol>
 
-<p><a name="ManualInstallation-{anchor:install-openejb}Installopenejb.war"></a></p>
-
-<h1>{anchor:install-openejb}Install openejb.war</h1>
+<h2>Install openejb.war</h2>
 
 <p>Once Tomcat has been <a href="tomcat-installation.html">installed</a>
 , the OpenEJB plugin for Tomcat can be installed.  The war can be obtained
-from the [OpenEJB download page|http://people.apache.org/~dain/openejb-temp]
-.  The commands in this example are executed from within the Tomcat
+from the <a href="http://tomee.apache.org/downloads.html">download page</a></p>
+
+<p>The commands in this example are executed from within the Tomcat
 installation directory.</p>
 
 <p><a name="ManualInstallation-UnpackOpenEJBTomcatplugininTomcatwebappsdirectory"></a></p>
 
 <h2>Unpack OpenEJB Tomcat plugin in Tomcat webapps directory</h2>
 
-<p><div class="warning">:title=Be Careful}This is the most error prone step.  A web
+<p>Be careful, this is the most error prone step.  A web
 application does not contain a root directory, so if you unpack it in the
 wrong directory, it is difficult to undo.  Please, follow this step
-closely, and most importantly <em>make sure you execute the unpack command
-from within the new webapps/openejb directory</em>.{warning}</p>
+closely, and most importantly make sure you execute the unpack command
+from within the new webapps/openejb directory</p>
 
 <p>Due to the structure of war files, you must create a new directory for
 OpenEJB, change to the new directory and execute the unpack command from
 within the new directory.  If you get this wrong, it is difficult to undo,
-so follow the steps closely.
-<div class="deck">:id=unpack tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
-C:\apache-tomcat-6.0.14>mkdir webapps\openejb</p>
+so follow the steps closely.</p>
 
-<p>C:\apache-tomcat-6.0.14>cd webapps\openejb</p>
+<pre><code>
+    C:\apache-tomcat-6.0.14>mkdir webapps\openejb
 
-<p>C:\apache-tomcat-6.0.14\webapps\openejb>jar -xvf \openejb.war
-  created: WEB-INF/
-  created: WEB-INF/classes/
-  created: WEB-INF/classes/org/
-  created: WEB-INF/classes/org/apache/
-  created: WEB-INF/classes/org/apache/openejb/
-...snip...</p>
+    C:\apache-tomcat-6.0.14>cd webapps\openejb
 
-<p>C:\apache-tomcat-6.0.14\webapps\openejb>dir
- Volume in drive C has no label.
- Volume Serial Number is 0000-0000</p>
+    C:\apache-tomcat-6.0.14\webapps\openejb>jar -xvf \openejb.war
+      created: WEB-INF/
+      created: WEB-INF/classes/
+      created: WEB-INF/classes/org/
+      created: WEB-INF/classes/org/apache/
+      created: WEB-INF/classes/org/apache/openejb/
+    ...snip...
 
-<p>Directory of C:\apache-tomcat-6.0.14\webapps\openejb</p>
+    C:\apache-tomcat-6.0.14\webapps\openejb>dir
+     Volume in drive C has no label.
+     Volume Serial Number is 0000-0000
 
-<p>09/21/2007  10:19 AM    <DIR>          .
-09/21/2007  10:19 AM    <DIR>          ..
-09/21/2007  10:19 AM         1,000 index.html
-09/21/2007  10:19 AM    <DIR>          lib
-09/21/2007  10:19 AM        11,358 LICENSE
-09/21/2007  10:19 AM    <DIR>          META-INF
-09/21/2007  10:19 AM        11,649 NOTICE
-09/21/2007  10:19 AM         1,018 openejb.xml
-09/21/2007  10:19 AM         1,886 README.txt
-09/21/2007  10:19 AM    <DIR>          tomcat
-09/21/2007  10:19 AM    <DIR>          WEB-INF
-           5 File(s)     26,911 bytes
-           6 Dir(s)   4,633,796,608 bytes free</p>
+     Directory of C:\apache-tomcat-6.0.14\webapps\openejb
 
-<p>C:\apache-tomcat-6.0.14\webapps\openejb>cd ....</p>
+    09/21/2007  10:19 AM    <DIR>          .
+    09/21/2007  10:19 AM    <DIR>          ..
+    09/21/2007  10:19 AM         1,000 index.html
+    09/21/2007  10:19 AM    <DIR>          lib
+    09/21/2007  10:19 AM        11,358 LICENSE
+    09/21/2007  10:19 AM    <DIR>          META-INF
+    09/21/2007  10:19 AM        11,649 NOTICE
+    09/21/2007  10:19 AM         1,018 openejb.xml
+    09/21/2007  10:19 AM         1,886 README.txt
+    09/21/2007  10:19 AM    <DIR>          tomcat
+    09/21/2007  10:19 AM    <DIR>          WEB-INF
+               5 File(s)     26,911 bytes
+               6 Dir(s)   4,633,796,608 bytes free
 
-<p>C:\apache-tomcat-6.0.14></p>
+    C:\apache-tomcat-6.0.14\webapps\openejb>cd ..\..
 
-<pre><code>{card:label=Unix}{noformat:nopanel=true}
-apache-tomcat-6.0.14$ mkdir webapps/openejb
+    C:\apache-tomcat-6.0.14>
 
-apache-tomcat-6.0.14$ cd webapps/openejb/
+        {card:label=Unix}{noformat:nopanel=true}
+        apache-tomcat-6.0.14$ mkdir webapps/openejb
 
-apache-tomcat-6.0.14/webapps/openejb$ jar -xvf path/to/openejb.war 
-  created: WEB-INF/
-  created: WEB-INF/classes/
-  created: WEB-INF/classes/org/
-  created: WEB-INF/classes/org/apache/
-  created: WEB-INF/classes/org/apache/openejb/
-...snip...
+        apache-tomcat-6.0.14$ cd webapps/openejb/
 
-apache-tomcat-6.0.14/webapps/openejb$ ls
-LICENSE      META-INF/    NOTICE       README.txt   WEB-INF/     index.html
+        apache-tomcat-6.0.14/webapps/openejb$ jar -xvf path/to/openejb.war 
+          created: WEB-INF/
+          created: WEB-INF/classes/
+          created: WEB-INF/classes/org/
+          created: WEB-INF/classes/org/apache/
+          created: WEB-INF/classes/org/apache/openejb/
+        ...snip...
+
+        apache-tomcat-6.0.14/webapps/openejb$ ls
+        LICENSE      META-INF/    NOTICE       README.txt   WEB-INF/     index.html
+      lib/         openejb.xml  tomcat/
+
+        apache-tomcat-6.0.14/webapps/openejb$ cd ../..
+
+        apache-tomcat-6.0.14$
+
 </code></pre>
-
-<p>lib/         openejb.xml  tomcat/</p>
-
-<pre><code>apache-tomcat-6.0.14/webapps/openejb$ cd ../..
-
-apache-tomcat-6.0.14$
-</code></pre>
-
-<p><div class="deck">}</p>
 
 <p><a name="ManualInstallation-AddtheOpenEJBlistenertoTomcat"></a></p>
 
@@ -240,37 +234,34 @@ apache-tomcat-6.0.14$
 
 <p>All Tomcat listener classes must be available in the Tomcat common class
 loader, so the openejb-loader jar must be copied into the Tomcat lib
-directory.
-<div class="deck">:id=copy openejb loader}<div class="card">:label=Windows}{noformat:nopanel=true}
-C:\apache-tomcat-6.0.14>copy
-webapps\openejb\lib\openejb-loader-3.0.0-SNAPSHOT.jar
-lib\openejb-loader.jar
-    1 file(s) copied.</p>
+directory.</p>
 
-<pre><code>{card:label=Unix}{noformat:nopanel=true}
-apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-loader-*.jar
+<pre><code>    C:\apache-tomcat-6.0.14&gt;copy webapps\openejb\lib\openejb-loader-3.0.0-SNAPSHOT.jar lib\openejb-loader.jar
+    1 file(s) copied.
+
+    apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-loader-*.jar lib/openejb-loader.jar
 </code></pre>
 
-<p>lib/openejb-loader.jar
-<div class="deck">}</p>
+<p>Add the following <code>&lt;Listener
+className="org.apache.openejb.loader.OpenEJBListener" /&gt;</code> to your conf/server.xml file to load the OpenEJB listener:</p>
 
-<p>Add the following {highlight}highlighted lines{highlight} to your
-conf/server.xml file to load the OpenEJB listener:
- <div class="panel">:title=conf/server.xml}
-<!-- Note:  A "Server" is not itself a "Container", so you may not
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;define subcomponents such as "Valves" at this
+<p>The snippet is shown below</p>
+
+<pre><code>&lt;!-- Note:  A "Server" is not itself a "Container", so you may not
+define subcomponents such as "Valves" at this
 level.
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Documentation at /docs/config/server.html
- -->
-<Server port="8005" shutdown="SHUTDOWN">
-&nbsp;&nbsp;{highlight}<!-- OpenEJB plugin for tomcat -->{highlight}
-&nbsp;&nbsp;{highlight}<Listener
-className="org.apache.openejb.loader.OpenEJBListener" />{highlight}</p>
+Documentation at /docs/config/server.html
+ --&gt;
 
-<p>&nbsp;&nbsp;<!--APR library loader. Documentation at /docs/apr.html -->
-&nbsp;&nbsp;<Listener
-className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
-...snip...<div class="panel">} </p>
+&lt;Server port="8005" shutdown="SHUTDOWN"&gt;
+&lt;!-- OpenEJB plugin for tomcat --&gt;
+&lt;Listener
+className="org.apache.openejb.loader.OpenEJBListener" /&gt;
+
+&lt;!--APR library loader. Documentation at /docs/apr.html --&gt;    
+&lt;Listener
+className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" /&gt;
+</code></pre>
 
 <p><a name="ManualInstallation-UpdatetheTomcatannotations-api.jarfile"></a></p>
 
@@ -279,91 +270,86 @@ className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
 <p>Tomcat contains an old non-compliant version of the javax.annotation
 classes and these invalid classes must be updated so OpenEJB can process
 annotations.  Simply, replace the annotations-api.jar in the Tomcat lib
-directory with the updated annotations-api.jar in the OpenEJB war.
-<div class="deck">:id=update annotations-api.jar}<div class="card">:label=Windows}{noformat:nopanel=true}
+directory with the updated annotations-api.jar in the OpenEJB war.</p>
+
+<pre><code>
+
 C:\apache-tomcat-6.0.14>copy webapps\openejb\tomcat\annotations-api.jar
 lib\annotations-api.jar
 Overwrite lib\annotations-api.jar? (Yes/No/All): y
-    1 file(s) copied.</p>
+    1 file(s) copied.
 
-<pre><code>{card:label=Unix}{noformat:nopanel=true}
 apache-tomcat-6.0.14$ cp webapps/openejb/tomcat/annotations-api.jar
-</code></pre>
+lib/annotations-api.jar 
 
-<p>lib/annotations-api.jar 
-<div class="deck">}</p>
+</code></pre>
 
 <p><a name="ManualInstallation-{anchor:javaagent}AddOpenEJBjavaagenttoTomcatstartup"></a></p>
 
-<h2>{anchor:javaagent} Add OpenEJB javaagent to Tomcat startup</h2>
+<h2>Add OpenEJB javaagent to Tomcat startup</h2>
 
 <p>OpenJPA, the Java Persistence implementation used by OpenEJB, currently
 must enhanced persistence classes to function properly, and this requires
 the installation of a javaagent into the Tomcat startup process.</p>
 
-<p>First, copy the OpenEJB JavaAgent jar into the lib directory.
-<div class="deck">:id=unpack tomcat}<div class="card">:label=Windows}{noformat:nopanel=true}
-C:\apache-tomcat-6.0.14>copy
-webapps\openejb\lib\openejb-javaagent-3.0.0-SNAPSHOT.jar
-lib\openejb-javaagent.jar
-    1 file(s) copied.</p>
+<p>First, copy the OpenEJB JavaAgent jar into the lib directory.</p>
 
-<pre><code>{card:label=Unix}{noformat:nopanel=true}
-apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-javaagent-*.jar
+<pre><code>
+
+    C:\apache-tomcat-6.0.14>copy webapps\openejb\lib\openejb-javaagent-3.0.0-SNAPSHOT.jar lib\openejb-javaagent.jar
+        1 file(s) copied.
+
+    apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-javaagent-*.jar lib/openejb-javaagent.jar
+
 </code></pre>
 
-<p>lib/openejb-javaagent.jar
-<div class="deck">}</p>
-
-<p>Simply, add the following {highlight}highlighted lines{highlight} to the
+<p>Simply, add the snippet marked below in
 bin/catalina.bat (Windows) or bin/catalina.sh (Unix) file to enable the
-OpenEJB javaagent:
-<div class="deck">:id=update script}<div class="card">:label=Windows}<div class="panel">:title=bin/catalina.bat}
-...snip...
-if not exist "%CATALINA_BASE%\conf\logging.properties" goto noJuli
+OpenEJB javaagent:</p>
+
+<pre><code>if not exist "%CATALINA_BASE%\conf\logging.properties" goto noJuli
 set JAVA_OPTS=%JAVA_OPTS%
 -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
 -Djava.util.logging.config.file="%CATALINA_BASE%\conf\logging.properties"
 :noJuli
-<div class="highlight">}rem Add OpenEJB javaagent
-if not exist "%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar"
-goto noOpenEJBJavaagent
-set
-JAVA_OPTS="-javaagent:%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar"
-%JAVA_OPTS%
-:noOpenEJBJavaagent{highlight}</p>
 
-<h2>rem ----- Execute The Requested Command</h2>
+ # Start of Snippet to add
+ rem Add OpenEJB javaagent if not exist
+ "%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar" goto
+ noOpenEJBJavaagent set
+ JAVA_OPTS="-javaagent:%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar"
+ %JAVA_OPTS% :noOpenEJBJavaagent
+ # End of Snippet to add
 
-<p>echo Using CATALINA_BASE:   %CATALINA_BASE%
+
+rem ----- Execute The Requested Command
+---------------------------------------
+echo Using CATALINA_BASE:   %CATALINA_BASE%
 echo Using CATALINA_HOME:   %CATALINA_HOME%
-...snip...<div class="panel">} <div class="card">}<div class="card">:label=Unix}<div class="panel">:title=bin/catalina.sh}
-...snip...
+
+
+
 # Set juli LogManager if it is present
-if <a href="openejb:--r-"$catalina_base"/conf/logging.properties-.html">OPENEJB: -r "$CATALINA_BASE"/conf/logging.properties </a>
+if [OPENEJB: -r "$CATALINA_BASE"/conf/logging.properties ](openejb:--r-"$catalina_base"/conf/logging.properties-.html)
 ; then
-&nbsp;&nbsp;JAVA_OPTS="$JAVA_OPTS
+JAVA_OPTS="$JAVA_OPTS
 "-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager"
 "-Djava.util.logging.config.file="$CATALINA_BASE/conf/logging.properties"
 fi
-<div class="highlight">}# Add OpenEJB javaagent
-if <a href="openejb:--r-"$catalina_base"/webapps/lib/openejb-javaagent.jar-.html">OPENEJB: -r "$CATALINA_BASE"/webapps/lib/openejb-javaagent.jar </a>
+
+ #Start of Snippet to add
+ if [OPENEJB: -r "$CATALINA_BASE"/webapps/lib/openejb-javaagent.jar ](openejb:--r-"$catalina_base"/webapps/lib/openejb-javaagent.jar-.html)
 ; then
-&nbsp;&nbsp;JAVA_OPTS=""-javaagent:$CATALINA_BASE/lib/openejb-javaagent.jar"
+JAVA_OPTS=""-javaagent:$CATALINA_BASE/lib/openejb-javaagent.jar"
 $JAVA_OPTS"
-fi{highlight}</p>
+fi
+#End of Snippet to add
+</code></pre>
 
-<h2># ----- Execute The Requested Command</h2>
+<h2>Note:</h2>
 
-<p># Bugzilla 37848: only output this if we have a TTY
-if <a href="openejb:-$have_tty--eq-1-.html">OPENEJB: $have_tty -eq 1 </a>
-; then
-&nbsp;&nbsp;echo "Using CATALINA_BASE:   $CATALINA_BASE"
-...snip...<div class="panel">} <div class="card">}<div class="deck">}</p>
-
-<p><em>NOTE:</em> The example above is an excerpt from the middle of the
-bin/catalina.sh file.  Search for "Execute" in the file to locate the
-correct position in the file to add the new lines.</p>
+<p>The example above is an excerpt from the middle of the
+bin/catalina.sh file. Search for the this section and add the snippet shown </p>
 
 
 
