@@ -146,8 +146,23 @@ p.put("myDataSource.JtaManaged", "true");
 Context context = new InitialContext(p);
 </code></pre>
 
+<p>Under certain circumstances it may be necessary to load two versions of the same driver.
+This is possible by definition of a classpath for the resource which points to the
+specific driver files required for the DataSource:</p>
+
+<pre><code>p.put("myDataSourceOne", "new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionOne.jar");
+p.put("myDataSourceOne.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+p.put("myDataSource.JdbcUrl", "jdbc:derby:myDatabaseOne;create=true");
+....
+p.put("myDataSourceTwo", "new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionTwo.jar");
+p.put("myDataSourceTwo.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+p.put("myDataSource.JdbcUrl", "jdbc:derby:myDatabaseTwo;create=true");
+</code></pre>
+
+<p>This will allow an application to communicate through legacy drivers to the same JDBC provider.</p>
+
 <p>See <a href="embedded-configuration.html">Embedded Configuration</a>
- for details on properties and overrides.</p>
+ for further details on properties and overrides.</p>
 
 <p>See <a href="containers-and-resources.html">Containers and Resources</a>
  for a full list of supported Resource types and their properties.</p>
