@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+      <title></title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../resources/css/bootstrap.css" rel="stylesheet">
+    <link href="./../resources/css/prettify.css" rel="stylesheet">
+    <link href="./../resources/css/bootstrap-mods.css" rel="stylesheet">
+    <link href="./../resources/css/main.css" rel="stylesheet">
+
+    <script type="text/javascript">
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+document.URL,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+document.URL,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=",
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../resources/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./../resources/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../resources/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../resources/images/apple-touch-icon-114x114.png">
+
+    <script src="./../resources/js/prettify.js" type="text/javascript"></script>
+    <script src="./../resources/js/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../resources/js/common.js"></script>
+    <script src="./../resources/js/prettyprint.js"></script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar" data-dropdown="dropdown">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../index.html">Apache TomEE</a>
+          <ul class="nav">
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  Apache
+                      <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                     <!-- <li><a href="./../misc/whoweare.html">Who we are?</a></li> -->
+                     <!-- <li><a href="./../misc/heritage.html">Heritage</a></li> -->
+                     <li><a href="http://www.apache.org">Apache Home</a></li>
+                     <!-- <li><a href="./../misc/resources.html">Resources</a></li> -->
+                     <li><a href="./../misc/contact.html">Contact</a></li>
+                     <li><a href="./../misc/legal.html">Legal</a></li>
+                     <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                     <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                     <li class="divider"/>
+                     <li><a href="http://www.apache.org/security">Security</a></li>
+                  </ul>
+              </li>
+              <li><a href="./../index.html">Home</a></li>
+              <li><a href="./../downloads.html">Downloads</a></li>
+              <li><a href="./../documentation.html">Documentation</a></li>
+              <li><a href="./../examples-trunk/index.html">Examples</a></li>
+              <li><a href="./../support.html">Support</a></li>
+              <li><a href="./../security/index.html">Security</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="page-header">
+    <small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
+    <h1>
+
+        <div style="float: right; position: relative; bottom: -10px; ">
+            <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
+            <a onclick="javascript:fbshare()" class="fb-share sprite" title="share on Facebook">share [fb]</a>
+            <a onclick="javascript:twshare()" class="tw-share sprite" title="share on Twitter">share [tw]</a>
+            <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+        </div>
+    </h1>
+</div>
+
+<h1>Releasing TomEE</h1>
+
+<pre><code>This document is aimed at guiding a release manager through the general release process. You will need either a Linux, Mac, or failing that a Linux Virtual on Win. 
+</code></pre>
+
+<h3>Preparation of The Branch</h3>
+
+<p>Run <strong>ant -f rat.xml > report.txt</strong> on trunk to ensure all licences are in place.</p>
+
+<ul>
+<li>Review the report.txt and update/add missing headers until clean.</li>
+<li><em>Tip</em>, search for <strong>Unapproved licenses:</strong> at the beginning the report for a list.</li>
+</ul>
+
+<p>Branch the version to release and ensure it builds and passes all tests.</p>
+
+<p>Add a buildbot CI setup for branch here:</p>
+
+<p><a href="https://svn.apache.org/repos/infra/infrastructure/buildbot/aegis/buildmaster/master1/projects/tomee.conf">https://svn.apache.org/repos/infra/infrastructure/buildbot/aegis/buildmaster/master1/projects/tomee.conf</a></p>
+
+<p>Basically search for the following line and it should be obvious how to add a new builder:</p>
+
+<pre><code>c['builders'].append(tomee_hemera_builder("tomee-trunk-ubuntu", "tomee/tomee/trunk"))
+</code></pre>
+
+<p>An SVN trigger must be added afterwards. This can only be done by someone with admin permissions, such as any PMC chair or an Infra team member.
+Just drop an email to <em>infrastructure@apache.org</em></p>
+
+<h3>Create a TCK Branch</h3>
+
+<p>Branch the TCK using the same version as the release branch from here:</p>
+
+<p><a href="https://svn.apache.org/repos/tck/tomee-tck/trunk">https://svn.apache.org/repos/tck/tomee-tck/trunk</a></p>
+
+<p>Update the TCK branch files to point to the version branch.</p>
+
+<pre><code>\tckbranch\plus.properties
+\tckbranch\pom.xml
+\tckbranch\webprofile-plus.properties
+\tckbranch\webprofile.properties
+</code></pre>
+
+<p>Run <strong>ant -f rat.xml > report.txt</strong> on the branch.</p>
+
+<ul>
+<li>Review the report.txt and update/add missing headers until clean.</li>
+<li><em>Tip</em>, search for <strong>Unapproved licenses:</strong>.</li>
+</ul>
+
+<h3>Check SVN Authentication</h3>
+
+<p>Pre-authenticate svn repositories to ensure your credentials are cached before using any tools.</p>
+
+<pre><code>svn mkdir -m "Create test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir
+svn delete -m "Delete test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir
+svn mkdir -m "Create test dir" https://repository.apache.org/content/repositories/testdir
+svn delete -m "Delete test dir" https://repository.apache.org/content/repositories/testdir
+svn mkdir -m "Create test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir
+svn delete -m "Delete test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir
+</code></pre>
+
+<h3>Prepare Maven Authentication</h3>
+
+<p>Ensure your maven .m2/settings.xml correct, and be aware that the tools currently require a clear text password:</p>
+
+<pre><code>&lt;server&gt;
+  &lt;id&gt;apache.snapshots.https&lt;/id&gt;
+  &lt;username&gt;un&lt;/username&gt;
+  &lt;password&gt;pw.in.clear&lt;/password&gt;
+&lt;/server&gt;
+
+&lt;server&gt;
+  &lt;id&gt;apache.releases.https&lt;/id&gt;
+  &lt;username&gt;un&lt;/username&gt;
+  &lt;password&gt;pw.in.clear&lt;/password&gt;
+&lt;/server&gt;
+
+&lt;server&gt;
+  &lt;id&gt;apache.dist.https&lt;/id&gt;
+  &lt;username&gt;un&lt;/username&gt;
+  &lt;password&gt;pw.in.clear&lt;/password&gt;
+&lt;/server&gt;
+
+&lt;profiles&gt;
+    &lt;profile&gt;
+    ...
+        &lt;repositories&gt;
+            &lt;repository&gt;
+              &lt;id&gt;apache.dist.https&lt;/id&gt;
+              &lt;url&gt;https://dist.apache.org/repos/dist&lt;/url&gt;
+            &lt;/repository&gt;
+          &lt;/repositories&gt;
+</code></pre>
+
+<h3>Code Signing Setup</h3>
+
+<p>If this is your first release then you will have to ensure that you have a code signing key prepared on the machine from which you perform the release. The process is quite intense. You can find information here:</p>
+
+<ul>
+<li><a href="http://www.apache.org/dev/release-signing.html">http://www.apache.org/dev/release-signing.html</a></li>
+<li><a href="http://maven.apache.org/developers/release/pmc-gpg-keys.html">http://maven.apache.org/developers/release/pmc-gpg-keys.html</a></li>
+</ul>
+
+<p>However, the basic steps are:</p>
+
+<ul>
+<li>Create a key using <strong>gpg --gen-key</strong>, using size 4096 and answering the questions that command issues.</li>
+<li>During the process you will have to generate random entropy, this is best achieved in another console and issuing the command <strong>find / > /dev/null</strong> and waiting a minute.</li>
+<li>List the keys using <strong>gpg --list-keys</strong> and take note of the name</li>
+</ul>
+
+<p>Once you have your key then you will need to append it to the key file here:</p>
+
+<ul>
+<li><a href="http://www.apache.org/dist/openejb/KEYS">http://www.apache.org/dist/openejb/KEYS</a></li>
+</ul>
+
+<p>That is best done as the file itself explains one you view it in a UTF-8 safe text editor.</p>
+
+<ul>
+<li>Save the KEYS file on your local machine and import it using <strong>gpg --import KEYS</strong></li>
+<li>Then create the new KEYS file using <strong>(gpg --list-sigs <your name> &amp;&amp; gpg --armor --export <your name>) >> KEYS</strong></li>
+<li>Check that the new KEYS file contains your key.</li>
+<li>Log in to people.apache.org and locate /dist/openejb/KEYS</li>
+<li>Make a backup of the remote KEYS file just in case</li>
+<li>Overwrite the old /dist/openejb/KEYS file with your new one that now also contains your key.</li>
+<li>Go to <a href="http://pgp.mit.edu/">http://pgp.mit.edu/</a> and add your ascii armoured key</li>
+<li>Take note of your key fingerprint using <strong>gpg --fingerprint <your name></strong></li>
+<li>Go to <a href="https://id.apache.org">https://id.apache.org</a>, log in and fill OpenPGP Public Key Primary Fingerprint: with the value of your fingerprint.</li>
+</ul>
+
+<h3>Build the Release Tools</h3>
+
+<p>Checkout the release tools using SVN from here <a href="https://svn.apache.org/repos/asf/tomee/sandbox/release-tools">https://svn.apache.org/repos/asf/tomee/sandbox/release-tools</a></p>
+
+<p>Really read the README.mdtext and follow the instructions for building the 3rd party libraries.</p>
+
+<p>Build the release tools, <em>mvn clean install -DskipTests -DfailIfNoTests=false</em></p>
+
+<p>Have a look at <strong>run.sh</strong> to see the entry point.</p>
+
+<p>Understand that the release tools are not polished, and you currently may have to edit source and re-compile.</p>
+
+<h3>Site Staging</h3>
+
+<p>For some of the release steps you will need to provide documentation on the site. Checkout the site here:</p>
+
+<p><a href="https://svn.apache.org/repos/asf/tomee/site/trunk">https://svn.apache.org/repos/asf/tomee/site/trunk</a></p>
+
+<p>Most of the content can be found under 'content' and subdirectories.</p>
+
+<p>When you commit changes the site should be built automatically by the buildbot, but you can force a build on IRC using <strong>tomee-bot: force build tomee-site-staging</strong></p>
+
+<p>The buildbot staging result can be seen here:</p>
+
+<p><a href="http://ci.apache.org/builders/tomee-site-staging">http://ci.apache.org/builders/tomee-site-staging</a></p>
+
+<p>And the actual staging site, where you can review your changes, is here:</p>
+
+<p><a href="http://tomee.staging.apache.org/">http://tomee.staging.apache.org/</a></p>
+
+<p>Once you are happy with the staging you can publish to the real site using:</p>
+
+<p><a href="https://cms.apache.org/tomee/publish">https://cms.apache.org/tomee/publish</a></p>
+
+<h3>Begin The Release Process</h3>
+
+<p>Ensure TCK is passing all tests.</p>
+
+<p>Open a console on the release tools directory.</p>
+
+<p>Note: Before running any <strong>./run.sh</strong> activity always check the release tools code for the command tomee-release-tools/src/main/java/org/apache/openejb/tools/release/cmd.
+At the moment some of the commands need manually editing to work. Eventually the commands should be re-written.</p>
+
+<p>All JIRA actions should be performed on the ASF JIRA here:</p>
+
+<p><a href="https://issues.apache.org/jira/browse/TOMEE">https://issues.apache.org/jira/browse/TOMEE</a></p>
+
+<p>Ensure JIRAs have been filed for commits using <strong>./run.sh reviewcommits</strong></p>
+
+<p>Update fixVersions for JIRAs used in SVN commits using <strong>./run.sh updatejiras</strong></p>
+
+<p>Review and bulk Close all JIRAs for the version to be released.</p>
+
+<p>Publish the changed binaries report (if any) using <strong>./run.sh comparelibraries</strong></p>
+
+<p>Write and publish the release notes preview on the staging site. </p>
+
+<p>Publish a summary of the RAT report preview on the staging site.</p>
+
+<p>Using the RAT report as a guide update LICENSE and NOTICE files for any changed binaries, and add new ones if required.</p>
+
+<p>Update branch versions. How you do this is up to you at this point in time.</p>
+
+<p>Update trunk versions. How you do this is up to you at this point in time.</p>
+
+<p>Create the next version iterations in JIRA.</p>
+
+<p>Resolve all SNAPSHOT dependencies in the branch against release versions. This includes the modules themselves.
+The reason for this is that an SVN TAG is taken straight off the branch during the next step.</p>
+
+<pre><code>Note: It is a future goal to either separate OpenEJB from TomEE or unify the versions so the
+[maven-release-plugin](http://maven.apache.org/maven-release/maven-release-plugin/) can be used.
+</code></pre>
+
+<h3>Rolling Out The Preview</h3>
+
+<p>Publish the preview using <strong>./run.sh roll binaries legal releasenotes preview</strong> - You can run these tasks like so, or individually in order.
+It will be likely that this will have to be repeated several times before a successful vote.</p>
+
+<pre><code>Note: Before running the above ensure you either have:
+
+ - A valid tomee-release.properties from the last release in your home directory (Speak to the last release manager).
+ - Or have modified **tomee-release-tools/src/main/java/org/apache/openejb/tools/release/Release.java** with current versions and rebuilt.
+</code></pre>
+
+<p>Ensure the TCK passes with preview repositories by editing and ensuring paths are correct in the following files:</p>
+
+<pre><code>\tckbranch\plus.properties
+\tckbranch\pom.xml
+\tckbranch\webprofile-plus.properties
+\tckbranch\webprofile.properties
+</code></pre>
+
+<p>To fire off a build on EC2 from the TCK directory use <strong>./triggerEC2.sh</strong>   </p>
+
+<p>If the TCK fails then discuss, fix and re-roll.</p>
+
+<p>Publish a <a href="https://www.apache.org/foundation/voting.html">Vote</a> if, and only if, the TCK passes.</p>
+
+<p>Votes are generally managed and identified using keywords such as [VOTE], [CANCELLED] and [RESULT]</p>
+
+<p>If the vote fails then discuss, fix and re-roll.</p>
+
+<p>TCK test vote binaries</p>
+
+<p>Follow the steps in tasks - In progress...</p>
+
+
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documentation!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../resources/js/bootstrap-modal.js"></script>
+
+        <footer>
+            <p>Copyright &copy; 1999-2014 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+                Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation.
+                All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./../resources/js/bootstrap-dropdown.js"></script>
+
+  </body>
+</html>
