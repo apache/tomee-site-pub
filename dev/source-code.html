@@ -4,8 +4,10 @@
 
     <meta charset="utf-8">
       <title>Source Code</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Apache TomEE">
+    <meta name="author" content="Apache TomEE">
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -149,7 +151,7 @@ is as easy as executing the following command:</p>
   <p>$ svn co <a href="https://svn.apache.org/repos/asf/tomee/tomee/trunk">https://svn.apache.org/repos/asf/tomee/tomee/trunk</a></p>
 </blockquote>
 
-<p>or alternatively with Apache Maven 2 or later:</p>
+<p>or alternatively with Apache Maven 3.0.5 or later:</p>
 
 <blockquote>
   <p>mvn scm:checkout
@@ -163,7 +165,7 @@ about the command, though, as it doesn't require the subversion client.</p>
 
 <p><a name="SourceCode-Continuousintegration"></a></p>
 
-<h1>Continuous integration</h1>
+<h3>Continuous integration</h3>
 
 <p>Apache TomEE continuous integration relies on <a href="http://ci.apache.org/">Apache Buildbot</a>.
 All builders are available <a href="http://ci.apache.org/builders">from the page</a>.</p>
@@ -176,10 +178,19 @@ All builders are available <a href="http://ci.apache.org/builders">from the page
 
 <p><a name="SourceCode-Building"></a></p>
 
-<h1>Building</h1>
+<h3>Maven</h3>
 
-<p>To build the code, you'll need to grab a copy of <a href="http://maven.apache.org">Apache Maven</a>
- version 3.0 or later.  The standard build command is as follows:</p>
+<p>To build the code, you'll need to grab a copy of <a href="http://maven.apache.org">Apache Maven</a>, version 3.0.5 or later.</p>
+
+<h3>Memory Settings</h3>
+
+<p>It is pretty much guaranteed that you will need to give Maven an increase on the available memory. <br />
+Depending on the OS you are working on the fix can be as easy as <code>_export MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</code>
+on MacOS and Unices or <code>set MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</code> on MS Windows.</p>
+
+<h3>Building</h3>
+
+<p>The standard build command is as follows:</p>
 
 <pre><code>$ cd tomee
 $ mvn clean install -DskipTests -DfailIfNoTests=false
@@ -193,27 +204,20 @@ $ mvn clean install
 
 <p>The output of that command should end with "BUILD SUCCESSFUL"</p>
 
-<h2>Memory Settings</h2>
-
-<p>It's likely you run into the infamous <code>OutOfMemoryError</code> and the solution is
-to increase the available memory for Apache Maven. Depending on the system
-you're working on, the fix can be as easy as <code>_export MAVEN_OPTS=-Xmx512m</code>
-on MacOS and Unices or <code>set MAVEN_OPTS=-Xmx512m</code> on MS Windows.</p>
-
-<h2>Binary locations</h2>
+<h3>Binary locations</h3>
 
 <p>Once built, the TomEE binaries will be located at:</p>
 
 <pre><code>$ ls tomee/apache-tomee/target/*.zip
-tomee/apache-tomee/target/apache-tomee-jaxrs-1.5.2-SNAPSHOT.zip
-tomee/apache-tomee/target/apache-tomee-plus-1.5.2-SNAPSHOT.zip
-tomee/apache-tomee/target/apache-tomee-webprofile-1.5.2-SNAPSHOT.zip
+tomee/apache-tomee/target/apache-tomee-jaxrs-[version]-SNAPSHOT.zip
+tomee/apache-tomee/target/apache-tomee-plus-[version]-SNAPSHOT.zip
+tomee/apache-tomee/target/apache-tomee-webprofile-[version]-SNAPSHOT.zip
 </code></pre>
 
 <p>The OpenEJB standalone binaries will be located at:</p>
 
 <pre><code>$ ls assembly/openejb-standalone/target/*.zip
-assembly/openejb-standalone/target/apache-openejb-4.5.2-SNAPSHOT.zip
+assembly/openejb-standalone/target/apache-openejb-[version]-SNAPSHOT.zip
 </code></pre>
 
 

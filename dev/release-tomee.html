@@ -4,8 +4,10 @@
 
     <meta charset="utf-8">
       <title></title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Apache TomEE">
+    <meta name="author" content="Apache TomEE">
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -274,7 +276,8 @@ Just follow the instructions there on how to append your key. The basic steps ar
 
 <h3>Site Staging</h3>
 
-<p>For some of the release steps you will need to provide documentation on the site. Checkout the site here:</p>
+<p><a href="#staging"/>
+For some of the release steps you will need to provide documentation on the site. Checkout the site here:</p>
 
 <p><a href="https://svn.apache.org/repos/asf/tomee/site/trunk">https://svn.apache.org/repos/asf/tomee/site/trunk</a></p>
 
@@ -303,11 +306,15 @@ Just follow the instructions there on how to append your key. The basic steps ar
 
 Because we cannot use the Maven release tools we currently have to create a an SVN tag manually. The best way to do this is to:
 
- - Copy the branch to a staging branch using: svn copy https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]  https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging -m "Staging [version]"
- - Checkout the staging branch using: svn co https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging tomee-[version]-staging
+ - Copy the branch to a staging branch using:  
+   &gt; svn copy https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]  https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging -m "Staging [version]"
+ - Checkout the staging branch using:  
+   &gt; svn co https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging tomee-[version]-staging
  - Update all SNAPSHOT versions to the release versions in the local tomee-[version]-staging and commit.
- - Create the tag from the staging: svn copy https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging https://svn.apache.org/repos/asf/tomee/tomee/tags/tomee-[version] -m "Tag [version]"
- - Delete the staging branch using: svn rm https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging -m "Delete staging"
+ - Create the tag from the staging:  
+   &gt; svn copy https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging https://svn.apache.org/repos/asf/tomee/tomee/tags/tomee-[version] -m "Tag [version]"
+ - Delete the staging branch using:  
+   &gt; svn rm https://svn.apache.org/repos/asf/tomee/tomee/branches/tomee-[version]-staging -m "Delete staging"
 </code></pre>
 
 <p>Open a console on the release-tools directory.</p>
@@ -341,13 +348,10 @@ At the moment some of the commands need manually editing to work. Eventually the
 
 <h3>Rolling Out The Preview</h3>
 
-<p>Publish the preview using <strong>./run.sh roll binaries legal releasenotes preview</strong> - You can run these tasks like so, or individually in order.
-It will be likely that this will have to be repeated several times before a successful vote.</p>
-
-<pre><code>Note: Before running the above ensure you either have:
+<pre><code>Note: Before running anything below ensure you either have:
 
  - A valid tomee-release.properties from the last release in your home directory (Speak to the last release manager).
- - Or have modified **tomee-release-tools/src/main/java/org/apache/openejb/tools/release/Release.java** with current versions and rebuilt.
+ - Or have modified **tomee-release-tools/src/main/java/org/apache/openejb/tools/release/Release.java** with current versions and **mvn clean install**.
 </code></pre>
 
 <p>Ensure the TCK passes with preview repositories by editing and ensuring paths are correct in the following files:</p>
@@ -358,7 +362,10 @@ It will be likely that this will have to be repeated several times before a succ
 \tckbranch\webprofile.properties
 </code></pre>
 
-<p>To fire off a build on EC2 from the TCK directory use <strong>./triggerEC2.sh</strong>   </p>
+<p>Publish the preview using <strong>./run.sh roll binaries legal releasenotes preview</strong> - You can run these tasks like so, or individually in order.
+It will be likely that this will have to be repeated several times before a successful vote.</p>
+
+<p>To fire off a build on EC2 from the TCK directory speak to the last release manager for the <strong>curl</strong> command to use</p>
 
 <p>If the TCK fails then discuss, fix and re-roll.</p>
 
@@ -368,9 +375,25 @@ It will be likely that this will have to be repeated several times before a succ
 
 <p>If the vote fails then discuss, fix and re-roll.</p>
 
-<p>TCK test vote binaries</p>
+<h3>Voted Binaries</h3>
 
-<p>Follow the steps in tasks - In progress...</p>
+<p>Once the vote has passed then release the binaries on Nexus: <a href="https://repository.apache.org/index.html#welcome">https://repository.apache.org/index.html#welcome</a></p>
+
+<p>Update both OpenEJB and TomEE JIRA versions as released (Set the release date).</p>
+
+<p>Copy the binaries to the release location (User rights require a PMC to do this)</p>
+
+<pre><code>From: https://dist.apache.org/repos/dist/dev/tomee/staging-[stagingId]/tomee-[version]
+To: https://dist.apache.org/repos/dist/release/tomee/tomee-[version] 
+</code></pre>
+
+<p>Commit and publish changes to the site, see <a href="release-tomee.html#staging">Site Staging</a>  </p>
+
+<h3>Blog</h3>
+
+<p>Announce to the world that TomEE has new bells and whistles!</p>
+
+<p>https://blogs.apache.org/roller-ui/login.rol</p>
 
 
 
