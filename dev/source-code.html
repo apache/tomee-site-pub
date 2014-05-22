@@ -188,27 +188,38 @@ All builders are available <a href="http://ci.apache.org/builders">from the page
 Depending on the OS you are working on the fix can be as easy as <code>_export MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</code>
 on MacOS and Unices or <code>set MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</code> on MS Windows.</p>
 
-<h3>Building</h3>
+<h3>Full Build</h3>
 
-<p>The standard build command is as follows:</p>
+<p>The standard build command is as follows (Skipping all tests):</p>
 
-<pre><code>$ cd tomee
-$ mvn clean install -DskipTests -DfailIfNoTests=false
+<pre><code>cd tomee
+mvn clean install -DskipTests -DfailIfNoTests=false
 </code></pre>
 
-<p>Alternatively, if you've made changes to the code and want to verify them, you can run with tests on:</p>
+<p>Alternatively, if you've made changes to the code and want to verify them, you can run with tests on (Takes about 2 hours):</p>
 
-<pre><code>$ cd tomee
-$ mvn clean install
+<pre><code>cd tomee
+mvn clean install
 </code></pre>
 
 <p>The output of that command should end with "BUILD SUCCESSFUL"</p>
+
+<p>It is also possible compile and test individual modules. <br />
+Just change to the module directory and run the same commands as above.</p>
+
+<h3>Quick Build</h3>
+
+<p>If you are in a hurry, and let's face it most of us are, you can run a quick build without the examples:</p>
+
+<pre><code>mvn -Pquick -Dsurefire.useFile=false -DdisableXmlReport=true -DuniqueVersion=false -ff -Dassemble -DskipTests -DfailIfNoTests=false clean install
+</code></pre>
 
 <h3>Binary locations</h3>
 
 <p>Once built, the TomEE binaries will be located at:</p>
 
-<pre><code>$ ls tomee/apache-tomee/target/*.zip
+<pre><code>ls [project]/tomee/apache-tomee/target/*.zip
+
 tomee/apache-tomee/target/apache-tomee-jaxrs-[version]-SNAPSHOT.zip
 tomee/apache-tomee/target/apache-tomee-plus-[version]-SNAPSHOT.zip
 tomee/apache-tomee/target/apache-tomee-webprofile-[version]-SNAPSHOT.zip
@@ -216,7 +227,8 @@ tomee/apache-tomee/target/apache-tomee-webprofile-[version]-SNAPSHOT.zip
 
 <p>The OpenEJB standalone binaries will be located at:</p>
 
-<pre><code>$ ls assembly/openejb-standalone/target/*.zip
+<pre><code>ls [project]/assembly/openejb-standalone/target/*.zip
+
 assembly/openejb-standalone/target/apache-openejb-[version]-SNAPSHOT.zip
 </code></pre>
 
