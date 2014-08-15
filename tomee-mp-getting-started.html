@@ -6,9 +6,10 @@
       <title>TomEE Maven Plugin</title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./documentation.html">Documentation</a></li>
               <li><a href="./examples-trunk/index.html">Examples</a></li>
               <li><a href="./support.html">Support</a></li>
+              <li><a href="./contribute.html">Contribute</a></li>
               <li><a href="./security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -131,13 +133,29 @@
     </h1>
 </div>
 
-<h1>Generating a TomEE-Project with Maven</h1>
+<h3>Add The TomEE Maven Plugin To An Existing Project</h3>
 
-<p>TomEE provides a maven-archetype for generating a maven based project. This template-project is preconfigured with <code>javaee-api</code> (scope provided) and with the <code>tomee-maven-plugin</code> for starting the application with TomEE.</p>
+<p>If you already have a maven project set up then just add the plugin as described <a href="maven/index.html">here</a></p>
 
-<p>The current version of the archetype is '1.6.0.2'. So the needed command to generate an application is:</p>
+<p>You will likely need the full Java EE API added to your pom file:</p>
 
-<pre><code>mvn archetype:generate -DarchetypeGroupId=org.apache.openejb.maven -DarchetypeArtifactId=tomee-webapp-archetype -DarchetypeVersion=1.6.0.2
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;javaee-api&lt;/artifactId&gt;
+  &lt;version&gt;6.0-6&lt;/version&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>The simplest path is to allow Maven to create an example project for you. Even if you have an existing project you can always use the template as a reference.</p>
+
+<h3>Generate a Basic TomEE-Project With Maven</h3>
+
+<p>TomEE provides a maven-archetype for generating a template project. This template project is preconfigured with <code>javaee-api</code> (scope provided) and with the <a href="maven/index.html"><code>tomee-maven-plugin</code></a> for starting the application with TomEE.</p>
+
+<p>The current version of the archetype is '1.7.0'. So the required command to generate an application would be:</p>
+
+<pre><code>mvn archetype:generate -DarchetypeGroupId=org.apache.openejb.maven -DarchetypeArtifactId=tomee-webapp-archetype -DarchetypeVersion=1.7.0
 </code></pre>
 
 <p>The first time you run this command maven downloads the archetype and some parts related to it. Afterwards you see a prompt which allows you to specify the groupId, artifactId, version and package of your application.
@@ -163,7 +181,7 @@ For starting the application you have to change the current directory to the dir
 <pre><code>cd tomee-demo
 </code></pre>
 
-<h1>Starting a TomEE-Project with Maven</h1>
+<h3>Starting a TomEE-Project with Maven</h3>
 
 <p>With using the archetype everything you need is in place already. So you just have to start TomEE with:</p>
 
@@ -173,7 +191,7 @@ For starting the application you have to change the current directory to the dir
 <p>The first time you run this command takes a bit longer, because maven has to download e.g. TomEE.
 Once those parts are downloaded, starting maven, deploying and starting the generated application takes less than 10s (depending on your computer).</p>
 
-<h1>Accessing a started application</h1>
+<h3>Accessing a running application</h3>
 
 <p>The application gets deployed to <code>target/apache-tomee/webapps</code>. If everything worked correctly, you should see a directory ('ROOT') as well as a web-archive ('ROOT.war').
 The context-paths of the deployed application is ROOT. In our example the generated application contains a servlet mapped to '/index'. So you can access it via:</p>

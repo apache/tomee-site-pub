@@ -6,9 +6,10 @@
       <title>Simple Singleton</title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./../../documentation.html">Documentation</a></li>
               <li><a href="./../../examples-trunk/index.html">Examples</a></li>
               <li><a href="./../../support.html">Support</a></li>
+              <li><a href="./../../contribute.html">Contribute</a></li>
               <li><a href="./../../security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -189,15 +191,15 @@ public class PropertyRegistry {
         properties.clear();
     }
 
-    public String getProperty(String key) {
+    public String getProperty(final String key) {
         return properties.getProperty(key);
     }
 
-    public String setProperty(String key, String value) {
+    public String setProperty(final String key, final String value) {
         return (String) properties.setProperty(key, value);
     }
 
-    public String removeProperty(String key) {
+    public String removeProperty(final String key) {
         return (String) properties.remove(key);
     }
 }
@@ -209,57 +211,38 @@ public class PropertyRegistry {
 
 <pre><code>package org.superbiz.registry;
 
-import org.junit.Assert;
-import org.junit.AfterClass;
-import org.junit.Test;
-
-import javax.ejb.embeddable.EJBContainer;
-import javax.naming.Context;
-import java.net.URI;
+import javax.ejb.Lock;
+import javax.ejb.Singleton;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ComponentRegistryTest {
+import static javax.ejb.LockType.READ;
+import static javax.ejb.LockType.WRITE;
 
-    private final static EJBContainer ejbContainer = EJBContainer.createEJBContainer();
+@Singleton
+@Lock(READ)
+public class ComponentRegistry {
 
-    @Test
-    public void oneInstancePerMultipleReferences() throws Exception {
+    private final Map&lt;Class, Object&gt; components = new HashMap&lt;Class, Object&gt;();
 
-        final Context context = ejbContainer.getContext();
-
-        // Both references below will point to the exact same instance
-        ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
-        ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
-
-        URI expectedUri = new URI("foo://bar/baz");
-        one.setComponent(URI.class, expectedUri);
-        URI actualUri = two.getComponent(URI.class);
-        Assert.assertSame(expectedUri, actualUri);
-
-        two.removeComponent(URI.class);
-        URI uri = one.getComponent(URI.class);
-        Assert.assertNull(uri);
-
-        Date expectedDate = new Date();
-        two.setComponent(Date.class, expectedDate);
-        Date actualDate = one.getComponent(Date.class);
-        Assert.assertSame(expectedDate, actualDate);
-
-        one.removeComponent(URI.class);
-        uri = two.getComponent(URI.class);
-        Assert.assertNull(uri);
-
-        Collection&lt;?&gt; collection = one.getComponents();
-        Assert.assertTrue("Reference 'one' - ComponentRegistry is empty",collection.isEmpty());
-
-        collection = two.getComponents();
-        Assert.assertTrue("Reference 'two' - ComponentRegistry is empty",collection.isEmpty());
+    public &lt;T&gt; T getComponent(final Class&lt;T&gt; type) {
+        return (T) components.get(type);
     }
 
-    @AfterClass
-    public static void closeEjbContainer() {
-        ejbContainer.close();
+    public Collection&lt;?&gt; getComponents() {
+        return new ArrayList(components.values());
+    }
+
+    @Lock(WRITE)
+    public &lt;T&gt; T setComponent(final Class&lt;T&gt; type, final T value) {
+        return (T) components.put(type, value);
+    }
+
+    @Lock(WRITE)
+    public &lt;T&gt; T removeComponent(final Class&lt;T&gt; type) {
+        return (T) components.remove(type);
     }
 }
 </code></pre>
@@ -286,8 +269,8 @@ public class ComponentRegistryTest {
 
 <pre><code>package org.superbiz.registry;
 
-import org.junit.Assert;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -306,32 +289,33 @@ public class ComponentRegistryTest {
         final Context context = ejbContainer.getContext();
 
         // Both references below will point to the exact same instance
-        ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
-        ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+        final ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+        final ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
 
-        URI expectedUri = new URI("foo://bar/baz");
+        final URI expectedUri = new URI("foo://bar/baz");
         one.setComponent(URI.class, expectedUri);
-        URI actualUri = two.getComponent(URI.class);
+        final URI actualUri = two.getComponent(URI.class);
         Assert.assertSame(expectedUri, actualUri);
 
         two.removeComponent(URI.class);
         URI uri = one.getComponent(URI.class);
         Assert.assertNull(uri);
 
-        Date expectedDate = new Date();
-        two.setComponent(Date.class, expectedDate);
-        Date actualDate = one.getComponent(Date.class);
-        Assert.assertSame(expectedDate, actualDate);
-
         one.removeComponent(URI.class);
         uri = two.getComponent(URI.class);
         Assert.assertNull(uri);
 
+        final Date expectedDate = new Date();
+        two.setComponent(Date.class, expectedDate);
+        final Date actualDate = one.getComponent(Date.class);
+        Assert.assertSame(expectedDate, actualDate);
+
         Collection&lt;?&gt; collection = one.getComponents();
-        Assert.assertTrue("Reference 'one' - ComponentRegistry is empty",collection.isEmpty());
+        System.out.println(collection);
+        Assert.assertEquals("Reference 'one' - ComponentRegistry contains one record", collection.size(), 1);
 
         collection = two.getComponents();
-        Assert.assertTrue("Reference 'two' - ComponentRegistry is empty",collection.isEmpty());
+        Assert.assertEquals("Reference 'two' - ComponentRegistry contains one record", collection.size(), 1);
     }
 
     @AfterClass
@@ -345,8 +329,8 @@ public class ComponentRegistryTest {
 
 <pre><code>package org.superbiz.registry;
 
-import org.junit.Assert;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -359,10 +343,10 @@ public class PropertiesRegistryTest {
     @Test
     public void oneInstancePerMultipleReferences() throws Exception {
 
-        Context context = ejbContainer.getContext();
+        final Context context = ejbContainer.getContext();
 
-        PropertyRegistry one = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
-        PropertyRegistry two = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
+        final PropertyRegistry one = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
+        final PropertyRegistry two = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
 
         one.setProperty("url", "http://superbiz.org");
         String url = two.getProperty("url");

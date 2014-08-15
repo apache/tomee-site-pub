@@ -20,11 +20,13 @@
   <packaging>war</packaging>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     <version.myfaces2>2.2.3</version.myfaces2>
-    <version.deltaspike>1.0.0</version.deltaspike>
+    <version.deltaspike>1.0.1</version.deltaspike>
     <version.extval>2.0.8</version.extval>
-    <version.openejb>4.7.0-SNAPSHOT</version.openejb>
-    <version.tomee>1.7.0-SNAPSHOT</version.tomee>
+    <version.openejb>5.0.0-SNAPSHOT</version.openejb>
+    <version.tomee>2.0.0-SNAPSHOT</version.tomee>
   </properties>
 
   <build>
@@ -35,9 +37,33 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.openjpa</groupId>
+        <artifactId>openjpa-maven-plugin</artifactId>
+        <version>2.3.0</version>
+        <configuration>
+          <includes>org/superbiz/deltaspike/domain/*.class</includes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>enhancer</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>enhance</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.openejb.patch</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>2.4.0-nonfinal-1598334</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.openejb.maven</groupId>
@@ -48,10 +74,29 @@
           <simpleLog>true</simpleLog>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <configuration> <!-- optional -->
+          <systemPropertyVariables>
+            <openejb.jul.forceReload>true</openejb.jul.forceReload>
+            <logging.level.OpenEJB.startup>FINEST</logging.level.OpenEJB.startup>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <repositories>
+    <repository>
+      <id>apache-m2-snapshot</id>
+      <name>Apache Snapshot Repository</name>
+      <url>http://repository.apache.org/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
     <repository>
       <id>prime-repo</id>
       <name>Prime Technology Maven Repository</name>
@@ -64,7 +109,7 @@
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>javaee-api</artifactId>
-      <version>6.0-6-SNAPSHOT</version>
+      <version>7.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -72,8 +117,53 @@
       <artifactId>openejb-core</artifactId>
       <version>${version.openejb}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>xbean-asm5-shaded</artifactId>
+          <groupId>org.apache.xbean</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-collections</artifactId>
+          <groupId>commons-collections</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-lang3</artifactId>
+          <groupId>org.apache.commons</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.xbean</groupId>
+      <artifactId>xbean-asm5-shaded</artifactId>
+      <version>3.18</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <artifactId>commons-lang3</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <version>3.3.2</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.7</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.deltaspike.core</groupId>
       <artifactId>deltaspike-core-api</artifactId>
@@ -207,6 +297,20 @@
       <artifactId>myfaces-impl</artifactId>
       <version>${version.myfaces2}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-collections</artifactId>
+          <groupId>commons-collections</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-beanutils</artifactId>
+          <groupId>commons-beanutils</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.myfaces.core</groupId>
@@ -219,6 +323,12 @@
       <artifactId>myfaces-test20</artifactId>
       <version>1.0.6</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- 3rd party libs -->

@@ -6,9 +6,10 @@
       <title>TomEE and Arquillian</title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./documentation.html">Documentation</a></li>
               <li><a href="./examples-trunk/index.html">Examples</a></li>
               <li><a href="./support.html">Support</a></li>
+              <li><a href="./contribute.html">Contribute</a></li>
               <li><a href="./security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -163,23 +165,27 @@
 
 <p>When a port is set to -1, a random port will be chosen.  This is key to avoiding port conflicts on CI systems or for just plain clean testing.</p>
 
-<p>The TomEE Arquillian adapters will export the actual port chosen back as a system propert using the same name.  The test case can use the property to retrieve the port and contact the server.</p>
+<p>The TomEE Arquillian adapters will export the actual port chosen back as a system property using the same name.  The test case can use the property to retrieve the port and contact the server.</p>
 
 <pre><code>URL url = new URL("http://localhost:" + System.getProperty("tomee.httpPort");
 // use the URL to connect to the server
 </code></pre>
 
+<p>If that property returns null   </p>
+
 <p>When you are actually using a test on the client side, you can use instead</p>
 
-<pre><code>@Arquillian private URL url;
+<pre><code>import org.jboss.arquillian.test.api.ArquillianResource;
+...
+@ArquillianResource private URL url;
 </code></pre>
 
 <p>The url will get injected by Arquillian. Be careful, that injection only works if your are on the client side (it does not make sense in the server side). So, if for a specific need to need it, just use the system property.</p>
 
 <h1>TomEE Embedded Adapter</h1>
 
-<p>The TomEE Embedded Adapter will boot TomEE right inside the testcase itself resulting in one JVM running both the application and the test case.
-This is generally much faster than the TomEE Remote Adapter and great for development.  That said, it is strongly recommended to also run all tests in a Continous Integration
+<p>The TomEE Embedded Adapter will boot TomEE right inside the test case itself resulting in one JVM running both the application and the test case.
+This is generally much faster than the TomEE Remote Adapter and great for development.  That said, it is strongly recommended to also run all tests in a Continuous Integration
 system using the TomEE Remote Adapter.</p>
 
 <p>To use the TomEE Embedded Arquillian Adapter, simply add this Maven dependency to your Arquillian setup:</p>
@@ -216,6 +222,11 @@ system using the TomEE Remote Adapter.</p>
 
 <p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus distribution.  Once setup, the server will execute in a separate process.  This will be slower, but
 with the added benefit it is 100% match with the production system.</p>
+
+<p>Clients can get the remote server port using the following System property:</p>
+
+<pre><code>final String port = System.getProperty("server.http.port");
+</code></pre>
 
 <p>The following shows a typical configuration for testing against TomEE (webprofile version).  The same can be done against TomEE+ by changing <code>&lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;</code> to <code>&lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;</code></p>
 

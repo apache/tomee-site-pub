@@ -6,9 +6,10 @@
       <title></title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./documentation.html">Documentation</a></li>
               <li><a href="./examples-trunk/index.html">Examples</a></li>
               <li><a href="./support.html">Support</a></li>
+              <li><a href="./contribute.html">Contribute</a></li>
               <li><a href="./security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -133,14 +135,13 @@
 
 <h1>Deploying in TomEE</h1>
 
-<p>Deploying in TomEE is quite simple. </p>
+<p>Deploying applications in TomEE is as simple as deploying them in Tomcat. </p>
 
-<p>You could deploy your application just like how you would deploy with Tomcat. For an example, <a href="tomee-and-eclipse.html">tomee-and-eclipse</a> shows
-how to use TomEE along with Eclipse.</p>
+<p>You could deploy your application in Eclipse just like how you would deploy with Tomcat. For an example, <a href="tomee-and-eclipse.html">tomee-and-eclipse</a> shows how to use TomEE with Eclipse.</p>
 
-<p>Or you could simply package your application as a war and "drop it in" tomee/webapps folder or as an ear and "drop it in" tomee/apps folder.</p>
+<p>Or you can simply package your application as a standard <strong>WAR</strong> file and copy it to the <strong>[TomEE]/webapps</strong> folder, or as an <strong>EAR</strong> file and copy it to the <strong>[TomEE]/apps</strong> folder.</p>
 
-<p>On a related note, read on to learn about packaging EJBs in a WAR.</p>
+<p>Read on to learn more about packaging EJBs in a WAR file.</p>
 
 <h3>Packaging</h3>
 
@@ -148,44 +149,39 @@ how to use TomEE along with Eclipse.</p>
 
 <h4>One archive</h4>
 
-<p>The basic idea of this approach is that your Servlets and EJBs are together
-in your WAR file as one app.
--No classloader boundries between Servlets and EJBs
--EJBs and Servlets can share all third-party libraries (like Spring!) -
-no EAR required.
--Can put the web.xml and ejb-jar.xml in the same archive (the WAR file).
--EJBs can see Servlet classes and vice versa.</p>
+<p>The basic idea of this approach is that your Servlets and EJBs are together in your WAR file as one application.</p>
+
+<ul>
+<li>No classloader boundaries between Servlets and EJBs</li>
+<li>EJBs and Servlets can share all third-party libraries (like Spring!) </li>
+<li>No EAR required.</li>
+<li>Can put the web.xml and ejb-jar.xml in the same archive (the WAR file) </li>
+<li>EJBs can see Servlet classes and vice versa </li>
+</ul>
 
 <p><a name="CollapsedEAR-NotquiteJ2EE(itistrulyJava EE6)"></a></p>
 
-<h4>Not quite J2EE (it is truly Java EE6)</h4>
+<h4>Not quite J2EE (But it is Java EE 6)</h4>
 
-<p>This is very different than J2EE or Java EE 5 as there aren't several
-levels of separation and classloader hierarchy.  This is going to take some
-getting used to and it should be understood that this style of packaging
-isn't J2EE compliant. Who would care tough as it is a feature of Java EE 6
-we would've been waiting for so long.</p>
+<p>This is very different than J2EE or Java EE 5 as there are not several levels of separation and classloader hierarchy any more. <br />
+This may take some getting used to and it is important to understand that this style of packaging is <strong>not</strong> J2EE compliant. <br />
+You should not worry though, as it is an accepted feature of Java EE 6.</p>
 
 <h4>J2EE classloading rules:</h4>
 
-<p>-You cannot ever have EJBs and servlets in the same classloader.</p>
+<ul>
+<li>You cannot ever have EJBs and Servlets in the same classloader.</li>
+<li>Three classloader minimum; a classloader for the ear, one for each
+ejb-jar, and one for each WAR file.</li>
+<li>Servlets can see EJBs, but EJBs cannot see Servlets.</p>
 
-<p>-Three classloader minimum; a classloader for the ear, one for each
-ejb-jar, and one for each WAR file.</p>
+<p>To pull that off, J2EE has to kill you on packaging:</li>
+<li>You cannot have EJB classes and Servlet classes in the same archive.</li>
+<li>You need at least three archives to combine Servlets and EJBs; 1 EAR containing 1 EJB jar and 1 Servlet WAR.</li>
+<li>Shared libraries must go in the EAR and be included in a specially formatted 'Class-Path' entry in the EAR's MANIFEST file.</p>
 
-<p>-Servlets can see EJBs, but EJBs cannot see servlets.</p>
-
-<p>To pull that off, J2EE has to kill you on packaging:
--You cannot have EJB classes and Servlet classes in the same archive.</p>
-
-<p>-You need at least three archives to combine servlets and ejbs; 1 EAR
-containing 1 EJB jar and 1 servlet WAR.</p>
-
-<p>-Shared libraries must go in the EAR and be included in a specially
-formatted 'Class-Path' entry in the EAR's MANIFEST file.</p>
-
-<p>Critically speaking, forcing more than one classloader on an application
-is where J2EE "jumps the shark" for a large majority of people's needs.</p>
+<p>Critically speaking, forcing more than one classloader on an application is where J2EE "jumps the shark" for a large majority of people's needs.</li>
+</ul>
 
 
 

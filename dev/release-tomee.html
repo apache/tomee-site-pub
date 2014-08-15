@@ -6,9 +6,10 @@
       <title></title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./../documentation.html">Documentation</a></li>
               <li><a href="./../examples-trunk/index.html">Examples</a></li>
               <li><a href="./../support.html">Support</a></li>
+              <li><a href="./../contribute.html">Contribute</a></li>
               <li><a href="./../security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -133,7 +135,7 @@
 
 <h1>Releasing TomEE</h1>
 
-<pre><code>This document is aimed at guiding a release manager through the general release process. You will need either a Linux, Mac, or failing that a Linux Virtual on Win. 
+<pre><code>This document is aimed at guiding a release manager through the general release process. You will need either a Linux, Mac, or failing that a Linux Virtual (with at least a 50GB Drive) on Win. 
 </code></pre>
 
 <h3>Preparation of The Branch</h3>
@@ -142,7 +144,7 @@
 
 <ul>
 <li>Review the report.txt and update/add missing headers until clean.</li>
-<li><em>Tip</em>, search for <strong>Unapproved licenses:</strong> at the beginning the report for a list.</li>
+<li><em>Tip</em>, search for <strong>Unapproved licenses:</strong> at the beginning of the report for a list.</li>
 </ul>
 
 <p>Branch the version to release and ensure it builds and passes all tests.</p>
@@ -184,12 +186,12 @@ Just drop an email to <em>infrastructure@apache.org</em></p>
 
 <p>Pre-authenticate svn repositories to ensure your credentials are cached before using any tools.</p>
 
-<pre><code>svn mkdir -m "Create test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir
-svn delete -m "Delete test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir
-svn mkdir -m "Create test dir" https://repository.apache.org/content/repositories/testdir
-svn delete -m "Delete test dir" https://repository.apache.org/content/repositories/testdir
-svn mkdir -m "Create test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir
-svn delete -m "Delete test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir
+<pre><code>svn mkdir --username [apacheuser] --password [apachepw] -m "Create test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir1
+svn delete --username [apacheuser] --password [apachepw] -m "Delete test dir" https://svn.apache.org/repos/asf/tomee/tomee/branches/testdir1
+svn mkdir --username [apacheuser] --password [apachepw] -m "Create test dir" https://repository.apache.org/content/repositories/testdir2
+svn delete --username [apacheuser] --password [apachepw] -m "Delete test dir" https://repository.apache.org/content/repositories/testdir2
+svn mkdir --username [apacheuser] --password [apachepw] -m "Create test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir3
+svn delete --username [apacheuser] --password [apachepw] -m "Delete test dir" https://dist.apache.org/repos/dist/dev/tomee/testdir3
 </code></pre>
 
 <h3>Prepare Maven Authentication</h3>
@@ -267,7 +269,8 @@ Just follow the instructions there on how to append your key. The basic steps ar
 
 <p>Checkout the release tools using SVN from here <a href="https://svn.apache.org/repos/asf/tomee/sandbox/release-tools">https://svn.apache.org/repos/asf/tomee/sandbox/release-tools</a></p>
 
-<p>Really read the README.mdtext and follow the instructions for building the 3rd party libraries.</p>
+<p>Really read the README.mdtext and follow the instructions for building the 3rd party libraries. <br />
+Basically SVN checkout and compile <a href="https://svn.codehaus.org/swizzle/trunk">Swizzle</a> and <a href="https://svn.apache.org/repos/asf/creadur/tentacles/trunk">Tentacles</a></p>
 
 <p>Build the release tools, <em>mvn clean install -DskipTests -DfailIfNoTests=false</em></p>
 
@@ -284,7 +287,10 @@ For some of the release steps you will need to provide documentation on the site
 
 <p>Most of the content can be found under 'content' and subdirectories.</p>
 
-<p>When you commit changes the site should be built automatically by the buildbot, but you can force a build on IRC using <strong>tomee-bot: force build tomee-site-staging</strong></p>
+<p>When you commit changes the site should be built automatically by the buildbot, but you can force a build on IRC using:</p>
+
+<pre><code>**tomee-bot: force build tomee-site-staging**
+</code></pre>
 
 <p>The buildbot staging result can be seen here:</p>
 
@@ -366,7 +372,21 @@ At the moment some of the commands need manually editing to work. Eventually the
 <p>Publish the preview using <strong>./run.sh roll binaries legal releasenotes preview</strong> - You can run these tasks like so, or individually in order.
 It will be likely that this will have to be repeated several times before a successful vote.</p>
 
-<p>To fire off a build on EC2 from the TCK directory speak to the last release manager for the <strong>curl</strong> command to use</p>
+<p>The <em>legal</em> step will create the legal report files in the /tmp/download/staging-[revision]/legal directory. These need to be added to the staging repo.
+ - Delete the [legal]/repo and [legal]/content directories, as these are no longer required
+    rm -R /tmp/download/staging-[revision]/legal/content
+    rm -R /tmp/download/staging-[revision]/legal/repo</p>
+
+<ul>
+<li>Perform a non-recursive checkout of the staging repo and add the legal:
+svn co -N https://dist.apache.org/repos/dist/dev/tomee/staging-[revision] /tmp/download/staging
+mv /tmp/download/staging-[revision]/legal /tmp/download/staging
+cd /tmp/download/staging-[revision]
+svn add legal</li>
+</ul>
+
+<p>Once the binaries are in place add the staging repository to the corresponding TCK project and fire off a build.
+To fire off a build on EC2 from the TCK directory speak to the last release manager for the <strong>curl</strong> command to use</p>
 
 <p>If the TCK fails then discuss, fix and re-roll.</p>
 
@@ -394,10 +414,10 @@ To: https://dist.apache.org/repos/dist/release/tomee/tomee-[version]
 
 <p>Announce to the world that TomEE has new bells and whistles!</p>
 
-<p><a href="https://blogs.apache.org/roller-ui/login.rol">https://blogs.apache.org/roller-ui/login.rol</a>
-<a href="http://twitter.com/ApacheTomEE">http://twitter.com/ApacheTomEE</a>
-<a href="http://facebook.com/ApacheTomEE">http://facebook.com/ApacheTomEE</a>
-<a href="https://plus.google.com/118203123063829126066">https://plus.google.com/118203123063829126066</a></p>
+<p><a href="https://blogs.apache.org/roller-ui/login.rol">https://blogs.apache.org/roller-ui/login.rol</a> <br />
+<a href="http://twitter.com/ApacheTomEE">http://twitter.com/ApacheTomEE</a> <br />
+<a href="http://facebook.com/ApacheTomEE">http://facebook.com/ApacheTomEE</a> <br />
+<a href="https://plus.google.com/118203123063829126066">https://plus.google.com/118203123063829126066</a>  </p>
 
 
 

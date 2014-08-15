@@ -6,9 +6,10 @@
       <title>TomEE Maven Plugin</title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
-	<meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	<META HTTP-EQUIV="Expires" CONTENT="-1">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
+    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -100,6 +101,7 @@
               <li><a href="./documentation.html">Documentation</a></li>
               <li><a href="./examples-trunk/index.html">Examples</a></li>
               <li><a href="./support.html">Support</a></li>
+              <li><a href="./contribute.html">Contribute</a></li>
               <li><a href="./security/index.html">Security</a></li>
           </ul>
 
@@ -107,7 +109,7 @@
             <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
                 <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
                 <INPUT type="hidden" name="cof" value="FORID:0">
-                <INPUT name="q" type="text" placeholder="Search">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
             </FORM>
             <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
             <!-- Google CSE Search Box Ends -->
@@ -135,291 +137,78 @@
 plugin that allows for:</p>
 
 <ul>
-<li>easy provisioning of a TomEE server</li>
-<li>server start and stop</li>
-<li>application deploy and undeploy</li>
+<li>Easy provisioning of a TomEE server</li>
+<li>Server start and stop</li>
+<li>Application deployment and undeployment</li>
 </ul>
 
-<p>Simply add the following to your <code>pom.xml</code></p>
+<p>Simply add the following to the <plugins>, and optionally the <pluginManagement>), section of your <code>pom.xml</code></p>
 
-<pre><code>&lt;plugin&gt;
-  &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
-  &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.6.0.2&lt;/version&gt;
-  &lt;configuration&gt;
-    &lt;tomeeVersion&gt;1.6.0.2&lt;/tomeeVersion&gt;
-    &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
-  &lt;/configuration&gt;
-&lt;/plugin&gt;
+<pre><code>&lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
+      &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+      &lt;version&gt;[Current TomEE Version]&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;tomeeVersion&gt;[Optional Runtime TomEE Version]&lt;/tomeeVersion&gt;
+        &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+&lt;/plugins&gt;
 </code></pre>
 
-<p>The available commands can be discovered running:</p>
+<h3>Plugin Goals</h3>
 
-<pre><code>mvn tomee:help
-</code></pre>
-
-<p>Should print output like the following:</p>
-
-<pre><code>[INFO] Available commands:
-[INFO]  - tomee:run: run and wait for the server
-[INFO]  - tomee:debug: run in debug mode and wait for the server (alias of run)
-[INFO]  - tomee:start: run the server
-[INFO]  - tomee:stop: stop the server (to use with start)
-[INFO]  - tomee:configtest: run configtest tomcat command
-[INFO]  - tomee:deploy &lt;path&gt;: deploy path archive
-[INFO]  - tomee:undeploy &lt;path&gt;: undeploy path archive. Note it should be the same path than the one used in deploy command
-[INFO]  - tomee:list: list ejbs deployed
-[INFO]  - tomee:build: build tomee but does not start it
-[INFO]  - tomee:help: this
-</code></pre>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>Goal</th>
+<th>Description</th></tr>
+<tr class="b">
+<td><a href="maven/build-mojo.html">tomee:build</a></td>
+<td>Create TomEE, but do not run it.</td></tr>
+<tr class="a">
+<td><a href="maven/configtest-mojo.html">tomee:configtest</a></td>
+<td>Run the Apache Tomcat `configtest` command.</td></tr>
+<tr class="b">
+<td><a href="maven/debug-mojo.html">tomee:debug</a></td>
+<td>Same as `run` but with debug activated on the default or specified port.</td></tr>
+<tr class="a">
+<td><a href="maven/deploy-mojo.html">tomee:deploy</a></td>
+<td>Deploy an application in a running TomEE.</td></tr>
+<tr class="b">
+<td><a href="maven/exec-mojo.html">tomee:exec</a></td>
+<td>Undocumented.</td></tr>
+<tr class="a">
+<td><a href="maven/help-mojo.html">tomee:help</a></td>
+<td>Display help information on the tomee-maven-plugin.<br />
+Call <code>mvn tomee:help -Ddetail=true
+-Dgoal=&lt;goal-name&gt;</code> to display parameter details.</td></tr>
+<tr class="b">
+<td><a href="maven/list-mojo.html">tomee:list</a></td>
+<td>Largely inspired by the OpenEJB command helper, but with some differences. List deployed EJB's in a running TomEE.</td></tr>
+<tr class="a">
+<td><a href="maven/run-mojo.html">tomee:run</a></td>
+<td>Start and wait for TomEE.</td></tr>
+<tr class="b">
+<td><a href="maven/start-mojo.html">tomee:start</a></td>
+<td>Start TomEE and continue.</td></tr>
+<tr class="a">
+<td><a href="maven/stop-mojo.html">tomee:stop</a></td>
+<td>Stop a TomEE started with start command.</td></tr>
+<tr class="b">
+<td><a href="maven/undeploy-mojo.html">tomee:undeploy</a></td>
+<td>Undeploy an application in a running TomEE</td></tr></table>
 
 <p>Note that for the tomee:deploy and tomee:undeploy goals, the path can either be specified within the <configuration/> section of the <code>pom.xml</code> using the <path> parameter, or it can be passed via the user property tomee-plugin.archive. If a relative path is passed for the deploy path archive, this must be relative to the TomEE server.</p>
 
 <p>Note 2: running tomee maven plugin you can type 'quit' directly in the console to shutdown correctly the
 server. 'reload' is also available when internal openejb application is deployed.</p>
 
-<p>Available configuration elements:</p>
+<h3>More Tweaks</h3>
 
-<div class="section"><h3>Optional Parameters<a name="Optional_Parameters"></a></h3>
-<table class="bodyTable" border="0">
-<tr class="a">
-<th>Name</th>
-<th>Type</th>
-<th>Since</th>
-<th>Description</th>
-</tr>
-<tr class="b">
-<td><b><a href="#apacheRepos">apacheRepos</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>repository to use for snapshots<br /><b>Default value is</b>: <tt>snapshots</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.apache-repos</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#appDir">appDir</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>relative to tomee.base.<br /><b>Default value is</b>: <tt>apps</tt>.<br /></td>
-</tr>
-<tr class="b">
-<td><b><a href="#apps">apps</a></b></td>
-<td><tt>List</tt></td>
-<td><tt>-</tt></td>
-<td>folder for applications (jar and ear)<br /></td>
-</tr>
-<tr class="a">
-<td><b><a href="#args">args</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>additional JVM options (-Xmx, -Xms, ...)<br /><b>User property is</b>: <tt>tomee-plugin.args</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#bin">bin</a></b></td>
-<td><tt>File</tt></td>
-<td><tt>-</tt></td>
-<td>bin directory to sync<br /><b>Default value is</b>: <tt>${project.basedir}/src/main/tomee/bin</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.bin</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#catalinaBase">catalinaBase</a></b></td>
-<td><tt>File</tt></td>
-<td><tt>-</tt></td>
-<td>catalina.base<br /><b>Default value is</b>: <tt>${project.build.directory}/apache-tomee</tt>.<br /></td>
-</tr>
-<tr class="b">
-<td><b><a href="#config">config</a></b></td>
-<td><tt>File</tt></td>
-<td><tt>-</tt></td>
-<td>conf directory to sync<br /><b>Default value is</b>: <tt>${project.basedir}/src/main/tomee/conf</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.conf</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#debug">debug</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>debug (remote debuggding)<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.debug</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#debugPort">debugPort</a></b></td>
-<td><tt>int</tt></td>
-<td><tt>-</tt></td>
-<td>remote debugging port<br /><b>Default value is</b>: <tt>5005</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.debugPort</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#deployOpenEjbApplication">deployOpenEjbApplication</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>should internal app be deployed (needed for some features)<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.deploy-openejb-internal-application</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#keepServerXmlAsthis">keepServerXmlAsthis</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>should server.xml ports be replaced to respect what is in the pom<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.keep-server-xml</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#lib">lib</a></b></td>
-<td><tt>File</tt></td>
-<td><tt>-</tt></td>
-<td>lib folder to sync<br /><b>Default value is</b>: <tt>${project.basedir}/src/main/tomee/lib</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.lib</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#libDir">libDir</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>relative to tomee.base.<br /><b>Default value is</b>: <tt>lib</tt>.<br /></td>
-</tr>
-<tr class="a">
-<td><b><a href="#libs">libs</a></b></td>
-<td><tt>List</tt></td>
-<td><tt>-</tt></td>
-<td>supported formats: --&gt; groupId:artifactId:version... --&gt;
-unzip:groupId:artifactId:version... --&gt; remove:prefix (often
-prefix = artifactId)<br /></td>
-</tr>
-<tr class="b">
-<td><b><a href="#password">password</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>password when using openejb internal application in secured mode<br /><b>User property is</b>: <tt>tomee-plugin.pwd</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#path">path</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>The path of the archive to deploy<br /><b>User property is</b>: <tt>tomee-plugin.archive</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#quickSession">quickSession</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>should secure random be replaced by random for session id generation<br /><b>Default value is</b>: <tt>true</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.quick-session</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#realm">realm</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>realm used by openejb internal application when secured<br /><b>User property is</b>: <tt>tomee-plugin.realm</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#reloadOnUpdate">reloadOnUpdate</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>should app be auto redeployed when updating a binary<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.reload-on-update</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#removeDefaultWebapps">removeDefaultWebapps</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>remove host-manager, docs, ROOT, manager<br /><b>Default value is</b>: <tt>true</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.remove-default-webapps</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#removeTomeeWebapp">removeTomeeWebapp</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>remote tomee webapp<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.remove-tomee-webapps</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#skipCurrentProject">skipCurrentProject</a></b></td>
-<td><tt>boolean</tt></td>
-<td><tt>-</tt></td>
-<td>don't deploy current project<br /><b>Default value is</b>: <tt>false</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.skipCurrentProject</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#synchronization">synchronization</a></b></td>
-<td><tt>Synchronization</tt></td>
-<td><tt>-</tt></td>
-<td>resource synchronization block<br /></td>
-</tr>
-<tr class="b">
-<td><b><a href="#systemVariables">systemVariables</a></b></td>
-<td><tt>Map</tt></td>
-<td><tt>-</tt></td>
-<td>system properties (in map format)<br /></td>
-</tr>
-<tr class="a">
-<td><b><a href="#tomeeAjpPort">tomeeAjpPort</a></b></td>
-<td><tt>int</tt></td>
-<td><tt>-</tt></td>
-<td>ajp port<br /><b>Default value is</b>: <tt>8009</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.ajp</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#tomeeArtifactId">tomeeArtifactId</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td><rtifactId to use (for custom distrib)br /><b>Default value is</b>: <tt>apache-tomee</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.artifactId</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#tomeeClassifier">tomeeClassifier</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>classifier to use (webprofile, jaxrs,  plus)<br /><b>Default value is</b>: <tt>webprofile</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.classifier</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#tomeeGroupId">tomeeGroupId</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>tomee groupId (for custom distrib)<br /><b>Default value is</b>: <tt>org.)apache.openejb</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.groupId</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#tomeeHost">tomeeHost</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>tomee host<br /><b>Default value is</b>: <tt>localhost</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.host</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#tomeeHttpPort">tomeeHttpPort</a></b></td>
-<td><tt>int</tt></td>
-<td><tt>-</tt></td>
-<td>http port<br /><b>Default value is</b>: <tt>8080</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.http</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#tomeeHttpsPort">tomeeHttpsPort</a></b></td>
-<td><tt>Integer</tt></td>
-<td><tt>-</tt></td>
-<td>https port<br /><b>User property is</b>: <tt>tomee-plugin.https</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#tomeeShutdownPort">tomeeShutdownPort</a></b></td>
-<td><tt>int</tt></td>
-<td><tt>-</tt></td>
-<td>shutown port<br /><b>Default value is</b>: <tt>8005</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.shutdown</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#tomeeVersion">tomeeVersion</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>tomee version<br /><b>Default value is</b>: <tt>-1</tt>.<br /><b>User property is</b>: <tt>tomee-plugin.version</tt>.</td>
-</tr>
-<tr class="b">
-<td><b><a href="#user">user</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>user when openejb internal webapp is secured<br /><b>User property is</b>: <tt>tomee-plugin.user</tt>.</td>
-</tr>
-<tr class="a">
-<td><b><a href="#warFile">warFile</a></b></td>
-<td><tt>File</tt></td>
-<td><tt>-</tt></td>
-<td>application to deploy<br /><b>Default value is</b>: <tt>${project.build.directory}/${project.build.finalName}.${project.packaging}</tt>.<br /></td>
-</tr>
-<tr class="b">
-<td><b><a href="#webappDir">webappDir</a></b></td>
-<td><tt>String</tt></td>
-<td><tt>-</tt></td>
-<td>relative to tomee.base.<br /><b>Default value is</b>: <tt>webapps</tt>.<br /></td>
-</tr>
-<tr class="a">
-<td><b><a href="#webapps">webapps</a></b></td>
-<td><tt>List</tt></td>
-<td><tt>-</tt></td>
-<td>webapps directory if custom<br /></td>
-</tr>
-</table>
-</div>
+<p>The lib tag allows to enrich the container with some additional libraries.</p>
 
-<h2>Some more tweak</h2>
-
-<p>The lib tag allows to enrich the container with some additional librairies.</p>
-
-<p>It supports some interesting pattern to complete the default maven format.</p>
+<p>Some interesting patterns in addition to the default maven formats are supported.</p>
 
 <ul>
 <li>remove:&lt;some prefix of jar in lib folder&gt;: remove all jar starting with the specified prefix</li>
@@ -429,7 +218,7 @@ prefix = artifactId)<br /></td>
 
 <p>Note: the name tweak can be used to rename applications too</p>
 
-<h2>Provisioning Example</h2>
+<h3>Provisioning Example</h3>
 
 <p>This plugin is also usable in projects which are not war. For instance you can use it in a pom
 project to setup a TomEE install, add libraries, deploy apps then run the server.</p>
@@ -437,9 +226,9 @@ project to setup a TomEE install, add libraries, deploy apps then run the server
 <pre><code>  &lt;plugin&gt;
     &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
     &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
-    &lt;version&gt;1.6.0.2&lt;/version&gt;
+    &lt;version&gt;1.7.0&lt;/version&gt;
     &lt;configuration&gt;
-      &lt;tomeeVersion&gt;1.6.0.2&lt;/tomeeVersion&gt;
+      &lt;tomeeVersion&gt;1.7.0&lt;/tomeeVersion&gt;
       &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
       &lt;debug&gt;false&lt;/debug&gt;
       &lt;debugPort&gt;5005&lt;/debugPort&gt;
@@ -464,12 +253,12 @@ project to setup a TomEE install, add libraries, deploy apps then run the server
   &lt;/plugin&gt;
 </code></pre>
 
-<h2>Auto Reloading example</h2>
+<h3>Auto Reloading Example</h3>
 
 <pre><code>&lt;plugin&gt;
   &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
   &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;1.6.0.2&lt;/version&gt;
+  &lt;version&gt;1.7.0&lt;/version&gt;
   &lt;configuration&gt;
     &lt;synchronization&gt;
       &lt;extensions&gt;
@@ -481,7 +270,7 @@ project to setup a TomEE install, add libraries, deploy apps then run the server
 &lt;/plugin&gt;
 </code></pre>
 
-<p>Synchronization block supports the following configuration:</p>
+<p>The Synchronization block supports the following configuration options:</p>
 
 <ul>
 <li>resourcesDir (default src/main/webapp)</li>
@@ -490,10 +279,10 @@ project to setup a TomEE install, add libraries, deploy apps then run the server
 <li>targetResourcesDir (default tomee/webapps/finalName)</li>
 <li>updateInterval (default 5 - in second)</li>
 <li>extensions (default html, xhtml, js and css)</li>
-<li>regex: a regex should match file to takeinto account when updating</li>
+<li>regex: a regex should match files to take into account when updating</li>
 </ul>
 
-<p>reloadOnUpdate means to reload the context (webapp). It means undeploying/redeploying it.</p>
+<p>reloadOnUpdate means to reload the entire context (webapp). This means undeploying/redeploying the application.</p>
 
 
 
