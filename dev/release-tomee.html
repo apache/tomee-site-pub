@@ -7,7 +7,6 @@
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
     <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
-    <meta http-equiv="last-modified" content="Thu, 14 Aug 2014 15:40:00 GMT"/>
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Expires" CONTENT="-1">
 
@@ -408,7 +407,30 @@ To fire off a build on EC2 from the TCK directory speak to the last release mana
 To: https://dist.apache.org/repos/dist/release/tomee/tomee-[version] 
 </code></pre>
 
-<p>Commit and publish changes to the site, see <a href="release-tomee.html#staging">Site Staging</a>  </p>
+<p>Wait for the binaries to replicate to mirrors. Here is a neat script from David to check the status:</p>
+
+<pre><code>#!/bin/bash
+
+RELEASE=${1?Specify a release, such as './mirror_check.sh tomee-1.7.0'}
+
+function list_mirrors {
+    DYN=http://www.apache.org/dyn/closer.cgi/tomee/$RELEASE/
+    wget -q -O - $DYN | tr '"&gt;&lt; ' '\n' | grep "^http.*$RELEASE/" | sort | uniq
+}
+
+function status_code {
+    wget -v "$1" 2&gt;&amp;1| grep 'awaiting response' | tr ' ' '\n' | grep "[0-9]"
+}
+
+list_mirrors | while read n; do
+    echo "$(status_code $n) $n"
+done | sort | grep 'http'
+</code></pre>
+
+<p>Commit and publish changes to the site, see <a href="release-tomee.html#staging">Site Staging</a></p>
+
+<pre><code>https://cms.apache.org/tomee/publish
+</code></pre>
 
 <h3>Blog</h3>
 
