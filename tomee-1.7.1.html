@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="utf-8">
-      <title>TomEE Maven Plugin</title>
+      <title></title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
     <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10"></meta>
@@ -36,7 +36,7 @@
       };
       function twshare () {
           window.open(
-                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=TomEE Maven Plugin",
+                  "https://twitter.com/intent/tweet?url="+document.URL+"&text=",
                   'Share on Twitter',
                   'width=800,height=526');
       };
@@ -121,7 +121,7 @@
 
 <div class="page-header">
     <small><a href="./index.html">Home</a></small><br>
-    <h1>TomEE Maven Plugin
+    <h1>
 
         <div style="float: right; position: relative; bottom: -10px; ">
             <a onclick="javascript:gpshare()" class="gp-share sprite" title="share on Google+">share [gp]</a>
@@ -132,71 +132,49 @@
     </h1>
 </div>
 
-<h3>Add The TomEE Maven Plugin To An Existing Project</h3>
+<h1>Apache TomEE 1.7.1 Released!</h1>
 
-<p>If you already have a maven project set up then just add the plugin as described <a href="maven/index.html">here</a></p>
+<p>After the huge buzz getting version 1.7.0 off the press it is time to get back to the day to day. As promised we are committed to providing the best for our community, and so without further a do here is TomEE 1.7.1 - This is a maintenance release that fixes some minor issues and a few tweaks (We understand it is not so minor if you are waiting for it, so thanks for your patience). This version is still shipped upon Apache Tomcat 7.0.55.</p>
 
-<p>You will likely need the full Java EE API added to your pom file:</p>
+<p>Please note that the TomEE 1.7.1 drop in WAR file will not work on Apache Tomcat 8. If you are interested in a Tomcat 8.x version then please feel free to check out and <a href="contribute.html">contribute to the developer branch</a> - We are always interested in any help from the community that we can get.</p>
+
+<p>The Apache TomEE 1.7.1 release files can be downloaded from here:</p>
+
+<p><a href="downloads.html">http://tomee.apache.org/downloads.html</a></p>
+
+<p>Note: Issue <a href="https://issues.apache.org/jira/browse/TOMEE-1339">TOMEE-1339</a> introduced a default (but configurable) check for a static <em>index.html</em> file when an empty JAX-RS resource URL is specified by a client. You can use this file to return a descriptive response to the client for example. Make sure that this optional file does not contain sensitive information when made available. Currently it is not a JSP and it is not parsed in any way by the Servlet container - This may change in the next version.</p>
+
+<p>Simply update your existing Maven JavaEE-API, OpenEJB and or TomEE pom.xml entries to point to the latest versions:</p>
 
 <pre><code>&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
-  &lt;artifactId&gt;javaee-api&lt;/artifactId&gt;
-  &lt;version&gt;6.0-6&lt;/version&gt;
-  &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+    &lt;artifactId&gt;javaee-api&lt;/artifactId&gt;
+    &lt;version&gt;6.0-6&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+    &lt;artifactId&gt;openejb-core&lt;/artifactId&gt;
+    &lt;version&gt;4.7.1&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+    &lt;artifactId&gt;tomee&lt;/artifactId&gt;
+    &lt;version&gt;1.7.1&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
-<p>The simplest path is to allow Maven to create an example project for you. Even if you have an existing project you can always use the template as a reference.</p>
+<p>A complete <a href="tomee-1.7.1-release-notes.html">Changelog</a> can be viewed here:</p>
 
-<h3>Generate a Basic TomEE-Project With Maven</h3>
+<p><a href="tomee-1.7.1-release-notes.html">tomee-1.7.1-release-notes.html</a></p>
 
-<p>TomEE provides a maven-archetype for generating a template project. This template project is preconfigured with <code>javaee-api</code> (scope provided) and with the <a href="maven/index.html"><code>tomee-maven-plugin</code></a> for starting the application with TomEE.</p>
+<p>So please feel free to jump in feet first and <a href="documentation.html">get started with TomEE</a>. You will nearly always find someone to help you on one of our <a href="support.html">support channels</a>.</p>
 
-<p>For example, if current version of the archetype is '1.7.1', then the required command to generate an application would be:</p>
+<h3>Java EE7 and Beyond</h3>
 
-<pre><code>mvn archetype:generate -DarchetypeGroupId=org.apache.openejb.maven -DarchetypeArtifactId=tomee-webapp-archetype -DarchetypeVersion=1.7.1
-</code></pre>
-
-<p>The first time you run this command maven downloads the archetype and some parts related to it. Afterwards you see a prompt which allows you to specify the groupId, artifactId, version and package of your application.
-If you are using 'tomee' as groupId, 'tomee-demo' as artifactId, '1.0' as version and 'myapp' as package, your console should show something like:</p>
-
-<pre><code>Define value for property 'groupId': : tomee     
-Define value for property 'artifactId': : tomee-demo
-Define value for property 'version':  1.0-SNAPSHOT: : 1.0
-Define value for property 'package':  tomee: : myapp
-Confirm properties configuration:
-groupId: tomee
-artifactId: tomee-demo
-version: 1.0
-package: myapp
-...
-[INFO] BUILD SUCCESS
-...
-</code></pre>
-
-<p>Afterwards you see a new folder with the name you used for the artifactId (in the previous example 'tomee-demo').
-For starting the application you have to change the current directory to the directory of the generated application:</p>
-
-<pre><code>cd tomee-demo
-</code></pre>
-
-<h3>Starting a TomEE-Project with Maven</h3>
-
-<p>With using the archetype everything you need is in place already. So you just have to start TomEE with:</p>
-
-<pre><code>mvn package tomee:run
-</code></pre>
-
-<p>The first time you run this command takes a bit longer, because maven has to download e.g. TomEE.
-Once those parts are downloaded, starting maven, deploying and starting the generated application takes less than 10s (depending on your computer).</p>
-
-<h3>Accessing a running application</h3>
-
-<p>The application gets deployed to <code>target/apache-tomee/webapps</code>. If everything worked correctly, you should see a directory ('ROOT') as well as a web-archive ('ROOT.war').
-The context-paths of the deployed application is ROOT. In our example the generated application contains a servlet mapped to '/index'. So you can access it via:</p>
-
-<pre><code>http://localhost:8080/index
-</code></pre>
+<p>From this point on the TomEE community will be focusing most of it's efforts on TomEE 2.0.x, which will be the first TomEE Java EE 7 driven version running on Apache Tomcat 8.x. It is more than likely that support for Java SE 6 will be dropped so that Java SE 7 features can finally be leveraged during the development process. We will of course continue to maintain the 1.7.x branch for the foreseeable future.</p>
 
 
 
