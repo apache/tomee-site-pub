@@ -18,34 +18,39 @@ package org.superbiz.groovy
 
 import org.apache.ziplock.JarLocation
 import org.jboss.arquillian.container.test.api.Deployment
+import org.jboss.arquillian.spock.ArquillianSputnik
 import org.jboss.shrinkwrap.api.ArchivePaths
 import org.jboss.shrinkwrap.api.ShrinkWrap
 import org.jboss.shrinkwrap.api.asset.EmptyAsset
 import org.jboss.shrinkwrap.api.spec.WebArchive
-import spock.lang.Specification
+import org.junit.runner.RunWith
 
 import javax.inject.Inject
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertNotNull
 
-class HelloSpecification extends Specification {
+@RunWith(ArquillianSputnik.class)
+class HelloSpecification extends spock.lang.Specification {
+
     @Inject
-    private Hello hello
+    private org.superbiz.groovy.Hello hello
 
     @Deployment
     def static WebArchive "create archive"() {
         ShrinkWrap.create(WebArchive.class)
-            .addAsLibraries(JarLocation.jarLocation(GroovyObject.class))
-            .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
-            .addClasses(Hello.class)
+                  .addAsLibraries(JarLocation.jarLocation(GroovyObject.class))
+                  .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
+                  .addClasses(Hello.class)
     }
 
     def "Hello.hi() method should return 'hi'"() {
         when:
-            assertNotNull hello
+        println("Checking hello instance: " + hello)
+        assertNotNull hello
 
         then:
-            assertEquals "hi", hello.hi()
+        println("Comparing 'hi' to '" + hello.hi() + "'")
+        assertEquals "hi", hello.hi()
     }
 }

@@ -17,9 +17,10 @@
 package org.superbiz;
 
 public class Manager {
+
     private final String name;
 
-    public Manager(String name) {
+    public Manager(final String name) {
         this.name = name;
     }
 

@@ -17,7 +17,13 @@
 package org.superbiz.groovy
 
 class Hello {
+
     def hi() {
         "hi"
+    }
+
+    @Override
+    String toString() {
+        "This is the Hello instance";
     }
 }

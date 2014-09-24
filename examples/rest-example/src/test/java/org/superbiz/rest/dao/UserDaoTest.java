@@ -24,9 +24,10 @@ import org.superbiz.rest.model.User;
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.NamingException;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 public class UserDaoTest {
+
     private static EJBContainer container;
 
     @BeforeClass
@@ -43,8 +44,8 @@ public class UserDaoTest {
 
     @Test
     public void create() throws NamingException {
-        UserDAO dao = (UserDAO) container.getContext().lookup("java:global/rest-example/UserDAO");
-        User user = dao.create("foo", "dummy", "foo@bar.org");
+        final UserDAO dao = (UserDAO) container.getContext().lookup("java:global/rest-example/UserDAO");
+        final User user = dao.create("foo", "dummy", "foo@bar.org");
         assertNotNull(dao.find(user.getId()));
     }
 }

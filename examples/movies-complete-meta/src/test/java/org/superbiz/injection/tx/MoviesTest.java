@@ -32,7 +32,7 @@ import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * See the transaction-rollback example as it does the same thing
- * via UserTransaction and shows more techniques for rollback 
+ * via UserTransaction and shows more techniques for rollback
  */
 //START SNIPPET: code
 public class MoviesTest extends TestCase {
@@ -53,6 +53,19 @@ public class MoviesTest extends TestCase {
         p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
         EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        transactionalCaller.call(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                for (final Movie m : movies.getMovies()) {
+                    movies.deleteMovie(m);
+                }
+                return null;
+            }
+        });
     }
 
     private void doWork() throws Exception {
@@ -94,8 +107,8 @@ public class MoviesTest extends TestCase {
         }
     }
 
-
     public static interface Caller {
+
         public <V> V call(Callable<V> callable) throws Exception;
     }
 

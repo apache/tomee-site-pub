@@ -26,9 +26,10 @@ import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
 import javax.naming.NamingException;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 public class EventTest {
+
     private static EJBContainer container;
     private static String initialLogProperty;
 

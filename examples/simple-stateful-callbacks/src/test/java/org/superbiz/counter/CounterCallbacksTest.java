@@ -16,16 +16,21 @@
  */
 package org.superbiz.counter;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class CounterCallbacksTest implements ExecutionObserver {
+
     private List<Object> received = new ArrayList<Object>();
 
     public Context getContext() throws NamingException {

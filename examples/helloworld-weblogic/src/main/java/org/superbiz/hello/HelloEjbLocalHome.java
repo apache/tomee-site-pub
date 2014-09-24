@@ -20,8 +20,9 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBLocalHome;
 
 /**
- * @version $Revision: 1090810 $ $Date: 2011-04-10 14:49:26 +0000 (Sun, 10 Apr 2011) $
+ * @version $Revision: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public interface HelloEjbLocalHome extends EJBLocalHome {
+
     HelloEjbLocal create() throws CreateException;
 }

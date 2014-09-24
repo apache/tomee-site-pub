@@ -27,10 +27,11 @@ import javax.naming.NamingException;
 import java.util.Collection;
 import java.util.Properties;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DynamicUserDaoTest {
+
     private static EJBContainer container;
     private static boolean initialized = false;
 
@@ -57,7 +58,6 @@ public class DynamicUserDaoTest {
         p.setProperty("openejb.deployments.classpath.include", "spring-data-proxy-meta");
         p.setProperty("openejb.exclude-include.order", "exclude-include");
 
-        p.setProperty("jdbc/DynamicUserDaoTest", "new://Resource?type=DataSource");
         p.setProperty("jdbc/DynamicUserDaoTest", "new://Resource?type=DataSource");
         p.setProperty("jdbc/DynamicUserDaoTest.JdbcDriver", "org.hsqldb.jdbcDriver");
         p.setProperty("jdbc/DynamicUserDaoTest.JdbcUrl", "jdbc:hsqldb:mem:moviedb");

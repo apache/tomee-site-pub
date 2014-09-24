@@ -27,9 +27,10 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @version $Rev: 1227481 $ $Date: 2012-01-05 04:39:55 +0000 (Thu, 05 Jan 2012) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public class MethodLevelInterceptorOnlyTest extends TestCase {
+
     private InitialContext initCtx;
 
     @Before

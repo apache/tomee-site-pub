@@ -23,7 +23,7 @@ import javax.naming.Context;
 import java.util.Locale;
 
 /**
- * @version $Rev: 1220545 $ $Date: 2011-12-18 21:22:34 +0000 (Sun, 18 Dec 2011) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public class FriendlyPersonTest extends TestCase {
 
@@ -69,7 +69,6 @@ public class FriendlyPersonTest extends TestCase {
         assertEquals("Ola David!", friendlyPerson.greet("pt", "David"));
     }
     //END SNIPPET: remotehome
-
 
     /**
      * Here we lookup and test the FriendlyPerson bean via its EJB 2.1 EJBLocalHome and EJBLocalObject interfaces
@@ -177,6 +176,5 @@ public class FriendlyPersonTest extends TestCase {
 
         assertEquals("Ola David!", friendlyPerson.greet("pt", "David"));
     }
-
 
 }

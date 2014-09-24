@@ -16,50 +16,57 @@
  */
 package org.superbiz.registry;
 
-import junit.framework.TestCase;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Test;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Date;
 
-//START SNIPPET: code
-public class ComponentRegistryTest extends TestCase {
+public class ComponentRegistryTest {
 
-    public void test() throws Exception {
+    private final static EJBContainer ejbContainer = EJBContainer.createEJBContainer();
 
-        final Context context = EJBContainer.createEJBContainer().getContext();
+    @Test
+    public void oneInstancePerMultipleReferences() throws Exception {
+
+        final Context context = ejbContainer.getContext();
 
         // Both references below will point to the exact same instance
-        ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+        final ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+        final ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
 
-        ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
-
-
-        // Let's prove both references point to the same instance
-
-
-        // Set a URL into 'one' and retrieve it from 'two'
-
-        URI expectedUri = new URI("foo://bar/baz");
-
+        final URI expectedUri = new URI("foo://bar/baz");
         one.setComponent(URI.class, expectedUri);
+        final URI actualUri = two.getComponent(URI.class);
+        Assert.assertSame(expectedUri, actualUri);
 
-        URI actualUri = two.getComponent(URI.class);
+        two.removeComponent(URI.class);
+        URI uri = one.getComponent(URI.class);
+        Assert.assertNull(uri);
 
-        assertSame(expectedUri, actualUri);
+        one.removeComponent(URI.class);
+        uri = two.getComponent(URI.class);
+        Assert.assertNull(uri);
 
-
-        // Set a Date into 'two' and retrieve it from 'one'
-
-        Date expectedDate = new Date();
-
+        final Date expectedDate = new Date();
         two.setComponent(Date.class, expectedDate);
+        final Date actualDate = one.getComponent(Date.class);
+        Assert.assertSame(expectedDate, actualDate);
 
-        Date actualDate = one.getComponent(Date.class);
+        Collection<?> collection = one.getComponents();
+        System.out.println(collection);
+        Assert.assertEquals("Reference 'one' - ComponentRegistry contains one record", collection.size(), 1);
 
-        assertSame(expectedDate, actualDate);
+        collection = two.getComponents();
+        Assert.assertEquals("Reference 'two' - ComponentRegistry contains one record", collection.size(), 1);
+    }
 
+    @AfterClass
+    public static void closeEjbContainer() {
+        ejbContainer.close();
     }
 }
-//END SNIPPET: code

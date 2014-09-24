@@ -23,26 +23,26 @@
 
   <groupId>org.superbiz</groupId>
   <artifactId>projectstage-demo</artifactId>
-  <version>1.0</version>
+  <version>1.1.1-SNAPSHOT</version>
   <name>OpenEJB :: Examples :: DeltaSpike ProjectStage</name>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>javaee-api</artifactId>
-      <version>6.0-4</version>
+      <version>6.0-6</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.deltaspike.core</groupId>
       <artifactId>deltaspike-core-api</artifactId>
-      <version>0.2-incubating</version>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
-      <version>1.0.2.Final</version>
+      <version>1.1.5.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -60,14 +60,15 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <properties>
-    <tomee.version>1.5.1</tomee.version>
+    <tomee.version>1.7.1</tomee.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
   <distributionManagement>
@@ -80,4 +81,24 @@
       <url>file://${basedir}/target/snapshot-repo/</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
+        <configuration>
+          <!--skipTests>false</skipTests-->
+          <!--
+TODO: remove the skipTests flag. I needed to do it because it was throwing this exception.
+Test set: org.superbiz.projectstage.TestingProjectStageTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.194 sec <<< FAILURE!
+checkManagerValue(org.superbiz.projectstage.TestingProjectStageTest)  Time elapsed: 0.131 sec  <<< ERROR!
+java.lang.ClassCastException: $Proxy52 cannot be cast to org.junit.runner.RunWith
+          -->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

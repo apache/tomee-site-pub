@@ -1,4 +1,4 @@
-/*
+package org.superbiz.designbycontract;/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -21,8 +21,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.superbiz.designbycontract.OlympicGamesManager;
-import org.superbiz.designbycontract.PoleVaultingManager;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -31,13 +29,12 @@ import javax.naming.Context;
 import javax.validation.ConstraintViolationException;
 import java.util.Properties;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
-
-// TODO This needs to be in a non-default package
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class OlympicGamesTest {
+
     private static Context context;
 
     @EJB

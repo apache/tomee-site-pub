@@ -34,12 +34,18 @@ public class AttachmentTest extends TestCase {
 
     //START SNIPPET: setup	
     private InitialContext initialContext;
+	
+	//Random port to avoid test conflicts
+    private static final int port = Integer.parseInt(System.getProperty("httpejbd.port", "" + org.apache.openejb.util.NetworkUtil.getNextAvailablePort()));
 
     protected void setUp() throws Exception {
 
         Properties properties = new Properties();
         properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         properties.setProperty("openejb.embedded.remotable", "true");
+		
+		//Just for this test we change the default port from 4204 to avoid conflicts
+		properties.setProperty("httpejbd.port", "" + port);
 
         initialContext = new InitialContext(properties);
     }
@@ -53,8 +59,8 @@ public class AttachmentTest extends TestCase {
     //START SNIPPET: webservice
     public void testAttachmentViaWsInterface() throws Exception {
         Service service = Service.create(
-                new URL("http://127.0.0.1:4204/webservice-attachments/AttachmentImpl?wsdl"),
-                new QName("http://superbiz.org/wsdl", "AttachmentWsService"));
+                                            new URL("http://localhost:" + port + "/webservice-attachments/AttachmentImpl?wsdl"),
+                                            new QName("http://superbiz.org/wsdl", "AttachmentWsService"));
         assertNotNull(service);
 
         AttachmentWs ws = service.getPort(AttachmentWs.class);
@@ -73,8 +79,8 @@ public class AttachmentTest extends TestCase {
         DataSource source = new ByteArrayDataSource(request.getBytes(), "text/plain; charset=UTF-8");
 
         // not yet supported !
-//        response = ws.stringFromDataSource(source);
-//        assertEquals(request, response);
+        //        response = ws.stringFromDataSource(source);
+        //        assertEquals(request, response);
 
         // Data Handler
         response = ws.stringFromDataHandler(new DataHandler(source));

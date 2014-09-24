@@ -23,18 +23,25 @@ import javax.naming.InitialContext;
 import java.util.Properties;
 
 /**
- * @version $Rev: 1227481 $ $Date: 2012-01-05 04:39:55 +0000 (Thu, 05 Jan 2012) $
+ * @version $Rev: 1591902 $ $Date: 2014-05-02 13:37:53 +0000 (Fri, 02 May 2014) $
  */
 public class TelephoneTest extends TestCase {
 
     //START SNIPPET: setup
+	
+	//Random port to avoid test conflicts
+    private static final int port = Integer.parseInt(System.getProperty("ejbd.port", "" + org.apache.openejb.util.NetworkUtil.getNextAvailablePort()));
 
+    @Override
     protected void setUp() throws Exception {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         properties.setProperty("openejb.embedded.remotable", "true");
+		
+		//Just for this test we change the default port from 4204 to avoid conflicts
+		properties.setProperty("ejbd.port", "" + port);
+		
         // Uncomment these properties to change the defaults
-        //properties.setProperty("ejbd.port", "4202");
         //properties.setProperty("ejbd.bind", "localhost");
         //properties.setProperty("ejbd.threads", "200");
         //properties.setProperty("ejbd.disabled", "false");
@@ -52,22 +59,20 @@ public class TelephoneTest extends TestCase {
     //START SNIPPET: localcontext
     public void testTalkOverLocalNetwork() throws Exception {
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
-        InitialContext localContext = new InitialContext(properties);
+        final InitialContext localContext = new InitialContext(properties);
 
-        Telephone telephone = (Telephone) localContext.lookup("TelephoneBeanRemote");
+        final Telephone telephone = (Telephone) localContext.lookup("TelephoneBeanRemote");
 
         telephone.speak("Did you know I am talking directly through the embedded container?");
 
         assertEquals("Interesting.", telephone.listen());
 
-
         telephone.speak("Yep, I'm using the bean's remote interface but since the ejb container is embedded " +
-                "in the same vm I'm just using the LocalInitialContextFactory.");
+                        "in the same vm I'm just using the LocalInitialContextFactory.");
 
         assertEquals("Really?", telephone.listen());
-
 
         telephone.speak("Right, you really only have to use the RemoteInitialContextFactory if you're in a different vm.");
 
@@ -82,27 +87,24 @@ public class TelephoneTest extends TestCase {
      */
     //START SNIPPET: remotecontext
     public void testTalkOverRemoteNetwork() throws Exception {
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
-        properties.setProperty(Context.PROVIDER_URL, "ejbd://localhost:4201");
-        InitialContext remoteContext = new InitialContext(properties);
+        properties.setProperty(Context.PROVIDER_URL, "ejbd://localhost:" + port);
+        final InitialContext remoteContext = new InitialContext(properties);
 
-        Telephone telephone = (Telephone) remoteContext.lookup("TelephoneBeanRemote");
+        final Telephone telephone = (Telephone) remoteContext.lookup("TelephoneBeanRemote");
 
         telephone.speak("Is this a local call?");
 
         assertEquals("No.", telephone.listen());
 
-
         telephone.speak("This would be a lot cooler if I was connecting from another VM then, huh?");
 
         assertEquals("I wondered about that.", telephone.listen());
 
-
         telephone.speak("I suppose I should hangup and call back over the LocalInitialContextFactory.");
 
         assertEquals("Good idea.", telephone.listen());
-
 
         telephone.speak("I'll remember this though in case I ever have to call you accross a network.");
 

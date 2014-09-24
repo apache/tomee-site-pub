@@ -33,11 +33,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class UserServiceTest {
+
     private static Context context;
     private static UserService service;
     private static List<User> users = new ArrayList<User>();
@@ -105,22 +106,23 @@ public class UserServiceTest {
         String users = WebClient.create("http://localhost:4204/rest-on-ejb")
                 .path("/user/list")
                 .get(String.class);
-        assertEquals(
+        assertEquals(users,
                 inline("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<users>" +
-                        "  <user>" +
-                        "    <email>foo@foo.com</email>" +
-                        "    <fullname>foo</fullname>" +
-                        "    <id>1</id>" +
-                        "    <password>foopwd</password>" +
-                        "  </user>" +
                         "  <user>" +
                         "    <email>bar@bar.com</email>" +
                         "    <fullname>bar</fullname>" +
                         "    <id>2</id>" +
                         "    <password>barpwd</password>" +
                         "  </user>" +
-                        "</users>"), inline(users));
+                        "  <user>" +
+                        "    <email>foo@foo.com</email>" +
+                        "    <fullname>foo</fullname>" +
+                        "    <id>1</id>" +
+                        "    <password>foopwd</password>" +
+                        "  </user>" +
+                        "</users>"), inline(users)
+        );
     }
 
     private static String inline(String s) {
@@ -145,5 +147,6 @@ public class UserServiceTest {
         assertEquals("corrected", modified.getFullname());
         assertEquals("userpwd", modified.getPassword());
         assertEquals("it@is.ok", modified.getEmail());
+        service.delete(created.getId());
     }
 }

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="UTF-8">
+      <title>@Asynchronous @PostConstruct</title>
+    <meta name="description" content="Apache TomEE">
+    <meta name="author" content="Apache TomEE">
+    <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="./../../resources/css/bootstrap.css" rel="stylesheet">
+    <link href="./../../resources/css/prettify.css" rel="stylesheet">
+    <link href="./../../resources/css/bootstrap-mods.css" rel="stylesheet">
+    <link href="./../../resources/css/main.css" rel="stylesheet">
+
+    <script type="text/javascript">
+        var t = encodeURIComponent(document.title.replace(/^\s+|\s+$/g,""));
+        var u = encodeURIComponent(""+document.URL);
+    
+      function fbshare () {
+          window.open(
+                  "http://www.facebook.com/sharer/sharer.php?u="+u,
+                  'Share on Facebook',
+                  'width=640,height=426');
+      };
+      function gpshare () {
+          window.open(
+                  "https://plus.google.com/share?url="+u,
+                  'Share on Google+',
+                  'width=584,height=385');
+      };
+      function twshare () {
+          window.open(
+                  "https://twitter.com/intent/tweet?url="+u+"&text="+t,
+                  'Share on Twitter',
+                  'width=800,height=526');
+      };
+      function pinshare () {
+          window.open("//www.pinterest.com/pin/create/button/?url="+u+"&media=http%3A%2F%2Ftomee.apache.org%2Fresources%2Fimages%2Ffeather-logo.png&description="+t,
+                  'Share on Pinterest',
+                  'width=800,height=526');
+      };
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./../../favicon.ico">
+    <link rel="apple-touch-icon" href="./../../resources/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./../../resources/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./../../resources/images/apple-touch-icon-114x114.png">
+
+    <script src="./../../resources/js/prettify.js" type="text/javascript"></script>
+    <script src="./../../resources/js/jquery-latest.js"></script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
+    <script src="./../../resources/js/common.js"></script>
+    <script src="./../../resources/js/prettyprint.js"></script>
+    <!--script src="//assets.pinterest.com/js/pinit.js" type="text/javascript" async></script//-->
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar" data-dropdown="dropdown">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="./../../index.html">Apache TomEE</a>
+          <ul class="nav">
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  Apache
+                      <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                     <!-- <li><a href="./../../misc/whoweare.html">Who we are?</a></li> -->
+                     <!-- <li><a href="./../../misc/heritage.html">Heritage</a></li> -->
+                     <li><a href="http://www.apache.org">Apache Home</a></li>
+                     <!-- <li><a href="./../../misc/resources.html">Resources</a></li> -->
+                     <li><a href="./../../misc/contact.html">Contact</a></li>
+                     <li><a href="./../../misc/legal.html">Legal</a></li>
+                     <li><a href="http://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                     <li><a href="http://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                     <li class="divider"/>
+                     <li><a href="http://www.apache.org/security">Security</a></li>
+                  </ul>
+              </li>
+              <li><a href="./../../index.html">Home</a></li>
+              <li><a href="./../../downloads.html">Downloads</a></li>
+              <li><a href="./../../documentation.html">Documentation</a></li>
+              <li><a href="./../../examples-trunk/index.html">Examples</a></li>
+              <li><a href="./../../support.html">Support</a></li>
+              <li><a href="./../../contribute.html">Contribute</a></li>
+              <li><a href="./../../security/index.html">Security</a></li>
+          </ul>
+
+            <!-- Google CSE Search Box Begins  -->
+            <FORM class="pull-right" id="searchbox_010475492895890475512:_t4iqjrgx90" action="http://www.google.com/cse">
+                <INPUT type="hidden" name="cx" value="010475492895890475512:_t4iqjrgx90">
+                <INPUT type="hidden" name="cof" value="FORID:0">
+                <INPUT size="18" width="130" style="width:130px" name="q" type="text" placeholder="Search">
+            </FORM>
+            <!--<SCRIPT type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_010475492895890475512:_t4iqjrgx90"></SCRIPT>-->
+            <!-- Google CSE Search Box Ends -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    
+
+<div class="row">
+    <div class="span8">
+        <small><a href="./../../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../../examples/">Examples</a>&nbsp;&raquo&nbsp;<a href="./../../examples/async-postconstruct/">Async Postconstruct</a></small><br>
+    </div>
+    <div class="span8">
+    </div>
+</div>
+&nbsp;
+<div class="page-header">
+<h1>@Asynchronous @PostConstruct
+
+    <div style="float: right; position: relative; bottom: -10px; ">
+	<div id="google_translate_element"></div><script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <a onclick="javascript:gpshare()" class="gp-share sprite" title="Share on Google+">share [gp]</a>
+        <a onclick="javascript:fbshare()" class="fb-share sprite" title="Share on Facebook">share [fb]</a>
+        <a onclick="javascript:twshare()" class="tw-share sprite" title="Share on Twitter">share [tw]</a>
+        <a onclick="javascript:pinshare()" class="pin-share sprite" title="Share on Pinterest">share [pin]</a>
+        <a data-toggle="modal" href="#edit" class="edit-page" title="Contribute to this Page">contribute</a>
+    </div>
+</h1>
+</div>
+
+<p>Placing <code>@Asynchronous</code> on the <code>@PostConstruct</code> of an EJB is not a supported part of Java EE, but this example shows a pattern which works just as well with little effort.</p>
+
+<p>The heart of this pattern is to:</p>
+
+<ul>
+<li>pass the construction "logic" to an <code>@Asynchronous</code> method via a <code>java.util.concurrent.Callable</code></li>
+<li>ensure the bean does not process invocations till construction is complete via an <code>@AroundInvoke</code> method on the bean and the <code>java.util.concurrent.Future</code></li>
+</ul>
+
+<p>Simple and effective.  The result is a faster starting application that is still thread-safe.</p>
+
+<pre><code>package org.superbiz.asyncpost;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
+import javax.ejb.Singleton;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+@Singleton
+@Lock(LockType.READ)
+public class SlowStarter {
+
+    @EJB
+    private Executor executor;
+
+    private Future construct;
+
+    private String color;
+    private String shape;
+
+    @PostConstruct
+    private void construct() throws Exception {
+        construct = executor.submit(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                Thread.sleep(SECONDS.toMillis(10));
+                SlowStarter.this.color = "orange";
+                SlowStarter.this.shape = "circle";
+                return null;
+            }
+        });
+    }
+
+    @AroundInvoke
+    private Object guaranteeConstructionComplete(InvocationContext context) throws Exception {
+        construct.get();
+        return context.proceed();
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getShape() {
+        return shape;
+    }
+}
+</code></pre>
+
+<p>The <code>Executor</code> is a simple pattern, useful for many things, which exposes an interface functionaly equivalent to <code>java.util.concurrent.ExecutorService</code>, but
+with the underlying thread pool controlled by the container.</p>
+
+<pre><code>package org.superbiz.asyncpost;
+
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
+import javax.ejb.Singleton;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
+@Singleton
+@Lock(LockType.READ)
+public class Executor {
+
+    @Asynchronous
+    public &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task) throws Exception {
+        return new AsyncResult&lt;T&gt;(task.call());
+    }
+
+}
+</code></pre>
+
+<p>Finally a test case shows the usefulness of <code>@AroundInvoke</code> call in our bean that calls <code>construct.get()</code></p>
+
+<pre><code>package org.superbiz.asyncpost;
+
+import junit.framework.Assert;
+import org.junit.Test;
+
+import javax.ejb.EJB;
+import javax.ejb.embeddable.EJBContainer;
+
+public class SlowStarterTest {
+
+    @EJB
+    private SlowStarter slowStarter;
+
+    @Test
+    public void test() throws Exception {
+
+        // Start the Container
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
+
+        // Immediately access the fields initialized in the PostConstruct
+        // This will fail without the @AroundInvoke call to construct.get()
+        Assert.assertEquals("orange", slowStarter.getColor());
+        Assert.assertEquals("circle", slowStarter.getShape());
+    }
+}
+</code></pre>
+
+
+<div class="page-header">&nbsp;</div>
+<h4>APIs Used</h4>
+<ul><li><a href="http://docs.oracle.com/javaee/6/api/javax/annotation/PostConstruct.html">javax.annotation.PostConstruct</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/AsyncResult.html">javax.ejb.AsyncResult</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Asynchronous.html">javax.ejb.Asynchronous</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/EJB.html">javax.ejb.EJB</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Lock.html">javax.ejb.Lock</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/LockType.html">javax.ejb.LockType</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/Singleton.html">javax.ejb.Singleton</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/AroundInvoke.html">javax.interceptor.AroundInvoke</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/AroundTimeout.html">javax.interceptor.AroundTimeout</a></li>
+<li><a href="http://docs.oracle.com/javaee/6/api/javax/interceptor/InvocationContext.html">javax.interceptor.InvocationContext</a></li>
+</ul>
+
+<h3>Source</h3>
+  <ul>
+      <li>Apache <a href="http://svn.apache.org/repos/asf/tomee/tomee//examples/async-postconstruct">async-postconstruct</a></li>
+      <li>Github <a href="https://github.com/apache/tomee/tree//examples/async-postconstruct">async-postconstruct</a></li>
+  </ul>
+<pre>
+svn co http://svn.apache.org/repos/asf/tomee/tomee//examples/async-postconstruct
+cd async-postconstruct
+mvn clean install
+</pre>
+
+
+        <div id="edit" class="modal hide fade in" style="display: none; ">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">x</a>
+
+                <h3>Thank you for contributing to the documentation!</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Any help with the documentation is greatly appreciated.</h4>
+                <p>All edits are reviewed before going live, so feel free to do much more than fix typos or links.  If you see a page that could benefit from an entire rewrite, we'd be thrilled to review it.  Don't be surprised if we like it so much we ask you for help with other pages :)</p>
+                <small>NOTICE: unless indicated otherwise on the pages in question, all editable content available from apache.org is presumed to be licensed under the Apache License (AL) version 2.0 and hence all submissions to apache.org treated as formal Contributions under the license terms.</small>
+                <!--[if gt IE 6]>
+                <h4>Internet Explorer Users</h4>
+                <p>If you are not an Apache committer, click the Yes link and enter a <i>anonymous</i> for the username and leave the password empty</p>
+                <![endif]-->
+
+            </div>
+            <div class="modal-footer">
+                Do you have an Apache ID?
+                <a href="javascript:void(location.href='https://cms.apache.org/redirect?uri='+escape(location.href))" class="btn">Yes</a>
+                <a href="javascript:void(location.href='https://anonymous:@cms.apache.org/redirect?uri='+escape(location.href))" class="btn">No</a>
+            </div>
+        </div>
+        <script src="./../../resources/js/bootstrap-modal.js"></script>
+
+        <footer>
+            <p>Copyright &copy; 1999-2014 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.
+                Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation.
+                All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./../../resources/js/bootstrap-dropdown.js"></script>
+
+  </body>
+</html>

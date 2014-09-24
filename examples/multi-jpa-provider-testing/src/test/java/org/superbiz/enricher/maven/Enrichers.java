@@ -19,9 +19,6 @@ package org.superbiz.enricher.maven;
 
 import org.jboss.shrinkwrap.api.container.LibraryContainer;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
-import org.jboss.shrinkwrap.resolver.api.maven.strategy.AcceptScopesStrategy;
-import org.jboss.shrinkwrap.resolver.api.maven.strategy.TransitiveStrategy;
 
 import javax.enterprise.inject.ResolutionException;
 import java.io.File;
@@ -29,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Enrichers {
+
     private static final Map<String, File[]> CACHE = new HashMap<String, File[]>();
 
     private Enrichers() {
@@ -41,15 +39,15 @@ public final class Enrichers {
 
                 // try offline first since it is generally faster
                 CACHE.put(pom, Maven.resolver()
-                        .offline(true)
-                        .loadPomFromFile(pom)
-                        .importRuntimeAndTestDependencies(new AcceptScopesStrategy(ScopeType.COMPILE))
-                        .asFile());
+                                    .offline(true)
+                                    .loadPomFromFile(pom)
+                                    .importRuntimeAndTestDependencies().resolve().withTransitivity()
+                                    .asFile());
             } catch (ResolutionException re) { // try on central
                 CACHE.put(pom, Maven.resolver()
-                        .loadPomFromFile(pom)
-                        .importRuntimeAndTestDependencies(new AcceptScopesStrategy(ScopeType.COMPILE))
-                        .asFile());
+                                    .loadPomFromFile(pom)
+                                    .importRuntimeAndTestDependencies().resolve().withTransitivity()
+                                    .asFile());
             }
         }
         return CACHE.get(pom);

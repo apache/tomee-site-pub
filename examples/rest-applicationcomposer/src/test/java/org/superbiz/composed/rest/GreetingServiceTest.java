@@ -23,9 +23,9 @@ import org.apache.openejb.jee.SingletonBean;
 import org.apache.openejb.jee.oejb3.EjbDeployment;
 import org.apache.openejb.jee.oejb3.OpenejbJar;
 import org.apache.openejb.junit.ApplicationComposer;
-import org.apache.openejb.junit.Configuration;
-import org.apache.openejb.junit.Module;
 import org.apache.openejb.loader.IO;
+import org.apache.openejb.testing.Configuration;
+import org.apache.openejb.testing.Module;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(ApplicationComposer.class)
 public class GreetingServiceTest {
+
     @Configuration
     public Properties configuration() {
         return new Properties() {{
@@ -46,7 +47,6 @@ public class GreetingServiceTest {
 
     @Module
     public EjbModule app() {
-        // in embedded mode only ejb are deployed
         final SingletonBean bean = (SingletonBean) new SingletonBean(GreetingService.class).localBean();
         bean.setRestService(true);
 

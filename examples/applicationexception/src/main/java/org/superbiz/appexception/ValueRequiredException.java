@@ -17,7 +17,8 @@
 package org.superbiz.appexception;
 
 /**
- * @version $Rev: 784112 $ $Date: 2009-06-12 13:23:57 +0000 (Fri, 12 Jun 2009) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
  */
 public class ValueRequiredException extends BusinessException {
+
 }

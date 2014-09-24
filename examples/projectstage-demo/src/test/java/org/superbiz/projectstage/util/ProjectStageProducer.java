@@ -21,17 +21,21 @@ import org.apache.deltaspike.core.spi.config.ConfigSourceProvider;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
-public final class ProjectStageProducer implements ConfigSourceProvider  {
+public final class ProjectStageProducer implements ConfigSourceProvider {
+
     public static final String CONFIG_PATH = "project-stage.properties";
 
     private static final Properties PROPERTIES = new Properties();
+
     static {
         try {
             PROPERTIES.load(ProjectStageProducer.class.getResourceAsStream("/project-stage.properties"));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // no-op
         }
     }
@@ -53,6 +57,16 @@ public final class ProjectStageProducer implements ConfigSourceProvider  {
                 @Override
                 public String getConfigName() {
                     return "test-project-stage";
+                }
+
+                @Override
+                public Map<String, String> getProperties() {
+                    return Collections.emptyMap();
+                }
+
+                @Override
+                public boolean isScannable() {
+                    return false;
                 }
             });
         }};
