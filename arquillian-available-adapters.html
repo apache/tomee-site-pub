@@ -151,6 +151,15 @@
     &lt;configuration&gt;
         &lt;property name="httpPort"&gt;-1&lt;/property&gt;
         &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+        &lt;!--Optional Container Properties--&gt;
+        &lt;property name="properties"&gt;
+            aproperty=something
+        &lt;/property&gt;
+        &lt;!--Optional Remote Adapter Deployer Properties
+        &lt;property name="deployerProperties"&gt;
+            aproperty=something
+        &lt;/property&gt;
+        --&gt;
     &lt;/configuration&gt;
 &lt;/container&gt;
 </code></pre>
@@ -190,20 +199,34 @@
 @ArquillianResource private URL url;
 </code></pre>
 
-<p>The url will get injected by Arquillian. Be careful, that injection only works if your are on the client side (it does not make sense in the server side). So, if for a specific need to need it, just use the system property.</p>
+<p>The URL will get injected by Arquillian. Be careful, that injection only works if your are on the client side (it does not make sense in the server side). So, if for a specific need to need it, just use the system property.</p>
 
 <h1>TomEE Embedded Adapter</h1>
 
-<p>The TomEE Embedded Adapter will boot TomEE right inside the test case itself resulting in one JVM running both the application and the test case.
-This is generally much faster than the TomEE Remote Adapter and great for development.  That said, it is strongly recommended to also run all tests in a Continuous Integration
-system using the TomEE Remote Adapter.</p>
+<p>The TomEE Embedded Adapter will boot TomEE right inside the test case itself resulting in one JVM running both the application and the test case. This is generally much faster than the TomEE Remote Adapter and great for development.  That said, it is strongly recommended to also run all tests in a Continuous Integration system using the TomEE Remote Adapter.</p>
 
-<p>To use the TomEE Embedded Arquillian Adapter, simply add this Maven dependency to your Arquillian setup:</p>
+<p>To use the TomEE Embedded Arquillian Adapter, simply add these Maven dependencies to your Maven pom.xml:</p>
 
 <pre><code>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
   &lt;artifactId&gt;arquillian-tomee-embedded&lt;/artifactId&gt;
-  &lt;version&gt;1.0.0&lt;/version&gt;
+  &lt;version&gt;1.7.1&lt;/version&gt; &lt;!--Current version--&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-embedded&lt;/artifactId&gt;
+  &lt;version&gt;1.7.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!--Required for WebServices and RESTful WebServices--&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-webservices&lt;/artifactId&gt;
+  &lt;version&gt;1.7.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-jaxrs&lt;/artifactId&gt;
+  &lt;version&gt;1.7.1&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
@@ -212,6 +235,7 @@ system using the TomEE Remote Adapter.</p>
 <ul>
 <li><code>httpPort</code></li>
 <li><code>stopPort</code></li>
+<li><code>properties</code> (System properties for container)</li>
 </ul>
 
 <p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
@@ -230,10 +254,9 @@ system using the TomEE Remote Adapter.</p>
 
 <h1>TomEE Remote Adapter</h1>
 
-<p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus distribution.  Once setup, the server will execute in a separate process.  This will be slower, but
-with the added benefit it is 100% match with the production system.</p>
+<p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus distribution.  Once setup, the server will execute in a separate process.  This will be slower, but with the added benefit it is 100% match with the production system environment.</p>
 
-<p>Clients can get the remote server port using the following System property:</p>
+<p>On a local machine clients can get the remote server port using the following System property:</p>
 
 <pre><code>final String port = System.getProperty("server.http.port");
 </code></pre>
@@ -241,7 +264,7 @@ with the added benefit it is 100% match with the production system.</p>
 <p>The following shows a typical configuration for testing against TomEE (webprofile version).  The same can be done against TomEE+ by changing <code>&lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;</code> to <code>&lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;</code></p>
 
 <pre><code>&lt;properties&gt;
-  &lt;tomee.version&gt;1.0.0&lt;/tomee.version&gt;
+  &lt;tomee.version&gt;1.7.1&lt;/tomee.version&gt;
   &lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;
 &lt;/properties&gt;
 &lt;build&gt;
@@ -280,7 +303,9 @@ with the added benefit it is 100% match with the production system.</p>
 <li><code>httpPort</code></li>
 <li><code>stopPort</code></li>
 <li><code>version</code></li>
-<li><code>classifier</code> (must be either <code>webprofile</code> or  <code>plus</code>)</li>
+<li><code>classifier</code> (Must be either <code>webprofile</code> or  <code>plus</code>)</li>
+<li><code>properties</code> (System properties for container)</li>
+<li><code>deployerProperties</code> (Sent to Deployer)</li>
 </ul>
 
 <p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
@@ -303,7 +328,7 @@ with the added benefit it is 100% match with the production system.</p>
 
 <h1>Maven Profiles</h1>
 
-<p>Setting up both adapters is quite easy via maven profiles.  Here the default adapter is the Embedded Adapter, the Remote Adapter will run with <code>-Ptomee-webprofile-remote</code> specified as a <code>mvn</code> command argument.</p>
+<p>Setting up both adapters is quite easy via Maven profiles.  Here the default adapter is the Embedded Adapter, the Remote Adapter will run with <code>-Ptomee-webprofile-remote</code> specified as a <code>mvn</code> command argument.</p>
 
 <pre><code>&lt;profiles&gt;
 
