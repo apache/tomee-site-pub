@@ -18,10 +18,10 @@
  */
 package org.superbiz.deltaspike.test;
 
-import junit.framework.Assert;
 import org.apache.deltaspike.cdise.api.ContextControl;
 import org.apache.deltaspike.core.spi.scope.window.WindowContext;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.superbiz.deltaspike.WebappMessageBundle;
@@ -32,6 +32,7 @@ import org.superbiz.deltaspike.view.config.Pages;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 @RunWith(CdiTestRunner.class)
 public class PageBeanTest
@@ -51,10 +52,21 @@ public class PageBeanTest
     @Inject
     private ContextControl contextControl;
 
-    //@Test
+    @Test(expected = PersistenceException.class)
+    public void duplicatedUser()
+    {
+        final String userName = "tomee";
+        final String firstName = "Apache";
+        final String lastName = "TomEE";
+
+        this.userRepository.saveAndFlush(new User(userName, firstName, lastName));
+        this.userRepository.saveAndFlush(new User(userName, firstName + "2", lastName + "2"));
+    }
+
+    @Test
     public void saveUser()
     {
-        final String userName = "gp";
+        final String userName = "GP";
         final String firstName = "Gerhard";
         final String lastName = "Petracek";
         this.windowContext.activateWindow("testWindow");
@@ -70,7 +82,7 @@ public class PageBeanTest
         Assert.assertFalse(FacesContext.getCurrentInstance().getMessageList().isEmpty());
         Assert.assertEquals(webappMessageBundle.msgUserRegistered(userName), FacesContext.getCurrentInstance().getMessageList().iterator().next().getSummary());
 
-        User user = this.userRepository.loadUser(userName);
+        User user = this.userRepository.findByUserName(userName);
         Assert.assertNotNull(user);
         Assert.assertEquals(firstName, user.getFirstName());
         Assert.assertEquals(lastName, user.getLastName());
@@ -97,7 +109,7 @@ public class PageBeanTest
         Assert.assertFalse(FacesContext.getCurrentInstance().getMessageList().isEmpty());
         Assert.assertEquals(webappMessageBundle.msgUserRegistered(userName), FacesContext.getCurrentInstance().getMessageList().iterator().next().getSummary());
 
-        User user = this.userRepository.loadUser(userName);
+        User user = this.userRepository.findByUserName(userName);
         Assert.assertNotNull(user);
         Assert.assertEquals(firstName, user.getFirstName());
         Assert.assertEquals(lastName, user.getLastName());
