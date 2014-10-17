@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="UTF-8">
-      <title>Source Code</title>
+      <title>GIT for TomEE Developers</title>
     <meta name="description" content="Apache TomEE">
     <meta name="author" content="Apache TomEE">
     <meta name="google-translate-customization" content="f36a520c08f4c9-0a04e86a9c075ce9-g265f3196f697cf8f-10">
@@ -131,7 +131,7 @@
 
 <div class="page-header">
     <small><a href="./../index.html">Home</a>&nbsp;&raquo&nbsp;<a href="./../dev/">Dev</a></small><br>
-    <h1>Source Code
+    <h1>GIT for TomEE Developers
 
         <div style="float: right; position: relative; bottom: -10px; ">
             <a onclick="javascript:gpshare()" class="gp-share sprite" title="Share on Google+">share [gp]</a>
@@ -143,137 +143,105 @@
     </h1>
 </div>
 
-<p><strong><span style="color: rgb(128,0,0);">We have moved to GIT</span>. This means that anything you may find elsewhere on the site about SVN is no longer valid!</strong></p>
+<h3>The GitFlow Workflow</h3>
 
-<p>The documentation will be updated over the next few days and weeks but if you find anything that is <strong>really</strong> misleading then please send a message to the developer list at: <a href="mailto:dev@tomee.apache.org">dev@tomee.apache.org</a></p>
-
-<p>Probably the best GIT tutorial on the planet can be found here: <a href="https://www.atlassian.com/git/">https://www.atlassian.com/git/</a> - This is a great reference for both existing and new GIT users. Please take a look.</p>
-
-<h3>GIT Information for Everyone</h3>
-
-<p>You can browse the source code via the <a href="http://git-wip-us.apache.org/repos/asf/tomee.git">web interface</a>.</p>
-
-<p>If you intend to hack on TomEE then it is recommended that you create a <a href="https://github.com">GitHub Account</a> and <a href="https://help.github.com/articles/fork-a-repo/">fork</a> the TomEE repository so that you can submit pull requests (See below).</p>
-
-<p>If you just want to build the source version then you can download (aka clone) the sources of Apache TomEE with a GIT client from the following URL <a href="https://git-wip-us.apache.org/repos/asf/tomee.git">https://git-wip-us.apache.org/repos/asf/tomee.git</a> - The 'develop' branch is the current development branch.</p>
-
-<p>Performing the checkout from a command line using the GIT client (recommended) is as easy as executing the following command:</p>
-
-<blockquote>
-  <p>git clone -b develop <a href="https://git-wip-us.apache.org/repos/asf/tomee.git">https://git-wip-us.apache.org/repos/asf/tomee.git</a> tomee</p>
-</blockquote>
-
-<p>If you want to checkout a specific branch then you can just change that in the command:</p>
-
-<blockquote>
-  <p>git clone -b tomee-1.7.x <a href="https://git-wip-us.apache.org/repos/asf/tomee.git">https://git-wip-us.apache.org/repos/asf/tomee.git</a> tomee-1.7.x</p>
-</blockquote>
-
-<p>Or alternatively with Apache Maven 3.0.5 or later:</p>
-
-<blockquote>
-  <p>mvn scm:checkout
-  -DconnectionUrl=scm:git:<a href="https://git-wip-us.apache.org/repos/asf/tomee.git">https://git-wip-us.apache.org/repos/asf/tomee.git</a>
-  -DcheckoutDirectory=tomee</p>
-</blockquote>
-
-<p>Note: This method does not require the GIT client.</p>
-
-<p><a name="SourceCode-Contributors"></a></p>
-
-<h3>GIT Information for TomEE Contributors</h3>
-
-<p><strong>Please read our own detailed GitFlow workflow information <a href="git.html">here</a></strong></p>
-
-<p>We will be using the <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Gitflow Workflow</a> from day one. Please read and understand how this works.</p>
-
-<p><span style="color: rgb(128,0,0);">GIT pull requests will only be accepted on the <strong>develop</strong> branch</span>.
-See <a href="https://help.github.com/articles/using-pull-requests/">here</a> for information on pull requests. </p>
-
-<p>The <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Gitflow Workflow</a> workflow is basically the same as the <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow">Feature Branch Workflow</a> but instead of using <em>master</em> everyone should work off the <em>develop</em> branch.</p>
-
-<p>The official Apache Committer documentation can be found <a href="https://git-wip-us.apache.org/#committers-getting-started">here</a></p>
-
-<p><a name="SourceCode-Continuousintegration"></a></p>
-
-<h3>Continuous integration</h3>
-
-<p>Apache TomEE continuous integration relies on <a href="http://ci.apache.org/">Apache Buildbot</a>.
-All builders are available <a href="http://ci.apache.org/builders">from the page</a>.</p>
+<p>Notes before you begin (mostly for SVN users):</p>
 
 <ul>
-<li><a href="http://ci.apache.org/builders/tomee-1.7.x-ubuntu">Apache TomEE 1.7.x under Ubuntu</a></li>
-<li><a href="http://ci.apache.org/builders/tomee-trunk-ubuntu">Apache TomEE 2.x under Ubuntu</a></li>
-<li><a href="http://ci.apache.org/builders/tomee-trunk-win-sunjdk">Apache TomEE 2.x under Windows using a Sun/Oracle JDK</a></li>
-<li><a href="http://ci.apache.org/builders/tomee-trunk-win-ibmjdk6">Apache TomEE 2.x under Windows using an IBM JDK</a></li>
+<li>The '<em>develop</em>' repository is the equivalent of the SVN <em>trunk</em> directory.  </li>
+<li>The '<em>master</em>' repository is the equivalent of the SVN <em>tags</em> directory.    </li>
+<li>The '<em>origin</em>' is the actual GIT repository that contains the projects <em>master</em>, <em>develop</em> and other branches (Like trunk, branches and tags).  </li>
+<li>Unlike SVN a 'commit' is only a local action. The local commits are only published to the remote repository using 'push'.  </li>
+<li>Commit and push code to your own feature branch as often as you like, but only merge stable branches back into to the <em>develop</em> branch.  </li>
+<li>Only the release manager should manage the <em>master</em> repository</li>
+<li>Read the official Apache Committer documentation <a href="https://git-wip-us.apache.org/#committers-getting-started">here</a> </li>
 </ul>
 
-<p><a name="SourceCode-Building"></a></p>
+<p><span style="color: rgb(128,0,0);">Run commands in the directory of the project you are working on, for example 'tomee':</span></p>
 
-<h3>Maven</h3>
-
-<p>To build the code, you'll need to grab a copy of <a href="http://maven.apache.org">Apache Maven</a>, version 3.0.5 or later.</p>
-
-<h3>Memory Settings</h3>
-
-<p>It is pretty much guaranteed that you will need to give Maven an increase on the available memory. <br />
-Depending on the OS you are working on the fix can be as easy as (Note: <em>-XX:MaxPermSize=256M</em> is ignored by Java 8):  </p>
+<p>Always create a feature branch from <em>develop</em> using an '<em>extremely</em>' descriptive name, this should usually be the <a href="https://issues.apache.org/jira/browse/TOMEE">JIRA</a> id or task name you want to work on:</p>
 
 <blockquote>
-  <p>export MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</p>
+  <p><span style="color: rgb(51,51,153);">git checkout -b TOMEE-007 develop</span></p>
+  
+  <p>Switched to a new branch 'TOMEE-007'  </p>
+  
+  <p><span style="color: rgb(51,51,153);">git status</span></p>
+  
+  <p>nothing to commit, working directory clean</p>
 </blockquote>
 
-<p>on MacOS and Unices or </p>
+<p>Immediately push the new branch to the repository so everyone can see it remotely (and possibly collaborate):</p>
 
 <blockquote>
-  <p>set MAVEN_OPTS=-Xmx768m -XX:MaxPermSize=256M -XX:ReservedCodeCacheSize=64m -Xss2048k</p>
+  <p><span style="color: rgb(51,51,153);">git push -u origin TOMEE-007</span></p>
+  
+  <p>Branch TOMEE-007 set up to track remote branch TOMEE-007 from origin.</p>
 </blockquote>
 
-<p>on MS Windows.</p>
-
-<h3>Full Build</h3>
-
-<p>A fast build that skips all tests, generates no reports and creates full distribution archives is as follows:</p>
+<p>Once that is done then you just need the simple push for subsequent calls on this branch:</p>
 
 <blockquote>
-  <p>mvn -Dsurefire.useFile=false -DdisableXmlReport=true -DuniqueVersion=false -ff -Dassemble -DskipTests -DfailIfNoTests=false clean install</p>
+  <p><span style="color: rgb(51,51,153);">git push</span></p>
 </blockquote>
 
-<p>The full build with tests takes around 2 hours:</p>
+<p><span style="color: rgb(0,128,0);">Work like mad on the JIRA issue calling commit and add as often as you like...</span></p>
+
+<p>If others are working on your branch also remember to pull their changes (Or just as good practice):</p>
 
 <blockquote>
-  <p>mvn -Dassemble clean install</p>
+  <p><span style="color: rgb(51,51,153);">git pull</span></p>
+  
+  <p><span style="color: rgb(51,51,153);">git commit</span></p>
+  
+  <p><span style="color: rgb(51,51,153);">git push</span></p>
 </blockquote>
 
-<p>The output of those commands should end with "BUILD SUCCESSFUL"</p>
-
-<p>It is of course possible to just compile and test individual modules. Just change to the module directory and run the same commands as above.</p>
-
-<h3>Quick Build</h3>
-
-<p>If you are in real a hurry (and let's face it most of us are) you can run a quick build without the examples using the <em>quick</em> profile:</p>
+<p>Finally, to push the completed (or significant non-breaking progress on the) feature to <em>develop</em> at any time (ensuring <em>develop</em> is up to date first):</p>
 
 <blockquote>
-  <p>mvn -Pquick -Dsurefire.useFile=false -DdisableXmlReport=true -DuniqueVersion=false -ff -Dassemble -DskipTests -DfailIfNoTests=false clean install</p>
+  <p><span style="color: rgb(51,51,153);">git pull origin develop</span></p>
+  
+  <p><span style="color: rgb(51,51,153);">git checkout develop</span></p>
+  
+  <p><span style="color: rgb(51,51,153);">git merge --no-ff TOMEE-007</span></p>
 </blockquote>
 
-<h3>Binary locations</h3>
+<p>Once the completed feature is merged and the JIRA resolved then the branch can and 'should' be deleted before pushing:</p>
 
-<p>Once built, the TomEE binaries will be located at:</p>
+<blockquote>
+  <p><span style="color: rgb(51,51,153);">git branch -d TOMEE-007</span></p>
+  
+  <p><span style="color: rgb(51,51,153);">git push origin develop</span></p>
+</blockquote>
 
-<pre><code>ls [project]/tomee/apache-tomee/target/*.zip
+<p><a name="git-gui"></a></p>
 
-tomee/apache-tomee/target/apache-tomee-jaxrs-[version]-SNAPSHOT.zip
-tomee/apache-tomee/target/apache-tomee-plus-[version]-SNAPSHOT.zip
-tomee/apache-tomee/target/apache-tomee-webprofile-[version]-SNAPSHOT.zip
-</code></pre>
+<h3>The GUI Way</h3>
 
-<p>The OpenEJB standalone binaries will be located at:</p>
+<p>Now we have learned to do it the hard way, time to look at the simplified version. The GitHub native tools!</p>
 
-<pre><code>ls [project]/assembly/openejb-standalone/target/*.zip
+<p>For the latest mac version go here: <a href="https://mac.github.com/">Mac Latest</a>, </p>
 
-assembly/openejb-standalone/target/apache-openejb-[version]-SNAPSHOT.zip
-</code></pre>
+<p>And windows here: <a href="https://windows.github.com/">Win Latest</a></p>
+
+<p>These tools will probably not save you much time over the command line, but provide a much better visualization of ongoing processes.</p>
+
+<p>The steps are and remain as described above:</p>
+
+<ol>
+<li>From <em>develop</em> create a new branch called, for example TOMEE-007</li>
+<li>'Publish' (push -u) the new branch</li>
+<li>Work on the branch and commit regularly</li>
+<li>Synchronize (pull and push) changes in the the branch when stable</li>
+<li>Switch to <em>develop</em> and synchronize (pull)</li>
+<li>Merge the branch into <em>develop</em>, i.e. 'TOMEE-007' + 'develop'  = 'develop' <span style="color: rgb(255,102,0);">*See note below</span></li>
+<li>Commit <em>develop</em></li>
+<li>Synchronize <em>develop</em> (pull and push)</li>
+<li>Delete the branch TOMEE-007</li>
+</ol>
+
+<p><span style="color: rgb(255,102,0);"><em>Note</span>: You can actually merge the current *develop</em> (or any other 'synchronized' branch) into your branch first to make sure it is stable,i.e. 'develop' + 'TOMEE-007' = 'TOMEE-007' - This is really cool!</p>
 
 
 
