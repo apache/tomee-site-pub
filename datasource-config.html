@@ -614,6 +614,63 @@ destroyed and removed from the pool</p>
 timeBetweenEvictionRunsMillis property must be a positive
 number and the ValidationQuery parameter must be set.</p>
 
+<h1>XADataSource</h1>
+
+<p>There are several ways to configure a XADataSource. Depending the underlying datasource (Oracle, MySQL one or the other
+solution can be more adapted.</p>
+
+<p>This part deals with <code>JtaManaged</code> XaDataSource since a not managed XaDataSource can be defined as a standard
+resource using <code>class-name</code>.</p>
+
+<h2>Single definition</h2>
+
+<p>First solution is to define as <code>JdbcDriver</code> an XADataSource:</p>
+
+<pre><code>&lt;Resource id="myXaDs" type="DataSource"&gt;
+    JdbcDriver = org.foo.MyXaDataSource
+
+    myXaProperty = value
+
+    myPoolProperty = 10
+&lt;/Resource&gt;
+</code></pre>
+
+<p>This solution merges properties for the XaDataSource and the pool (tomcat-jdbc for TomEE, dbcp for OpenEJB by default
+but still configurable with DataSourceCreator).</p>
+
+<p>Note: in this case for Oracle for instance you'll define UserName for the pool and User for the datasource which
+can look weird if you don't know properties are used for 2 instances (pool and datasource).</p>
+
+<p>Note: this solution uses the same logic than @DataSourceDefinition factory mecanism.</p>
+
+<h2>Two resources definition</h2>
+
+<p>An alternative is to define a resource for the XaDataSource:</p>
+
+<pre><code>&lt;Resource id="myXa" class-name="org.foo.MyXaDataSource"&gt;
+    myXaProperty = value
+&lt;/Resource&gt;
+</code></pre>
+
+<p>And then wrap it in the pool:</p>
+
+<pre><code>&lt;Resource id="myXaDs" type="DataSource"&gt;
+    DataSourceCreator = [dbcp|dbcp-alternative]
+    myPoolProperty = 10
+&lt;/Resource&gt;
+</code></pre>
+
+<p>Note: <code>dbcp</code> is more adapted than <code>dbcp-alternative</code> in most of the case because it is reusing direct dbcp JTA management.</p>
+
+<h2>Known issues</h2>
+
+<p>For TomEE 1.7.0/1.7.1 you can need to add the property:</p>
+
+<pre><code> openejb.datasource.pool = true
+</code></pre>
+
+<p>in resource properties to ensure the resource is pooled.</p>
+
 
 
 
