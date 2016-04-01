@@ -180,10 +180,10 @@ http://&lt;host&gt;:&lt;port&gt;/&lt;webapp context name&gt;/foo</p>
 Deserializing unknown content coming from an untrusted source imposes a security risk as the stream could be manipulated.
 A much publicized <a href="http://www.kb.cert.org/vuls/id/576313">vulnerability</a> was found in the commons-collections library which allowed to remotely execute arbitrary code simply by deserializing instances of the class <code>InvokerTransformer</code>.</p>
 
-<p>To prevent this risk TomEE and the OpenEJB client since 1.7.4 before deserializing every object checks its class against a black list and a white list.
+<p>To prevent this risk TomEE and the OpenEJB client since 1.7.4 before deserializing every object checks its class against a configurable blacklist and a whitelist.
 The default black list is defined as <code>*</code>, meaning that requests cannot be deserialized at all and the Ejbd transport in fact cannot be used.</p>
 
-<p>The black list and white list is configured via the system properties:</p>
+<p>The blacklist and whitelist is configured via the system properties:</p>
 
 <ul>
 <li><code>tomee.serialization.class.whitelist</code></li>
@@ -192,13 +192,28 @@ The default black list is defined as <code>*</code>, meaning that requests canno
 
 <p>You will also find these properties in <a href="properties-listing.html">System Properties Listing</a></p>
 
-<p>The default for <code>tomee.serialization.class.whitelist</code> is empty, the default for <code>tomee.serialization.class.blacklist</code> is <code>*</code>.
-The black list has a higher priority than the white list.
-That means that you have to make sure that you add a required class to the white list and at the same time remove it from the black list.</p>
+<p>These rules apply for the whitelist:</p>
+
+<ul>
+<li>The whitelist has a lower priority than the blacklist. That means a class that is part of the blacklist cannot be whitelisted and will always be refused.</li>
+<li>If a whitelist is not defined, either by not defining the property at all or defining it with an empty value, every class is on the whitelist. In this case only the blacklist applies.</li>
+<li>If a whitelist is defined it must be a comma separated list of prefixes of fully qualified class names. Then deserialization of an object fails if its class is not part of this whitelist. A class is on the whitelist if its fully qualified classname is prefixed by one of the values in the whitelist.</li>
+</ul>
+
+<p>These rules apply for the blacklist:</p>
+
+<ul>
+<li>If the blacklist should be deactivated it must be configured to the value <code>-</code>. This will open your system to the serialization vulnerability if you don't configure a whitelist!</li>
+<li>If the blacklist is not configured its default value is <code>org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan,java.lang.Process</code> so that for example the class <code>org.apache.commons.collections.functors.InvokerTransformer</code> cannot be deserialized.</li>
+<li>If the blacklist is configured with an empty value the blacklist is effectively <code>*</code>, therefore preventing any Ejbd communication.</li>
+<li>If you want to blacklist certain classes the property must be configured to a comma separated list of prefixes of fully qualified class names. A class is on the blacklist if its fully qualified classname is prefixed by one of the values in the blacklist.</li>
+</ul>
+
+<p>The default for <code>tomee.serialization.class.whitelist</code> is empty, the default for <code>tomee.serialization.class.blacklist</code> is <code>*</code> since TomEE 1.7.4.</p>
 
 <p>If an EJB request fails because a class is not whitelisted you will find this log entry:</p>
 
-<pre><code>WARN - "null OEJP/4.7" FAIL "Security error - foo.Bar is not whitelisted as deserialisable, prevented before loading it." - Debug for StackTrace
+<pre><code>WARN - "null OEJP/4.7" FAIL "Security error - foo.Bar is not whitelisted as deserializable, prevented before loading it." - Debug for StackTrace
 </code></pre>
 
 <p>If you trust this class and want to support serialization in remote communication you have to configure these properties appropriately both on server side as well as on client side.</p>
@@ -225,18 +240,38 @@ tomee.serialization.class.blacklist = foo.Bar
 
 <h4>Revert to behavior of TomEE 1.7.3</h4>
 
-<p>You can configure these properties so that the Ejbd transport will behave in the same way it did with TomEE 1.7.3:</p>
+<p>TomEE 1.7.3 already contained a fixed blacklist that was not configurable and contained the packages org.codehaus.groovy.runtime, org.apache.commons.collections.functors and org.apache.xalan including subpackages and the class java.lang.Process.
+If you know that your applications runs on TomEE 1.7.3 but does not on TomEE 1.7.4 showing the aforementioned log message, you can define the configuration so that the serialization will work in the same way as it did with TomEE 1.7.3:</p>
 
 <pre><code>tomee.serialization.class.whitelist = 
 tomee.serialization.class.blacklist = org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan,java.lang.Process
 </code></pre>
 
-<p>Please note that with this configuration your server is vulnerable to Java serialization attacks again in particular when the system is exposed to the internet.</p>
+<p>Please note that with this configuration your server may be vulnerable to Java serialization attacks not yet identified by the Zero Day initiative. 
+Also note that the following versions of the affected libraries have been patched and approved by the Zero Day initiative and <em>may</em> be safe to deserialize.</p>
+
+<ul>
+<li>Groovy 2.4.4</li>
+<li>Commons Collections 3.2.2</li>
+<li>Xalan 2.7.2</li>
+</ul>
 
 <p>As Ejbd transport is tunneled over HTTP please make sure that the <code>ServerServlet</code> is not publicly accessible.
 When the applications running on TomEE do not package the <code>ServerServlet</code> themselves ensure that the URL http://&lt;host&gt;:&lt;port&gt;/tomee/ejb is not accessible from untrusted sources.</p>
 
 <p>If your applications package declare it in their own web.xml make sure that the respective URL is not accessible from untrusted sources.</p>
+
+<h4>Revert to behavior of TomEE 1.7.2</h4>
+
+<p>TomEE 1.7.2 did not have any kind of blacklist when deserializing objects over Ejbd.
+If you want to revert to this behavior you can simply deactivate the blacklist with this configuration:</p>
+
+<pre><code>tomee.serialization.class.whitelist =
+tomee.serialization.class.blacklist = -
+</code></pre>
+
+<p>Note that this configuration makes your system highly vulnerable to serialization attacks!
+Consider your system as unsafe!</p>
 
 <h4>Remote communication and Arquillian tests</h4>
 
@@ -245,7 +280,7 @@ As the Ejbd transport is already used for deploying applications all Arquillian 
 
 <p>Therefore the TomEE Arquillian adapter automatically starts the container so that all classes except for a set of well-know dangerous classes are whitelisted.</p>
 
-<p>As Ejbd is by default disabled since TomEE 7.0.0, the TomEE Arquillian adapter automatically activates it when starting starting a remote container.</p>
+<p>As Ejbd is by default disabled since TomEE 7.0.0, the TomEE Arquillian adapter automatically activates it when starting a remote container.</p>
 
 <h4>Remote communication and the TomEE Maven Plugin</h4>
 
