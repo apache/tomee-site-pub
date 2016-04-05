@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../..//#">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../developer/index.html">Developer</a></li>
+					<li><a href="../../admin/index.html">Admin</a></li>
+					<li><a href="../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../blog/index.html">Blog</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+                    <li><a href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <h2>How to Setup TomEE in production</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use TomEE as described on <a href="../../admin/file-layout.html">File Layout</a> page but in production it is better to
+split TomEE and application binaries and configuration.</p>
+</div>
+<div class="paragraph">
+<p>Idea is to have this kind of layout (the root is the one you prefer):</p>
+</div>
+<div id="filetree" class="paragraph col-md-4">
+<p>[{
+    label: '/some/path',
+    description: 'any location on your file system',
+    children: [
+        {
+            label: 'tomee',
+            description: 'all tomee binaries will be there, note: you often do the same for the JVM versions you have',
+            children: [
+                {
+                    label: 'tomee-1.7.1',
+                    description: 'a particular tomee version (just unzip it there)',
+                    children: [
+                        { label: 'bin', description: 'the startup binaries/scripts' },
+                        { label: 'conf', description: 'default shared configuration for this version, can be overwritten by instance' },
+                        { label: 'lib', description: 'the binaries' }
+                    ]
+                },
+                {
+                    label: 'tomee-1.7.2',
+                    description: 'a particular tomee version (just unzip it there)',
+                    children: [
+                        { label: 'bin', description: 'the startup binaries/scripts' },
+                        { label: 'conf', description: 'default shared configuration for this version, can be overwritten by instance' },
+                        { label: 'lib', description: 'the binaries' }
+                    ]
+                },
+                {
+                    label: 'tomee-7.0.0-M3',
+                    description: 'a particular tomee version (just unzip it there)',
+                    children: [
+                        { label: 'bin', description: 'the startup binaries/scripts' },
+                        { label: 'conf', description: 'default shared configuration for this version, can be overwritten by instance' },
+                        { label: 'lib', description: 'the binaries' }
+                    ]
+                }
+            ]
+        },
+        {
+            label: 'applications',
+            description: 'all applications',
+            children: [
+                {
+                    label: 'application1',
+                    description: 'any application instance (ie configuration + binaries)',
+                    children: [
+                        { label: 'bin', description: 'provide scripts for this instance (see under that file layout)' },
+                        { label: 'conf', description: 'the instance configuration, typically what is in tomee/conf when used in standalone' },
+                        { label: 'lib', description: 'some additional binaries like JDBC drivers' },
+                        { label: 'logs', description: 'instances logs location' },
+                        { label: 'work', description: 'dedicated work directory' },
+                        { label: 'temp', description: 'instance temporary folder' },
+                        { label: 'webapps', description: 'instance webapp folder' }
+                    ]
+                },
+                {
+                    label: 'application2',
+                    description: 'any application instance (ie configuration + binaries)',
+                    children: [
+                        { label: 'bin', description: 'provide scripts for this instance (see under that file layout)' },
+                        { label: 'conf', description: 'the instance configuration, typically what is in tomee/conf when used in standalone' },
+                        { label: 'lib', description: 'some additional binaries like JDBC drivers' },
+                        { label: 'logs', description: 'instances logs location' },
+                        { label: 'work', description: 'dedicated work directory' },
+                        { label: 'temp', description: 'instance temporary folder' },
+                        { label: 'webapps', description: 'instance webapp folder' }
+                    ]
+                }
+            ]
+        }
+    ]
+}]</p>
+</div>
+<div id="filetreedetail" class="paragraph col-md-8 bs-callout bs-callout-primary">
+<p>Click on a tree node or open a folder to see the detail there.</p>
+</div>
+<div class="paragraph clearfix">
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_instance_scripts">Instance scripts</h3>
+<div class="paragraph">
+<p>The idea for instances (applications) scripts is to simply delegate to tomcat ones but customizing the JVM and TomEE versions.</p>
+</div>
+<div class="paragraph">
+<p>Customizing the version (and locations) is done in <code>bin/setenv.sh</code> of instances.</p>
+</div>
+<div class="paragraph">
+<p>Here are an example for the common scripts (of course you can write helper version like restart etc).</p>
+</div>
+<div class="sect3">
+<h4 id="_setenv_sh">setenv.sh</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">#! /bin/sh
+
+# which java
+export JAVA_HOME="/some/path/java/jdk-8u60"
+# which tomee
+export CATALINA_HOME="/some/path/tomee/tomee-7.0.0-M3"
+# where is the application - to let tomcat/tomee finds the configuration
+export CATALINA_BASE="/some/path/application1/"
+# to let tomee be able to kill the instance if shutdown doesn't work (see shutdown script)
+export CATALINA_PID="/some/path/application1/work/tomee.pid"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_startup">startup</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">#! /bin/bash
+
+proc_script_base="`cd $(dirname $0) &amp;&amp; cd .. &amp;&amp; pwd`"
+source "$proc_script_base/bin/setenv.sh"
+nohup "$CATALINA_HOME/bin/startup.sh" "$@" &gt; $proc_script_base/logs/nohup.log &amp;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_shutdown">shutdown</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">#! /bin/bash
+
+proc_script_base="`cd $(dirname $0) &amp;&amp; cd .. &amp;&amp; pwd`"
+source "$proc_script_base/bin/setenv.sh"
+# we support parameters like timeout and force, typically we would call it this way: ./shutdown 1200 -force
+"$CATALINA_HOME/bin/shutdown.sh" "$@"</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+</body>
+
+</html>
+

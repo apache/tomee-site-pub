@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../../..//#">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../developer/index.html">Developer</a></li>
+					<li><a href="../../../admin/index.html">Admin</a></li>
+					<li><a href="../../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../../security/index.html">Security</a></li>
+					<li><a href="../../../blog/index.html">Blog</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+                    <li><a href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../../../developer/tools/maven/tomee.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>TomEE Maven Plugin</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE Maven Plugin is a set of goals for the development and to prepare to go in production:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tomee:build</code></p>
+</li>
+<li>
+<p><code>tomee:exec</code></p>
+</li>
+<li>
+<p><code>tomee:configtest</code></p>
+</li>
+<li>
+<p><code>tomee:debug</code></p>
+</li>
+<li>
+<p><code>tomee:deploy</code></p>
+</li>
+<li>
+<p><code>tomee:exec</code></p>
+</li>
+<li>
+<p><code>tomee:list</code></p>
+</li>
+<li>
+<p><code>tomee:run</code></p>
+</li>
+<li>
+<p><code>tomee:start</code></p>
+</li>
+<li>
+<p><code>tomee:stop</code></p>
+</li>
+<li>
+<p><code>tomee:undeploy</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run">Run</h3>
+<div class="paragraph">
+<p>The most commonly used goal, it allows to start a tomee with applications. Here is its configuration:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">synchronization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a synchronization (see after the table)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">synchronizations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">list of synchronizations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reloadOnUpdate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should the application be redeployed when a synchronization is triggered</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skipCurrentProject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should current project not be considered as a deployable even if its packaging is compatible (war typically)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">auto, plugin one</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">which version of TomEE to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeGroupId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">org.apache.tomee</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TomEE artifact groupId</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeArtifactId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apache-tomee</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TomEE artifact artifactId</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeType</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the type of the TomEE artifact , only zip supported at the moment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeClassifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webprofile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">which flavor of TomEE to use (classifier)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeShutdownPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">read from server.xml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the shutdown port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeShutdownAttempts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">how many times to wait for startup/shutdown (waits 1s in between)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeShutdownCommand</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SHUTDOWN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the shutdown command</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeAjpPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">read from the pom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the AJP port if needed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeHttpsPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">read from the pom</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the HTTPS port if needed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">args</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">command line arguments (system properties, javaagent, JVM options &#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debug</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">start and wait for a remote debugger to connect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debugPort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5005</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">used when debug to change the default port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">simpleLog</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">use one line logs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">extractWars</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explode wars before starting</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stripWarVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remove the version from the war name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stripVersion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remove the version from the artifact name whatever it is (even jar)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webappResources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.basedir}/src/main/webapp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">where web resources are</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webappClasses and classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.outputDirectory}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">where artifact binaries are</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">catalinaBase</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.directory}/apache-tomee</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">where to create the tomee instance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name of the current artifact (rename the war from the maven name to this one)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webappDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webapps</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path to webapps folder from tomee.base</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">appDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apps</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path to apps folder from tomee.base</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">libDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lib</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">where is lib folder</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mainDir</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.basedir}/src/main</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">used in openejb mode to change default config of conf/lib/bin folders to openejb instead of tomee</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.basedir}/src/main/tomee/conf</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a conf folder synchronized with TomEE one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.basedir}/src/main/tomee/bin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a bin folder synchronized with TomEE one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lib</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.basedir}/src/main/tomee/lib</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a lib folder synchronized with TomEE one</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">systemVariables</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a map of system properties</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">classpaths</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of additional entries for the startup classpath</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">customizers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of customizers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jsCustomizers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of js customizers (js scripts)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">groovyCustomizers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a list of groovy customizers (groovy scripts)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webappDefaultConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">auto config war oriented</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quickSession</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">session generation will use <code>Random</code> instead of <code>SecureRandom</code> (for dev)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">forceReloadable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ensure TomEE supports reloading/redeployment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">forceJspDevelopment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSP will be auto-recompiled on changes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">libs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dependencies to add in lib, see after this table for advanced usage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">endorsedLibs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dependencies to add in endorsed, see after this table for advanced usage</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javaagents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">javaagents to add on the JVM, supports maven coordinates</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">persistJavaagents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should javaagent be saved or just use for this plugin run</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">webapps</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">additional applicatinos to deploy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warFile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.directory}/${project.build.finalName}.${project.packaging}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the war to deploy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">workWarFile</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.directory}/${project.build.finalName}"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the exploded war to deploy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">removeDefaultWebapps</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should default webapps (ROOT, docs, &#8230;&#8203;) be deleted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deployOpenEjbApplication</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should openejb internal application be deployed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">removeTomeeWebapp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should tomee webapp (with EJBd adapter) be deployed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tomeeAlreadyInstalled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skip all the setup configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ejbRemote</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should EJBd be activated</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkStarted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">should the plugin check the server is up (useful when used with <code>pre-integration</code> phase</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useConsole</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">wait for the end of the execution reading inputs from the console (like <code>quit</code> command)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useOpenEJB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">use openejb-standalone instead of tomee</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inlinedServerXml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a server.xml content in pom.xml directly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inlinedTomEEXml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a tomee.xml content in pom.xml directly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">overrideOnUnzip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">if when unzipping tomee a file is already there should it be overriden</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skipRootFolderOnUnzip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ignore root folder of the zip</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keystore</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path to keystore for HTTPS connector</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Synchronization are blocks defining a source and target folder and both are synchronized. It typically copy
+<code>src/main/webapp</code> resources in <code>target/apache-tomee/webapps/myapp/</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="_customizers">Customizers</h4>
+<div class="paragraph">
+<p>Customizers are java classes loadable by the plugin and with a main or implementing <code>Runnable</code> and taking optionally
+as constructor parameter a <code>File</code> representing <code>tomee.base</code> or no arguments.</p>
+</div>
+<div class="paragraph">
+<p>They are executed when creating the TomEE instance.</p>
+</div>
+<div class="paragraph">
+<p>There are two scripting flavors of that: js and groovy. Both will have some contextual variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>catalinaBase: tomee base path</p>
+</li>
+<li>
+<p>resolver: a maven resolver to get a dependency using maven. For instance: <code>resolver.resolve('group', 'artfact', 'version', 'type')</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dependencies_libs">Dependencies (libs)</h4>
+<div class="paragraph">
+<p>The format can be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a maven dependency:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>groupId:artifactId:version</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a zip dependency and extracted in lib folder:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>unzip:groupId:artifactId:version</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a matching prefix to remove:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>remove:prefix</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example">Example</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.tomee.maven&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;${tomee7.version}&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
+    &lt;debug&gt;false&lt;/debug&gt;
+    &lt;debugPort&gt;5005&lt;/debugPort&gt;
+    &lt;args&gt;-Dfoo=bar&lt;/args&gt;
+    &lt;config&gt;${project.basedir}/src/test/tomee/conf&lt;/config&gt;
+    &lt;libs&gt;
+      &lt;lib&gt;mysql:mysql-connector-java:5.1.20&lt;/lib&gt;
+    &lt;/libs&gt;
+    &lt;webapps&gt;
+       &lt;webapp&gt;org.superbiz:myapp:4.3?name=ROOT&lt;/webapp&gt;
+       &lt;webapp&gt;org.superbiz:api:1.1&lt;/webapp&gt;
+    &lt;/webapps&gt;
+    &lt;apps&gt;
+        &lt;app&gt;org.superbiz:mybugapp:3.2:ear&lt;/app&gt;
+    &lt;/apps&gt;
+    &lt;libs&gt;
+        &lt;lib&gt;mysql:mysql-connector-java:5.1.21&lt;/lib&gt;
+        &lt;lib&gt;unzip:org.superbiz:hibernate-bundle:4.1.0.Final:zip&lt;/lib&gt;
+        &lt;lib&gt;remove:openjpa-&lt;/lib&gt;
+    &lt;/libs&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_build">Build</h3>
+<div class="paragraph">
+<p>Excepted synchronization, build plugin inherit from <code>run</code> Mojo its configuration. It just adds the following:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">formats</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map of configuration, keys are format (zip, tar.gz) and value the target location</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">zip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">create a zip from the configured instance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attach</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attach created artifacts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skipArchiveRootFolder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">don&#8217;t add a root folder in the zip</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_tomcat_like_goals">Tomcat like goals</h3>
+<div class="paragraph">
+<p><code>configtest</code>, <code>start</code> and <code>stop</code> just execute these commands on the server (like on <code>catalina.sh</code>).</p>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+</body>
+
+</html>
+

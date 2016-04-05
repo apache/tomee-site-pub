@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../..//#">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../developer/index.html">Developer</a></li>
+					<li><a href="../../admin/index.html">Admin</a></li>
+					<li><a href="../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../blog/index.html">Blog</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+                    <li><a href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../../admin/configuration/containers.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>Resources</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>All containers will be created automatically - which means you don&#8217;t need to define them
+if you don&#8217;t need to tune their configuration - when a bean of their type if found.</p>
+</div>
+<div class="paragraph">
+<p>To avoid that use <code>openejb.offline</code> property and set it to <code>true</code>. See <a href="server.html">Server Configuration</a> for more detail.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__stateless">@Stateless</h3>
+<div class="paragraph">
+<p>A <code>@Stateless</code> container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="STATELESS"&gt;
+    AccessTimeout = 30 seconds
+    MaxSize = 10
+    MinSize = 0
+    StrictPooling = true
+    MaxAge = 0 hours
+    ReplaceAged = true
+    ReplaceFlushed = false
+    MaxAgeOffset = -1
+    IdleTimeout = 0 minutes
+    GarbageCollection = false
+    SweepInterval = 5 minutes
+    CallbackThreads = 5
+    CloseTimeout = 5 minutes
+    UseOneSchedulerThreadByBean = false
+    EvictionThreads = 1
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=STATELESS
+Foo.AccessTimeout = 30 seconds
+Foo.MaxSize = 10
+Foo.MinSize = 0
+Foo.StrictPooling = true
+Foo.MaxAge = 0 hours
+Foo.ReplaceAged = true
+Foo.ReplaceFlushed = false
+Foo.MaxAgeOffset = -1
+Foo.IdleTimeout = 0 minutes
+Foo.GarbageCollection = false
+Foo.SweepInterval = 5 minutes
+Foo.CallbackThreads = 5
+Foo.CloseTimeout = 5 minutes
+Foo.UseOneSchedulerThreadByBean = false
+Foo.EvictionThreads = 1</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration">Configuration</h4>
+<div class="sect4">
+<h5 id="_accesstimeout">AccessTimeout</h5>
+<div class="paragraph">
+<p>Specifies the time an invokation should wait for an instance
+of the pool to become available.</p>
+</div>
+<div class="paragraph">
+<p>After the timeout is reached, if an instance in the pool cannot
+be obtained, the method invocation will fail.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+"1 hour and 27 minutes and 10 seconds"</p>
+</div>
+<div class="paragraph">
+<p>Any usage of the <code>javax.ejb.AccessTimeout</code> annotation will
+override this setting for the bean or method where the
+annotation is used.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_maxsize">MaxSize</h5>
+<div class="paragraph">
+<p>Specifies the size of the bean pools for this stateless
+SessionBean container.  If StrictPooling is not used, instances
+will still be created beyond this number if there is demand, but
+they will not be returned to the pool and instead will be
+immediately destroyed.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_minsize">MinSize</h5>
+<div class="paragraph">
+<p>Specifies the minimum number of bean instances that should be in
+the pool for each bean.  Pools are prefilled to the minimum on
+startup.  Note this will create start order dependencies between
+other beans that also eagerly start, such as other <code>@Stateless</code>
+beans with a minimum or <code>@Singleton</code> beans using <code>@Startup</code>.  The
+start order.</p>
+</div>
+<div class="paragraph">
+<p>The minimum pool size is rigidly maintained.  Instances in the
+minimum side of the pool are not eligible for <code>IdleTimeout</code> or
+<code>GarbageCollection</code>, but are subject to <code>MaxAge</code> and flushing.</p>
+</div>
+<div class="paragraph">
+<p>If the pool is flushed it is immediately refilled to the minimum
+size with <code>MaxAgeOffset</code> applied.  If an instance from the minimum
+side of the pool reaches its <code>MaxAge</code>, it is also immediately
+replaced.  Replacement is done in a background queue using the
+number of threads specified by <code>CallbackThreads</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_strictpooling">StrictPooling</h5>
+<div class="paragraph">
+<p>StrictPooling tells the container what to do when the pool
+reaches it&#8217;s maximum size and there are incoming requests that
+need instances.</p>
+</div>
+<div class="paragraph">
+<p>With strict pooling, requests will have to wait for instances to
+become available. The pool size will never grow beyond the the
+set <code>MaxSize</code> value.  The maximum amount of time a request should
+wait is specified via the <code>AccessTimeout</code> setting.</p>
+</div>
+<div class="paragraph">
+<p>Without strict pooling, the container will create temporary
+instances to meet demand. The instances will last for just one
+method invocation and then are removed.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>StrictPooling</code> to <code>false</code> and <code>MaxSize</code> to <code>0</code> will result in
+no pooling. Instead instances will be created on demand and live
+for exactly one method call before being removed.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_maxage">MaxAge</h5>
+<div class="paragraph">
+<p>Specifies the maximum time that an instance should live before
+it should be retired and removed from use.  This will happen
+gracefully.  Useful for situations where bean instances are
+designed to hold potentially expensive resources such as memory
+or file handles and need to be periodically cleared out.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+<code>1 hour and 27 minutes and 10 seconds</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_replaceaged">ReplaceAged</h5>
+<div class="paragraph">
+<p>When <code>ReplaceAged</code> is enabled, any instances in the pool that
+expire due to reaching their <code>MaxAge</code> will be replaced immediately
+so that the pool will remain at its current size.  Replacement
+is done in a background queue so that incoming threads will not
+have to wait for instance creation.</p>
+</div>
+<div class="paragraph">
+<p>The aim of his option is to prevent user requests from paying
+the instance creation cost as <code>MaxAge</code> is enforced, potentially
+while under heavy load at peak hours.</p>
+</div>
+<div class="paragraph">
+<p>Instances from the minimum side of the pool are always replaced
+when they reach their <code>MaxAge</code>, this setting dictates the
+treatment of non-minimum instances.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_replaceflushed">ReplaceFlushed</h5>
+<div class="paragraph">
+<p>When <code>ReplaceFlushed</code> is enabled, any instances in the pool that
+are flushed will be replaced immediately so that the pool will
+remain at its current size.  Replacement is done in a background
+queue so that incoming threads will not have to wait for
+instance creation.</p>
+</div>
+<div class="paragraph">
+<p>The aim of his option is to prevent user requests from paying
+the instance creation cost if a flush performed while under
+heavy load at peak hours.</p>
+</div>
+<div class="paragraph">
+<p>Instances from the minimum side of the pool are always replaced
+when they are flushed, this setting dictates the treatment of
+non-minimum instances.</p>
+</div>
+<div class="paragraph">
+<p>A bean may flush its pool by casting the <code>SessionContext</code> to
+<code>Flushable</code> and calling <code>flush()</code>.  See <code>SweepInterval</code> for details on
+how flush is performed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import java.io.Flushable;
+import java.io.IOException;
+
+public class MyBean {
+
+    private SessionContext sessionContext;
+
+    public void flush() throws IOException {
+
+        ((Flushable) sessionContext).flush();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_maxageoffset">MaxAgeOffset</h5>
+<div class="paragraph">
+<p>Applies to MaxAge usage and would rarely be changed, but is a
+nice feature to understand.</p>
+</div>
+<div class="paragraph">
+<p>When the container first starts and the pool is filled to the
+minimum size, all those "minimum" instances will have the same
+creation time and therefore all expire at the same time dictated
+by the <code>MaxAge</code> setting.  To protect against this sudden drop
+scenario and provide a more gradual expiration from the start
+the container will spread out the age of the instances that fill
+the pool to the minimum using an offset.</p>
+</div>
+<div class="paragraph">
+<p>The <code>MaxAgeOffset</code> is not the final value of the offset, but
+rather it is used in creating the offset and allows the
+spreading to push the initial ages into the future or into the
+past.  The pool is filled at startup as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">for (int i = 0; i &lt; poolMin; i++) {
+    long ageOffset = (maxAge / poolMin * i * maxAgeOffset) % maxAge;
+    pool.add(new Bean(), ageOffset));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default <code>MaxAgeOffset</code> is -1 which causes the initial
+instances in the pool to live a bit longer before expiring.  As
+a concrete example, let&#8217;s say the MinSize is 4 and the MaxAge is
+100 years.  The generated offsets for the four instances created
+at startup would be 0, -25, -50, -75.  So the first instance
+would be "born" at age 0, die at 100, living 100 years.  The
+second instance would be born at -25, die at 100, living a total
+of 125 years.  The third would live 150 years.  The fourth 175
+years.</p>
+</div>
+<div class="paragraph">
+<p>A <code>MaxAgeOffset</code> of 1 would cause instances to be "born" older
+and therefore die sooner.  Using the same example <code>MinSize</code> of 4
+and <code>MaxAge</code> of <code>100 years</code>, the life spans of these initial four
+instances would be 100, 75, 50, and 25 years respectively.</p>
+</div>
+<div class="paragraph">
+<p>A <code>MaxAgeOffset</code> of 0 will cause no "spreading" of the age of the
+first instances used to fill the pool to the minimum and these
+instances will of course reach their MaxAge at the same time.
+It is possible to set to decimal values such as -0.5, 0.5, -1.2,
+or 1.2.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_idletimeout">IdleTimeout</h5>
+<div class="paragraph">
+<p>Specifies the maximum time that an instance should be allowed to
+sit idly in the pool without use before it should be retired and
+removed.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+"1 hour and 27 minutes and 10 seconds"</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_garbagecollection">GarbageCollection</h5>
+<div class="paragraph">
+<p>Allows Garbage Collection to be used as a mechanism for shrinking
+the pool.  When set to true all instances in the pool, excluding
+the minimum, are eligible for garbage collection by the virtual
+machine as per the rules of <code>java.lang.ref.SoftReference</code> and can be
+claimed by the JVM to free memory.  Instances garbage collected
+will have their <code>@PreDestroy</code> methods called during finalization.</p>
+</div>
+<div class="paragraph">
+<p>In the OpenJDK VM the <code>-XX:SoftRefLRUPolicyMSPerMB</code> flag can adjust
+how aggressively SoftReferences are collected.  The default
+OpenJDK setting is 1000, resulting in inactive pooled instances
+living one second of lifetime per free megabyte in the heap, which
+is very aggressive.  The setting should be increased to get the
+most out of the <code>GarbageCollection</code> feature of the pool.  Much
+higher settings are safe.  Even a setting as high as 3600000 (1
+hour per free MB in the heap) does not affect the ability for the
+VM to garbage collect SoftReferences in the event that memory is
+needed to avoid an <code>OutOfMemoryException</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_sweepinterval">SweepInterval</h5>
+<div class="paragraph">
+<p>The frequency in which the container will sweep the pool and
+evict expired instances.  Eviction is how the <code>IdleTimeout</code>,
+<code>MaxAge</code>, and pool "flush" functionality is enforced.  Higher
+intervals are better.</p>
+</div>
+<div class="paragraph">
+<p>Instances in use are excluded from sweeping.  Should an instance
+expire while in use it will be evicted immediately upon return
+to the pool.  Effectively <code>MaxAge</code> and flushes will be enforced as
+a part of normal activity or sweeping, while IdleTimeout is only
+enforcable via sweeping.  This makes aggressive sweeping less
+important for a pool under moderate load.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+<code>1 hour and 27 minutes and 10 seconds</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_callbackthreads">CallbackThreads</h5>
+<div class="paragraph">
+<p>When sweeping the pool for expired instances a thread pool is
+used to process calling <code>@PreDestroy</code> on expired instances as well
+as creating new instances as might be required to fill the pool
+to the minimum after a Flush or <code>MaxAge</code> expiration.  The
+<code>CallbackThreads</code> setting dictates the size of the thread pool and
+is shared by all beans deployed in the container.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_closetimeout">CloseTimeout</h5>
+<div class="paragraph">
+<p>PostConstruct methods are invoked on all instances in the pool
+when the bean is undeployed and its pool is closed.  The
+<code>CloseTimeout</code> specifies the maximum time to wait for the pool to
+close and <code>PostConstruct</code> methods to be invoked.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+<code>1 hour and 27 minutes and 10 seconds</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_useoneschedulerthreadbybean">UseOneSchedulerThreadByBean</h5>
+<div class="paragraph">
+<p>back to previous behavior (TomEE 1.x) where 1 scheduler thread was used for stateless eviction
+by bean (ie for 500 stateless beans you get 500 eviction threads)</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_evictionthreads">EvictionThreads</h5>
+<div class="paragraph">
+<p>number of threads to associate to eviction threads (1 is not bad for most applications)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__stateful">@Stateful</h3>
+<div class="paragraph">
+<p>A <code>@Stateful</code> container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="STATEFUL"&gt;
+    AccessTimeout = 30 seconds
+    Cache = org.apache.openejb.core.stateful.SimpleCache
+    Passivator = org.apache.openejb.core.stateful.SimplePassivater
+    TimeOut = 20
+    Frequency = 60
+    Capacity = 1000
+    BulkPassivate = 100
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=STATEFUL
+Foo.AccessTimeout = 30 seconds
+Foo.Cache = org.apache.openejb.core.stateful.SimpleCache
+Foo.Passivator = org.apache.openejb.core.stateful.SimplePassivater
+Foo.TimeOut = 20
+Foo.Frequency = 60
+Foo.Capacity = 1000
+Foo.BulkPassivate = 100</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_2">Configuration</h4>
+<div class="sect4">
+<h5 id="_accesstimeout_2">AccessTimeout</h5>
+<div class="paragraph">
+<p>Specifies the maximum time an invocation could wait for the
+<code>@Stateful</code> bean instance to become available before giving up.</p>
+</div>
+<div class="paragraph">
+<p>After the timeout is reached a <code>javax.ejb.ConcurrentAccessTimeoutException</code>
+will be thrown.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+"1 hour and 27 minutes and 10 seconds"</p>
+</div>
+<div class="paragraph">
+<p>Any usage of the <code>javax.ejb.AccessTimeout</code> annotation will
+override this setting for the bean or method where the
+annotation is used.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_cache">Cache</h5>
+<div class="paragraph">
+<p>The cache is responsible for managing stateful bean
+instances.  The cache can page instances to disk as memory
+is filled and can destroy abandoned instances.  A different
+cache implementation can be used by setting this property
+to the fully qualified class name of the Cache implementation.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_passivator">Passivator</h5>
+<div class="paragraph">
+<p>The passivator is responsible for writing beans to disk
+at passivation time. Different passivators can be used
+by setting this property to the fully qualified class name
+of the <code>PassivationStrategy</code> implementation. The passivator
+is not responsible for invoking any callbacks or other
+processing, its only responsibly is to write the bean state
+to disk.</p>
+</div>
+<div class="paragraph">
+<p>Known implementations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>org.apache.openejb.core.stateful.RAFPassivater</p>
+</li>
+<li>
+<p>org.apache.openejb.core.stateful.SimplePassivater</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_timeout">TimeOut</h5>
+<div class="paragraph">
+<p>Specifies the time a bean can be idle before it is removed by the container.</p>
+</div>
+<div class="paragraph">
+<p>This value is measured in minutes. A value of 5 would
+result in a time-out of 5 minutes between invocations.
+A value of -1 would mean no timeout.
+A value of 0 would mean a bean can be immediately removed by the container.</p>
+</div>
+<div class="paragraph">
+<p>Any usage of the <code>javax.ejb.StatefulTimeout</code> annotation will
+override this setting for the bean where the annotation is used.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_frequency">Frequency</h5>
+<div class="paragraph">
+<p>Specifies the frequency (in seconds) at which the bean cache is checked for
+idle beans.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_capacity">Capacity</h5>
+<div class="paragraph">
+<p>Specifies the size of the bean pools for this
+stateful SessionBean container.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_bulkpassivate">BulkPassivate</h5>
+<div class="paragraph">
+<p>Property name that specifies the number of instances
+to passivate at one time when doing bulk passivation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__singleton">@Singleton</h3>
+<div class="paragraph">
+<p>A <code>@Singleton</code> container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="SINGLETON"&gt;
+    AccessTimeout = 30 seconds
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=SINGLETON
+Foo.AccessTimeout = 30 seconds</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_3">Configuration</h4>
+<div class="sect4">
+<h5 id="_accesstimeout_3">AccessTimeout</h5>
+<div class="paragraph">
+<p>Specifies the maximum time an invocation could wait for the
+<code>@Singleton</code> bean instance to become available before giving up.</p>
+</div>
+<div class="paragraph">
+<p>After the timeout is reached a <code>javax.ejb.ConcurrentAccessTimeoutException</code>
+will be thrown.</p>
+</div>
+<div class="paragraph">
+<p>Usable time units: nanoseconds, microsecons, milliseconds,
+seconds, minutes, hours, days.  Or any combination such as
+<code>1 hour and 27 minutes and 10 seconds</code></p>
+</div>
+<div class="paragraph">
+<p>Any usage of the <code>javax.ejb.AccessTimeout</code> annotation will
+override this setting for the bean or method where the
+annotation is used.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__messagedriven">@MessageDriven</h3>
+<div class="paragraph">
+<p>A MDB container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="MESSAGE"&gt;
+    ResourceAdapter = Default JMS Resource Adapter
+    MessageListenerInterface = javax.jms.MessageListener
+    ActivationSpecClass = org.apache.activemq.ra.ActiveMQActivationSpec
+    InstanceLimit = 10
+    FailOnUnknowActivationSpec = true
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=MESSAGE
+Foo.ResourceAdapter = Default JMS Resource Adapter
+Foo.MessageListenerInterface = javax.jms.MessageListener
+Foo.ActivationSpecClass = org.apache.activemq.ra.ActiveMQActivationSpec
+Foo.InstanceLimit = 10
+Foo.FailOnUnknowActivationSpec = true</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_4">Configuration</h4>
+<div class="sect4">
+<h5 id="_resourceadapter">ResourceAdapter</h5>
+<div class="paragraph">
+<p>The resource adapter delivers messages to the container</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_messagelistenerinterface">MessageListenerInterface</h5>
+<div class="paragraph">
+<p>Specifies the message listener interface handled by this container</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_activationspecclass">ActivationSpecClass</h5>
+<div class="paragraph">
+<p>Specifies the activation spec class</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_instancelimit">InstanceLimit</h5>
+<div class="paragraph">
+<p>Specifies the maximum number of bean instances that are
+allowed to exist for each MDB deployment.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_failonunknowactivationspec">FailOnUnknowActivationSpec</h5>
+<div class="paragraph">
+<p>Log a warning if true or throw an exception if false is an activation spec can&#8217;t be respected</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__managed">@Managed</h3>
+<div class="paragraph">
+<p>A managed bean container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="MANAGED" /&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=MANAGED</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp_entity">CMP entity</h3>
+<div class="paragraph">
+<p>A CMP bean container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="CMP_ENTITY"&gt;
+    CmpEngineFactory = org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=CMP_ENTITY
+Foo.CmpEngineFactory = org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_5">Configuration</h4>
+<div class="sect4">
+<h5 id="_cmpenginefactory">CmpEngineFactory</h5>
+<div class="paragraph">
+<p>The engine to use for this container. By default TomEE only provides the JPA implementation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bmp_entity">BMP entity</h3>
+<div class="paragraph">
+<p>A BMP entity container.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Container id="Foo" type="BMP_ENTITY"&gt;
+    PoolSize = 10
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Container?type=BMP_ENTITY
+Foo.PoolSize = 10</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_6">Configuration</h4>
+<div class="sect4">
+<h5 id="_poolsize">PoolSize</h5>
+<div class="paragraph">
+<p>Specifies the size of the bean pools for this
+bmp entity container.</p>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+</body>
+
+</html>
+

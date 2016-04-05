@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../../..//#">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../developer/index.html">Developer</a></li>
+					<li><a href="../../../admin/index.html">Admin</a></li>
+					<li><a href="../../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../../security/index.html">Security</a></li>
+					<li><a href="../../../blog/index.html">Blog</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+                    <li><a href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../../../developer/testing/applicationcomposer/index.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>ApplicationComposer: the swiss knife of TomEE</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>ApplicationComposer API is mainly contained in org.apache.openejb.testing package (historically, today we would have called the package org.apache.tomee.applicationcomposer).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dependencies">Dependencies</h3>
+<div class="paragraph">
+<p>To start using ApplicationComposer you need to add some dependencies.</p>
+</div>
+<div class="paragraph">
+<p>The minimum required one is openejb-core:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-core&lt;/artifactId&gt;
+  &lt;version&gt;${openejb.version&gt;&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need JAXRS services you&#8217;ll add (or replace thanks to transitivity of maven) openejb-cxf-rs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-cxf-rs&lt;/artifactId&gt;
+  &lt;version&gt;${openejb.version&gt;&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need JAXWS services you&#8217;ll add (or replace thanks to transitivity of maven) openejb-cxf:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-cxf&lt;/artifactId&gt;
+  &lt;version&gt;${openejb.version&gt;&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_applicationcomposer_components">ApplicationComposer Components</h3>
+<div class="sect3">
+<h4 id="__module">@Module</h4>
+<div class="paragraph">
+<p>An ApplicationComposer needs at minimum a module (the application you need to deploy).</p>
+</div>
+<div class="paragraph">
+<p>To do so you have two cases:</p>
+</div>
+<div class="paragraph">
+<p>before TomEE 7.x: you can only write method(s) decorated with @Module
+since TomEE 7.x: you can skip it and use @Classes directly on the ApplicationComposer class as a shortcut for:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Module public WebApp app() { return new WebApp(); }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The expected returned type of these methods are in org.apache.openejb.jee package:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Application: entry point to create an ear</p>
+</li>
+<li>
+<p>WebApp: a web application</p>
+</li>
+<li>
+<p>EjbJar: an ejb module</p>
+</li>
+<li>
+<p>EnterpriseBean children: a simple EJB</p>
+</li>
+<li>
+<p>Persistence: a persistence module with multiple units</p>
+</li>
+<li>
+<p>PersistenceUnit: a simple unit (automatically wrapped in a Persistence)</p>
+</li>
+<li>
+<p>Connector: a JCA connector module</p>
+</li>
+<li>
+<p>Beans: a CDI module,</p>
+</li>
+<li>
+<p>Class[] or Class: a set of classes scanned to discover annotations</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that for easiness @Classes was added to be able to describe a module and some scanned classes. For instance the following snippet will create a web application with classes C1, C2 as CDI beans and E1 as an EJB automatically:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Module
+@Classes(cdi = true, value = { C1.class, C2.class, E1.class })
+public WebApp app() {
+    return new WebApp();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__configuration">@Configuration</h4>
+<div class="paragraph">
+<p>Often you need to customize a bit the container or at least create some resources like test databases. To do so you can create a method returning Properties which will be the container properties.</p>
+</div>
+<div class="paragraph">
+<p>Note: to simplify writing properties you can use PropertiesBuilder util class which is just a fluent API to write properties.</p>
+</div>
+<div class="paragraph">
+<p>In these properties you can reuse OpenEJB/TomEE property syntax for resources.</p>
+</div>
+<div class="paragraph">
+<p>Here is a sample:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Configuration
+public Properties configuration() {
+    return new PropertiesBuilder()
+        .p("db", "new://Resource?type=DataSource")
+        .p("db.JdbcUrld", "jdbc:hsqldb:mem:test")
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since TomEE 7.x you can also put properties on ApplicationComposer class using @ContainerProperties API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@ContainerProperties({
+  @ContainerProperties.Property(name = "db", value = "new://Resource?type=DataSource"),
+  @ContainerProperties.Property(name = "db.JdbcUrl", value = "jdbc:hsqldb:mem:test")
+})
+public class MyAppComposer() {
+  // ...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__component">@Component</h4>
+<div class="paragraph">
+<p>Sometimes you need to customize a container component. The most common use case is the security service to mock a little bit authorization if you don&#8217;t care in your test.</p>
+</div>
+<div class="paragraph">
+<p>To do so just write a method decorated with @Component returning the instance you desire.</p>
+</div>
+<div class="paragraph">
+<p>Components in TomEE are stored in a container Map and the key needs to be a Class. This one is deduced from the returned type of the @Component method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Component
+public SecurityService mockSecurity() {
+    return new MySecurityService();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__descriptors">@Descriptors</h4>
+<div class="paragraph">
+<p>You can reuse existing file descriptors using @Descriptors. The name is the file name and the path either a classpath path or a file path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// runner if needed etc...
+@Descriptors(@Descriptor(name = "persistence.xml", path = "META-INF/persistence.xml"))
+public class MyTest {
+   //...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: this can be put in a @Module method as well.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_services">Services</h4>
+<div class="paragraph">
+<p>If you want to test a JAXRS or JAXWS service you need to activate these services.</p>
+</div>
+<div class="paragraph">
+<p>To do so just add the needed dependency and use @EnableServices:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// runner if needed etc...
+@EnableService("jaxrs") // jaxws supported as well
+public class MyTest {
+   //...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_random_port">Random port</h4>
+<div class="paragraph">
+<p>Services like JAXRS and JAXWS relies on HTTP. Often it is nice to have a random port to be able to deploy multiple tests/projects on the same CI platform at the same time.</p>
+</div>
+<div class="paragraph">
+<p>To shortcut all the needed logic you can use @RandomPort. It is simply an injection giving you either the port (int) or the root context (URL):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// runner, services if needed etc...
+public class MyTest {
+   @RandomPort("http")
+   private int port;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: you can generate this way multiple ports. The value is the name of the service it will apply on (being said http is an alias for httpejbd which is our embedded http layer).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_nice_logs">Nice logs</h4>
+<div class="paragraph">
+<p>@SimpleLog annotation allows you to have one liner logs</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__jaxrsprovider">@JaxrsProvider</h4>
+<div class="paragraph">
+<p>@JaxrsProvider allows you to specify on a @Module method the list of JAXRS provider you want to use.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dependencies_without_hacky_code">Dependencies without hacky code</h4>
+<div class="paragraph">
+<p>@Jars allows you to add dependencies (scanned) to your application automatically (like CDI libraries):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Module
+@Classes(cdi = true, value = { C1.class, C2.class, E1.class })
+@Jars("deltaspike-")
+public WebApp app() {
+    return new WebApp();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__default">@Default</h4>
+<div class="paragraph">
+<p>@Default (openejb one not CDI one) automatically adds in the application target/classes as binaries and src/main/webapp as resources for maven projects.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__cdiextensions">@CdiExtensions</h4>
+<div class="paragraph">
+<p>This annotation allows you to control which extensions are activated during the test.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__appresource">@AppResource</h4>
+<div class="paragraph">
+<p>This annotation allows injection of few particular test resources like:</p>
+</div>
+<div class="paragraph">
+<p>the test AppModule (application meta)
+the test Context (JNDI)
+the test ApplicationComposers (underlying runner)
+ContextProvider: allow to mock JAXRS contexts</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__mockinjector">@MockInjector</h4>
+<div class="paragraph">
+<p>Allows to mock EJB injections. It decorates a dedicated method returning an instance (or Class) implementing FallbackPropertyInjector.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__webresource">@WebResource</h4>
+<div class="paragraph">
+<p>Allow for web application to add folders containing web resources.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_to_run_it">How to run it?</h3>
+<div class="sect3">
+<h4 id="_junit">JUnit</h4>
+<div class="paragraph">
+<p>If you use JUnit you have mainly 2 solutions to run you "model" using the ApplicationComposer:</p>
+</div>
+<div class="paragraph">
+<p>using ApplicationComposer runner:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@RunWith(ApplicationComposer.class) public class MyTest { // ... }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>using ApplicationComposerRule rule:
+public class MyTest { @Rule // or @ClassRule if you want the container/application lifecycle be bound to the class and not test methods public final ApplicationComposerRule rule = new ApplicationComposerRule(this); }</p>
+</div>
+<div class="paragraph">
+<p>Tip: since TomEE 7.x ApplicationComposerRule is decomposed in 2 rules if you need: ContainerRule and DeployApplication. Using JUnit RuleChain you can chain them to get the samebehavior as ApplicationComposerRule or better deploy multiple ApplicationComposer models and controlling their deployment ordering (to mock a remote service for instance).</p>
+</div>
+<div class="paragraph">
+<p>Finally just write <code>@Test</code> method using test class injections as if the test class was a managed bean!</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_testng">TestNG</h4>
+<div class="paragraph">
+<p>TestNG integration is quite simple today and mainly ApplicationComposerListener class you can configure as a listener to get ApplicationComposer features.</p>
+</div>
+<div class="paragraph">
+<p>Finally just write TestNG @Test method using test class injections as if the test class was a managed bean!</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_standalone">Standalone</h4>
+<div class="paragraph">
+<p>Since TomEE 7.x you can also use ApplicationComposers to directly run you ApplicationComposer model as a standalone application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyApp {
+    public static void main(String[] args) {
+        ApplicationComposers.run(MyApp.class, args);
+    }
+
+    // @Module, @Configuration etc...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tip: if MyApp has <code>@PostConstruct</code> methods they will be respected and if MyApp has a constructor taking an array of String it will be instantiated getting the second parameter as argument (ie you can propagate your main parameter to your model to modify your application depending it!)</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_junit_sample">JUnit Sample</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Classes(cdi = true, value = { MyService.class, MyOtherService.class })
+@ContainerProperties(@ContainerProperties.Property(name = "myDb", value = "new://Resource?type=DataSource"))
+@RunWith(ApplicationComposer.class)
+public class MyTest {
+    @Resource(name = "myDb")
+    private DataSource ds;
+
+    @Inject
+    private MyService service;
+
+    @Test
+    public void myTest() {
+        // do test using injections
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_going_further">Going further</h3>
+<div class="paragraph">
+<p>If you want to learn more about ApplicationComposer see <a href="../../../advanced/applicationcomposer/index.html">ApplicationComposer Advanced</a> page.</p>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+</body>
+
+</html>
+

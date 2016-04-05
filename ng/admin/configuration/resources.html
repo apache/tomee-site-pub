@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../..//#">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../developer/index.html">Developer</a></li>
+					<li><a href="../../admin/index.html">Admin</a></li>
+					<li><a href="../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../blog/index.html">Blog</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+                    <li><a href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../../admin/configuration/resources.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>Resources</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In TomEE resources are mainly "singleton" (understood as defined once per server or application). Technically
+it can be anything but you will probably meet more Datasources than other type of resources.</p>
+</div>
+<div class="paragraph">
+<p>Most resources will be created automatically if there is no matching resources - by name and type -
+when an injection will be found. To avoid that use <code>openejb.offline</code> property and set it to <code>true</code>.
+See <a href="server.html">Server Configuration</a> for more detail.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_definition_a_resource_how_does_it_work">Definition a resource: how does it work?</h3>
+<div class="paragraph">
+<p>Before all let see how properties syntax is equivalent to XML one (system.properties and tomee.xml typically).</p>
+</div>
+<div class="paragraph">
+<p>Properties syntax uses dot notation to represent setters/properties which are plain properties in XML syntax
+and a URL syntax with query parameters to define the resource where it is directly the resource and tag attributes in XML.
+Finally the id is an attribute in XML and the key of the resource definition in properties.</p>
+</div>
+<div class="paragraph">
+<p>Let see it with a sample, both delcarations are the same:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">myDataSource = new://Resource?type=DataSource
+myDataSource.JdbcUrl = jdbc:hsqldb:mem:site
+myDataSource.UserName = sa</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="myDataSource" type="DataSource"&gt;
+  JdbcUrl = jdbc:hsqldb:mem:site
+  UserName = sa
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One started you can get injected any resource using <code>@Resource</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Resource(name = "myDataSource")
+private DataSource dataSource;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_factory_syntax">Factory syntax</h3>
+<div class="paragraph">
+<p>Here are the attributes of a resource:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Optional</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name of the resource, will match <code>openejb:Resource/id</code> in JNDI tree.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">define a default resource definition using service-jar.xml</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">class-name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">specify which class to instantiate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">factory-name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">specify which method to invoke on the class-name when specified to create the resource</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">properties-provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a class responsible to provide to tomee the properties to use, it can have a property <code>serviceId</code> to know which resource it is.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">classpath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a classpath to use to create the resource. Note: if not implementing an interface the resource will be isolated from the applications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aliases</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">other names for the resource, allows for instance to share the same pool for a datasource used with multiple names in applications.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">post-construct/pre-destroy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">methods called when creating/destroying the resources.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lazy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">for resources set them to be created when first accessed and not when deployed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>TomEE supports some implicit properties for resources but sometimes you just want to fully control the
+resource and not use implicit properties which can be affected to a property which doesn&#8217;t expect such a value (typically the case
+if you create a custom Oracle datasource). For such case you can set <code>SkipImplicitAttributes</code> property to <code>true</code> and your resource
+will ignore implicit properties.</p>
+</div>
+<div class="paragraph">
+<p>Implicit properties are:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transactionManager</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The JTA transaction manager</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServiceId</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the "id" of the resource (its name)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In the same spirit you can skip properties fallback using <code>SkipPropertiesFallback</code> and setting it to <code>true</code>. It typically avoids to
+fallback all unset properties (no matching property found) to a <code>Properties</code> instance and set it if one matching property is found.
+In Oracle case for instance it matches the connection properties which can have side effects.</p>
+</div>
+<div class="sect4">
+<h5 id="_value_ciphering">Value ciphering</h5>
+<div class="paragraph">
+<p>The propertie values support ciphering using the syntax <code>cipher:{algorithm}:{cipheredValue}</code>, for instance <code>cipher:Static3DES:xMH5uM1V9vQzVUv5LG7YLA==</code> will
+be read as <code>Passw0rd</code>. Ciphers can be computed using <code>tomee.sh</code> script: <code>${tomee.home}/bin/tomee.sh cipher Passw0rd</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_common_resources">Common Resources</h3>
+<div class="sect3">
+<h4 id="_datasources">DataSources</h4>
+<div class="paragraph">
+<p>DataSources have defaults for all values and a default datasource can be provided automatically but if you want to
+configure it here are the common properties:</p>
+</div>
+<div class="paragraph">
+<p>You can set the boolean <code>JtaManaged</code> to false if you don&#8217;t want your datasource to be using JTA - if you manage transactions yourself.</p>
+</div>
+<div class="paragraph">
+<p>Then other configurations are linked the pool the datasource is using. By default TomEE uses <a href="https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html">tomcat-jdbc</a> but we also provide
+<a href="https://commons.apache.org/proper/commons-dbcp/configuration.html">commons-dbcp</a> (2 for TomEE 7.x and 1 for TomEE 1.x).
+The properties are then the related configurations with these particular
+entries we try to keep in sync for both:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JdbcDriver</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the jdbc driver of the datasource</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JdbcUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the jdbc url of the datasource</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the user to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the password of the user</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="_password_and_ciphering">Password and ciphering</h5>
+<div class="paragraph">
+<p>DataSource were the first resource to support password ciphering. Originally it was another property which is still supported.
+It is called <code>PasswordCipher</code>. Its value is the ciphering algorithm and it affects the password value. However <code>cipher:xxx</code>
+is still supported on <code>Password</code> value. Default <code>PasswordCipher</code> being <code>PlainText</code> it behaves as no ciphering is in place by default.</p>
+</div>
+<div class="paragraph">
+<p>Sample:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">ds = new://Resource?type=javax.sql.DataSource
+# our password is "Passw0rd"
+ds.Password = xMH5uM1V9vQzVUv5LG7YLA==
+ds.PasswordCipher = Static3DES</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_advanced_datasource_configuration">Advanced DataSource configuration</h5>
+<div class="paragraph">
+<p>TomEE also provides few utilities you can add in DataSource properties:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LogSql</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Should SQL be logged (using TomEE logger)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LogSqlPackages</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">if set the logging will show the matching packages (separated by comma) inline when logging the query, allows to know where a query comes from</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flushable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">if true the datasource can be casted as a Flushable to recreate the pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ResetOnError</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">if a <code>SQLException</code> happens the pool is automatically recreated. Configuration is either "true" to do it each time an exception occurs, <code>x</code> or <code>retry(x)</code> to do it and retry until maximum <code>x</code> times</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ResetOnErrorMethods</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">which methods are handled by ResetOnError</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TomEEProxyHandler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom <code>InvocationHandler</code> wrapping the datasource calls</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DataSourceCreator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">which pool to use, <code>dbcp</code>, <code>tomcat</code>, <code>dbcp-alternative</code> (DBCP and TomEE proxying instead of DBCP JTA integration), <code>simple</code> (no pooling)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="_datasource_and_jta">DataSource and JTA</h5>
+<div class="paragraph">
+<p><code>JtaManaged</code> determines wether or not this data source should be JTA managed
+or user managed.  If set to 'true' it will automatically be enrolled
+in any ongoing transactions.  Calling begin/commit/rollback or setAutoCommit
+on the datasource or connection will not be allowed.  If you need to perform
+these functions yourself, set <code>JtaManaged</code> to <code>false</code></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_datasource_and_jpa">DataSource and JPA</h5>
+<div class="paragraph">
+<p>In terms of JPA persistence.xml:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JtaManaged=true</code> can be used as a 'jta-data-source'</p>
+</li>
+<li>
+<p><code>JtaManaged=false</code> can be used as a 'non-jta-data-source'</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_activemqresourceadapter">ActiveMQResourceAdapter</h3>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ActiveMQResourceAdapter"&gt;
+    BrokerXmlConfig = broker:(tcp://localhost:61616)?useJmx=false
+    ServerUrl = vm://localhost?waitForStart=20000&amp;async=true
+    DataSource = Default Unmanaged JDBC Database
+    StartupTimeout = 10 seconds
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ActiveMQResourceAdapter
+Foo.BrokerXmlConfig = broker:(tcp://localhost:61616)?useJmx=false
+Foo.ServerUrl = vm://localhost?waitForStart=20000&amp;async=true
+Foo.DataSource = Default Unmanaged JDBC Database
+Foo.StartupTimeout = 10 seconds</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration">Configuration</h4>
+<div class="sect4">
+<h5 id="_brokerxmlconfig">BrokerXmlConfig</h5>
+<div class="paragraph">
+<p>Broker configuration URI as defined by ActiveMQ
+see <a href="http://activemq.apache.org/broker-configuration-uri.html" class="bare">http://activemq.apache.org/broker-configuration-uri.html</a>
+BrokerXmlConfig xbean:file:conf/activemq.xml - Requires xbean-spring.jar and dependencies</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_serverurl">ServerUrl</h5>
+<div class="paragraph">
+<p>Broker address</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_datasource">DataSource</h5>
+<div class="paragraph">
+<p>DataSource for persistence messages</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_startuptimeout">StartupTimeout</h5>
+<div class="paragraph">
+<p>How long to wait for broker startup</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javax_jms_connectionfactory">javax.jms.ConnectionFactory</h3>
+<div class="paragraph">
+<p>An ActiveMQ (JMS) connection factory.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="javax.jms.ConnectionFactory"&gt;
+    ResourceAdapter = Default JMS Resource Adapter
+    TransactionSupport = xa
+    PoolMaxSize = 10
+    PoolMinSize = 0
+    ConnectionMaxWaitTime = 5 seconds
+    ConnectionMaxIdleTime = 15 Minutes
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.ConnectionFactory
+Foo.ResourceAdapter = Default JMS Resource Adapter
+Foo.TransactionSupport = xa
+Foo.PoolMaxSize = 10
+Foo.PoolMinSize = 0
+Foo.ConnectionMaxWaitTime = 5 seconds
+Foo.ConnectionMaxIdleTime = 15 Minutes</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_2">Configuration</h4>
+<div class="sect4">
+<h5 id="_resourceadapter">ResourceAdapter</h5>
+<div class="paragraph">
+<p>An ActiveMQ (JMS) resource adapter.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_transactionsupport">TransactionSupport</h5>
+<div class="paragraph">
+<p>Specifies if the connection is enrolled in global transaction
+allowed values: <code>xa</code>, <code>local</code> or <code>none</code>. Default to <code>xa</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_poolmaxsize">PoolMaxSize</h5>
+<div class="paragraph">
+<p>Maximum number of physical connection to the ActiveMQ broker.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_poolminsize">PoolMinSize</h5>
+<div class="paragraph">
+<p>Minimum number of physical connection to the ActiveMQ broker.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_connectionmaxwaittime">ConnectionMaxWaitTime</h5>
+<div class="paragraph">
+<p>Maximum amount of time to wait for a connection.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_connectionmaxidletime">ConnectionMaxIdleTime</h5>
+<div class="paragraph">
+<p>Maximum amount of time a connection can be idle before being reclaimed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javax_jms_queue">javax.jms.Queue</h3>
+<div class="paragraph">
+<p>An ActiveMQ (JMS) queue.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="javax.jms.Queue"&gt;
+    # not set means id
+    destination =
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.Queue
+# not set means id
+Foo.destination =</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_3">Configuration</h4>
+<div class="sect4">
+<h5 id="_destination">destination</h5>
+<div class="paragraph">
+<p>Specifies the name of the queue</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javax_jms_topic">javax.jms.Topic</h3>
+<div class="paragraph">
+<p>An ActiveMQ (JMS) topic.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="javax.jms.Topic"&gt;
+    # not set means id
+    destination =
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.Topic
+# not set means id
+Foo.destination =</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_4">Configuration</h4>
+<div class="sect4">
+<h5 id="_destination_2">destination</h5>
+<div class="paragraph">
+<p>Specifies the name of the topic</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_org_omg_corba_orb">org.omg.CORBA.ORB</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+to use it you need to add an implementation of corba.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="org.omg.CORBA.ORB" /&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=org.omg.CORBA.ORB</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javax_mail_session">javax.mail.Session</h3>
+<div class="paragraph">
+<p>A mail session.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="mail/mysession" type="javax.mail.Session"&gt;
+  mail.transport.protocol = smtp
+  mail.smtp.host = smtp.provider.com
+  mail.smtp.auth = true
+  mail.smtp.starttls.enable = true
+  mail.smtp.port = 587
+  mail.smtp.user = user@provider.com
+  password = abcdefghij
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">mail/mysession = new://Resource?type=javax.mail.Session
+mail/mysession.mail.transport.protocol = smtp
+mail/mysession.mail.smtp.host = smtp.provider.com
+mail/mysession.mail.smtp.auth = true
+mail/mysession.mail.smtp.starttls.enable = true
+mail/mysession.mail.smtp.port = 587
+mail/mysession.mail.smtp.user = user@provider.com
+mail/mysession.password = abcdefghij</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The properties are <code>javax.mail.Session</code> ones with the addition of <code>useDefault</code> which specifies if <code>getDefaultInstance()</code>
+or <code>getInstance</code> is used to create the session. <code>getDefaultInstance()</code> will ensure that several calls are done with the
+same configuration and return the same instance. For tomee it is likely better to rely on <code>getInstance()</code>(ie keep <code>useDefault</code> to false)
+and use <code>aliases</code> option of the resource to define an alias if you need to share the same instance accross multiple names.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managedexecutorservice">ManagedExecutorService</h3>
+<div class="paragraph">
+<p>A concurrency utility for EE executor service.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ManagedExecutorService"&gt;
+    Core = 5
+    Max = 25
+    KeepAlive = 5 s
+    Queue = 15
+    ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
+    Lazy = true
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedExecutorService
+Foo.Core = 5
+Foo.Max = 25
+Foo.KeepAlive = 5 s
+Foo.Queue = 15
+Foo.ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
+Foo.Lazy = true</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_5">Configuration</h4>
+<div class="sect4">
+<h5 id="_core">Core</h5>
+<div class="paragraph">
+<p>The pool core size.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_max">Max</h5>
+<div class="paragraph">
+<p>The pool max size.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_keepalive">KeepAlive</h5>
+<div class="paragraph">
+<p>The thread keep alive time (in duration format)</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_queue">Queue</h5>
+<div class="paragraph">
+<p>The queue type size.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_threadfactory">ThreadFactory</h5>
+<div class="paragraph">
+<p>The thread factory implementation class.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_lazy">Lazy</h5>
+<div class="paragraph">
+<p>If set to true the pool is created when first accessed otherwise it is created at startup.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managedscheduledexecutorservice">ManagedScheduledExecutorService</h3>
+<div class="paragraph">
+<p>Inherit from <code>ManagedExecutorService</code> and adds scheduling abilities.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ManagedScheduledExecutorService"&gt;
+    Core = 5
+    ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
+    Lazy = true
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedScheduledExecutorService
+Foo.Core = 5
+Foo.ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
+Foo.Lazy = true</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_6">Configuration</h4>
+<div class="paragraph">
+<p>See <code>ManagedExecutorService</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managedthreadfactory">ManagedThreadFactory</h3>
+<div class="paragraph">
+<p>A thread factory for a <code>ManagedExecutorService</code>.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ManagedThreadFactory"&gt;
+    Prefix = openejb-managed-thread-
+    Lazy = true
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedThreadFactory
+Foo.Prefix = openejb-managed-thread-
+Foo.Lazy = true</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_7">Configuration</h4>
+<div class="sect4">
+<h5 id="_prefix">Prefix</h5>
+<div class="paragraph">
+<p>The thread prefix (suffixed with thread id).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_contextservice">ContextService</h3>
+<div class="paragraph">
+<p>A concurrency utilities for JavaEE context service. It allows to create
+contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts).</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ContextService" /&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ContextService</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jndiprovider_inject_remote_clients">JndiProvider: inject remote clients</h3>
+<div class="paragraph">
+<p>A thread factory for a <code>ManagedExecutorService</code>.
+Default implementation is <code>org.apache.openejb.threads.impl.ManagedThreadFactoryImpl</code>.</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ManagedThreadFactory"&gt;
+    Prefix = openejb-managed-thread-
+    Lazy = true
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedThreadFactory
+Foo.Prefix = openejb-managed-thread-
+Foo.Lazy = true</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuration_8">Configuration</h4>
+<div class="sect4">
+<h5 id="_prefix_2">Prefix</h5>
+<div class="paragraph">
+<p>The thread prefix (suffixed with thread id).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_contextservice_2">ContextService</h3>
+<div class="paragraph">
+<p>A concurrency utilities for JavaEE context service. It allows to create
+contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts).</p>
+</div>
+<div class="paragraph">
+<p>Declarable in tomee.xml via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ContextService" /&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ContextService</code></pre>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+</body>
+
+</html>
+
