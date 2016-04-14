@@ -459,6 +459,99 @@ public class MyTest {
 </div>
 </div>
 <div class="sect2">
+<h3 id="_start_and_deploy_once">Start and Deploy once</h3>
+<div class="paragraph">
+<p>When having a huge suite of test it can be long to start/deploy/undeploy/shutdown he container/application for each method.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s why <code>SingleApplicationComposerRunner</code> allows to just reuse the same instance accross several test.</p>
+</div>
+<div class="paragraph">
+<p>The first test will start and deploy the application and then other tests will reuse this instance until the JVM is destroyed
+where the server/application will be undeployed/shutdown.</p>
+</div>
+<div class="paragraph">
+<p>Here a simple usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.apache.openejb.testing.SingleApplicationComposerRunner;
+// other imports
+
+@RunWith(SingleApplicationComposerRunner.class)
+public class MyTest {
+    @Inject
+    private ACdiBean bean;
+
+    @Application
+    private TheModel model;
+
+    @Test
+    public void aTest() {
+        // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+if you need a real TomEE container then you can have a look to <code>TomEEEmbeddedSingleRunner</code> which does deploys the classpath
+using tomee-embedded.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_configure_what_to_deploy">Configure what to deploy</h4>
+<div class="paragraph">
+<p>As all tests will reuse the same application the model (the class declaring the application with <code>@Classes</code>, <code>@Module</code> etc&#8230;&#8203;) needs to be extracted from the test class itself.</p>
+</div>
+<div class="paragraph">
+<p>The application lookup uses this strategy (ordered):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the fully qualified name is read from the system property <code>tomee.application-composer.application</code></p>
+</li>
+<li>
+<p>a <strong>single</strong> class decorated with <code>@Application</code> is looked in the jar/folder containing the test class</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you have several "groups" you can use JUnit <code>@Category</code> to differentiate them and write one application class by category. Then
+in <code>surefire</code> plugin you declare two <code>executions</code> enforcing the system property <code>tomee.application-composer.application</code> for each of them
+and the associated <code>@Category</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_available_injections">Available injections</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>If the application model class uses <code>@RandomPort</code> then the test classes can get it as well</p>
+</li>
+<li>
+<p>CDI injections are supported</p>
+</li>
+<li>
+<p><code>@Application</code> on a field allows to get the application model to get injected</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Compared to a standalone usage it misses all other EE injections (<code>@PersistenceContext</code>, <code>@Resource</code> etc&#8230;&#8203; but you can inject them in the application model
+and just expose them or wrap them in your tests thanks to the <code>@Application</code> field.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_going_further">Going further</h3>
 <div class="paragraph">
 <p>If you want to learn more about ApplicationComposer see <a href="../../../advanced/applicationcomposer/index.html">ApplicationComposer Advanced</a> page.</p>
