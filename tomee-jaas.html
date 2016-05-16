@@ -175,9 +175,9 @@ configure your JAAS LoginModule as in Tomcat.</p>
     &lt;Connector port="8009" protocol="AJP/1.3" redirectPort="8443" /&gt;
     &lt;Engine name="Catalina" defaultHost="localhost"&gt;
       &lt;!-- here is the magic --&gt;
-      &lt;Realm className="org.apache.catalina.realm.JAASRealm" appName="PropertiesLoginModule"
-          userClassNames="org.apache.openejb.core.security.AbstractSecurityService$User"
-          roleClassNames="org.apache.openejb.core.security.AbstractSecurityService$Group"&gt;
+      &lt;Realm className="org.apache.catalina.realm.JAASRealm" appName="PropertiesLogin"
+             userClassNames="org.apache.openejb.core.security.jaas.UserPrincipal"
+             roleClassNames="org.apache.openejb.core.security.jaas.GroupPrincipal"&gt;
       &lt;/Realm&gt;
 
       &lt;Host name="localhost"  appBase="webapps"
@@ -197,7 +197,23 @@ configure your JAAS LoginModule as in Tomcat.</p>
 };
 </code></pre>
 
-<p>Configure your login module specifically (users.properties for snippets of this page for instance)</p>
+<p>Configure your login module specifically (<code>users.properties</code> for snippets of this page for instance).</p>
+
+<p>Place <code>users.properties</code> and <code>groups.properties</code> files in <code>$CATALINA_BASE/conf/</code> folder.
+<code>users.properties</code> file contains user name and associated password entries, ex.:</p>
+
+<pre><code>me=password
+tomee=tomee
+</code></pre>
+
+<p><code>groups.properties</code> file specifies groups and their users, ex.:</p>
+
+<pre><code>my-role=me
+manager-gui=tomee,me
+tomee-admin=tomee
+</code></pre>
+
+<p><strong>NOTE</strong>: <code>users.properties</code> and <code>groups.properties</code> file names and file location are fixed. If other names are used, the files must be placed in <code>%CATALINA_BASE/lib/</code> folder instead.</p>
 
 
 
