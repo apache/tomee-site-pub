@@ -73,25 +73,71 @@
               
               <div class='btn-toolbar pull-right' style="z-index: 2000;">
                 <div class='btn-group'>
-                    <a class="btn" href="../../developer/tools/index.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                    <a class="btn" href="../../developer/tools/gradle-plugins.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
                 </div>
               </div>
               
-              <h2>TomEE developer tools</h2>
+              <h2>TomEE Gradle Plugin</h2>
             </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <div class="ulist">
-<ul>
-<li>
-<p><a href="maven-plugins.html">Maven Plugins</a></p>
-</li>
-<li>
-<p><a href="gradle-plugins.html">Gradle Plugin</a></p>
-</li>
-</ul>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE provides a gradle plugin for tomee-embedded "à la Jetty".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">buildscript {
+   repositories {
+       mavenCentral()
+   }
+
+   dependencies {
+       classpath 'org.apache.tomee.gradle:tomee-embedded:7.0.0'
+   }
+}
+
+apply plugin: 'org.apache.tomee.tomee-embedded'
+
+// ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then just start tomee with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>gradle tomee-embedded -i</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All the configuration is optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// plugin setup
+def tomeeEmbedded = extensions.getByName('tomee-embedded')
+tomeeEmbedded.tomeeVersion = 'other version'
+tomeeEmbedded.skipDefaultRepository  = true // don't use central to retrieve tomee
+
+// container dependencies
+def tomeeEmbeddedDeps = configurations.getByName('tomee-embedded')
+// add dependencies you need to this configuration</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>tomee-embedded task has several more advanced configuration like tomee properties, modules to deploy etc&#8230;&#8203;
+Its configuration is pretty close to <a href="maven/embedded.html">Embedded Maven Plugin</a>.</p>
+</div>
+</div>
 </div>
             </div>
             

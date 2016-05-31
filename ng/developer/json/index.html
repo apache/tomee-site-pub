@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="../..//#">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../developer/index.html">Developer</a></li>
+					<li><a href="../../admin/index.html">Admin</a></li>
+					<li><a href="../../advanced/index.html">Advanced</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../blog/index.html">Blog</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+                    <li><a href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../../developer/json/index.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>TomEE and JSON</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since TomEE 7.0, TomEE comes with Apache Johnzon.
+It means you can use JSON-P out of the box but also Johnzon Mapper
+which is the default JAX-RS provider for JSON.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+this is a breaking change with 1.x which was using jettison.
+This last one was relying on JAXB model to generate JSON which often led
+to unexpected JSON tree and some unexpected escaping too.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getting_started_with_johnzon_mapper">Getting started with Johnzon Mapper</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://johnzon.apache.org/" class="bare">http://johnzon.apache.org/</a> will get more informations than this quick
+getting started but here are the basics of the mapping with Johnzon.</p>
+</div>
+<div class="paragraph">
+<p>The mapper uses a direct java to json representation.</p>
+</div>
+<div class="paragraph">
+<p>For instance this java bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyModel {
+  private int id;
+  private String name;
+
+  // getters/setters
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will be mapped to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">{
+  "id": 1234,
+  "name": "Johnzon doc"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that Johnzon supports several customization either directly on the MapperBuilder of through annotations.</p>
+</div>
+<div class="sect2">
+<h3 id="__johnzonignore">@JohnzonIgnore</h3>
+<div class="paragraph">
+<p>@JohnzonIgnore is used to ignore a field. You can optionally say you ignore the field until some version
+if the mapper has a version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyModel {
+  @JohnzonIgnore
+  private String name;
+
+  // getters/setters
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or to support name for version 3, 4, &#8230;&#8203; but ignore it for 1 and 2:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyModel {
+  @JohnzonIgnore(minVersion = 3)
+  private String name;
+
+  // getters/setters
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__johnzonconverter">@JohnzonConverter</h3>
+<div class="paragraph">
+<p>Converters are used for advanced mapping between java and json.</p>
+</div>
+<div class="paragraph">
+<p>There are several converter types:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Converter: map java to json and the opposite based on the string representation</p>
+</li>
+<li>
+<p>Adapter: a converter not limited to String</p>
+</li>
+<li>
+<p>ObjectConverter.Reader: to converter from json to java at low level</p>
+</li>
+<li>
+<p>ObjectConverter.Writer: to converter from java to json at low level</p>
+</li>
+<li>
+<p>ObjectConverter.Codec: a Reader and Writer</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The most common is to customize date format but they all take. For that simple case we often use a Converter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class LocalDateConverter implements Converter&lt;LocalDate&gt; {
+    @Override
+    public String toString(final LocalDate instance) {
+        return instance.toString();
+    }
+
+    @Override
+    public LocalDate fromString(final String text) {
+        return LocalDate.parse(text);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you need a more advanced use case and modify the structure of the json (wrapping the value for instance)
+you will likely need Reader/Writer or a Codec.</p>
+</div>
+<div class="paragraph">
+<p>Then once your converter developed you can either register globally on the MapperBuilder or simply decorate
+the field you want to convert with @JohnzonConverter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyModel {
+  @JohnzonConverter(LocalDateConverter.class)
+  private LocalDate date;
+
+  // getters/setters
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__johnzonproperty">@JohnzonProperty</h3>
+<div class="paragraph">
+<p>Sometimes the json name is not java friendly (_foo or foo-bar or even 200 for instance). For that cases
+@JohnzonProperty allows to customize the name used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyModel {
+  @JohnzonProperty("__date")
+  private LocalDate date;
+
+  // getters/setters
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_accessmode">AccessMode</h3>
+<div class="paragraph">
+<p>On MapperBuilder you have several AccessMode available by default but you can also create your own one.</p>
+</div>
+<div class="paragraph">
+<p>The default available names are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>field: to use fields model and ignore getters/setters</p>
+</li>
+<li>
+<p>method: use getters/setters (means if you have a getter but no setter you will serialize the property but not read it)</p>
+</li>
+<li>
+<p>strict-method (default based on Pojo convention): same as method but getters for collections are not used to write</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use these names with setAccessModeName().</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_your_own_mapper">Your own mapper</h3>
+<div class="paragraph">
+<p>Since johnzon is in tomee libraries you can use it yourself (if you use maven/gradle set johnzon-mapper as provided):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">final MySuperObject object = createObject();
+
+final Mapper mapper = new MapperBuilder().build();
+mapper.writeObject(object, outputStream);
+
+final MySuperObject otherObject = mapper.readObject(inputStream, MySuperObject.class);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_johnzon_and_jax_rs">Johnzon and JAX-RS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE uses by default Johnzon as JAX-RS provider for versions 7.x. If you want however to customize it you need to follow this procedure:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a WEB-INF/openejb-jar.xml:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;openejb-jar&gt;
+ &lt;pojo-deployment class-name="jaxrs-application"&gt;
+   &lt;properties&gt;
+     # optional but requires to skip scanned providers if set to true
+     cxf.jaxrs.skip-provider-scanning = true
+     # list of providers we want
+     cxf.jaxrs.providers = johnzon,org.apache.openejb.server.cxf.rs.EJBAccessExceptionMapper
+   &lt;/properties&gt;
+ &lt;/pojo-deployment&gt;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a WEB-INF/resources.xml to define johnzon service which will be use to instantiate the provider</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;resources&gt;
+ &lt;Service id="johnzon" class-name="org.apache.johnzon.jaxrs.ConfigurableJohnzonProvider"&gt;
+   # 1M
+   maxSize = 1048576
+   bufferSize = 1048576
+
+   # ordered attributes
+   attributeOrder = $order
+
+   # Additional types to ignore
+   ignores = org.apache.cxf.jaxrs.ext.multipart.MultipartBody
+ &lt;/Service&gt;
+
+ &lt;Service id="order" class-name="com.company.MyAttributeSorter" /&gt;
+
+&lt;/resources&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: as you can see you mainly just need to define a service with the id johnzon (same as in openejb-jar.xml)
+and you can reference other instances using $id for services and @id for resources.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+</body>
+
+</html>
+
