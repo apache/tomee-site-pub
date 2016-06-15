@@ -92,13 +92,16 @@
                 </div>
               </div>
               
-              <h2>TomEE and Fat jars</h2>
+              <h2>TomEE Shading</h2>
             </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <div class="paragraph">
+                <div class="sect1">
+<h2 id="_fat_jars">Fat Jars</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Shading the container and the application has some challenges like merging correctly resources (<code>META-INF/services/</code> typically).</p>
 </div>
 <div class="paragraph">
@@ -179,6 +182,100 @@ which can be skipped in this operation since it is there only as a marker for ja
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Then just build the jar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">mvn clean package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And you can run it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">java -jar myapp-1.0-SNAPSHOT.jar</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fat_wars">Fat Wars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fat Wars are executable wars. Note they can be fancy for demos but they have the drawback to put the server in web resources
+at packaging time (to ensure the war is actually an executable jar) so adding a filter preventing these files to be read
+can be needed if you don&#8217;t already use a web technology doing it (a servlet bound to /*).</p>
+</div>
+<div class="paragraph">
+<p>Here how to do a fat war:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;properties&gt;
+  &lt;!-- can be uber (for all), jaxrs, jaxws for lighter ones --&gt;
+  &lt;tomee.flavor&gt;uber&lt;/tomee.flavor&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+  &lt;!-- ...your dependencies as usual... --&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+    &lt;artifactId&gt;tomee-embedded&lt;/artifactId&gt;
+    &lt;classifier&gt;${tomee.flavor}&lt;/classifier&gt;
+    &lt;version&gt;7.0.0&lt;/version&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;
+      &lt;version&gt;2.6&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;failOnMissingWebXml&gt;false&lt;/failOnMissingWebXml&gt;
+        &lt;archive&gt;
+          &lt;manifest&gt;
+            &lt;mainClass&gt;org.apache.tomee.embedded.Main&lt;/mainClass&gt;
+          &lt;/manifest&gt;
+        &lt;/archive&gt;
+        &lt;dependentWarExcludes /&gt;
+        &lt;overlays&gt;
+          &lt;overlay&gt;
+            &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+            &lt;artifactId&gt;tomee-embedded&lt;/artifactId&gt;
+            &lt;classifier&gt;${tomee.flavor}&lt;/classifier&gt;
+            &lt;type&gt;jar&lt;/type&gt;
+            &lt;excludes /&gt;
+          &lt;/overlay&gt;
+        &lt;/overlays&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then just build the war:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">mvn clean package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And you can run it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-bash" data-lang="bash">java -jar myapp-1.0-SNAPSHOT.war</code></pre>
+</div>
+</div>
+</div>
 </div>
             </div>
             
