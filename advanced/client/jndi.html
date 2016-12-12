@@ -217,6 +217,72 @@ ctx.lookup("java:....");</code></pre>
 <div class="paragraph">
 <p>See <a href="../../admin/cluster/index.html">Cluster</a> page for more details on the options.</p>
 </div>
+<div class="sect2">
+<h3 id="_security">Security</h3>
+<div class="paragraph">
+<p>The context configuration can take additional configuration to handle EJB security:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>p.put("openejb.authentication.realmName", "my-realm"); // optional
+p.put(Context.SECURITY_PRINCIPAL, "alfred");
+p.put(Context.SECURITY_CREDENTIALS, "bat");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The realm will be used by JAAS to get the right LoginModules and principal/credentials to
+do the actual authentication.</p>
+</div>
+<div class="sect3">
+<h4 id="_http_case">HTTP case</h4>
+<div class="paragraph">
+<p>Often HTTP layer is secured and in this case you need to authenticate before the EJBd (remote EJB TomEE protocol) layer.
+Thanks to TomEE/Tomcat integration login there will propagate to the EJBd context.</p>
+</div>
+<div class="paragraph">
+<p>This can be done passing the token you need to set as <code>Authorization</code> header in the <code>PROVIDER_URL</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>// tomee/openejb principal/credentials
+p.put(Context.PROVIDER_URL, "http://localhost:8080/tomee/ejb?authorization=Basic%20dG9tZWU6b3BlbmVqYg==");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The token passed as <code>authorization</code> query parameter is the header value URL encoded. It can
+be any token like a basic one, a custom one, an OAuth2 one (in this case you need to renew it programmatically
+and change your client instance when renewing) etc&#8230;&#8203;</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+basic being very common there is a shortcut with two alternate query parameter replacing <code>authorization</code> one: <code>basic.password</code> and <code>basic.username</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally if you don&#8217;t use <code>Authorization</code> header you can change the used header setting <code>authorizationHeader</code> query parameter.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>authorization</code>, <code>authorizationHeader</code>, <code>basic.username</code>, and <code>basic.password</code> are removed
+from the URL before opening the connection and therefore not logged in the remote server access log since version 7.0.3.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 </div>
             </div>
