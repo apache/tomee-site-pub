@@ -23,7 +23,7 @@ import javax.naming.InitialContext;
 import java.util.Properties;
 
 /**
- * @version $Rev: 1591902 $ $Date: 2014-05-02 13:37:53 +0000 (Fri, 02 May 2014) $
+ * @version $Rev: 1591902 $ $Date: 2014-05-02 15:37:53 +0200 (Fri, 02 May 2014) $
  */
 public class TelephoneTest extends TestCase {
 

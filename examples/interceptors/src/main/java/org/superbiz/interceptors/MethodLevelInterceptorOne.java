@@ -20,7 +20,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 /**
- * @version $Rev: 607077 $ $Date: 2007-12-27 14:55:23 +0000 (Thu, 27 Dec 2007) $
+ * @version $Rev: 607077 $ $Date: 2007-12-27 15:55:23 +0100 (Thu, 27 Dec 2007) $
  */
 public class MethodLevelInterceptorOne {
 

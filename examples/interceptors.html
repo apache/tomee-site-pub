@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="..//#">
+				    <span>
+
+				    
+                        <img src="../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../developer/index.html">Developer</a></li>
+					<li><a href="../admin/index.html">Admin</a></li>
+					<li><a href="../advanced/index.html">Advanced</a></li>
+					<li><a href="../security/index.html">Security</a></li>
+					<li><a href="../examples/index-ng.html">Examples</a></li>
+					<li><a href="../blog/index.html">Blog</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+                    <li><a href="../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../examples/interceptors.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>Interceptors</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example interceptors can be browsed at <a href="https://github.com/apache/tomee/tree/master/examples/interceptors" class="bare">https://github.com/apache/tomee/tree/master/examples/interceptors</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_classlevelinterceptorone">ClassLevelInterceptorOne</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class ClassLevelInterceptorOne {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_classlevelinterceptorsuperclassone">ClassLevelInterceptorSuperClassOne</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class ClassLevelInterceptorSuperClassOne {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_classlevelinterceptorsuperclasstwo">ClassLevelInterceptorSuperClassTwo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class ClassLevelInterceptorSuperClassTwo extends SuperClassOfClassLevelInterceptor {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_classlevelinterceptortwo">ClassLevelInterceptorTwo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class ClassLevelInterceptorTwo {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_defaultinterceptorone">DefaultInterceptorOne</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.annotation.PostConstruct;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class DefaultInterceptorOne {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+
+    @PostConstruct
+    protected void postConstructInterceptor(InvocationContext ic) throws Exception {
+        Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_defaultinterceptortwo">DefaultInterceptorTwo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class DefaultInterceptorTwo {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fullyintercepted">FullyIntercepted</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import java.util.List;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public interface FullyIntercepted {
+
+    List&lt;String&gt; businessMethod();
+
+    List&lt;String&gt; methodWithDefaultInterceptorsExcluded();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fullyinterceptedbean">FullyInterceptedBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptors;
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+@Stateless
+@Local
+@Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
+public class FullyInterceptedBean extends FullyInterceptedSuperClass implements FullyIntercepted {
+
+    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
+    public List&lt;String&gt; businessMethod() {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("businessMethod");
+        return list;
+    }
+
+    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
+    public List&lt;String&gt; methodWithDefaultInterceptorsExcluded() {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("methodWithDefaultInterceptorsExcluded");
+        return list;
+    }
+
+    @AroundInvoke
+    protected Object beanClassBusinessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, "beanClassBusinessMethodInterceptor");
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fullyinterceptedsuperclass">FullyInterceptedSuperClass</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.Interceptors;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+@Interceptors({ClassLevelInterceptorSuperClassOne.class, ClassLevelInterceptorSuperClassTwo.class})
+public class FullyInterceptedSuperClass {
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptorone">MethodLevelInterceptorOne</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class MethodLevelInterceptorOne {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptoronlyintf">MethodLevelInterceptorOnlyIntf</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import java.io.Serializable;
+import java.util.List;
+
+public interface MethodLevelInterceptorOnlyIntf&lt;T extends Serializable&gt; {
+    public List&lt;T&gt; makePersistent(T entity);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptoronlyparent">MethodLevelInterceptorOnlyParent</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import java.util.List;
+
+public interface MethodLevelInterceptorOnlyParent extends MethodLevelInterceptorOnlyIntf&lt;String&gt; {
+
+    public List&lt;String&gt; makePersistent(String entity);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptoronlyslsbean">MethodLevelInterceptorOnlySLSBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import java.util.ArrayList;
+import java.util.List;
+
+@Local(MethodLevelInterceptorOnlyParent.class)
+@Stateless
+public class MethodLevelInterceptorOnlySLSBean implements MethodLevelInterceptorOnlyParent {
+
+    @Interceptors(MethodLevelInterceptorOne.class)
+    public List&lt;String&gt; makePersistent(String entity) {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("makePersistent");
+        return list;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptortwo">MethodLevelInterceptorTwo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class MethodLevelInterceptorTwo {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secondstatelessinterceptedbean">SecondStatelessInterceptedBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.ejb.Stateless;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptors;
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version $Rev: 808273 $ $Date: 2009-08-26 20:42:06 -0700 (Wed, 26 Aug 2009) $
+ */
+@Stateless
+@Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
+public class SecondStatelessInterceptedBean implements SecondStatelessInterceptedLocal {
+
+    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
+    public List&lt;String&gt; methodWithDefaultInterceptorsExcluded() {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("methodWithDefaultInterceptorsExcluded");
+        return list;
+    }
+
+    @AroundInvoke
+    protected Object beanClassBusinessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secondstatelessinterceptedlocal">SecondStatelessInterceptedLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import java.util.List;
+
+/**
+ * @version $Rev: 808273 $ $Date: 2009-08-26 20:42:06 -0700 (Wed, 26 Aug 2009) $
+ */
+public interface SecondStatelessInterceptedLocal {
+    List&lt;String&gt; methodWithDefaultInterceptorsExcluded();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_superclassofclasslevelinterceptor">SuperClassOfClassLevelInterceptor</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.annotation.PostConstruct;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+/**
+ * @version $Rev: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class SuperClassOfClassLevelInterceptor {
+
+    @AroundInvoke
+    protected Object businessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+
+    @PostConstruct
+    protected void postConstructInterceptor(InvocationContext ic) throws Exception {
+        Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_thirdslsbean">ThirdSLSBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.ejb.Stateless;
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.ExcludeClassInterceptors;
+import javax.interceptor.ExcludeDefaultInterceptors;
+import javax.interceptor.Interceptors;
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+@Stateless
+@Interceptors({ClassLevelInterceptorOne.class, ClassLevelInterceptorTwo.class})
+@ExcludeDefaultInterceptors
+public class ThirdSLSBean implements ThirdSLSBeanLocal {
+
+    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
+    public List&lt;String&gt; businessMethod() {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("businessMethod");
+        return list;
+    }
+
+    @Interceptors({MethodLevelInterceptorOne.class, MethodLevelInterceptorTwo.class})
+    @ExcludeClassInterceptors
+    public List&lt;String&gt; anotherBusinessMethod() {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add("anotherBusinessMethod");
+        return list;
+    }
+
+
+    @AroundInvoke
+    protected Object beanClassBusinessMethodInterceptor(InvocationContext ic) throws Exception {
+        return Utils.addClassSimpleName(ic, this.getClass().getSimpleName());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_thirdslsbeanlocal">ThirdSLSBeanLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import java.util.List;
+
+/**
+ * @version $Rev: 607320 $ $Date: 2007-12-28 12:15:06 -0800 (Fri, 28 Dec 2007) $
+ */
+public interface ThirdSLSBeanLocal {
+    List&lt;String&gt; businessMethod();
+
+    List&lt;String&gt; anotherBusinessMethod();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_utils">Utils</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import javax.interceptor.InvocationContext;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @version $Rev: 808273 $ $Date: 2009-08-26 20:42:06 -0700 (Wed, 26 Aug 2009) $
+ */
+public class Utils {
+
+    public static List&lt;String&gt; addClassSimpleName(InvocationContext ic, String classSimpleName) throws Exception {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        list.add(classSimpleName);
+        List&lt;String&gt; listOfStrings = (List&lt;String&gt;) ic.proceed();
+        if (listOfStrings != null) {
+            list.addAll(listOfStrings);
+        }
+        return list;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+         version="3.0"&gt;
+  &lt;interceptors&gt;
+    &lt;interceptor&gt;
+      &lt;interceptor-class&gt;org.superbiz.interceptors.DefaultInterceptorOne&lt;/interceptor-class&gt;
+    &lt;/interceptor&gt;
+    &lt;interceptor&gt;
+      &lt;interceptor-class&gt;org.superbiz.interceptors.DefaultInterceptorTwo&lt;/interceptor-class&gt;
+    &lt;/interceptor&gt;
+  &lt;/interceptors&gt;
+  &lt;assembly-descriptor&gt;
+    &lt;interceptor-binding&gt;
+      &lt;ejb-name&gt;*&lt;/ejb-name&gt;
+      &lt;interceptor-class&gt;org.superbiz.interceptors.DefaultInterceptorOne&lt;/interceptor-class&gt;
+    &lt;/interceptor-binding&gt;
+    &lt;interceptor-binding&gt;
+      &lt;ejb-name&gt;*&lt;/ejb-name&gt;
+      &lt;interceptor-class&gt;org.superbiz.interceptors.DefaultInterceptorTwo&lt;/interceptor-class&gt;
+    &lt;/interceptor-binding&gt;
+    &lt;interceptor-binding&gt;
+      &lt;ejb-name&gt;FullyInterceptedBean&lt;/ejb-name&gt;
+      &lt;exclude-default-interceptors&gt;true&lt;/exclude-default-interceptors&gt;
+      &lt;method&gt;
+        &lt;method-name&gt;methodWithDefaultInterceptorsExcluded&lt;/method-name&gt;
+      &lt;/method&gt;
+    &lt;/interceptor-binding&gt;
+    &lt;interceptor-binding&gt;
+      &lt;ejb-name&gt;SecondStatelessInterceptedBean&lt;/ejb-name&gt;
+      &lt;exclude-default-interceptors&gt;true&lt;/exclude-default-interceptors&gt;
+    &lt;/interceptor-binding&gt;
+    &lt;interceptor-binding&gt;
+      &lt;ejb-name&gt;MethodLevelInterceptorOnlySLSBean&lt;/ejb-name&gt;
+      &lt;exclude-default-interceptors&gt;true&lt;/exclude-default-interceptors&gt;
+    &lt;/interceptor-binding&gt;
+  &lt;/assembly-descriptor&gt;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fullyinterceptedtest">FullyInterceptedTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+public class FullyInterceptedTest extends TestCase {
+
+    private InitialContext initCtx;
+
+    @Before
+    public void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.deployments.classpath.include", ".*interceptors/target/classes.*");
+
+        initCtx = new InitialContext(properties);
+    }
+
+    @Test
+    public void testBusinessMethod() throws Exception {
+
+        FullyIntercepted fullyIntercepted = (FullyIntercepted) initCtx.lookup("FullyInterceptedBeanLocal");
+
+        assert fullyIntercepted != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("DefaultInterceptorOne");
+        expected.add("DefaultInterceptorTwo");
+        expected.add("ClassLevelInterceptorSuperClassOne");
+        expected.add("ClassLevelInterceptorSuperClassTwo");
+        expected.add("ClassLevelInterceptorOne");
+        expected.add("ClassLevelInterceptorTwo");
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("MethodLevelInterceptorTwo");
+        expected.add("beanClassBusinessMethodInterceptor");
+        expected.add("businessMethod");
+
+        List&lt;String&gt; actual = fullyIntercepted.businessMethod();
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+
+    @Test
+    public void testMethodWithDefaultInterceptorsExcluded() throws Exception {
+
+        FullyIntercepted fullyIntercepted = (FullyIntercepted) initCtx.lookup("FullyInterceptedBeanLocal");
+
+        assert fullyIntercepted != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("ClassLevelInterceptorSuperClassOne");
+        expected.add("ClassLevelInterceptorSuperClassTwo");
+        expected.add("ClassLevelInterceptorOne");
+        expected.add("ClassLevelInterceptorTwo");
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("MethodLevelInterceptorTwo");
+        expected.add("beanClassBusinessMethodInterceptor");
+        expected.add("methodWithDefaultInterceptorsExcluded");
+
+        List&lt;String&gt; actual = fullyIntercepted.methodWithDefaultInterceptorsExcluded();
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        initCtx.close();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_methodlevelinterceptoronlytest">MethodLevelInterceptorOnlyTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 895825 $ $Date: 2010-01-04 15:35:22 -0800 (Mon, 04 Jan 2010) $
+ */
+public class MethodLevelInterceptorOnlyTest extends TestCase {
+    private InitialContext initCtx;
+
+    @Before
+    public void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.deployments.classpath.include", ".*interceptors/target/classes.*");
+
+        initCtx = new InitialContext(properties);
+    }
+
+    @Test
+    public void testInterceptedGenerifiedBusinessIntfMethod() throws Exception {
+        MethodLevelInterceptorOnlyParent bean = (MethodLevelInterceptorOnlyParent) initCtx.lookup("MethodLevelInterceptorOnlySLSBeanLocal");
+
+        assert bean != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("makePersistent");
+
+        List&lt;String&gt; actual = bean.makePersistent(null);
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secondstatelessinterceptedtest">SecondStatelessInterceptedTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+public class SecondStatelessInterceptedTest extends TestCase {
+
+    private InitialContext initCtx;
+
+    @Before
+    public void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.deployments.classpath.include", ".*interceptors/target/classes.*");
+
+        initCtx = new InitialContext(properties);
+    }
+
+    @Test
+    public void testMethodWithDefaultInterceptorsExcluded() throws Exception {
+        SecondStatelessInterceptedLocal bean =
+                (SecondStatelessInterceptedLocal) initCtx.lookup("SecondStatelessInterceptedBeanLocal");
+
+        assert bean != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("ClassLevelInterceptorOne");
+        expected.add("ClassLevelInterceptorTwo");
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("MethodLevelInterceptorTwo");
+        expected.add("SecondStatelessInterceptedBean");
+        expected.add("methodWithDefaultInterceptorsExcluded");
+
+        List&lt;String&gt; actual = bean.methodWithDefaultInterceptorsExcluded();
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_thirdslsbeantest">ThirdSLSBeanTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.interceptors;
+
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+public class ThirdSLSBeanTest extends TestCase {
+    private InitialContext initCtx;
+
+    @Before
+    public void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.deployments.classpath.include", ".*interceptors/target/classes.*");
+
+        initCtx = new InitialContext(properties);
+    }
+
+    @Test
+    public void testMethodWithDefaultInterceptorsExcluded() throws Exception {
+        ThirdSLSBeanLocal bean = (ThirdSLSBeanLocal) initCtx.lookup("ThirdSLSBeanLocal");
+
+        assert bean != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("ClassLevelInterceptorOne");
+        expected.add("ClassLevelInterceptorTwo");
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("MethodLevelInterceptorTwo");
+        expected.add("ThirdSLSBean");
+        expected.add("businessMethod");
+
+        List&lt;String&gt; actual = bean.businessMethod();
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+
+    @Test
+    public void testMethodWithDefaultAndClassInterceptorsExcluded() throws Exception {
+        ThirdSLSBeanLocal bean = (ThirdSLSBeanLocal) initCtx.lookup("ThirdSLSBeanLocal");
+
+        assert bean != null;
+
+        List&lt;String&gt; expected = new ArrayList&lt;String&gt;();
+        expected.add("MethodLevelInterceptorOne");
+        expected.add("MethodLevelInterceptorTwo");
+        expected.add("ThirdSLSBean");
+        expected.add("anotherBusinessMethod");
+
+        List&lt;String&gt; actual = bean.anotherBusinessMethod();
+        assert expected.equals(actual) : "Expected " + expected + ", but got " + actual;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.interceptors.FullyInterceptedTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/interceptors
+INFO - openejb.base = /Users/dblevins/examples/interceptors
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Using 'openejb.deployments.classpath.include=.*interceptors/target/classes.*'
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/interceptors/target/classes
+INFO - Beginning load: /Users/dblevins/examples/interceptors/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/interceptors/classpath.ear
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean FullyInterceptedBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Enterprise application "/Users/dblevins/examples/interceptors/classpath.ear" loaded.
+INFO - Assembling app: /Users/dblevins/examples/interceptors/classpath.ear
+INFO - Jndi(name=FullyInterceptedBeanLocal) --&gt; Ejb(deployment-id=FullyInterceptedBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/FullyInterceptedBean!org.superbiz.interceptors.FullyIntercepted) --&gt; Ejb(deployment-id=FullyInterceptedBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/FullyInterceptedBean) --&gt; Ejb(deployment-id=FullyInterceptedBean)
+INFO - Jndi(name=ThirdSLSBeanLocal) --&gt; Ejb(deployment-id=ThirdSLSBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/ThirdSLSBean!org.superbiz.interceptors.ThirdSLSBeanLocal) --&gt; Ejb(deployment-id=ThirdSLSBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/ThirdSLSBean) --&gt; Ejb(deployment-id=ThirdSLSBean)
+INFO - Jndi(name=SecondStatelessInterceptedBeanLocal) --&gt; Ejb(deployment-id=SecondStatelessInterceptedBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/SecondStatelessInterceptedBean!org.superbiz.interceptors.SecondStatelessInterceptedLocal) --&gt; Ejb(deployment-id=SecondStatelessInterceptedBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/SecondStatelessInterceptedBean) --&gt; Ejb(deployment-id=SecondStatelessInterceptedBean)
+INFO - Jndi(name=MethodLevelInterceptorOnlySLSBeanLocal) --&gt; Ejb(deployment-id=MethodLevelInterceptorOnlySLSBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/MethodLevelInterceptorOnlySLSBean!org.superbiz.interceptors.MethodLevelInterceptorOnlyParent) --&gt; Ejb(deployment-id=MethodLevelInterceptorOnlySLSBean)
+INFO - Jndi(name=global/classpath.ear/interceptors/MethodLevelInterceptorOnlySLSBean) --&gt; Ejb(deployment-id=MethodLevelInterceptorOnlySLSBean)
+INFO - Created Ejb(deployment-id=ThirdSLSBean, ejb-name=ThirdSLSBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=SecondStatelessInterceptedBean, ejb-name=SecondStatelessInterceptedBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=FullyInterceptedBean, ejb-name=FullyInterceptedBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=MethodLevelInterceptorOnlySLSBean, ejb-name=MethodLevelInterceptorOnlySLSBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=ThirdSLSBean, ejb-name=ThirdSLSBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=SecondStatelessInterceptedBean, ejb-name=SecondStatelessInterceptedBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=FullyInterceptedBean, ejb-name=FullyInterceptedBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=MethodLevelInterceptorOnlySLSBean, ejb-name=MethodLevelInterceptorOnlySLSBean, container=Default Stateless Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/interceptors/classpath.ear)
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.564 sec
+Running org.superbiz.interceptors.MethodLevelInterceptorOnlyTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
+Running org.superbiz.interceptors.SecondStatelessInterceptedTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+Running org.superbiz.interceptors.ThirdSLSBeanTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
+
+Results :
+
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../admin/index.html">Administrators</a>
+          <li><a hef="../developer/index.html">Developers</a>
+          <li><a hef="../advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+

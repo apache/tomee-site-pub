@@ -17,7 +17,7 @@
 package org.superbiz.injection;
 
 /**
- * @version $Revision: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
+ * @version $Revision: 1516150 $ $Date: 2013-08-21 15:09:35 +0200 (Wed, 21 Aug 2013) $
  */
 public class Movie {
 

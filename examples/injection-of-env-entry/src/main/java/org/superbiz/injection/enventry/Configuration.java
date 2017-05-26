@@ -26,7 +26,7 @@ import java.util.Date;
  * <p/>
  * "EJB Core Contracts and Requirements" specification section 16.4.1.1.
  *
- * @version $Rev: 1090807 $ $Date: 2011-04-10 14:12:31 +0000 (Sun, 10 Apr 2011) $
+ * @version $Rev: 1090807 $ $Date: 2011-04-10 16:12:31 +0200 (Sun, 10 Apr 2011) $
  */
 //START SNIPPET: code
 @Singleton

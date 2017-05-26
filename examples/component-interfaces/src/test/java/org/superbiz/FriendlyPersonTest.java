@@ -23,7 +23,7 @@ import javax.naming.Context;
 import java.util.Locale;
 
 /**
- * @version $Rev: 1516150 $ $Date: 2013-08-21 13:09:35 +0000 (Wed, 21 Aug 2013) $
+ * @version $Rev: 1516150 $ $Date: 2013-08-21 15:09:35 +0200 (Wed, 21 Aug 2013) $
  */
 public class FriendlyPersonTest extends TestCase {
 

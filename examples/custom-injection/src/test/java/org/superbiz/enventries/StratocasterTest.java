@@ -29,7 +29,7 @@ import java.util.Locale;
 import static java.util.Arrays.asList;
 
 /**
- * @version $Rev: 1591459 $ $Date: 2014-04-30 19:29:47 +0000 (Wed, 30 Apr 2014) $
+ * @version $Rev: 1591459 $ $Date: 2014-04-30 21:29:47 +0200 (Wed, 30 Apr 2014) $
  */
 //START SNIPPET: code
 public class StratocasterTest extends TestCase {

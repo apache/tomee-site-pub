@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="..//#">
+				    <span>
+
+				    
+                        <img src="../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../developer/index.html">Developer</a></li>
+					<li><a href="../admin/index.html">Admin</a></li>
+					<li><a href="../advanced/index.html">Advanced</a></li>
+					<li><a href="../security/index.html">Security</a></li>
+					<li><a href="../examples/index-ng.html">Examples</a></li>
+					<li><a href="../blog/index.html">Blog</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+                    <li><a href="../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../examples/webservice-handlerchain.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>@WebService handlers with @HandlerChain</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example webservice-handlerchain can be browsed at <a href="https://github.com/apache/tomee/tree/master/examples/webservice-handlerchain" class="bare">https://github.com/apache/tomee/tree/master/examples/webservice-handlerchain</a></p>
+</div>
+<div class="paragraph">
+<p>In this example we see a basic JAX-WS <code>@WebService</code> component use a handler chain to alter incoming and outgoing SOAP messages.  SOAP Handlers are similar to Servlet Filters or EJB/CDI Interceptors.</p>
+</div>
+<div class="paragraph">
+<p>At high level, the steps involved are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create handler(s) implementing <code>javax.xml.ws.handler.soap.SOAPHandler</code></p>
+</li>
+<li>
+<p>Declare and order them in an xml file via <code>&lt;handler-chain&gt;</code></p>
+</li>
+<li>
+<p>Associate the xml file with an <code>@WebService</code> component via <code>@HandlerChain</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_handlerchain">The @HandlerChain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First we&#8217;ll start with our plain <code>@WebService</code> bean, called <code>Calculator</code>, which is annotated with <code>@HandlerChain</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Singleton
+@WebService(
+        portName = "CalculatorPort",
+        serviceName = "CalculatorService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.wsh.CalculatorWs")
+@HandlerChain(file = "handlers.xml")
+public class Calculator implements CalculatorWs {
+
+    public int sum(int add1, int add2) {
+        return add1 + add2;
+    }
+
+    public int multiply(int mul1, int mul2) {
+        return mul1 * mul2;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we see <code>@HandlerChain</code> pointing to a file called <code>handlers.xml</code>.  This file could be called anything, but it must be in the same jar and java package as our <code>Calculator</code> component.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_handler_chains_file">The &lt;handler-chains&gt; file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our <code>Calculator</code> service is in the package <code>org.superbiz.calculator.wsh</code>, which means our handler chain xml file must be at <code>org/superbiz/calculator/wsh/handlers.xml</code> in our application&#8217;s classpath or the file will not be found and no handlers will be used.</p>
+</div>
+<div class="paragraph">
+<p>In maven we achieve this by putting our handlers.xml in <code>src/main/resources</code> like so:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>src/main/resources/org/superbiz/calculator/wsh/handlers.xml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>With this file we declare and <strong>order</strong> our handler chain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;handler-chains xmlns="http://java.sun.com/xml/ns/javaee"&gt;
+  &lt;handler-chain&gt;
+    &lt;handler&gt;
+      &lt;handler-name&gt;org.superbiz.calculator.wsh.Inflate&lt;/handler-name&gt;
+      &lt;handler-class&gt;org.superbiz.calculator.wsh.Inflate&lt;/handler-class&gt;
+    &lt;/handler&gt;
+    &lt;handler&gt;
+      &lt;handler-name&gt;org.superbiz.calculator.wsh.Increment&lt;/handler-name&gt;
+      &lt;handler-class&gt;org.superbiz.calculator.wsh.Increment&lt;/handler-class&gt;
+    &lt;/handler&gt;
+  &lt;/handler-chain&gt;
+&lt;/handler-chains&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The order as you might suspect is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Inflate</code></p>
+</li>
+<li>
+<p><code>Increment</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_soaphandler_implementation">The SOAPHandler implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our <code>Inflate</code> handler has the job of monitoring <strong>responses</strong> to the <code>sum</code> and <code>multiply</code> operations and making them 1000 times better.  Manipulation of the message is done by walking the <code>SOAPBody</code> and editing the nodes.  The <code>handleMessage</code> method is invoked for both requests and responses, so it is important to check the <code>SOAPBody</code> before attempting to naviage the nodes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import org.w3c.dom.Node;
+import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.util.Collections;
+import java.util.Set;
+
+public class Inflate implements SOAPHandler&lt;SOAPMessageContext&gt; {
+
+    public boolean handleMessage(SOAPMessageContext mc) {
+        try {
+            final SOAPMessage message = mc.getMessage();
+            final SOAPBody body = message.getSOAPBody();
+            final String localName = body.getFirstChild().getLocalName();
+
+            if ("sumResponse".equals(localName) || "multiplyResponse".equals(localName)) {
+                final Node responseNode = body.getFirstChild();
+                final Node returnNode = responseNode.getFirstChild();
+                final Node intNode = returnNode.getFirstChild();
+
+                final int value = new Integer(intNode.getNodeValue());
+                intNode.setNodeValue(Integer.toString(value * 1000));
+            }
+
+            return true;
+        } catch (SOAPException e) {
+            return false;
+        }
+    }
+
+    public Set&lt;QName&gt; getHeaders() {
+        return Collections.emptySet();
+    }
+
+    public void close(MessageContext mc) {
+    }
+
+    public boolean handleFault(SOAPMessageContext mc) {
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Increment</code> handler is identical in code and therefore not shown.  Instead of multiplying by 1000, it simply adds 1.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_testcase">The TestCase</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We use the JAX-WS API to create a Java client for our <code>Calculator</code> web service and use it to invoke both the <code>sum</code> and <code>multiply</code> operations.  Note the clever use of math to assert both the existence and order of our handlers.  If <code>Inflate</code> and <code>Increment</code> were reversed, the responses would be 11000 and 13000 respectively.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class CalculatorTest {
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty("openejb.embedded.remotable", "true");
+        EJBContainer.createEJBContainer(properties);
+    }
+
+    @Test
+    public void testCalculatorViaWsInterface() throws Exception {
+        final Service calculatorService = Service.create(
+                new URL("http://127.0.0.1:4204/Calculator?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorService"));
+
+        assertNotNull(calculatorService);
+
+        final CalculatorWs calculator = calculatorService.getPort(CalculatorWs.class);
+
+        // we expect our answers to come back 1000 times better, plus one!
+        assertEquals(10001, calculator.sum(4, 6));
+        assertEquals(12001, calculator.multiply(3, 4));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_example">Running the example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Simply run <code>mvn clean install</code> and you should see output similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.calculator.wsh.CalculatorTest
+INFO - openejb.home = /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - openejb.base = /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers/target/test-classes
+INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Auto-deploying ejb Calculator: EjbDeployment(deployment-id=Calculator)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean Calculator: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Creating Container(id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.calculator.wsh.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Enterprise application "/Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers" loaded.
+INFO - Assembling app: /Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers
+INFO - Created Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Singleton Container)
+INFO - Deployed Application(path=/Users/dblevins/work/all/trunk/openejb/examples/webservice-handlers)
+INFO - Initializing network services
+INFO - Creating ServerService(id=httpejbd)
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+INFO -   ** Starting Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       4204
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from class org.superbiz.calculator.wsh.CalculatorWs
+INFO - Setting the server's publish address to be http://nopath:80
+INFO - Webservice(wsdl=http://127.0.0.1:4204/Calculator, qname={http://superbiz.org/wsdl}CalculatorService) --&gt; Ejb(id=Calculator)
+INFO -   admin thread         127.0.0.1       4200
+INFO -   ejbd                 127.0.0.1       4201
+INFO -   ejbd                 127.0.0.1       4203
+INFO - -------
+INFO - Ready!
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Default SAAJ universe not set
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.783 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inspecting_the_messages">Inspecting the messages</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The above would generate the following messages.</p>
+</div>
+<div class="sect2">
+<h3 id="_calculator_wsdl">Calculator wsdl</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  name="CalculatorService" targetNamespace="http://superbiz.org/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://superbiz.org/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;wsdl:types&gt;
+    &lt;xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                targetNamespace="http://superbiz.org/wsdl" xmlns:tns="http://superbiz.org/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;xsd:element name="multiply" type="tns:multiply"/&gt;
+      &lt;xsd:complexType name="multiply"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="multiplyResponse" type="tns:multiplyResponse"/&gt;
+      &lt;xsd:complexType name="multiplyResponse"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="sum" type="tns:sum"/&gt;
+      &lt;xsd:complexType name="sum"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name="sumResponse" type="tns:sumResponse"/&gt;
+      &lt;xsd:complexType name="sumResponse"&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+    &lt;/xsd:schema&gt;
+  &lt;/wsdl:types&gt;
+  &lt;wsdl:message name="multiplyResponse"&gt;
+    &lt;wsdl:part element="tns:multiplyResponse" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="sumResponse"&gt;
+    &lt;wsdl:part element="tns:sumResponse" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="sum"&gt;
+    &lt;wsdl:part element="tns:sum" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name="multiply"&gt;
+    &lt;wsdl:part element="tns:multiply" name="parameters"&gt;
+    &lt;/wsdl:part&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:portType name="CalculatorWs"&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;wsdl:input message="tns:multiply" name="multiply"&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output message="tns:multiplyResponse" name="multiplyResponse"&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;wsdl:input message="tns:sum" name="sum"&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output message="tns:sumResponse" name="sumResponse"&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:portType&gt;
+  &lt;wsdl:binding name="CalculatorServiceSoapBinding" type="tns:CalculatorWs"&gt;
+    &lt;soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="multiply"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name="multiplyResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="sum"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name="sumResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:binding&gt;
+  &lt;wsdl:service name="CalculatorService"&gt;
+    &lt;wsdl:port binding="tns:CalculatorServiceSoapBinding" name="CalculatorPort"&gt;
+      &lt;soap:address location="http://127.0.0.1:4204/Calculator?wsdl"/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soap_sum_and_sumresponse">SOAP sum and sumResponse</h3>
+<div class="paragraph">
+<p>Request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sum xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;arg0&gt;4&lt;/arg0&gt;
+      &lt;arg1&gt;6&lt;/arg1&gt;
+    &lt;/ns1:sum&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Response:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;return&gt;10001&lt;/return&gt;
+    &lt;/ns1:sumResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soap_multiply_and_multiplyresponse">SOAP multiply and multiplyResponse</h3>
+<div class="paragraph">
+<p>Request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiply xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;arg0&gt;3&lt;/arg0&gt;
+      &lt;arg1&gt;4&lt;/arg1&gt;
+    &lt;/ns1:multiply&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Response:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiplyResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
+      &lt;return&gt;12001&lt;/return&gt;
+    &lt;/ns1:multiplyResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../admin/index.html">Administrators</a>
+          <li><a hef="../developer/index.html">Developers</a>
+          <li><a hef="../advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="..//#">
+				    <span>
+
+				    
+                        <img src="../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../developer/index.html">Developer</a></li>
+					<li><a href="../admin/index.html">Admin</a></li>
+					<li><a href="../advanced/index.html">Advanced</a></li>
+					<li><a href="../security/index.html">Security</a></li>
+					<li><a href="../examples/index-ng.html">Examples</a></li>
+					<li><a href="../blog/index.html">Blog</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+                    <li><a href="../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../examples/async-methods.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>@Asynchronous Methods</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example async-methods can be browsed at <a href="https://github.com/apache/tomee/tree/master/examples/async-methods" class="bare">https://github.com/apache/tomee/tree/master/examples/async-methods</a></p>
+</div>
+<div class="paragraph">
+<p>The @Asynchronous annotation was introduced in EJB 3.1 as a simple way of creating asynchronous processing.</p>
+</div>
+<div class="paragraph">
+<p>Every time a method annotated <code>@Asynchronous</code> is invoked by anyone it will immediately return regardless of how long the method actually takes.  Each invocation returns a [Future][1] object that essentially starts out <strong>empty</strong> and will later have its value filled in by the container when the related method call actually completes.  Returning a <code>Future</code> object is not required and <code>@Asynchronous</code> methods can of course return <code>void</code>.</p>
+</div>
+</div>
+</div>
+<h1 id="_example" class="sect0">Example</h1>
+<div class="paragraph">
+<p>Here, in <code>JobProcessorTest</code>,</p>
+</div>
+<div class="paragraph">
+<p><code>final Future&lt;String&gt; red = processor.addJob("red");</code>
+proceeds to the next statement,</p>
+</div>
+<div class="paragraph">
+<p><code>final Future&lt;String&gt; orange = processor.addJob("orange");</code></p>
+</div>
+<div class="paragraph">
+<p>without waiting for the addJob() method to complete. And later we could ask for the result using the <code>Future&lt;?&gt;.get()</code> method like</p>
+</div>
+<div class="paragraph">
+<p><code>assertEquals("blue", blue.get());</code></p>
+</div>
+<div class="paragraph">
+<p>It waits for the processing to complete (if its not completed already) and gets the result. If you did not care about the result, you could simply have your asynchronous method as a void method.</p>
+</div>
+<div class="paragraph">
+<p>[Future][1] Object from docs,</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+A Future represents the result of an asynchronous computation. Methods are provided to check if the computation is complete, to wait for its completion, and to retrieve the result of the computation. The result can only be retrieved using method get when the computation has completed, blocking if necessary until it is ready. Cancellation is performed by the cancel method. Additional methods are provided to determine if the task completed normally or was cancelled. Once a computation has completed, the computation cannot be cancelled. If you would like to use a Future for the sake of cancellability but not provide a usable result, you can declare types of the form Future&lt;?&gt; and return null as a result of the underlying task
+</td>
+</tr>
+</table>
+</div>
+<h1 id="_the_code" class="sect0">The code</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">@Singleton
+public class JobProcessor {
+@Asynchronous
+@Lock(READ)
+@AccessTimeout(-1)
+public Future&lt;String&gt; addJob(String jobName) {
+
+    // Pretend this job takes a while
+    doSomeHeavyLifting();
+
+    // Return our result
+    return new AsyncResult&lt;String&gt;(jobName);
+}</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    private void doSomeHeavyLifting() {
+        try {
+            Thread.sleep(SECONDS.toMillis(10));
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+            throw new IllegalStateException(e);
+        }
+      }
+    }
+=  Test</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class JobProcessorTest extends TestCase {
+
+public void test() throws Exception {
+
+    final Context context = EJBContainer.createEJBContainer().getContext();
+
+    final JobProcessor processor = (JobProcessor) context.lookup("java:global/async-methods/JobProcessor");
+
+    final long start = System.nanoTime();
+
+    // Queue up a bunch of work
+    final Future&lt;String&gt; red = processor.addJob("red");
+    final Future&lt;String&gt; orange = processor.addJob("orange");
+    final Future&lt;String&gt; yellow = processor.addJob("yellow");
+    final Future&lt;String&gt; green = processor.addJob("green");
+    final Future&lt;String&gt; blue = processor.addJob("blue");
+    final Future&lt;String&gt; violet = processor.addJob("violet");
+
+    // Wait for the result -- 1 minute worth of work
+    assertEquals("blue", blue.get());
+    assertEquals("orange", orange.get());
+    assertEquals("green", green.get());
+    assertEquals("red", red.get());
+    assertEquals("yellow", yellow.get());
+    assertEquals("violet", violet.get());
+
+    // How long did it take?
+    final long total = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start);
+
+    // Execution should be around 9 - 21 seconds
+		// The execution time depends on the number of threads available for asynchronous execution.
+		// In the best case it is 10s plus some minimal processing time.
+    assertTrue("Expected &gt; 9 but was: " + total, total &gt; 9);
+    assertTrue("Expected &lt; 21 but was: " + total, total &lt; 21);
+
+  }
+}</code></pre>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.async.JobProcessorTest
+Apache OpenEJB 7.0.0-SNAPSHOT    build: 20110801-04:02
+http://tomee.apache.org/
+INFO - openejb.home = G:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - openejb.base = G:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: g:\Workspace\fullproject\openejb3\examples\async-methods\target\classes
+INFO - Beginning load: g:\Workspace\fullproject\openejb3\examples\async-methods\target\classes
+INFO - Configuring enterprise application: g:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean JobProcessor: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.async.JobProcessorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application "g:\Workspace\fullproject\openejb3\examples\async-methods" loaded.
+INFO - Assembling app: g:\Workspace\fullproject\openejb3\examples\async-methods
+INFO - Jndi(name="java:global/async-methods/JobProcessor!org.superbiz.async.JobProcessor")
+INFO - Jndi(name="java:global/async-methods/JobProcessor")
+INFO - Jndi(name="java:global/EjbModule100568296/org.superbiz.async.JobProcessorTest!org.superbiz.async.JobProcessorTest")
+INFO - Jndi(name="java:global/EjbModule100568296/org.superbiz.async.JobProcessorTest")
+INFO - Created Ejb(deployment-id=org.superbiz.async.JobProcessorTest, ejb-name=org.superbiz.async.JobProcessorTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=org.superbiz.async.JobProcessorTest, ejb-name=org.superbiz.async.JobProcessorTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Deployed Application(path=g:\Workspace\fullproject\openejb3\examples\async-methods)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.305 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 21.097s
+[INFO] Finished at: Wed Aug 03 22:48:26 IST 2011
+[INFO] Final Memory: 13M/145M
+[INFO] ------------------------------------------------------------------------</pre>
+</div>
+</div>
+<h1 id="_how_it_works_small_under_the_covers_small" class="sect0">How it works &lt;small&gt;under the covers&lt;/small&gt;</h1>
+<div class="paragraph">
+<p>Under the covers what makes this work is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>JobProcessor</code> the caller sees is not actually an instance of <code>JobProcessor</code>.  Rather it&#8217;s a subclass or proxy that has all the methods overridden.  Methods that are supposed to be asynchronous are handled differently.</p>
+</li>
+<li>
+<p>Calls to an asynchronous method simply result in a <code>Runnable</code> being created that wraps the method and parameters you gave.  This runnable is given to an [Executor][3] which is simply a work queue attached to a thread pool.</p>
+</li>
+<li>
+<p>After adding the work to the queue, the proxied version of the method returns an implementation of <code>Future</code> that is linked to the <code>Runnable</code> which is now waiting on the queue.</p>
+</li>
+<li>
+<p>When the <code>Runnable</code> finally executes the method on the <strong>real</strong> <code>JobProcessor</code> instance, it will take the return value and set it into the <code>Future</code> making it available to the caller.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Important to note that the <code>AsyncResult</code> object the <code>JobProcessor</code> returns is not the same <code>Future</code> object the caller is holding.  It would have been neat if the real <code>JobProcessor</code> could just return <code>String</code> and the caller&#8217;s version of <code>JobProcessor</code> could return <code>Future&lt;String&gt;</code>, but we didn&#8217;t see any way to do that without adding more complexity.  So the <code>AsyncResult</code> is a simple wrapper object.  The container will pull the <code>String</code> out, throw the <code>AsyncResult</code> away, then put the <code>String</code> in the <strong>real</strong> <code>Future</code> that the caller is holding.</p>
+</div>
+<div class="paragraph">
+<p>To get progress along the way, simply pass a thread-safe object like [AtomicInteger][4] to the <code>@Asynchronous</code> method and have the bean code periodically update it with the percent complete.</p>
+</div>
+<h1 id="_related_examples" class="sect0">Related Examples</h1>
+<div class="paragraph">
+<p>For complex asynchronous processing, JavaEE&#8217;s answer is <code>@MessageDrivenBean</code>. Have a look at the <a href="simple-mdb.html">simple-mdb</a> example</p>
+</div>
+<div class="paragraph">
+<p>[1]: <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html" class="bare">http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html</a>
+[3]: <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html" class="bare">http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html</a>
+[4]: <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html" class="bare">http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html</a></p>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../admin/index.html">Administrators</a>
+          <li><a hef="../developer/index.html">Developers</a>
+          <li><a hef="../advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+

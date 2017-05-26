@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description" content="Apache TomEE is a light JavaEE server with a lot tooling" />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="..//#">
+				    <span>
+
+				    
+                        <img src="../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../developer/index.html">Developer</a></li>
+					<li><a href="../admin/index.html">Admin</a></li>
+					<li><a href="../advanced/index.html">Advanced</a></li>
+					<li><a href="../security/index.html">Security</a></li>
+					<li><a href="../examples/index-ng.html">Examples</a></li>
+					<li><a href="../blog/index.html">Blog</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+                    <li><a href="../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+            <div class='page-header'>
+              
+              <div class='btn-toolbar pull-right' style="z-index: 2000;">
+                <div class='btn-group'>
+                    <a class="btn" href="../examples/dynamic-proxy-to-access-mbean.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                </div>
+              </div>
+              
+              <h2>dynamic-proxy-to-access-mbean</h2>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example dynamic-proxy-to-access-mbean can be browsed at <a href="https://github.com/apache/tomee/tree/master/examples/dynamic-proxy-to-access-mbean" class="bare">https://github.com/apache/tomee/tree/master/examples/dynamic-proxy-to-access-mbean</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Acessing MBean is something simple through the JMX API but it is often technical and not very interesting.</p>
+</div>
+<div class="paragraph">
+<p>This example simplify this work simply doing it generically in a proxy.</p>
+</div>
+<div class="paragraph">
+<p>So from an user side you simple declare an interface to access your MBeans.</p>
+</div>
+<div class="paragraph">
+<p>Note: the example implementation uses a local MBeanServer but enhancing the example API
+it is easy to imagine a remote connection with user/password if needed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_objectname_api_annotation">ObjectName API (annotation)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Simply an annotation to get the object</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamic.mbean;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Target({TYPE, METHOD})
+@Retention(RUNTIME)
+public @interface ObjectName {
+    String value();
+
+    // for remote usage only
+    String url() default "";
+    String user() default "";
+    String password() default "";
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dynamicmbeanhandler_thr_proxy_implementation">DynamicMBeanHandler (thr proxy implementation)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamic.mbean;
+
+import javax.annotation.PreDestroy;
+import javax.management.Attribute;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Need a @PreDestroy method to disconnect the remote host when used in remote mode.
+ */
+public class DynamicMBeanHandler implements InvocationHandler {
+    private final Map&lt;Method, ConnectionInfo&gt; infos = new ConcurrentHashMap&lt;Method, ConnectionInfo&gt;();
+
+    @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        final String methodName = method.getName();
+        if (method.getDeclaringClass().equals(Object.class) &amp;&amp; "toString".equals(methodName)) {
+            return getClass().getSimpleName() + " Proxy";
+        }
+        if (method.getAnnotation(PreDestroy.class) != null) {
+            return destroy();
+        }
+
+        final ConnectionInfo info = getConnectionInfo(method);
+        final MBeanInfo infos = info.getMBeanInfo();
+        if (methodName.startsWith("set") &amp;&amp; methodName.length() &gt; 3 &amp;&amp; args != null &amp;&amp; args.length == 1
+            &amp;&amp; (Void.TYPE.equals(method.getReturnType()) || Void.class.equals(method.getReturnType()))) {
+            final String attributeName = attributeName(infos, methodName, method.getParameterTypes()[0]);
+            info.setAttribute(new Attribute(attributeName, args[0]));
+            return null;
+        } else if (methodName.startsWith("get") &amp;&amp; (args == null || args.length == 0) &amp;&amp; methodName.length() &gt; 3) {
+            final String attributeName = attributeName(infos, methodName, method.getReturnType());
+            return info.getAttribute(attributeName);
+        }
+        // operation
+        return info.invoke(methodName, args, getSignature(method));
+    }
+
+    public Object destroy() {
+        for (ConnectionInfo info : infos.values()) {
+            info.clean();
+        }
+        infos.clear();
+        return null;
+    }
+
+    private String[] getSignature(Method method) {
+        String[] args = new String[method.getParameterTypes().length];
+        for (int i = 0; i &lt; method.getParameterTypes().length; i++) {
+            args[i] = method.getParameterTypes()[i].getName();
+        }
+        return args; // note: null should often work...
+    }
+
+    private String attributeName(MBeanInfo infos, String methodName, Class&lt;?&gt; type) {
+        String found = null;
+        String foundBackUp = null; // without checking the type
+        final String attributeName = methodName.substring(3, methodName.length());
+        final String lowerName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4, methodName.length());
+
+        for (MBeanAttributeInfo attribute : infos.getAttributes()) {
+            final String name = attribute.getName();
+            if (attributeName.equals(name)) {
+                foundBackUp = attributeName;
+                if (attribute.getType().equals(type.getName())) {
+                    found = name;
+                }
+            } else if (found == null &amp;&amp; ((lowerName.equals(name) &amp;&amp; !attributeName.equals(name))
+                || lowerName.equalsIgnoreCase(name))) {
+                foundBackUp = name;
+                if (attribute.getType().equals(type.getName())) {
+                    found = name;
+                }
+            }
+        }
+
+        if (found == null &amp;&amp; foundBackUp == null) {
+            throw new UnsupportedOperationException("cannot find attribute " + attributeName);
+        }
+
+        if (found != null) {
+            return found;
+        }
+        return foundBackUp;
+    }
+
+    private synchronized ConnectionInfo getConnectionInfo(Method method) throws Exception {
+        if (!infos.containsKey(method)) {
+            synchronized (infos) {
+                if (!infos.containsKey(method)) { // double check for synchro
+                    org.superbiz.dynamic.mbean.ObjectName on = method.getAnnotation(org.superbiz.dynamic.mbean.ObjectName.class);
+                    if (on == null) {
+                        Class&lt;?&gt; current = method.getDeclaringClass();
+                        do {
+                            on = method.getDeclaringClass().getAnnotation(org.superbiz.dynamic.mbean.ObjectName.class);
+                            current = current.getSuperclass();
+                        } while (on == null &amp;&amp; current != null);
+                        if (on == null) {
+                            throw new UnsupportedOperationException("class or method should define the objectName to use for invocation: " + method.toGenericString());
+                        }
+                    }
+                    final ConnectionInfo info;
+                    if (on.url().isEmpty()) {
+                        info = new LocalConnectionInfo();
+                        ((LocalConnectionInfo) info).server = ManagementFactory.getPlatformMBeanServer(); // could use an id...
+                    } else {
+                        info = new RemoteConnectionInfo();
+                        final Map&lt;String, String[]&gt; environment = new HashMap&lt;String, String[]&gt;();
+                        if (!on.user().isEmpty()) {
+                            environment.put(JMXConnector.CREDENTIALS, new String[]{ on.user(), on.password() });
+                        }
+                        // ((RemoteConnectionInfo) info).connector = JMXConnectorFactory.newJMXConnector(new JMXServiceURL(on.url()), environment);
+                        ((RemoteConnectionInfo) info).connector = JMXConnectorFactory.connect(new JMXServiceURL(on.url()), environment);
+
+                    }
+                    info.objectName = new ObjectName(on.value());
+
+                    infos.put(method, info);
+                }
+            }
+        }
+        return infos.get(method);
+    }
+
+    private abstract static class ConnectionInfo {
+        protected ObjectName objectName;
+
+        public abstract void setAttribute(Attribute attribute) throws Exception;
+        public abstract Object getAttribute(String attribute) throws Exception;
+        public abstract Object invoke(String operationName, Object params[], String signature[]) throws Exception;
+        public abstract MBeanInfo getMBeanInfo() throws Exception;
+        public abstract void clean();
+    }
+
+    private static class LocalConnectionInfo extends ConnectionInfo {
+        private MBeanServer server;
+
+        @Override public void setAttribute(Attribute attribute) throws Exception {
+            server.setAttribute(objectName, attribute);
+        }
+
+        @Override public Object getAttribute(String attribute) throws Exception {
+            return server.getAttribute(objectName, attribute);
+        }
+
+        @Override
+        public Object invoke(String operationName, Object[] params, String[] signature) throws Exception {
+            return server.invoke(objectName, operationName, params, signature);
+        }
+
+        @Override public MBeanInfo getMBeanInfo() throws Exception {
+            return server.getMBeanInfo(objectName);
+        }
+
+        @Override public void clean() {
+            // no-op
+        }
+    }
+
+    private static class RemoteConnectionInfo extends ConnectionInfo {
+        private JMXConnector connector;
+        private MBeanServerConnection connection;
+
+        private void before() throws IOException {
+            connection = connector.getMBeanServerConnection();
+        }
+
+        private void after() throws IOException {
+            // no-op
+        }
+
+        @Override public void setAttribute(Attribute attribute) throws Exception {
+            before();
+            connection.setAttribute(objectName, attribute);
+            after();
+        }
+
+        @Override public Object getAttribute(String attribute) throws Exception {
+            before();
+            try {
+                return connection.getAttribute(objectName, attribute);
+            } finally {
+                after();
+            }
+        }
+
+        @Override
+        public Object invoke(String operationName, Object[] params, String[] signature) throws Exception {
+            before();
+            try {
+                return connection.invoke(objectName, operationName, params, signature);
+            } finally {
+                after();
+            }
+        }
+
+        @Override public MBeanInfo getMBeanInfo() throws Exception {
+            before();
+            try {
+                return connection.getMBeanInfo(objectName);
+            } finally {
+                after();
+            }
+        }
+
+        @Override public void clean() {
+            try {
+                connector.close();
+            } catch (IOException e) {
+                // no-op
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dynamic_proxies">Dynamic Proxies</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_dynamicmbeanclient_the_dynamic_jmx_client">DynamicMBeanClient (the dynamic JMX client)</h3>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic.mbean;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import org.apache.openejb.api.Proxy;
+import org.superbiz.dynamic.mbean.DynamicMBeanHandler;
+import org.superbiz.dynamic.mbean.ObjectName;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.ejb.Singleton;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/**
+ * @author rmannibucau
+ */
+@Singleton
+@Proxy(DynamicMBeanHandler.class)
+@ObjectName(DynamicMBeanClient.OBJECT_NAME)
+public interface DynamicMBeanClient {
+	static final String OBJECT_NAME = "test:group=DynamicMBeanClientTest";</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>	int getCounter();
+	void setCounter(int i);
+	int length(String aString);
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamicmbeanclient_the_dynamic_jmx_client_2">DynamicMBeanClient (the dynamic JMX client)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamic.mbean;
+
+import org.apache.openejb.api.Proxy;
+
+import javax.annotation.PreDestroy;
+import javax.ejb.Singleton;
+
+
+@Singleton
+@Proxy(DynamicMBeanHandler.class)
+@ObjectName(value = DynamicRemoteMBeanClient.OBJECT_NAME, url = "service:jmx:rmi:///jndi/rmi://localhost:8243/jmxrmi")
+public interface DynamicRemoteMBeanClient {
+    static final String OBJECT_NAME = "test:group=DynamicMBeanClientTest";
+
+    int getCounter();
+    void setCounter(int i);
+    int length(String aString);
+
+    @PreDestroy void clean();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_mbean_used_for_the_test">The MBean used for the test</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_simplembean">SimpleMBean</h3>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic.mbean.simple;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public interface SimpleMBean {
+	int length(String s);</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>	int getCounter();
+	void setCounter(int c);
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple">Simple</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic.mbean.simple;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public class Simple implements SimpleMBean {
+	private int counter = 0;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Override public int length(String s) {
+    if (s == null) {
+        return 0;
+    }
+    return s.length();
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Override public int getCounter() {
+    return counter;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>	@Override public void setCounter(int c) {
+	    counter = c;
+	}
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dynamicmbeanclienttest_the_test">DynamicMBeanClientTest (The test)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamic.mbean;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.superbiz.dynamic.mbean.simple.Simple;
+
+import javax.ejb.EJB;
+import javax.ejb.embeddable.EJBContainer;
+import javax.management.Attribute;
+import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
+
+import static junit.framework.Assert.assertEquals;
+
+public class DynamicMBeanClientTest {
+    private static ObjectName objectName;
+    private static EJBContainer container;
+
+    @EJB private DynamicMBeanClient localClient;
+    @EJB private DynamicRemoteMBeanClient remoteClient;
+
+    @BeforeClass public static void start() {
+        container = EJBContainer.createEJBContainer();
+    }
+
+    @Before public void injectAndRegisterMBean() throws Exception {
+        container.getContext().bind("inject", this);
+        objectName = new ObjectName(DynamicMBeanClient.OBJECT_NAME);
+        ManagementFactory.getPlatformMBeanServer().registerMBean(new Simple(), objectName);
+    }
+
+    @After public void unregisterMBean() throws Exception {
+        if (objectName != null) {
+            ManagementFactory.getPlatformMBeanServer().unregisterMBean(objectName);
+        }
+    }
+
+    @Test public void localGet() throws Exception {
+        assertEquals(0, localClient.getCounter());
+        ManagementFactory.getPlatformMBeanServer().setAttribute(objectName, new Attribute("Counter", 5));
+        assertEquals(5, localClient.getCounter());
+    }
+
+    @Test public void localSet() throws Exception {
+        assertEquals(0, ((Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(objectName, "Counter")).intValue());
+        localClient.setCounter(8);
+        assertEquals(8, ((Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(objectName, "Counter")).intValue());
+    }
+
+    @Test public void localOperation() {
+        assertEquals(7, localClient.length("openejb"));
+    }
+
+    @Test public void remoteGet() throws Exception {
+        assertEquals(0, remoteClient.getCounter());
+        ManagementFactory.getPlatformMBeanServer().setAttribute(objectName, new Attribute("Counter", 5));
+        assertEquals(5, remoteClient.getCounter());
+    }
+
+    @Test public void remoteSet() throws Exception {
+        assertEquals(0, ((Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(objectName, "Counter")).intValue());
+        remoteClient.setCounter(8);
+        assertEquals(8, ((Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(objectName, "Counter")).intValue());
+    }
+
+    @Test public void remoteOperation() {
+        assertEquals(7, remoteClient.length("openejb"));
+    }
+
+    @AfterClass public static void close() {
+        if (container != null) {
+            container.close();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Apache TomEE the little great server.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://fr-fr.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../admin/index.html" class="white">Administration</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../admin/cluster/index.html" class="regular light-white">Cluster</a></li>
+								<li><a href="../admin/configuration/index.html" class="regular light-white">Configuration</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../developer/index.html" class="white">Developer</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../developer/classloading/index.html" class="regular light-white">Classloading</a></li>
+								<li><a href="../developer/ide/index.html" class="regular light-white">IDE</a></li>
+								<li><a href="../developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../developer/tools/index.html" class="regular light-white">Tools</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../advanced/index.html" class="white">Advanced</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../advanced/applicationcomposer/index.html" class="regular light-white">Application Composer</a></li>
+								<li><a href="../advanced/setup/index.html" class="regular light-white">Setup</a></li>
+								<li><a href="../advanced/shading/index.html" class="regular light-white">Shading</a></li>
+								<li><a href="../advanced/tomee-embedded/index.html" class="regular light-white">TomEE Embedded</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../admin/index.html">Administrators</a>
+          <li><a hef="../developer/index.html">Developers</a>
+          <li><a hef="../advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+
