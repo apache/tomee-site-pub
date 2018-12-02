@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Webservice Inheritance</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+<h2>Item</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import java.io.Serializable;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Item implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String brand;
+    private String itemName;
+    private double price;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+}
+</code></pre>
+<h2>Tower</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Tower extends Item {
+    private Fit fit;
+    private String tubing;
+
+    public static enum Fit {
+        Custom, Exact, Universal
+    }
+
+    public Fit getFit() {
+        return fit;
+    }
+
+    public void setFit(Fit fit) {
+        this.fit = fit;
+    }
+
+    public String getTubing() {
+        return tubing;
+    }
+
+    public void setTubing(String tubing) {
+        this.tubing = tubing;
+    }
+
+    ;
+}
+</code></pre>
+<h2>Wakeboard</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Wakeboard extends Wearable {
+}
+</code></pre>
+<h2>WakeboardBinding</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.persistence.Entity;
+
+@Entity
+public class WakeboardBinding extends Wearable {
+}
+</code></pre>
+<h2>WakeRiderImpl</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.ejb.Stateless;
+import javax.jws.WebService;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
+import java.util.List;
+
+/**
+ * This is an EJB 3 style pojo stateless session bean Every stateless session
+ * bean implementation must be annotated using the annotation @Stateless This
+ * EJB has a single interface: {@link WakeRiderWs} a webservice interface.
+ */
+@Stateless
+@WebService(
+        portName = &quot;InheritancePort&quot;,
+        serviceName = &quot;InheritanceWsService&quot;,
+        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
+        endpointInterface = &quot;org.superbiz.inheritance.WakeRiderWs&quot;)
+public class WakeRiderImpl implements WakeRiderWs {
+
+    @PersistenceContext(unitName = &quot;wakeboard-unit&quot;, type = PersistenceContextType.TRANSACTION)
+    private EntityManager entityManager;
+
+    public void addItem(Item item) throws Exception {
+        entityManager.persist(item);
+    }
+
+    public void deleteMovie(Item item) throws Exception {
+        entityManager.remove(item);
+    }
+
+    public List&lt;Item&gt; getItems() throws Exception {
+        Query query = entityManager.createQuery(&quot;SELECT i FROM Item i&quot;);
+        List&lt;Item&gt; items = query.getResultList();
+        return items;
+    }
+}
+</code></pre>
+<h2>WakeRiderWs</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import java.util.List;
+
+/**
+ * This is an EJB 3 webservice interface that uses inheritance.
+ */
+@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+@XmlSeeAlso({Wakeboard.class, WakeboardBinding.class, Tower.class})
+public interface WakeRiderWs {
+    public void addItem(Item item) throws Exception;
+
+    public void deleteMovie(Item item) throws Exception;
+
+    public List&lt;Item&gt; getItems() throws Exception;
+}
+</code></pre>
+<h2>Wearable</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class Wearable extends Item {
+    protected String size;
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+}
+</code></pre>
+<h2>ejb-jar.xml</h2>
+<pre><code>&lt;ejb-jar/&gt;
+</code></pre>
+<h2>persistence.xml</h2>
+<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+
+  &lt;persistence-unit name=&quot;wakeboard-unit&quot;&gt;
+
+    &lt;jta-data-source&gt;wakeBoardDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;wakeBoardDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+
+    &lt;class&gt;org.superbiz.inheritance.Item&lt;/class&gt;
+    &lt;class&gt;org.superbiz.inheritance.Tower&lt;/class&gt;
+    &lt;class&gt;org.superbiz.inheritance.Wakeboard&lt;/class&gt;
+    &lt;class&gt;org.superbiz.inheritance.WakeboardBinding&lt;/class&gt;
+    &lt;class&gt;org.superbiz.inheritance.Wearable&lt;/class&gt;
+
+    &lt;properties&gt;
+      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+    &lt;/properties&gt;
+
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<h2>InheritanceTest</h2>
+<pre><code>package org.superbiz.inheritance;
+
+import junit.framework.TestCase;
+import org.superbiz.inheritance.Tower.Fit;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import java.net.URL;
+import java.util.List;
+import java.util.Properties;
+
+public class InheritanceTest extends TestCase {
+
+    //START SNIPPET: setup  
+    private InitialContext initialContext;
+
+    protected void setUp() throws Exception {
+
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        p.put(&quot;wakeBoardDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
+        p.put(&quot;wakeBoardDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put(&quot;wakeBoardDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:wakeBoarddb&quot;);
+
+        p.put(&quot;wakeBoardDatabaseUnmanaged&quot;, &quot;new://Resource?type=DataSource&quot;);
+        p.put(&quot;wakeBoardDatabaseUnmanaged.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put(&quot;wakeBoardDatabaseUnmanaged.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:wakeBoarddb&quot;);
+        p.put(&quot;wakeBoardDatabaseUnmanaged.JtaManaged&quot;, &quot;false&quot;);
+
+        p.put(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+
+        initialContext = new InitialContext(p);
+    }
+    //END SNIPPET: setup    
+
+    /**
+     * Create a webservice client using wsdl url
+     *
+     * @throws Exception
+     */
+    //START SNIPPET: webservice
+    public void testInheritanceViaWsInterface() throws Exception {
+        Service service = Service.create(
+                new URL(&quot;http://127.0.0.1:4204/WakeRiderImpl?wsdl&quot;),
+                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;InheritanceWsService&quot;));
+        assertNotNull(service);
+
+        WakeRiderWs ws = service.getPort(WakeRiderWs.class);
+
+        Tower tower = createTower();
+        Item item = createItem();
+        Wakeboard wakeBoard = createWakeBoard();
+        WakeboardBinding wakeBoardbinding = createWakeboardBinding();
+
+        ws.addItem(tower);
+        ws.addItem(item);
+        ws.addItem(wakeBoard);
+        ws.addItem(wakeBoardbinding);
+
+
+        List&lt;Item&gt; returnedItems = ws.getItems();
+
+        assertEquals(&quot;testInheritanceViaWsInterface, nb Items&quot;, 4, returnedItems.size());
+
+        //check tower
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, returnedItems.get(0).getClass(), Tower.class);
+        tower = (Tower) returnedItems.get(0);
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, tower.getBrand(), &quot;Tower brand&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, tower.getFit().ordinal(), Fit.Custom.ordinal());
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, tower.getItemName(), &quot;Tower item name&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, tower.getPrice(), 1.0d);
+        assertEquals(&quot;testInheritanceViaWsInterface, first Item&quot;, tower.getTubing(), &quot;Tower tubing&quot;);
+
+        //check item
+        assertEquals(&quot;testInheritanceViaWsInterface, second Item&quot;, returnedItems.get(1).getClass(), Item.class);
+        item = (Item) returnedItems.get(1);
+        assertEquals(&quot;testInheritanceViaWsInterface, second Item&quot;, item.getBrand(), &quot;Item brand&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, second Item&quot;, item.getItemName(), &quot;Item name&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, second Item&quot;, item.getPrice(), 2.0d);
+
+        //check wakeboard
+        assertEquals(&quot;testInheritanceViaWsInterface, third Item&quot;, returnedItems.get(2).getClass(), Wakeboard.class);
+        wakeBoard = (Wakeboard) returnedItems.get(2);
+        assertEquals(&quot;testInheritanceViaWsInterface, third Item&quot;, wakeBoard.getBrand(), &quot;Wakeboard brand&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, third Item&quot;, wakeBoard.getItemName(), &quot;Wakeboard item name&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, third Item&quot;, wakeBoard.getPrice(), 3.0d);
+        assertEquals(&quot;testInheritanceViaWsInterface, third Item&quot;, wakeBoard.getSize(), &quot;WakeBoard size&quot;);
+
+        //check wakeboardbinding
+        assertEquals(&quot;testInheritanceViaWsInterface, fourth Item&quot;, returnedItems.get(3).getClass(), WakeboardBinding.class);
+        wakeBoardbinding = (WakeboardBinding) returnedItems.get(3);
+        assertEquals(&quot;testInheritanceViaWsInterface, fourth Item&quot;, wakeBoardbinding.getBrand(), &quot;Wakeboardbinding brand&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, fourth Item&quot;, wakeBoardbinding.getItemName(), &quot;Wakeboardbinding item name&quot;);
+        assertEquals(&quot;testInheritanceViaWsInterface, fourth Item&quot;, wakeBoardbinding.getPrice(), 4.0d);
+        assertEquals(&quot;testInheritanceViaWsInterface, fourth Item&quot;, wakeBoardbinding.getSize(), &quot;WakeBoardbinding size&quot;);
+    }
+    //END SNIPPET: webservice
+
+    private Tower createTower() {
+        Tower tower = new Tower();
+        tower.setBrand(&quot;Tower brand&quot;);
+        tower.setFit(Fit.Custom);
+        tower.setItemName(&quot;Tower item name&quot;);
+        tower.setPrice(1.0f);
+        tower.setTubing(&quot;Tower tubing&quot;);
+        return tower;
+    }
+
+    private Item createItem() {
+        Item item = new Item();
+        item.setBrand(&quot;Item brand&quot;);
+        item.setItemName(&quot;Item name&quot;);
+        item.setPrice(2.0f);
+        return item;
+    }
+
+    private Wakeboard createWakeBoard() {
+        Wakeboard wakeBoard = new Wakeboard();
+        wakeBoard.setBrand(&quot;Wakeboard brand&quot;);
+        wakeBoard.setItemName(&quot;Wakeboard item name&quot;);
+        wakeBoard.setPrice(3.0f);
+        wakeBoard.setSize(&quot;WakeBoard size&quot;);
+        return wakeBoard;
+    }
+
+    private WakeboardBinding createWakeboardBinding() {
+        WakeboardBinding wakeBoardBinding = new WakeboardBinding();
+        wakeBoardBinding.setBrand(&quot;Wakeboardbinding brand&quot;);
+        wakeBoardBinding.setItemName(&quot;Wakeboardbinding item name&quot;);
+        wakeBoardBinding.setPrice(4.0f);
+        wakeBoardBinding.setSize(&quot;WakeBoardbinding size&quot;);
+        return wakeBoardBinding;
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.inheritance.InheritanceTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/webservice-inheritance
+INFO - openejb.base = /Users/dblevins/examples/webservice-inheritance
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=wakeBoardDatabaseUnmanaged, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring Service(id=wakeBoardDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/webservice-inheritance/target/classes
+INFO - Beginning load: /Users/dblevins/examples/webservice-inheritance/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/webservice-inheritance/classpath.ear
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean WakeRiderImpl: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring PersistenceUnit(name=wakeboard-unit)
+INFO - Enterprise application &quot;/Users/dblevins/examples/webservice-inheritance/classpath.ear&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/webservice-inheritance/classpath.ear
+INFO - PersistenceUnit(name=wakeboard-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 396ms
+INFO - Created Ejb(deployment-id=WakeRiderImpl, ejb-name=WakeRiderImpl, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=WakeRiderImpl, ejb-name=WakeRiderImpl, container=Default Stateless Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/webservice-inheritance/classpath.ear)
+INFO - Initializing network services
+INFO - Creating ServerService(id=httpejbd)
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+  ** Starting Services **
+  NAME                 IP              PORT  
+  httpejbd             127.0.0.1       4204  
+  admin thread         127.0.0.1       4200  
+  ejbd                 127.0.0.1       4201  
+  ejbd                 127.0.0.1       4203  
+-------
+Ready!
+WARN - Found no persistent property in &quot;org.superbiz.inheritance.WakeboardBinding&quot;
+WARN - Found no persistent property in &quot;org.superbiz.inheritance.Wakeboard&quot;
+WARN - Found no persistent property in &quot;org.superbiz.inheritance.WakeboardBinding&quot;
+WARN - Found no persistent property in &quot;org.superbiz.inheritance.Wakeboard&quot;
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.442 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

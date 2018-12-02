@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>TomEE and Hibernate</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>Apache TomEE ships with OpenJPA as the default JPA provider, however any valid JPA 2.0 provider can be used.</p>
+<p>The basic steps are:</p>
+<ol>
+  <li>Add the Hibernate jars to <code>&lt;tomee-home&gt;/lib/</code></li>
+  <li>Configure the webapp or the server to use Hibernate</li>
+</ol>
+<p><strong>The atifact versions defined here are just for example, so please feel free to use current library versions.</strong></p>
+<h1>Webapp Configuration</h1>
+<p>Any webapp can specify the JPA provider it would like to use via the <code>persistence.xml</code> file, which can be at any of the following locations in a webapp</p>
+<ul>
+  <li><code>WEB-INF/persistence.xml</code> of the <code>.war</code> file</li>
+  <li><code>META-INF/persistence.xml</code> in any jar located in <code>WEB-INF/lib/</code></li>
+</ul>
+<p>A single webapp may have many <code>persistence.xml</code> files and each may use whichever JPA provider it needs.</p>
+<p>The following is an example of a fairly common <code>persistence.xml</code> for Hibernate</p>
+<pre><code>&lt;persistence version=&quot;1.0&quot;
+       xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence
+       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd&quot;&gt;
+
+  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+    &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+
+    &lt;properties&gt;
+      &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create-drop&quot;/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<p>Note, TomEE will automatically add the following property unless it is explicitly configured:</p>
+<pre><code>      &lt;property name=&quot;hibernate.transaction.manager_lookup_class&quot;
+                value=&quot;org.apache.openejb.hibernate.TransactionManagerLookup&quot;/&gt;
+</code></pre>
+<h1>Server Configuration</h1>
+<p>The default JPA provider can be changed at the server level to favor Hibernate over OpenJPA.</p>
+<p>Using the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or any other valid means of setting <code>java.lang.System.getProperties()</code>, the following standard properties can set the detault for any <code>persistence.xml</code> file.</p>
+<ul>
+  <li><code>javax.persistence.provider</code></li>
+  <li><code>javax.persistence.transactionType</code></li>
+  <li><code>javax.persistence.jtaDataSource</code></li>
+  <li><code>javax.persistence.nonJtaDataSource</code></li>
+</ul>
+<p>So, for example, Hibernate can become the default provider via setting</p>
+<p><code>CATALINA_OPTS=-Djavax.persistence.provider=org.hibernate.ejb.HibernatePersistence</code></p>
+<p>You <strong>must</strong> of course add the Hibernate libraries to <code>&lt;tomee-home&gt;/lib/</code> for this to work.</p>
+<h1>Hibernate libraries</h1>
+<p>Jars needed for Hibernate 4.x:</p>
+<p>Add:</p>
+<ul>
+  <li><code>&lt;tomee-home&gt;/lib/antlr-2.7.7.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/dom4j-1.6.1.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/hibernate-commons-annotations-4.0.1.Final.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/hibernate-core-4.1.4.Final.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/hibernate-entitymanager-4.1.4.Final.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/hibernate-validator-4.3.0.Final.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/jboss-logging-3.1.0.GA.jar</code></li>
+</ul>
+<p>Remove (optional):</p>
+<ul>
+  <li><code>&lt;tomee-home&gt;/lib/asm-3.2.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/openjpa-2.2.0.jar</code></li>
+</ul>
+<h1>Ehcache (optional)</h1>
+<p>To use Hibernate with Ehcache, add:</p>
+<ul>
+  <li><code>&lt;tomee-home&gt;/lib/hibernate-ehcache-4.1.4.Final.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/ehcache-core-2.5.1.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/ehcache-terracotta-2.5.1.jar</code></li>
+  <li><code>&lt;tomee-home&gt;/lib/terracotta-toolkit-1.4-runtime-4.1.0.jar</code></li>
+</ul>
+<h1>Infinispan (optional)</h1>
+<p>To use Infinispan cache (default Hibernate 2nd level cache) you need the below jars:</p>
+<pre><code>
+    <lib>org.infinispan:infinispan-core:5.1.4.FINAL</lib>
+    <lib>org.hibernate:hibernate-infinispan:${hibernate.core.version}</lib>
+    <lib>org.jgroups:jgroups:3.0.9.Final</lib>
+    <lib>org.jboss.marshalling:jboss-marshalling-river:1.3.11.GA:</lib>
+    <lib>org.jboss.marshalling:jboss-marshalling:1.3.11.GA</lib>
+    <lib>org.codehaus.woodstox:woodstox-core-asl:4.1.1</lib>
+    <lib>org.codehaus.woodstox:stax2-api:3.1.1</lib>
+    <lib>org.rhq.helpers:rhq-pluginAnnotations:3.0.4</lib>
+    <lib>org.jboss.logmanager:jboss-logmanager:1.2.2.GA</lib>
+</code></pre>
+<p>There are many guides on how to use 2nd level cache with JPA 2. You can remove OpenJPA jar so less jars are in <code>&lt;tomee-home&gt;/lib</code> folder. Also, be sure to put your Database JDBC driver in <code>&lt;tomee-home&gt;/lib</code>.</p>
+<p>The actual Maven dependencies for your project can be added in the usual way:</p>
+<pre><code>    &lt;!-- Hibernate --&gt;     
+    &lt;dependency&gt;
+       &lt;groupId&gt;antlr&lt;/groupId&gt;
+       &lt;artifactId&gt;antlr&lt;/artifactId&gt;
+       &lt;version&gt;2.7.7&lt;/version&gt;
+    &lt;/dependency&gt;   
+    &lt;dependency&gt;
+       &lt;groupId&gt;dom4j&lt;/groupId&gt;
+       &lt;artifactId&gt;dom4j&lt;/artifactId&gt;
+       &lt;version&gt;1.6.1&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate.common&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-commons-annotations&lt;/artifactId&gt;
+       &lt;version&gt;4.0.5.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-ehcache&lt;/artifactId&gt;
+       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+       &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
+       &lt;version&gt;4.3.2.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.jboss.logging&lt;/groupId&gt;
+       &lt;artifactId&gt;jboss-logging&lt;/artifactId&gt;
+       &lt;version&gt;3.1.0.GA&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+       &lt;groupId&gt;org.javassist&lt;/groupId&gt;
+       &lt;artifactId&gt;javassist&lt;/artifactId&gt;
+       &lt;version&gt;3.15.0-GA&lt;/version&gt;
+    &lt;/dependency&gt;
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

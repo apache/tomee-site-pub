@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Hello World</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>This page shows the basic steps required to create, build, and run an EJB and EJB client in its most minimum form. It does not hide steps or rely on special build tools or IDEs and is about the most stripped down you can get.</p>
+<p><em>See the <a href="examples.html">Examples</a><br/> page for a full list of examples that range from [@Stateles|Simple Stateless Example]<br/> and [@Stateful|Simple Stateful Example]<br/> beans, to [Dependency Injection|Injection of env-entry Example]<br/>, JDBC [DataSources|Injection of DataSource Example]<br/>, JPA [EntityManagers|Injection of EntityManager Example]<br/> and more.</em></p>
+<a name="HelloWorld-AbasicEJBexample"></a>
+<h2>A basic EJB example</h2>
+<p>Here are some basic steps you need to perform to get started with OpenEJB</p>
+<ol>
+  <li>Download and install OpenEJB</li>
+  <li>Setup your development environment</li>
+  <li>Write an EJB</li>
+  <li>Write an EJB client</li>
+  <li>Start the server</li>
+  <li>Deploy the EJB</li>
+  <li>Run the client</li>
+  <li>Stop the server</li>
+</ol>
+<a name="HelloWorld-DownloadandinstallOpenEJB"></a>
+<h2>Download and install OpenEJB</h2>
+<p>This example pertains to OpenEJB 3.0 which can be <a href="http://archive.apache.org/dist/openejb/3.0">downloaded here</a><br/>. Once you have downloaded OpenEJB, you can then simply extract the<br/>contents of the downloaded file to whichever directory you want to install OpenEJB in. </p>
+<p>After extracting the file contents, you should now see a directory named openejb-3.0. If you look under this directory, you will find a few more directories:<br/>- <em>bin</em>: Contains commands to start/stop the server (You can also do a lot<br/>of other stuff like deploy/undeploy, but we will just talk about things needed to get you started)<br/>- <em>lib</em>: Contains several jar files (you only need of few of these jars in<br/>your classpath to do EJB development)<br/>- <em>apps</em>: Once you create your EJB's and jar them up, you can place your<br/>jar file in this directory and start the server. The server will automatically deploy all the EJB's contained in this JAR.<br/>- <em>conf</em>: This directory contains all the configuration files. Although you<br/>may not see any file except for a README.txt file right now, but after you start the server, the required configuration files will be automatically created. It is highly recommeded to read the README.txt file under this directory<br/>- <em>logs</em>: Contains log files. </p>
+<a name="HelloWorld-Setupyourdevelopmentenvironment"></a>
+<h2>Setup your development environment</h2>
+<a name="HelloWorld-Createaworkingdirectory"></a>
+<h3>Create a working directory</h3>
+<p>Assuming you are in your home directory, create a directory named projects</p>
+<pre><code>karan@poweredge:~$ mkdir projects
+</code></pre>
+<p>Go to the projects directory</p>
+<pre><code>karan@poweredge:~$ cd projects
+</code></pre>
+<p>We will do all our work in this directory.<br/><a name="HelloWorld-InstallJava"></a></p>
+<h3>Install Java</h3>
+<p>Download and install Java (version 5 or higher). Also set it up so that you can run the java and javac commands from any directory<br/><a name="HelloWorld-SetOPENEJB_HOME"></a></p>
+<h3>Set OPENEJB_HOME</h3>
+<p>We will setup this variable to refer to the openejb install location.</p>
+<pre><code>karan@poweredge:~/projects$ export
+</code></pre>
+<p>OPENEJB_HOME=/home/karan/install/openejb-3.0</p>
+<a name="HelloWorld-WriteanEJB"></a>
+<h2>Write an EJB</h2>
+<p>Whatever files you create should be placed under the projects directory<br/><a name="HelloWorld-CreatetheRemoteInterface"></a></p>
+<h3>Create the Remote Interface</h3>
+<p>Using your favorite editor, create a file named Hello.java (shown below)</p>
+<pre><code>package org.acme;
+import javax.ejb.Remote;
+@Remote
+public interface Hello{
+    public String sayHello();
+}
+</code></pre>
+<a name="HelloWorld-CreatetheBeanClass"></a>
+<h3>Create the Bean Class</h3>
+<p>Now create a file named HelloBean.java (shown below)</p>
+<pre><code>package org.acme;
+import javax.ejb.Stateless;
+@Stateless
+public class HelloBean implements Hello{
+    public String sayHello(){
+       return &quot;Hello World!!!!&quot;;
+    }
+}
+</code></pre>
+<a name="HelloWorld-Compilethesourcecode"></a>
+<h3>Compile the source code</h3>
+<p>Since we have imported the javax.ejb.Stateless and javax.ejb.Remote annotations, we need these in our classpath to compile our source code. These annotations can be found in the $OPENEJB_HOME/lib/javaee-5.0-1.jar. Lets compile our source (make sure you are in the projects directory)</p>
+<pre><code>karan@poweredge:~/projects$ javac -cp $OPENEJB_HOME/lib/javaee-5.0-1.jar -d
+</code></pre>
+<p>. *.java</p>
+<p>The above will compile all the .java files and also create the required packages. You should now see a package named org under the projects directory. All class files should be under org/acme directory.<br/><a name="HelloWorld-PackagetheEJB"></a></p>
+<h3>Package the EJB</h3>
+<p>To package the EJB into a JAR, run the following command while you are in the projects directory</p>
+<pre><code>karan@poweredge:~/projects$ jar cvf hello.jar org
+</code></pre>
+<p>The above command will package everything under the org directory<br/>(including the org directory itself) into a jar file named hello.jar. Below<br/>is the output from running the above command:</p>
+<pre><code>karan@poweredge:~/projects$ jar cvf hello.jar org
+added manifest
+adding: org/(in = 0) (out= 0)(stored 0%)
+adding: org/acme/(in = 0) (out= 0)(stored 0%)
+adding: org/acme/Hello.class(in = 203) (out= 168)(deflated 17%)
+adding: org/acme/HelloBean.class(in = 383) (out= 275)(deflated 28%)
+</code></pre>
+<a name="HelloWorld-WriteanEJBClient"></a>
+<h2>Write an EJB Client</h2>
+<p>Now we will write a Client class which will lookup the EJB , invoke the sayHello() business method and print the value returned from the method. While you are in the projects directory, create a new file named HelloClient.java . Add the following to this file:</p>
+<pre><code>package org.acme;
+import java.util.Properties;
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.rmi.PortableRemoteObject;
+public class HelloClient{
+        public static void main(String[]
+</code></pre>
+<p>args) throws Exception{<br/> Properties props = new Properties();</p>
+<p>props.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.RemoteInitialContextFactory");<br/> props.put(Context.PROVIDER_URL,"ejbd://127.0.0.1:4201");<br/> Context ctx = new InitialContext(props);<br/> Object ref = ctx.lookup("HelloBeanRemote");<br/> Hello h =<br/>(Hello)PortableRemoteObject.narrow(ref,Hello.class);<br/> String result = h.sayHello();<br/> System.out.println(result);<br/> }<br/> }</p>
+<a name="HelloWorld-CompileHelloClient.java"></a>
+<h3>Compile HelloClient.java</h3>
+<p>Run the following command:</p>
+<pre><code>karan@poweredge:~/projects$ javac  -d . HelloClient.java
+</code></pre>
+<a name="HelloWorld-StarttheServer"></a>
+<h2>Start the Server</h2>
+<p>Go to the OpenEJB install directory (i.e. OPENEJB_HOME) and run the following command:</p>
+<pre><code>karan@poweredge:~/install/openejb-3.0$ bin/openejb start
+</code></pre>
+<p>Once the Server starts, you will see an output similar to the below in your console:</p>
+<pre><code>karan@poweredge:~/install/openejb-3.0$ bin/openejb start
+Apache OpenEJB 3.0    build: 20070926-12:34
+http://tomee.apache.org/
+OpenEJB ready.
+[OPENEJB:init]
+</code></pre>
+<p>OpenEJB Remote Server<br/> ** Starting Services **<br/> NAME IP PORT<br/> httpejbd 0.0.0.0 4204<br/> telnet 0.0.0.0 4202<br/> ejbd 0.0.0.0 4201<br/> hsql 0.0.0.0 9001<br/> admin thread 0.0.0.0 4200<br/> -------<br/> Ready!</p>
+<p>Take out a minute to browse through the conf and logs directories. You should now see some configuration and log files under the respective directories.<br/><a name="HelloWorld-DeploytheEJB"></a></p>
+<h2>Deploy the EJB</h2>
+<p>We will now use the deploy command to deploy the EJB in hello.jar. While you are in the projects directory, run the following command:</p>
+<pre><code>karan@poweredge:~/projects$ $OPENEJB_HOME/bin/openejb deploy hello.jar
+</code></pre>
+<p>The above command should give you the following output:</p>
+<pre><code>karan@poweredge:~/projects$ $OPENEJB_HOME/bin/openejb deploy hello.jar
+Application deployed successfully at &quot;hello.jar&quot;
+App(id=/home/karan/projects/hello.jar)
+    EjbJar(id=hello.jar, path=/home/karan/projects/hello.jar)
+    Ejb(ejb-name=HelloBean, id=HelloBean)
+        Jndi(name=HelloBeanRemote)
+</code></pre>
+<p>Notice how the output neatly lays out various deployment details. One thing you might want to note from the output is the JNDI name. This is the JNDI name we used in the client to lookup the EJB<br/><a name="HelloWorld-RuntheClient"></a></p>
+<h2>Run the Client</h2>
+<p>While you are in the projects directory, run the following command to run the client:</p>
+<pre><code>karan@poweredge:~/projects$ java -cp
+</code></pre>
+<p>$OPENEJB_HOME/lib/openejb-client-3.0.jar:$OPENEJB_HOME/lib/javaee-5.0-1.jar:.<br/> org.acme.HelloClient</p>
+<p>The above should give you the following output:</p>
+<pre><code>Hello World!!!!
+</code></pre>
+<a name="HelloWorld-Help!,itdidn'tworkforme!!."></a>
+<h2>Help! , it didn't work for me!!.</h2>
+<p>No problem, we are here to help. Just send us an email at <a href="mailto:u&#x73;&#101;&#x72;&#x73;&#64;&#116;o&#x6d;&#x65;e&#46;&#x61;&#x70;&#97;&#99;&#104;&#101;&#46;&#x6f;&#x72;&#103;">u&#x73;&#101;&#x72;&#x73;&#64;&#116;o&#x6d;&#x65;e&#46;&#x61;&#x70;&#97;&#99;&#104;&#101;&#46;&#x6f;&#x72;&#103;</a>. If possible, send us the contents of logs/openejb.log file in the email. </p>
+<a name="HelloWorld-Lookingformore?"></a>
+<h1>Looking for more?</h1>
+<p>More EJB 3.0 examples, sample applications, tutorials and howtos available <a href="examples.html">here</a><br/>.</p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

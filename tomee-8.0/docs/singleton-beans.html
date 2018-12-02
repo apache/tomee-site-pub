@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Singleton Beans</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <a name="SingletonBeans-SingletonOverview"></a>
+<h1>Singleton Overview</h1>
+<p>For the first time in years EJB has a new bean type, the <em>@Singleton</em>. In my opinion, the javax.ejb.Singleton will replace a lot of what people are using @Stateless for today. </p>
+<p>The Singleton is essentially what you get if you take a Stateless bean and adjust the pool size to be exactly 1 resulting in there being exactly one instance of the Singleton bean in the application which can be invoked concurrently by multiple threads, like a servlet. It can do everything a Stateless can do such as support local and remote business interfaces, web services, security, transactions, and more. Additionally, the Singleton can have its @PostConstruct method called with the application starts up and its @PreDestroy method called when the application shuts down. This allows it to serve as an application lifecycle listener which is something only Servlets could do before. It has an <em>@Startup</em> annotation which is similar in concept to the servlet <load-on-startup>, but unlike servlets it doesn't take a number as an argument. Instead, you can use an <em>@DependsOn</em> annotation to say which other Singletons you need and the container will ensure they start before you.</p>
+<p>See the <a href="singleton-example.html">Singleton Example</a><br/> for sample bean code and client.</p>
+<a name="SingletonBeans-Concurrency"></a>
+<h2>Concurrency</h2>
+<p>Singletons support two modes of concurrent access, Container-Managed Concurrency (the default) and Bean-Managed Concurrency.</p>
+<a name="SingletonBeans-Bean-ManagedConcurrency"></a>
+<h3>Bean-Managed Concurrency</h3>
+<p>With Bean-Managed Concurrency, annotated as <em>@ConcurrencyManagement(BEAN)</em>, the container sends all invocations into the bean and lets the Singleton bean instance decide how and when to synchronize access, if at all. Here the 'synchronization' keyword is allowed as well as the full javax.util.concurrent set of libraries. </p>
+<a name="SingletonBeans-Container-ManagedConcurrency"></a>
+<h3>Container-Managed Concurrency</h3>
+<p>With Container-Managed Concurrency, annotated as<br/><em>@ConcurrencyManagement(CONTAINER)</em>, the container will enforce concurrency<br/>for you via locking method access to the bean. Two modes, called locks exist and can be assigned to both the bean class and methods of the bean class.</p>
+<a name="SingletonBeans-Locktype"></a>
+<h4>Lock type</h4>
+<p>The first and the default is a "write" lock, annotated as <em>@Lock(WRITE)</em>. Essentially, with a write lock the caller holds an exclusive lock on the bean for the duration of the method call and all other threads for that or any other method must wait. </p>
+<p>The second option is a "read" lock, annotated as <em>@Lock(READ)</em>. The read lock allows full concurrent access to the methods (assuming no write locks are held). The default mode of "write" essentially makes your bean a single-threaded bean, which is very slow. The more conservative<br/>@Lock(WRITE) was chosen as the default as this is how all the other bean<br/>types work (only a single thread may access a bean instance at any given time). Those that are aware of how to handle concurrent access can easily put @Lock(READ) on their bean class, thus changing the default, and then<br/>@Lock(WRITE) on specific methods if needed. </p>
+<p>The locking modes of Container-Managed Concurrency map directly to the *<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReadWriteLock.html">java.util.concurrent.ReadWriteLock</a><br/>* API which looks like this:</p>
+<pre><code>public interface ReadWriteLock {
+   /**
+    * Returns the lock used for reading.
+    *
+    * @return the lock used for reading.
+    */
+   Lock readLock();
+
+   /**
+    * Returns the lock used for writing.
+    *
+    * @return the lock used for writing.
+    */
+   Lock writeLock();
+}
+</code></pre>
+<p>Literally 100% of the Singleton locking we're talking about is taken from this interface and its javadoc is a great source of information. It's safe to imagine that under the covers the Singleton Container has an instance of ReadWriteLock which it uses to enforce the locking for all the Singleton bean's methods. Essentially:</p>
+<ul>
+  <li>@Lock(READ) == theSingletonReadWriteLock.readLock().lock()</li>
+  <li>@Lock(WRITE) == theSingletonReadWriteLock.writeLock().lock()</li>
+</ul>
+<p>The EJB container may use something other than ReadWriteLock but the semantics of a ReadWriteLock must be followed. Internally, we use an instance of <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">java.util.concurrent.ReentrantReadWriteLock</a><br/> which supports correct memory synchronization, some reentrancy, lock<br/>downgrading, and [more|http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html]<br/>.</p>
+<a name="SingletonBeans-AcquiringtheLock"></a>
+<h4>Acquiring the Lock</h4>
+<p>The <em>@AccessTimetout</em> annotation can configure how long a thread will wait to acquire the read or write lock. This annotation can be used on the bean class or individual methods. The annotation maps directly to the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/Lock.html">java.util.concurrent.locks.Lock</a><br/> interface.</p>
+<pre><code>public interface Lock {
+
+    /**
+     * Blocks (potentially) forever
+     *
+     * @AccessTimout with a value of -1
+     */
+    void lock();
+
+    /**
+     * Non-blocking
+     *
+     * @AccessTimout with a value of 0
+     */
+    boolean tryLock();
+
+    /**
+     * Blocks (potentially) up to a limit
+     * 
+     * @AccessTimout(30, TimeUnit.SECONDS)
+     */
+    boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+
+}
+</code></pre>
+<p>In the event it is not possible to acquire the lock a<br/><em>javax.ejb.ConcurrentAccessException</em> or<br/><em>javax.ejb.ConcurrentAccessTimeoutException</em> will be thrown.</p>
+<a name="SingletonBeans-DefaultTimeout"></a>
+<h4>Default Timeout</h4>
+<p>The default value of <em>@AccessTimeout</em> annotation is vendor specific. In OpenEJB it defaults to the value of the <em>AccessTimeout</em> property which can be configured in many different scopes. Here is the order of preference:</p>
+<ol>
+  <li>bean-level in<br/>openejb-jar.xml/<openejb-jar>/<ejb-deployment>/<properties></li>
+  <li>jar-level in openejb-jar.xml/<openejb-jar>/<properties></li>
+  <li>container-level in openejb.xml/<openejb>/<Container></li>
+  <li>boot-level via InitialContext(Properties) or<br/>EJBContainer.createEjbContainer(Map&lt;Object,Object&gt;)</li>
+  <li>system-level in System.getProperties()</li>
+</ol>
+<p>The value of the property can be phrased in plain english such as "1 hour and 23 minutes and 17 seconds" see <a href="configuring-durations.html">Configuring Durations</a><br/> for details.</p>
+<a name="SingletonBeans-StartupandStartupOrdering"></a>
+<h2>Startup and Startup Ordering</h2>
+<p>Singletons have an <em>@Startup</em> annotation which can be applied to the bean class. When used, the Container will instantiate the Singleton instance<br/><em>eagerly</em> when the application starts up, otherwise the Container will<br/>instantiate the Singleton instance <em>lazily</em> when the bean is first accessed.</p>
+<p>If one Singleton refers to another Singleton in the @PostConstruct or<br/>@PreDestroy method, there must be some measure taken to ensure the other<br/>Singleton exists and is started. This sort of ordering is achieved with the <em>@DependsOn</em> annotation which can be used to list the names of Singleton beans that must be started before the Singleton bean using the annotation.</p>
+<pre><code>@DependsOn({&quot;SingletonB&quot;, &quot;SingletonC&quot;})
+@Singleton
+public class SingletonA {
+
+}
+</code></pre>
+<p>Circular references are not supported. If BeanA uses @DependsOn to point to BeanB and BeanB also uses @DependsOn to point at BeanA, the result is a deployment exception. Be aware that circular references can happen in less trivial ways such as A referring to B which refers to C which refers to D which refers back to A. We will detect and print all circular dependencies<br/>(called circuits) at deploy time.</p>
+<p>Note that @DependsOn is only required (and should only be used) if a Singleton <em>uses</em> another Singleton in its @PostConstruct method or<br/>@PreDestroy method. Simply having a reference to another Singleton and<br/>using it in other business methods does not require an @DependsOn declaration. The @DependsOn allows the Container to calculate the correct startup order and shutdown order so that it can guarantee the Singletons you need are available in your @PostConstruct or @PreDestroy methods. All Singletons will automatically be available to your business methods regardless if @DependsOn is used. Because of the greater chance of creating circular dependencies, it is better not to use the @DependsOn annotation "just in case" and should only be used when truly needed.</p>
+<a name="SingletonBeans-XMLandAnnotationOverriding"></a>
+<h1>XML and Annotation Overriding</h1>
+<p>Singletons can be declared in the ejb-jar.xml as follows:</p>
+<pre><code>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;session&gt;
+      &lt;ejb-name&gt;MySingletonBean&lt;/ejb-name&gt;
+      &lt;ejb-class&gt;org.superbiz.MySingletonBean&lt;/ejb-class&gt;
+      &lt;session-type&gt;Singleton&lt;/session-type&gt;
+      &lt;load-on-startup/&gt;
+      &lt;depends-on&gt;
+          &lt;ejb-name&gt;SingletonFoo&lt;/ejb-name&gt;
+          &lt;ejb-name&gt;SingletonBar&lt;/ejb-name&gt;
+      &lt;/depends-on&gt;
+    &lt;/session&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

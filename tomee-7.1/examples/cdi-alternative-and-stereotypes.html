@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>null</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1>Introduction</h1>
+<p>CDI is a revolution for Java EE world. This specification is the best one to avoid coupling between classes.</p>
+<p>This example simply aims to override bindings at runtime to simplify mocking work.</p>
+<p>It uses two kind of mocks:<br/>1) a mock with no implementation in the classloader<br/>2) a mock with an implementation in the classloader</p>
+<p>The mock answer from CDI is called <em>alternative</em>.</p>
+<p>Annotating <code>@Alternative</code> a class will mean it will replace any implementation if there is no other implementation or if it is forced (through <code>META-INF/beans.xml</code>).</p>
+<h1>Code explanation</h1>
+<h2>main code</h2>
+<p>We use an EJB <code>Jouney</code> to modelize a journey where the vehicle and the society can change. Here an EJB is used simply because it simplifies the test. A jouney wraps the vehicle and society information.</p>
+<p>We define then two interfaces to inject it in the <code>Journey</code> EJB: <code>Vehicle</code> and <code>Society</code>.</p>
+<p>Finally we add an implementation for <code>Scociety</code> interface: <code>LowCostCompanie</code>.</p>
+<p>If we don't go further <code>Journey</code> object will not be able to be created because no <code>Vehicle</code> implementation is available.</p>
+<p>Note: if we suppose we have a <code>Vehicle</code> implementation, the injected Society should be <code>LowCostCompanie</code>.</p>
+<h2>test code</h2>
+<p>The goal here is to test our <code>Journey</code> EJB. So we have to provide a <code>Vehicle</code> implementation: <code>SuperCar</code>.</p>
+<p>We want to force the <code>Society</code> implementation (for any reason) by our test implementation: <code>AirOpenEJB</code>.</p>
+<p>One solution could simply be to add <code>@Alternative</code> annotation on <code>AirOpenEJB</code> and activate it through the <code>META-INF/beans.xml</code> file.</p>
+<p>Here we want to write more explicit code. So we want to replace the <code>@Alternative</code> annotation by <code>@Mock</code> one.</p>
+<p>So we simply define an <code>@Mock</code> annotation for classes, resolvable at runtime which is a stereotype (<code>@Stereotype</code>) which replace <code>@Alternative</code>.</p>
+<p>Here is the annotation:</p>
+<pre><code>@Stereotype // we define a stereotype
+@Retention(RUNTIME) // resolvable at runtime
+@Target(TYPE) // this annotation is a class level one
+@Alternative // it replace @Alternative
+public @interface Mock {}
+</code></pre>
+<p>Note: you can add more CDI annotations after <code>@Alternative</code> and it will get the behavior expected (the scope for instance).</p>
+<p>So now we have our <code>@Mock</code> annotation which is a stereotype able to replace <code>@Alternative</code> annotation we simply add this annotation to our mocks.</p>
+<p>If you run it now you'll have this exception:</p>
+<pre><code>javax.enterprise.inject.UnsatisfiedResolutionException: Api type [org.superbiz.cdi.stereotype.Vehicle] is not found with the qualifiers
+Qualifiers: [@javax.enterprise.inject.Default()]
+for injection into Field Injection Point, field name :  vehicle, Bean Owner : [Journey, Name:null, WebBeans Type:ENTERPRISE, API Types:[java.lang.Object,org.superbiz.cdi.stereotype.Journey], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]]
+</code></pre>
+<p>It means the stereotype is not activated. To do it simply add it to your <code>META-INF/beans.xml</code>:</p>
+<pre><code>&lt;alternatives&gt;
+  &lt;stereotype&gt;org.superbiz.cdi.stereotype.Mock&lt;/stereotype&gt;
+&lt;/alternatives&gt;
+</code></pre>
+<p>Note: if you don't specify <code>AirOpenEJB</code> as <code>@Alternative</code> (done through our mock annotation) you'll get this exception:</p>
+<pre><code>Caused by: javax.enterprise.inject.AmbiguousResolutionException: There is more than one api type with : org.superbiz.cdi.stereotype.Society with qualifiers : Qualifiers: [@javax.enterprise.inject.Default()]
+for injection into Field Injection Point, field name :  society, Bean Owner : [Journey, Name:null, WebBeans Type:ENTERPRISE, API Types:[org.superbiz.cdi.stereotype.Journey,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]]
+found beans:
+AirOpenEJB, Name:null, WebBeans Type:MANAGED, API Types:[org.superbiz.cdi.stereotype.Society,org.superbiz.cdi.stereotype.AirOpenEJB,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]
+LowCostCompanie, Name:null, WebBeans Type:MANAGED, API Types:[org.superbiz.cdi.stereotype.Society,org.superbiz.cdi.stereotype.LowCostCompanie,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]
+</code></pre>
+<p>which simply means two implementations are available for the same injection point (<code>Journey.society</code>).</p>
+<h1>Conclusion</h1>
+<p>With CDI it is really easy to define annotations with a strong meaning. You can define business annotations or simply technical annotations to simplify your code (as we did with the mock annotation).</p>
+<p>Note: if for instance you used qualifiers to inject societies you could have put all these qualifiers on the mock class or defined a <code>@SocietyMock</code> annotation to be able to inject the same implementation for all qualifiers in your tests.</p>
+<h1>Output</h1>
+<pre><code>Running org.superbiz.cdi.stereotype.StereotypeTest
+Apache OpenEJB 7.0.0-SNAPSHOT    build: 20111030-07:54
+http://tomee.apache.org/
+INFO - openejb.home = /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
+INFO - openejb.base = /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes/target/test-classes
+INFO - Found EjbModule in classpath: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes/target/classes
+INFO - Beginning load: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes/target/test-classes
+INFO - Beginning load: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes/target/classes
+INFO - Configuring enterprise application: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean cdi-alternative-and-stereotypes_test.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean Journey: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Enterprise application &quot;/opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes&quot; loaded.
+INFO - Assembling app: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp!org.apache.openejb.BeanContext$Comp&quot;)
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp&quot;)
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp!org.apache.openejb.BeanContext$Comp&quot;)
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp&quot;)
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/Journey!org.superbiz.cdi.stereotype.Journey&quot;)
+INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/Journey&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest!org.superbiz.cdi.stereotype.StereotypeTest&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest&quot;)
+INFO - Created Ejb(deployment-id=cdi-alternative-and-stereotypes_test.Comp, ejb-name=cdi-alternative-and-stereotypes_test.Comp, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=cdi-alternative-and-stereotypes.Comp, ejb-name=cdi-alternative-and-stereotypes.Comp, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=org.superbiz.cdi.stereotype.StereotypeTest, ejb-name=org.superbiz.cdi.stereotype.StereotypeTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=Journey, ejb-name=Journey, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=cdi-alternative-and-stereotypes_test.Comp, ejb-name=cdi-alternative-and-stereotypes_test.Comp, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=cdi-alternative-and-stereotypes.Comp, ejb-name=cdi-alternative-and-stereotypes.Comp, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=org.superbiz.cdi.stereotype.StereotypeTest, ejb-name=org.superbiz.cdi.stereotype.StereotypeTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Journey, ejb-name=Journey, container=Default Singleton Container)
+INFO - Deployed Application(path=/opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes)
+INFO - Undeploying app: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

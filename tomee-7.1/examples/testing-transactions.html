@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Testing Transactions</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+<h2>Movie</h2>
+<pre><code>package org.superbiz.injection.tx;
+
+import javax.persistence.Entity;
+
+@Entity
+public class Movie {
+
+    private String director;
+    private String title;
+    private int year;
+
+    public Movie() {
+    }
+
+    public Movie(String director, String title, int year) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+}
+</code></pre>
+<h2>Movies</h2>
+<pre><code>package org.superbiz.injection.tx;
+
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
+import java.util.List;
+
+import static javax.ejb.TransactionAttributeType.MANDATORY;
+
+//START SNIPPET: code
+@Stateful(name = &quot;Movies&quot;)
+@TransactionAttribute(MANDATORY)
+public class Movies {
+
+    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.TRANSACTION)
+    private EntityManager entityManager;
+
+    public void addMovie(Movie movie) throws Exception {
+        entityManager.persist(movie);
+    }
+
+    public void deleteMovie(Movie movie) throws Exception {
+        entityManager.remove(movie);
+    }
+
+    public List&lt;Movie&gt; getMovies() throws Exception {
+        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        return query.getResultList();
+    }
+}
+</code></pre>
+<h2>persistence.xml</h2>
+<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+
+  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+    &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;
+
+    &lt;properties&gt;
+      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<h2>MoviesTest</h2>
+<pre><code>package org.superbiz.injection.tx;
+
+import junit.framework.TestCase;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.embeddable.EJBContainer;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.Callable;
+
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+
+/**
+ * See the transaction-rollback example as it does the same thing
+ * via UserTransaction and shows more techniques for rollback 
+ */
+//START SNIPPET: code
+public class MoviesTest extends TestCase {
+
+    @EJB
+    private Movies movies;
+
+    @EJB
+    private Caller transactionalCaller;
+
+    protected void setUp() throws Exception {
+        final Properties p = new Properties();
+        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
+        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+
+        EJBContainer.createEJBContainer(p).getContext().bind(&quot;inject&quot;, this);
+    }
+
+    private void doWork() throws Exception {
+
+        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
+        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
+        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+
+        List&lt;Movie&gt; list = movies.getMovies();
+        assertEquals(&quot;List.size()&quot;, 3, list.size());
+
+        for (Movie movie : list) {
+            movies.deleteMovie(movie);
+        }
+
+        assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
+    }
+
+    public void testWithTransaction() throws Exception {
+        transactionalCaller.call(new Callable() {
+            public Object call() throws Exception {
+                doWork();
+                return null;
+            }
+        });
+    }
+
+    public void testWithoutTransaction() throws Exception {
+        try {
+            doWork();
+            fail(&quot;The Movies bean should be using TransactionAttributeType.MANDATORY&quot;);
+        } catch (javax.ejb.EJBTransactionRequiredException e) {
+            // good, our Movies bean is using TransactionAttributeType.MANDATORY as we want
+        }
+    }
+
+
+    public static interface Caller {
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception;
+    }
+
+    /**
+     * This little bit of magic allows our test code to execute in
+     * the scope of a container controlled transaction.
+     */
+    @Stateless
+    @TransactionAttribute(REQUIRES_NEW)
+    public static class TransactionBean implements Caller {
+
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
+            return callable.call();
+        }
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.tx.MoviesTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/testing-transactions
+INFO - openejb.base = /Users/dblevins/examples/testing-transactions
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/testing-transactions/target/classes
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/testing-transactions/target/test-classes
+INFO - Beginning load: /Users/dblevins/examples/testing-transactions/target/classes
+INFO - Beginning load: /Users/dblevins/examples/testing-transactions/target/test-classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/testing-transactions
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean TransactionBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.injection.tx.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=movie-unit)
+INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
+INFO - Enterprise application &quot;/Users/dblevins/examples/testing-transactions&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/testing-transactions
+INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 406ms
+INFO - Jndi(name=&quot;java:global/testing-transactions/Movies!org.superbiz.injection.tx.Movies&quot;)
+INFO - Jndi(name=&quot;java:global/testing-transactions/Movies&quot;)
+INFO - Jndi(name=&quot;java:global/testing-transactions/TransactionBean!org.superbiz.injection.tx.MoviesTest$Caller&quot;)
+INFO - Jndi(name=&quot;java:global/testing-transactions/TransactionBean&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule2036741132/org.superbiz.injection.tx.MoviesTest!org.superbiz.injection.tx.MoviesTest&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule2036741132/org.superbiz.injection.tx.MoviesTest&quot;)
+INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Created Ejb(deployment-id=TransactionBean, ejb-name=TransactionBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.injection.tx.MoviesTest, ejb-name=org.superbiz.injection.tx.MoviesTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=TransactionBean, ejb-name=TransactionBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.injection.tx.MoviesTest, ejb-name=org.superbiz.injection.tx.MoviesTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/testing-transactions)
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.403 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

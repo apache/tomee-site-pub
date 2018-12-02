@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>CDI field producer</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>This example shows the usage of the @Produces annotation. @Produces is a CDI mechanism which allows defining a source<br/> for injection. This example shows one of two ways of declaring a producer. Instead of a producer method (see CDI-produces-disposes example)<br/>a producer field can be used. A producer field can be used instead of a simple getter method. It could be used to inject resources, such as persistence contexts. One caveat to using producer fields over producer<br/> methods is that a @Disposes method cannot be used in conjunction with @Produces field.</p>
+<p>For the purposes of this example, the type is hard-coded to a specific value. A Logger implementation shall contain a list of LogHandlers. We shall have three implementations of the LogHandler interface.</p>
+<ul>
+  <li>A DatabaseHandler</li>
+  <li>A FileHandler</li>
+  <li>A ConsoleHandler</li>
+</ul>
+<p>The DatabaseHandler would seemingly write the logs to a database. The FileHandler would write the same logs to a file. The ConsoleHandler would just print the logs to a console (Standard out). This example is just an illustration of how the concepts within CDI work and is not intended to provide a logging framework design/implementation.</p>
+<h2>ConsoleHandler</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class ConsoleHandler implements LogHandler {
+
+    private String name;
+
+    public ConsoleHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf(&quot;##### Handler: %s, Writing to the console!\n&quot;, getName());
+    }
+}
+</code></pre>
+<h2>DatabaseHandler</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class DatabaseHandler implements LogHandler {
+
+    private String name;
+
+    public DatabaseHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf(&quot;##### Handler: %s, Writing to the database!\n&quot;, getName());
+        // Use connection to write log to database
+    }
+}
+</code></pre>
+<h2>FileHandler</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public class FileHandler implements LogHandler {
+
+    private String name;
+
+    public FileHandler(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void writeLog(String s) {
+        System.out.printf(&quot;##### Handler: %s, Writing to the file!\n&quot;, getName());
+        // Write to log file
+    }
+}
+</code></pre>
+<h2>LogFactory</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import javax.enterprise.inject.Produces;
+
+public class LogFactory {
+
+    private int type = 2;
+
+    @Produces
+    LogHandler handler;
+
+    public LogFactory(){
+        handler = getLogHandler();
+    }
+
+    public LogHandler getLogHandler() {
+        switch (type) {
+            case 1:
+                return new FileHandler(&quot;@Produces created FileHandler!&quot;);
+            case 2:
+                return new DatabaseHandler(&quot;@Produces created DatabaseHandler!&quot;);
+            case 3:
+            default:
+                return new ConsoleHandler(&quot;@Produces created ConsoleHandler!&quot;);
+        }
+
+    }
+}
+</code></pre>
+<h2>Logger</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public interface Logger {
+
+    public void log(String s);
+
+    public LogHandler getHandler();
+}
+</code></pre>
+<h2>LoggerImpl</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@Named(&quot;logger&quot;)
+public class LoggerImpl implements Logger {
+
+    @Inject
+    private LogHandler handler;
+
+    @Override
+    public void log(String s) {
+        getHandler().writeLog(s);
+    }
+
+    public LogHandler getHandler() {
+        return handler;
+    }
+}
+</code></pre>
+<h2>LogHandler</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+public interface LogHandler {
+
+    public String getName();
+
+    public void writeLog(String s);
+}
+</code></pre>
+<h2>beans.xml</h2>
+<pre><code>&lt;beans xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee
+                            http://java.sun.com/xml/ns/javaee/beans_1_0.xsd&quot;&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<h2>LoggerTest</h2>
+<pre><code>package org.superbiz.cdi.produces.field;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.inject.Inject;
+import javax.naming.Context;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class LoggerTest {
+
+    @Inject
+    Logger logger;
+
+    private Context ctxt;
+
+    @Before
+    public void setUp() {
+        try {
+            ctxt = EJBContainer.createEJBContainer().getContext();
+            ctxt.bind(&quot;inject&quot;, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @After
+    public void cleanUp() {
+        try {
+            ctxt.unbind(&quot;inject&quot;);
+            ctxt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testLogHandler() {
+        assertNotNull(logger);
+        assertFalse(&quot;Handler should not be a ConsoleHandler&quot;, logger.getHandler() instanceof ConsoleHandler);
+        assertFalse(&quot;Handler should not be a FileHandler&quot;, logger.getHandler() instanceof FileHandler);
+        assertTrue(&quot;Handler should be a DatabaseHandler&quot;, logger.getHandler() instanceof DatabaseHandler);
+        logger.log(&quot;##### Testing write\n&quot;);
+        logger = null;
+    }
+
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cdi.produces.field.LoggerTest
+INFO - ********************************************************************************
+INFO - OpenEJB http://tomee.apache.org/
+INFO - Startup: Thu May 10 01:28:19 CDT 2012
+INFO - Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 7.0.0-SNAPSHOT
+INFO - Build date: 20120510
+INFO - Build time: 04:06
+INFO - ********************************************************************************
+INFO - openejb.home = /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - openejb.base = /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@a81b1fb
+INFO - succeeded in installing singleton service
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Inspecting classpath for applications: 26 urls. Consider adjusting your exclude/include.  Current settings: openejb.deployments.classpath.exclude=&#39;&#39;, openejb.deployments.classpath.include=&#39;.*&#39;
+INFO - Searched 26 classpath urls in 2015 milliseconds.  Average 77 milliseconds per url.
+INFO - Beginning load: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field/target/classes
+INFO - Configuring enterprise application: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - Auto-deploying ejb cdi-produces-field.Comp: EjbDeployment(deployment-id=cdi-produces-field.Comp)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean cdi-produces-field.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application &quot;/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field&quot; loaded.
+INFO - Assembling app: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+INFO - ignoreXmlConfiguration == true
+INFO - ignoreXmlConfiguration == true
+INFO - existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@a81b1fb
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took [69] ms.
+INFO - Deployed Application(path=/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field)
+##### Handler: @Produces created DatabaseHandler!, Writing to the database!
+INFO - Undeploying app: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.79 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

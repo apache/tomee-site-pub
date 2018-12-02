@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Telephone Stateful</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+<p>This example shows how to use OpenEJB's remoting capabilities in an embedded scenario.</p>
+<p>The basic recipe is the same for a standard embedded scenario but with these added ingreditents:</p>
+<ul>
+  <li><code>openejb.embedded.remotable</code> property</li>
+  <li><code>openejb-ejbd</code> jar</li>
+</ul>
+<p>While creating the InitialContext, pass in the openejb.embedded.remotable property with the value of "true". When this is seen by the LocalInitialContextFactory, it will boot up the Server ServiceManager in the VM which will in turn look for ServerServices in the classpath.</p>
+<p>Provided you have the openejb-ejbd jar in your classpath along with it's dependencies<br/>(openejb-server, openejb-client, openejb-core), then those services will be brought online<br/>and remote clients will be able to connect into your vm and invoke beans.</p>
+<p>If you want to add more ServerServices such as the http version of the ejbd protocol you'd simply add the openejb-httpejbd jar to your classpath. A number of ServerServices are available currently:</p>
+<ul>
+  <li>openejb-ejbd</li>
+  <li>openejb-http</li>
+  <li>openejb-telnet</li>
+  <li>openejb-derbynet</li>
+  <li>openejb-hsql</li>
+  <li>openejb-activemq</li>
+</ul>
+<h2>Telephone</h2>
+<pre><code>package org.superbiz.telephone;
+
+public interface Telephone {
+
+    void speak(String words);
+
+    String listen();
+}
+</code></pre>
+<h2>TelephoneBean</h2>
+<pre><code>package org.superbiz.telephone;
+
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+import java.util.ArrayList;
+import java.util.List;
+
+@Remote
+@Stateful
+public class TelephoneBean implements Telephone {
+
+    private static final String[] answers = {
+            &quot;How nice.&quot;,
+            &quot;Oh, of course.&quot;,
+            &quot;Interesting.&quot;,
+            &quot;Really?&quot;,
+            &quot;No.&quot;,
+            &quot;Definitely.&quot;,
+            &quot;I wondered about that.&quot;,
+            &quot;Good idea.&quot;,
+            &quot;You don&#39;t say!&quot;,
+    };
+
+    private List&lt;String&gt; conversation = new ArrayList&lt;String&gt;();
+
+    public void speak(String words) {
+        conversation.add(words);
+    }
+
+    public String listen() {
+        if (conversation.size() == 0) {
+            return &quot;Nothing has been said&quot;;
+        }
+
+        String lastThingSaid = conversation.get(conversation.size() - 1);
+        return answers[Math.abs(lastThingSaid.hashCode()) % answers.length];
+    }
+}
+</code></pre>
+<h2>TelephoneTest</h2>
+<pre><code>package org.superbiz.telephone;
+
+import junit.framework.TestCase;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Properties;
+
+/**
+ * @version $Rev: 1090810 $ $Date: 2011-04-10 07:49:26 -0700 (Sun, 10 Apr 2011) $
+ */
+public class TelephoneTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        // Uncomment these properties to change the defaults
+        //properties.setProperty(&quot;ejbd.port&quot;, &quot;4202&quot;);
+        //properties.setProperty(&quot;ejbd.bind&quot;, &quot;localhost&quot;);
+        //properties.setProperty(&quot;ejbd.threads&quot;, &quot;200&quot;);
+        //properties.setProperty(&quot;ejbd.disabled&quot;, &quot;false&quot;);
+        //properties.setProperty(&quot;ejbd.only_from&quot;, &quot;127.0.0.1,192.168.1.1&quot;);
+
+        new InitialContext(properties);
+    }
+
+    /**
+     * Lookup the Telephone bean via its remote interface but using the LocalInitialContextFactory
+     *
+     * @throws Exception
+     */
+    public void testTalkOverLocalNetwork() throws Exception {
+
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        InitialContext localContext = new InitialContext(properties);
+
+        Telephone telephone = (Telephone) localContext.lookup(&quot;TelephoneBeanRemote&quot;);
+
+        telephone.speak(&quot;Did you know I am talking directly through the embedded container?&quot;);
+
+        assertEquals(&quot;Interesting.&quot;, telephone.listen());
+
+
+        telephone.speak(&quot;Yep, I&#39;m using the bean&#39;s remote interface but since the ejb container is embedded &quot; +
+                &quot;in the same vm I&#39;m just using the LocalInitialContextFactory.&quot;);
+
+        assertEquals(&quot;Really?&quot;, telephone.listen());
+
+
+        telephone.speak(&quot;Right, you really only have to use the RemoteInitialContextFactory if you&#39;re in a different vm.&quot;);
+
+        assertEquals(&quot;Oh, of course.&quot;, telephone.listen());
+    }
+
+    /**
+     * Lookup the Telephone bean via its remote interface using the RemoteInitialContextFactory
+     *
+     * @throws Exception
+     */
+    public void testTalkOverRemoteNetwork() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
+        properties.setProperty(Context.PROVIDER_URL, &quot;ejbd://localhost:4201&quot;);
+        InitialContext remoteContext = new InitialContext(properties);
+
+        Telephone telephone = (Telephone) remoteContext.lookup(&quot;TelephoneBeanRemote&quot;);
+
+        telephone.speak(&quot;Is this a local call?&quot;);
+
+        assertEquals(&quot;No.&quot;, telephone.listen());
+
+
+        telephone.speak(&quot;This would be a lot cooler if I was connecting from another VM then, huh?&quot;);
+
+        assertEquals(&quot;I wondered about that.&quot;, telephone.listen());
+
+
+        telephone.speak(&quot;I suppose I should hangup and call back over the LocalInitialContextFactory.&quot;);
+
+        assertEquals(&quot;Good idea.&quot;, telephone.listen());
+
+
+        telephone.speak(&quot;I&#39;ll remember this though in case I ever have to call you accross a network.&quot;);
+
+        assertEquals(&quot;Definitely.&quot;, telephone.listen());
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.telephone.TelephoneTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/telephone-stateful
+INFO - openejb.base = /Users/dblevins/examples/telephone-stateful
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/telephone-stateful/target/classes
+INFO - Beginning load: /Users/dblevins/examples/telephone-stateful/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/telephone-stateful/classpath.ear
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean TelephoneBean: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Enterprise application &quot;/Users/dblevins/examples/telephone-stateful/classpath.ear&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/telephone-stateful/classpath.ear
+INFO - Jndi(name=TelephoneBeanRemote) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Jndi(name=global/classpath.ear/telephone-stateful/TelephoneBean!org.superbiz.telephone.Telephone) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Jndi(name=global/classpath.ear/telephone-stateful/TelephoneBean) --&gt; Ejb(deployment-id=TelephoneBean)
+INFO - Created Ejb(deployment-id=TelephoneBean, ejb-name=TelephoneBean, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=TelephoneBean, ejb-name=TelephoneBean, container=Default Stateful Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/telephone-stateful/classpath.ear)
+INFO - Initializing network services
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+  ** Starting Services **
+  NAME                 IP              PORT  
+  admin thread         127.0.0.1       4200  
+  ejbd                 127.0.0.1       4201  
+  ejbd                 127.0.0.1       4203  
+-------
+Ready!
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.448 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

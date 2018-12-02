@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Properties Tool</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <a name="PropertiesTool-PropertiesCommandlineTool"></a>
+<h1>Properties Command line Tool</h1>
+<p>To see all configurable properties in use by OpenEJB, using the following tool against a running server:</p>
+<blockquote>
+  <p>./bin/openejb properties</p>
+</blockquote>
+<p>The output of this tool takes all overrideable components OpenEJB sees and outputs their properties along with the current value. This allows you to easily see what is running in your system, what properties are available for overriding, and what exact values are for each component. OpenEJB has a number of flags that can be passed to it not associated with any particular component, these are output as well.</p>
+<p>Content from this file can be safely copied as-is into the conf/system.properties file or sent to the users list with bug reports. These properties may also be applied back into the openejb.xml file by pasting the properties without the "<id>." prefix into the respective component declarations. The only warning is that any properties of type<br/>"<id>.password" will have their values masked, so make sure you edit them<br/>if you reapply them back into conf/openejb.xml or conf/system.properties.</p>
+<a name="PropertiesTool-PropertyOverriding"></a>
+<h1>Property Overriding</h1>
+<p>Any component configured in OpenEJB via the openejb.xml (and some that aren't) can be overridden using system properties. The format is:</p>
+<p><code>&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt;</code></p>
+<p>And this can be done on the command line as follows:</p>
+<p><code>./bin/openejb -D&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt; ...</code></p>
+<p>Or by adding the property to the conf/system.properties file. Note that command line overrides win over overrides in the conf/system.properties file.</p>
+<p>In an embedded environment, the properties can be added to the Hashtable passed into the javax.naming.InitialContext when using the LocalInitialContextFactory or also to the System.getProperties() object before OpenEJB is embedded (which will be when the first InitialContext is created).</p>
+<p>At startup, OpenEJB will find the component with the given id and apply the new property value before constructing the individual component.</p>
+<a name="PropertiesTool-Exampleoutput"></a>
+<h1>Example output</h1>
+<pre><code># Container(id=Default CMP Container)
+# className: org.apache.openejb.core.cmp.CmpContainer
+#
+Default\ CMP\ Container.CmpEngineFactory=org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
+Default\ CMP\ Container.Engine=instantdb
+Default\ CMP\ Container.ConnectorName=Default JDBC Database
+
+# Container(id=Default BMP Container)
+# className: org.apache.openejb.core.entity.EntityContainer
+#
+Default\ BMP\ Container.PoolSize=10
+
+# Container(id=Default Stateful Container)
+# className: org.apache.openejb.core.stateful.StatefulContainer
+#
+Default\ Stateful\ Container.BulkPassivate=50
+Default\ Stateful\ Container.Passivator=org.apache.openejb.core.stateful.SimplePassivater
+Default\ Stateful\ Container.TimeOut=20
+Default\ Stateful\ Container.PoolSize=500
+
+# Container(id=Default Stateless Container)
+# className: org.apache.openejb.core.stateless.StatelessContainer
+#
+Default\ Stateless\ Container.PoolSize=10
+Default\ Stateless\ Container.StrictPooling=true
+Default\ Stateless\ Container.TimeOut=0
+
+# Container(id=Default MDB Container)
+# className: org.apache.openejb.core.mdb.MdbContainer
+#
+Default\ MDB\ Container.ResourceAdapter=Default JMS Resource Adapter
+Default\ MDB\ Container.InstanceLimit=10
+Default\ MDB\ Container.MessageListenerInterface=javax.jms.MessageListener
+Default\ MDB\ Container.ActivationSpecClass=org.apache.activemq.ra.ActiveMQActivationSpec
+
+# ConnectionManager(id=Default Local TX ConnectionManager)
+# className: org.apache.openejb.resource.SharedLocalConnectionManager
+#
+
+# Resource(id=Default JMS Resource Adapter)
+# className: org.apache.activemq.ra.ActiveMQResourceAdapter
+#
+Default\ JMS\ Resource\ Adapter.ServerUrl=vm\://localhost?async\=true
+Default\ JMS\ Resource\ Adapter.BrokerXmlConfig=broker\:(tcp\://localhost\:61616)
+Default\ JMS\ Resource\ Adapter.ThreadPoolSize=30
+
+# Resource(id=Default JDBC Database)
+# className: org.apache.openejb.resource.jdbc.BasicManagedDataSource
+#
+Default\ JDBC\ Database.MinIdle=0
+Default\ JDBC\ Database.Password=xxxx
+Default\ JDBC\ Database.JdbcUrl=jdbc\:hsqldb\:file\:hsqldb
+Default\ JDBC\ Database.MaxIdle=20
+Default\ JDBC\ Database.ConnectionProperties=
+Default\ JDBC\ Database.MaxWait=-1
+Default\ JDBC\ Database.TimeBetweenEvictionRunsMillis=-1
+Default\ JDBC\ Database.MaxActive=20
+Default\ JDBC\ Database.DefaultAutoCommit=true
+Default\ JDBC\ Database.AccessToUnderlyingConnectionAllowed=false
+Default\ JDBC\ Database.JdbcDriver=org.hsqldb.jdbcDriver
+Default\ JDBC\ Database.TestWhileIdle=false
+Default\ JDBC\ Database.UserName=sa
+Default\ JDBC\ Database.MaxOpenPreparedStatements=0
+Default\ JDBC\ Database.TestOnBorrow=true
+Default\ JDBC\ Database.PoolPreparedStatements=false
+Default\ JDBC\ Database.ConnectionInterface=javax.sql.DataSource
+Default\ JDBC\ Database.TestOnReturn=false
+Default\ JDBC\ Database.MinEvictableIdleTimeMillis=1800000
+Default\ JDBC\ Database.NumTestsPerEvictionRun=3
+Default\ JDBC\ Database.InitialSize=0
+
+# Resource(id=Default Unmanaged JDBC Database)
+# className: org.apache.openejb.resource.jdbc.BasicDataSource
+#
+Default\ Unmanaged\ JDBC\ Database.MaxWait=-1
+Default\ Unmanaged\ JDBC\ Database.InitialSize=0
+Default\ Unmanaged\ JDBC\ Database.DefaultAutoCommit=true
+Default\ Unmanaged\ JDBC\ Database.ConnectionProperties=
+Default\ Unmanaged\ JDBC\ Database.MaxActive=10
+Default\ Unmanaged\ JDBC\ Database.TestOnBorrow=true
+Default\ Unmanaged\ JDBC\ Database.JdbcUrl=jdbc\:hsqldb\:file\:hsqldb
+Default\ Unmanaged\ JDBC\ Database.TestOnReturn=false
+Default\ Unmanaged\ JDBC\ Database.AccessToUnderlyingConnectionAllowed=false
+Default\ Unmanaged\ JDBC\ Database.Password=xxxx
+Default\ Unmanaged\ JDBC\ Database.MinEvictableIdleTimeMillis=1800000
+Default\ Unmanaged\ JDBC\ Database.PoolPreparedStatements=false
+Default\ Unmanaged\ JDBC\ Database.MaxOpenPreparedStatements=0
+Default\ Unmanaged\ JDBC\ Database.ConnectionInterface=javax.sql.DataSource
+Default\ Unmanaged\ JDBC\ Database.MinIdle=0
+Default\ Unmanaged\ JDBC\ Database.NumTestsPerEvictionRun=3
+Default\ Unmanaged\ JDBC\ Database.TimeBetweenEvictionRunsMillis=-1
+Default\ Unmanaged\ JDBC\ Database.JdbcDriver=org.hsqldb.jdbcDriver
+Default\ Unmanaged\ JDBC\ Database.UserName=sa
+Default\ Unmanaged\ JDBC\ Database.MaxIdle=10
+Default\ Unmanaged\ JDBC\ Database.TestWhileIdle=false
+
+# Resource(id=Default JMS Connection Factory)
+# className: org.apache.activemq.ra.ActiveMQManagedConnectionFactory
+#
+Default\ JMS\ Connection\ Factory.ConnectionInterface=javax.jms.ConnectionFactory, \
+javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory
+Default\ JMS\ Connection\ Factory.ResourceAdapter=Default JMS Resource Adapter
+
+# SecurityService(id=Default Security Service)
+# className: org.apache.openejb.core.security.SecurityServiceImpl
+#
+
+# TransactionManager(id=Default Transaction Manager)
+# className: org.apache.geronimo.transaction.manager.GeronimoTransactionManager
+#
+
+# ServerService(id=httpejbd)
+# className: org.apache.openejb.server.httpd.HttpEjbServer
+#
+httpejbd.port=4204
+httpejbd.name=httpejbd
+httpejbd.disabled=false
+httpejbd.server=org.apache.openejb.server.httpd.HttpEjbServer
+httpejbd.threads=200
+httpejbd.bind=127.0.0.1
+
+# ServerService(id=telnet)
+# className: org.apache.openejb.server.telnet.TelnetServer
+#
+telnet.port=4202
+telnet.name=telnet
+telnet.disabled=false
+telnet.bind=127.0.0.1
+telnet.threads=5
+telnet.server=org.apache.openejb.server.telnet.TelnetServer
+
+# ServerService(id=ejbd)
+# className: org.apache.openejb.server.ejbd.EjbServer
+#
+ejbd.disabled=false
+ejbd.bind=127.0.0.1
+ejbd.server=org.apache.openejb.server.ejbd.EjbServer
+ejbd.port=4201
+ejbd.name=ejbd
+ejbd.threads=200
+
+# ServerService(id=hsql)
+# className: org.apache.openejb.server.hsql.HsqlService
+#
+hsql.port=9001
+hsql.name=hsql
+hsql.disabled=false
+hsql.server=org.apache.openejb.server.hsql.HsqlService
+hsql.bind=127.0.0.1
+
+# ServerService(id=admin)
+# className: org.apache.openejb.server.admin.AdminDaemon
+#
+admin.disabled=false
+admin.bind=127.0.0.1
+admin.only_from=localhost
+admin.port=4200
+admin.threads=1
+admin.name=admin
+admin.server=org.apache.openejb.server.admin.AdminDaemon
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

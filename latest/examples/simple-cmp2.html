@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>EJB 2.1 CMP EntityBeans (CMP2)</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>OpenEJB, the EJB Container for TomEE and Geronimo, does support all of EJB 1.1 to 3.1, including CMP2.</p>
+<p>The CMP2 implementation is actually done by adapting the CMP2 bean into a JPA Entity dynamically at deploy time.</p>
+<p>Appropriate subclasses, a JPA persistence.xml file and a mapping.xml file are generated at deployment time for the CMP2 EntityBeans and all the Entities will be then run on OpenJPA. This innovative code has been used as the sole CMP2 implementation in Geronimo for its J2EE 1.4, JavaEE 5 and JavaEE 6 certifications.</p>
+<p>The persistence.xml and mapping.xml files generated at deploy time can be saved to disk and included in the application, allowing you to:</p>
+<ul>
+  <li>gain finer control over persistence options</li>
+  <li>slowly convert individual entities from CMP2 to JPA</li>
+</ul>
+<p>Let's see an example.</p>
+<h1>Movies application</h1>
+<p>The following is a basic EJB 2.1 application consisting of one CMP2 Entity. For those that are reading this example out of curiosity and are not familiar with CMP2 or EJB 2.x, each CMP2 Entity is composed of two parts</p>
+<ul>
+  <li>
+  <p><strong>A Home interface</strong> which has data access methods like "find", "create", and "remove". This is essentially<br/> what people use <code>@Stateless</code> beans for today, but with difference that you do not need to supply<br/> the implementation of the interface -- the container will generate one for you. This is partly what inspired<br/> the creation of the OpenEJB-specific <a href="../dynamic-dao-implementation/README.html">Dynamic DAO</a> feature.</p></li>
+  <li>
+  <p><strong>An abstract EntityBean class</strong> which declares the persistent "properties" of the entity without actually<br/>declaring any fields. It is the container's job to implement the actual methods and create the appropriate fields. OpenEJB will implement this bean as a JPA <code>@Entity</code> bean.</p></li>
+</ul>
+<p>As such a CMP2 EntityBean is really just the description of a persistent object and the description of a data-access object. There is no actual code to write.</p>
+<p>The majority of work in CMP2 is done in the xml:</p>
+<ul>
+  <li><strong>ejb-jar.xml</strong> mapping information, which describes the persistent properties of the entity and the queries<br/> for all <em>Home</em> find, create and remove methods. This information will be converted by OpenEJB into<br/> a JPA mapping.xml file. All queries in the cmp2 part of the ejb-jar.xml are converted<br/> into named queries in JPA and generally everything is converted to its JPA equivalent.</li>
+</ul>
+<h2>CMP2 EntityBean, MovieBean</h2>
+<pre><code>package org.superbiz.cmp2;
+
+import javax.ejb.EntityBean;
+
+public abstract class MovieBean implements EntityBean {
+
+    public MovieBean() {
+    }
+
+    public Integer ejbCreate(String director, String title, int year) {
+        this.setDirector(director);
+        this.setTitle(title);
+        this.setYear(year);
+        return null;
+    }
+
+    public abstract java.lang.Integer getId();
+
+    public abstract void setId(java.lang.Integer id);
+
+    public abstract String getDirector();
+
+    public abstract void setDirector(String director);
+
+    public abstract String getTitle();
+
+    public abstract void setTitle(String title);
+
+    public abstract int getYear();
+
+    public abstract void setYear(int year);
+
+}
+</code></pre>
+<h2>CMP2 Home interface, Movies</h2>
+<pre><code>package org.superbiz.cmp2;
+
+import javax.ejb.CreateException;
+import javax.ejb.FinderException;
+import java.util.Collection;
+
+/**
+ * @version $Revision$ $Date$
+ */
+interface Movies extends javax.ejb.EJBLocalHome {
+    Movie create(String director, String title, int year) throws CreateException;
+
+    Movie findByPrimaryKey(Integer primarykey) throws FinderException;
+
+    Collection&lt;Movie&gt; findAll() throws FinderException;
+
+    Collection&lt;Movie&gt; findByDirector(String director) throws FinderException;
+}
+</code></pre>
+<h2>CMP2 mapping in ejb-jar.xml</h2>
+<pre><code>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;entity&gt;
+      &lt;ejb-name&gt;MovieBean&lt;/ejb-name&gt;
+      &lt;local-home&gt;org.superbiz.cmp2.Movies&lt;/local-home&gt;
+      &lt;local&gt;org.superbiz.cmp2.Movie&lt;/local&gt;
+      &lt;ejb-class&gt;org.superbiz.cmp2.MovieBean&lt;/ejb-class&gt;
+      &lt;persistence-type&gt;Container&lt;/persistence-type&gt;
+      &lt;prim-key-class&gt;java.lang.Integer&lt;/prim-key-class&gt;
+      &lt;reentrant&gt;false&lt;/reentrant&gt;
+      &lt;cmp-version&gt;2.x&lt;/cmp-version&gt;
+      &lt;abstract-schema-name&gt;MovieBean&lt;/abstract-schema-name&gt;
+      &lt;cmp-field&gt;
+        &lt;field-name&gt;id&lt;/field-name&gt;
+      &lt;/cmp-field&gt;
+      &lt;cmp-field&gt;
+        &lt;field-name&gt;director&lt;/field-name&gt;
+      &lt;/cmp-field&gt;
+      &lt;cmp-field&gt;
+        &lt;field-name&gt;year&lt;/field-name&gt;
+      &lt;/cmp-field&gt;
+      &lt;cmp-field&gt;
+        &lt;field-name&gt;title&lt;/field-name&gt;
+      &lt;/cmp-field&gt;
+      &lt;primkey-field&gt;id&lt;/primkey-field&gt;
+      &lt;query&gt;
+        &lt;query-method&gt;
+          &lt;method-name&gt;findByDirector&lt;/method-name&gt;
+          &lt;method-params&gt;
+            &lt;method-param&gt;java.lang.String&lt;/method-param&gt;
+          &lt;/method-params&gt;
+        &lt;/query-method&gt;
+        &lt;ejb-ql&gt;SELECT m FROM MovieBean m WHERE m.director = ?1&lt;/ejb-ql&gt;
+      &lt;/query&gt;
+      &lt;query&gt;
+        &lt;query-method&gt;
+          &lt;method-name&gt;findAll&lt;/method-name&gt;
+          &lt;method-params/&gt;
+        &lt;/query-method&gt;
+        &lt;ejb-ql&gt;SELECT m FROM MovieBean as m&lt;/ejb-ql&gt;
+      &lt;/query&gt;
+    &lt;/entity&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/ejb-jar&gt;
+</code></pre>
+<h2>openejb-jar.xml</h2>
+<pre><code>&lt;openejb-jar xmlns=&quot;http://www.openejb.org/xml/ns/openejb-jar-2.1&quot;&gt;
+  &lt;enterprise-beans&gt;
+    &lt;entity&gt;
+      &lt;ejb-name&gt;MovieBean&lt;/ejb-name&gt;
+      &lt;key-generator xmlns=&quot;http://www.openejb.org/xml/ns/pkgen-2.1&quot;&gt;
+        &lt;uuid/&gt;
+      &lt;/key-generator&gt;
+    &lt;/entity&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+<h2>MoviesTest</h2>
+<pre><code>package org.superbiz.cmp2;
+
+import junit.framework.TestCase;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Collection;
+import java.util.Properties;
+
+/**
+ * @version $Revision: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
+ */
+public class MoviesTest extends TestCase {
+
+    public void test() throws Exception {
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
+        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+
+        p.put(&quot;movieDatabaseUnmanaged&quot;, &quot;new://Resource?type=DataSource&quot;);
+        p.put(&quot;movieDatabaseUnmanaged.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put(&quot;movieDatabaseUnmanaged.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put(&quot;movieDatabaseUnmanaged.JtaManaged&quot;, &quot;false&quot;);
+
+        Context context = new InitialContext(p);
+
+        Movies movies = (Movies) context.lookup(&quot;MovieBeanLocalHome&quot;);
+
+        movies.create(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992);
+        movies.create(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996);
+        movies.create(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998);
+
+        Collection&lt;Movie&gt; list = movies.findAll();
+        assertEquals(&quot;Collection.size()&quot;, 3, list.size());
+
+        for (Movie movie : list) {
+            movies.remove(movie.getPrimaryKey());
+        }
+
+        assertEquals(&quot;Movies.findAll()&quot;, 0, movies.findAll().size());
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cmp2.MoviesTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/simple-cmp2/target
+INFO - openejb.base = /Users/dblevins/examples/simple-cmp2/target
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabaseUnmanaged, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/simple-cmp2/target/classes
+INFO - Beginning load: /Users/dblevins/examples/simple-cmp2/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/simple-cmp2/target/classpath.ear
+INFO - Configuring Service(id=Default CMP Container, type=Container, provider-id=Default CMP Container)
+INFO - Auto-creating a container for bean MovieBean: Container(type=CMP_ENTITY, id=Default CMP Container)
+INFO - Configuring PersistenceUnit(name=cmp)
+INFO - Adjusting PersistenceUnit cmp &lt;jta-data-source&gt; to Resource ID &#39;movieDatabase&#39; from &#39;null&#39;
+INFO - Adjusting PersistenceUnit cmp &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseUnmanaged&#39; from &#39;null&#39;
+INFO - Enterprise application &quot;/Users/dblevins/examples/simple-cmp2/target/classpath.ear&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/simple-cmp2/target/classpath.ear
+INFO - PersistenceUnit(name=cmp, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 160ms
+INFO - Jndi(name=MovieBeanLocalHome) --&gt; Ejb(deployment-id=MovieBean)
+INFO - Jndi(name=global/classpath.ear/simple-cmp2/MovieBean!org.superbiz.cmp2.Movies) --&gt; Ejb(deployment-id=MovieBean)
+INFO - Jndi(name=global/classpath.ear/simple-cmp2/MovieBean) --&gt; Ejb(deployment-id=MovieBean)
+INFO - Created Ejb(deployment-id=MovieBean, ejb-name=MovieBean, container=Default CMP Container)
+INFO - Started Ejb(deployment-id=MovieBean, ejb-name=MovieBean, container=Default CMP Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/simple-cmp2/target/classpath.ear)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.919 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+<h1>CMP2 to JPA</h1>
+<p>As mentioned OpenEJB will implement the abstract CMP2 <code>EntityBean</code> as a JPA <code>@Entity</code>, create a <code>persistence.xml</code> file and convert all <code>ejb-jar.xml</code> mapping and queries to a JPA <code>entity-mappings.xml</code> file.</p>
+<p>Both of these files will be written to disk by setting the system property <code>openejb.descriptors.output</code> to <code>true</code>. In the testcase above, this can be done via the <code>InitialContext</code> parameters via code like this:</p>
+<pre><code>Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+
+// setup the data sources as usual...
+
+// write the generated descriptors
+p.put(&quot;openejb.descriptors.output&quot;, &quot;true&quot;);
+
+Context context = new InitialContext(p);
+</code></pre>
+<p>Below are the generated <code>persistence.xml</code> and <code>mapping.xml</code> files for our CMP2 <code>EntityBean</code></p>
+<h2>CMP2 to JPA generated persistence.xml file</h2>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+    &lt;persistence-unit name=&quot;cmp&quot; transaction-type=&quot;JTA&quot;&gt;
+        &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+        &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+        &lt;mapping-file&gt;META-INF/openejb-cmp-generated-orm.xml&lt;/mapping-file&gt;
+        &lt;class&gt;openejb.org.superbiz.cmp2.MovieBean&lt;/class&gt;
+        &lt;properties&gt;
+            &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot;
+            value=&quot;buildSchema(ForeignKeys=true, Indexes=false, IgnoreErrors=true)&quot;/&gt;
+            &lt;property name=&quot;openjpa.Log&quot; value=&quot;DefaultLevel=INFO&quot;/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<p>All of this <code>persitence.xml</code> can be changed, however the <code>persistence-unit</code> must have the <code>name</code> fixed to <code>cmp</code>.</p>
+<h2>CMP2 to JPA generated mapping file</h2>
+<p>Note that the <code>persistence.xml</code> above refers to this mappings file as <code>META-INF/openejb-cmp-generated-orm.xml</code>. It is possible to rename this file to whatever name you prefer, just make sure to update the <code>&lt;mapping-file&gt;</code> element of the <code>cmp</code> persistence unit accordingly.</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;entity-mappings xmlns=&quot;http://java.sun.com/xml/ns/persistence/orm&quot; version=&quot;1.0&quot;&gt;
+    &lt;entity class=&quot;openejb.org.superbiz.cmp2.MovieBean&quot; name=&quot;MovieBean&quot;&gt;
+        &lt;description&gt;simple-cmp2#MovieBean&lt;/description&gt;
+        &lt;table/&gt;
+        &lt;named-query name=&quot;MovieBean.findByDirector(java.lang.String)&quot;&gt;
+            &lt;query&gt;SELECT m FROM MovieBean m WHERE m.director = ?1&lt;/query&gt;
+        &lt;/named-query&gt;
+        &lt;named-query name=&quot;MovieBean.findAll&quot;&gt;
+            &lt;query&gt;SELECT m FROM MovieBean as m&lt;/query&gt;
+        &lt;/named-query&gt;
+        &lt;attributes&gt;
+            &lt;id name=&quot;id&quot;&gt;
+                &lt;generated-value strategy=&quot;IDENTITY&quot;/&gt;
+            &lt;/id&gt;
+            &lt;basic name=&quot;director&quot;/&gt;
+            &lt;basic name=&quot;year&quot;/&gt;
+            &lt;basic name=&quot;title&quot;/&gt;
+        &lt;/attributes&gt;
+    &lt;/entity&gt;
+&lt;/entity-mappings&gt;
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>DataSource Versioning</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>This example shows you how to use versioned DataSources of the same provider using the classpath attribute.</p>
+<h1>Configuration</h1>
+<p>The DataSource configuration can be made several ways and here we layout two common methods in the form of unit tests. Before we start, if you take a peek in the project pom.xml and look for the maven-dependency-plugin usage you will see that we pull in two completely different driver files for this example.</p>
+<h1>AlternateDataSourceTest.java</h1>
+<p>This test utilizes the Arquillian testing framework. See <a href="http://tomee.apache.org/arquillian-available-adapters.html">here</a> for more details.</p>
+<p>The example uses src/test/resources/arquillian.xml and src/test/conf/tomee.xml to define the DataSources. Note the differing driver version paths, yet still using the same provider (org.apache.derby.jdbc.EmbeddedDriver):</p>
+<pre><code>&lt;tomee&gt;
+
+  &lt;Resource id=&quot;DatabaseOne&quot; type=&quot;DataSource&quot; classpath=&quot;${catalina.base}/../../drivers/derby-10.10.1.1.jar&quot;&gt;
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:databaseOne;create=true
+    UserName SA
+  &lt;/Resource&gt;
+
+  &lt;Resource id=&quot;DatabaseTwo&quot; type=&quot;DataSource&quot; classpath=&quot;${catalina.base}/../../drivers/derby-10.9.1.0.jar&quot;&gt;
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:databaseTwo;create=true
+    UserName SA
+  &lt;/Resource&gt;
+
+&lt;/tomee&gt;
+</code></pre>
+<h1>Developer Information</h1>
+<p>When testing within a Maven environment it is also possible to use direct maven coordinates rather than a file link, like so:</p>
+<pre><code>....
+&lt;Resource id=&quot;DatabaseOne&quot; type=&quot;DataSource&quot; classpath=&quot;mvn:org.apache.derby:derby:10.10.1.1&quot;&gt;
+....
+</code></pre>
+<h1>AlternateDriverJarTest.java</h1>
+<p>This test takes an embedded approach and as you can see the driver paths are specified as a DataSource parameter. Both examples demonstrate the same, in that two driver versions can be loaded and used within the same application.</p>
+<pre><code>@Configuration
+public Properties config() {
+
+    final File drivers = new File(new File(&quot;target&quot;), &quot;drivers&quot;).getAbsoluteFile();
+
+    final Properties p = new Properties();
+    p.put(&quot;openejb.jdbc.datasource-creator&quot;, &quot;dbcp-alternative&quot;);
+
+    File file = new File(drivers, &quot;derby-10.10.1.1.jar&quot;);
+    Assert.assertTrue(&quot;Failed to find: &quot; + file, file.exists());
+
+    p.put(&quot;JdbcOne&quot;, &quot;new://Resource?type=DataSource&amp;classpath=&quot;
+            + file.getAbsolutePath().replace(&quot;\\&quot;, &quot;/&quot;));
+    p.put(&quot;JdbcOne.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
+    p.put(&quot;JdbcOne.JdbcUrl&quot;, &quot;jdbc:derby:memory:JdbcOne;create=true&quot;);
+    p.put(&quot;JdbcOne.UserName&quot;, USER);
+    p.put(&quot;JdbcOne.Password&quot;, PASSWORD);
+    p.put(&quot;JdbcOne.JtaManaged&quot;, &quot;false&quot;);
+
+    file = new File(drivers, &quot;derby-10.9.1.0.jar&quot;);
+    Assert.assertTrue(&quot;Failed to find: &quot; + file, file.exists());
+
+    p.put(&quot;JdbcTwo&quot;, &quot;new://Resource?type=DataSource&amp;classpath=&quot;
+            + file.getAbsolutePath().replace(&quot;\\&quot;, &quot;/&quot;));
+    p.put(&quot;JdbcTwo.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
+    p.put(&quot;JdbcTwo.JdbcUrl&quot;, &quot;jdbc:derby:memory:JdbcTwo;create=true&quot;);
+    p.put(&quot;JdbcTwo.UserName&quot;, USER);
+    p.put(&quot;JdbcTwo.Password&quot;, PASSWORD);
+    p.put(&quot;JdbcTwo.JtaManaged&quot;, &quot;false&quot;);
+    return p;
+}
+</code></pre>
+<h1>Full Test Source for AlternateDataSourceTest.java</h1>
+<pre><code>package org.superbiz;
+
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+
+@RunWith(Arquillian.class)
+public class AlternateDataSourceTest {
+
+    @Deployment
+    public static WebArchive createDeployment() {
+
+        return ShrinkWrap.create(WebArchive.class, &quot;test.war&quot;)
+            .addClasses(DataSourceTester.class)
+            .addAsResource(new ClassLoaderAsset(&quot;META-INF/ejb-jar.xml&quot;), &quot;META-INF/ejb-jar.xml&quot;);
+        //We are using src/test/conf/tomee.xml, but this also works - .addAsResource(new ClassLoaderAsset(&quot;META-INF/resources.xml&quot;), &quot;META-INF/resources.xml&quot;);
+        //Or even using a persistence context - .addAsResource(new ClassLoaderAsset(&quot;META-INF/persistence.xml&quot;), &quot;META-INF/persistence.xml&quot;);
+    }
+
+    @EJB
+    private DataSourceTester tester;
+
+    @Test
+    public void testDataSourceOne() throws Exception {
+        Assert.assertEquals(&quot;Should be using 10.10.1.1 - (1458268)&quot;, &quot;10.10.1.1 - (1458268)&quot;, tester.getOne());
+    }
+
+    @Test
+    public void testDataSourceTwo() throws Exception {
+        Assert.assertEquals(&quot;Should be using 10.9.1.0 - (1344872)&quot;, &quot;10.9.1.0 - (1344872)&quot;, tester.getTwo());
+    }
+
+    @Test
+    public void testDataSourceBoth() throws Exception {
+        Assert.assertEquals(&quot;Should be using 10.10.1.1 - (1458268)|10.9.1.0 - (1344872)&quot;, &quot;10.10.1.1 - (1458268)|10.9.1.0 - (1344872)&quot;, tester.getBoth());
+    }
+
+    @Stateless
+    public static class DataSourceTester {
+
+        @Resource(name = &quot;DatabaseOne&quot;)
+        DataSource dataSourceOne;
+
+        @Resource(name = &quot;DatabaseTwo&quot;)
+        DataSource dataSourceTwo;
+
+        public String getOne() throws Exception {
+            return getVersion(dataSourceOne);
+        }
+
+        public String getTwo() throws Exception {
+            return getVersion(dataSourceTwo);
+        }
+
+        public String getBoth() throws Exception {
+            return getOne() + &quot;|&quot; + getTwo();
+        }
+
+        private static String getVersion(final DataSource ds) throws SQLException {
+            Connection con = null;
+            try {
+                con = ds.getConnection();
+                final DatabaseMetaData md = con.getMetaData();
+                return md.getDriverVersion();
+            } finally {
+                if (con != null) {
+                    con.close();
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.AlternateDataSourceTest
+Apr 17, 2014 2:19:45 PM org.apache.openejb.arquillian.common.Setup findHome
+INFO: Unable to find home in: C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote
+Apr 17, 2014 2:19:45 PM org.apache.openejb.arquillian.common.MavenCache getArtifact
+INFO: Downloading org.apache.openejb:apache-tomee:1.6.1-SNAPSHOT:zip:webprofile please wait...
+Apr 17, 2014 2:19:45 PM org.apache.openejb.arquillian.common.Zips unzip
+INFO: Extracting &#39;C:\Users\Andy\.m2\repository\org\apache\openejb\apache-tomee\1.6.1-SNAPSHOT\apache-tomee-1.6.1-SNAPSHOT-webprofile.zip&#39; to &#39;C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote&#39;
+Apr 17, 2014 2:19:47 PM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
+INFO: Downloaded container to: C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT
+INFO - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: C:\Program Files\Java\jdk1.7.0_45\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\SlikSvn\bin;C:\dev\apache-maven-3.2.1\bin;C:\dev\apache-ant-1.9.3\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files (x86)\Git\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\TortoiseSVN\bin;.
+INFO - Initializing ProtocolHandler [&quot;http-bio-55243&quot;]
+INFO - Initializing ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Using &#39;openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator&#39;
+INFO - Optional service not installed: org.apache.tomee.webservices.TomeeJaxRsService
+INFO - Optional service not installed: org.apache.tomee.webservices.TomeeJaxWsService
+INFO - ********************************************************************************
+INFO - OpenEJB http://tomee.apache.org/
+INFO - Startup: Thu Apr 17 14:19:55 CEST 2014
+INFO - Copyright 1999-2013 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 7.0.0-SNAPSHOT
+INFO - Build date: 20140417
+INFO - Build time: 01:37
+INFO - ********************************************************************************
+INFO - openejb.home = C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT
+INFO - openejb.base = C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@22c2e2dd
+INFO - Succeeded in installing singleton service
+INFO - openejb configuration file is &#39;C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT\conf\tomee.xml&#39;
+INFO - Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=DatabaseOne, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring Service(id=DatabaseTwo, type=Resource, provider-id=Default JDBC Database)
+INFO - Using &#39;openejb.system.apps=true&#39;
+INFO - Configuring enterprise application: openejb
+INFO - Using openejb.deploymentId.format &#39;{ejbName}&#39;
+INFO - Auto-deploying ejb openejb/Deployer: EjbDeployment(deployment-id=openejb/Deployer)
+INFO - Auto-deploying ejb openejb/ConfigurationInfo: EjbDeployment(deployment-id=openejb/ConfigurationInfo)
+INFO - Auto-deploying ejb MEJB: EjbDeployment(deployment-id=MEJB)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean openejb/Deployer: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Enterprise application &quot;openejb&quot; loaded.
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Tomcat Security Service)
+INFO - Creating Resource(id=DatabaseOne)
+INFO - Disabling testOnBorrow since no validation query is provided
+INFO - Creating Resource(id=DatabaseTwo)
+INFO - Disabling testOnBorrow since no validation query is provided
+INFO - Creating Container(id=Default Stateless Container)
+INFO - Assembling app: openejb
+INFO - Using &#39;openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}&#39;
+INFO - Jndi(name=openejb/DeployerBusinessRemote) --&gt; Ejb(deployment-id=openejb/Deployer)
+INFO - Jndi(name=global/openejb/openejb/Deployer!org.apache.openejb.assembler.Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+INFO - Jndi(name=global/openejb/openejb/Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+INFO - Jndi(name=openejb/ConfigurationInfoBusinessRemote) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+INFO - Jndi(name=global/openejb/openejb/ConfigurationInfo!org.apache.openejb.assembler.classic.cmd.ConfigurationInfo) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+INFO - Jndi(name=global/openejb/openejb/ConfigurationInfo) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+INFO - Jndi(name=MEJB) --&gt; Ejb(deployment-id=MEJB)
+INFO - Jndi(name=global/openejb/MEJB!javax.management.j2ee.ManagementHome) --&gt; Ejb(deployment-id=MEJB)
+INFO - Jndi(name=global/openejb/MEJB) --&gt; Ejb(deployment-id=MEJB)
+INFO - Created Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=MEJB, ejb-name=MEJB, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/ConfigurationInfo, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=MEJB, ejb-name=MEJB, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/ConfigurationInfo, container=Default Stateless Container)
+INFO - Deployed MBean(openejb.user.mbeans:application=openejb,group=org.apache.openejb.assembler.monitoring,name=JMXDeployer)
+INFO - Deployed Application(path=openejb)
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO - -------
+INFO - Ready!
+INFO - Initialization processed in 7959 ms
+INFO - Importing a Tomcat Resource with id &#39;UserDatabase&#39; of type &#39;org.apache.catalina.UserDatabase&#39;.
+INFO - Creating Resource(id=UserDatabase)
+INFO - Starting service Catalina
+INFO - Starting Servlet Engine: Apache Tomcat (TomEE)/7.0.53 (1.6.1-SNAPSHOT)
+INFO - Starting ProtocolHandler [&quot;http-bio-55243&quot;]
+INFO - Starting ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Server startup in 288 ms
+WARNING - StandardServer.await: Invalid command &#39;&#39; received
+Apr 17, 2014 2:20:04 PM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:55243/tomee/ejb}
+INFO - Extracting jar: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test.war
+INFO - Extracted path: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
+INFO - using default host: localhost
+INFO - ------------------------- localhost -&gt; /test
+INFO - Using &#39;openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager&#39;
+INFO - Configuring enterprise application: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
+INFO - Auto-deploying ejb DataSourceTester: EjbDeployment(deployment-id=DataSourceTester)
+INFO - Auto-linking resource-ref &#39;java:comp/env/DatabaseTwo&#39; in bean DataSourceTester to Resource(id=DatabaseTwo)
+INFO - Auto-linking resource-ref &#39;java:comp/env/DatabaseOne&#39; in bean DataSourceTester to Resource(id=DatabaseOne)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.AlternateDataSourceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT\temp for stateful session passivation
+INFO - Enterprise application &quot;C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test&quot; loaded.
+INFO - Assembling app: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
+INFO - Jndi(name=DataSourceTesterLocalBean) --&gt; Ejb(deployment-id=DataSourceTester)
+INFO - Jndi(name=global/test/DataSourceTester!org.superbiz.AlternateDataSourceTest$DataSourceTester) --&gt; Ejb(deployment-id=DataSourceTester)
+INFO - Jndi(name=global/test/DataSourceTester) --&gt; Ejb(deployment-id=DataSourceTester)
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@22c2e2dd
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 203 ms.
+INFO - Created Ejb(deployment-id=DataSourceTester, ejb-name=DataSourceTester, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=DataSourceTester, ejb-name=DataSourceTester, container=Default Stateless Container)
+INFO - Deployed Application(path=C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test)
+Apr 17, 2014 2:20:11 PM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:55243/tomee/ejb}
+INFO - Undeploying app: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
+Apr 17, 2014 2:20:13 PM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 30.155 sec
+Running org.superbiz.AlternateDriverJarTest
+Apr 17, 2014 2:20:13 PM org.apache.openejb.config.ConfigUtils searchForConfiguration
+INFO: Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+Apr 17, 2014 2:20:13 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+Apr 17, 2014 2:20:13 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+Apr 17, 2014 2:20:13 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=JdbcTwo, type=Resource, provider-id=Default JDBC Database)
+Apr 17, 2014 2:20:13 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=JdbcOne, type=Resource, provider-id=Default JDBC Database)
+Apr 17, 2014 2:20:13 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating TransactionManager(id=Default Transaction Manager)
+Apr 17, 2014 2:20:14 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating SecurityService(id=Default Security Service)
+Apr 17, 2014 2:20:14 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Resource(id=JdbcTwo)
+Apr 17, 2014 2:20:15 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Resource(id=JdbcOne)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.ConfigurationFactory configureApplication
+INFO: Configuring enterprise application: C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig createContainer
+INFO: Auto-creating a container for bean org.superbiz.AlternateDriverJarTest: Container(type=MANAGED, id=Default Managed Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Container(id=Default Managed Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.core.managed.SimplePassivater init
+INFO: Using directory C:\Users\Andy\AppData\Local\Temp for stateful session passivation
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig createContainer
+INFO: Auto-creating a container for bean JdbcOne: Container(type=SINGLETON, id=Default Singleton Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.Assembler createRecipe
+INFO: Creating Container(id=Default Singleton Container)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig processResourceRef
+INFO: Auto-linking resource-ref &#39;java:comp/env/JdbcOne&#39; in bean JdbcOne to Resource(id=JdbcOne)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig processResourceRef
+INFO: Auto-linking resource-ref &#39;java:comp/env/JdbcTwo&#39; in bean JdbcTwo to Resource(id=JdbcTwo)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AppInfoBuilder build
+INFO: Enterprise application &quot;C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest&quot; loaded.
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Assembling app: C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=JdbcOneLocalBean) --&gt; Ejb(deployment-id=JdbcOne)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/AlternateDriverJarTest/app/JdbcOne!org.superbiz.AlternateDriverJarTest$JdbcOne) --&gt; Ejb(deployment-id=JdbcOne)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/AlternateDriverJarTest/app/JdbcOne) --&gt; Ejb(deployment-id=JdbcOne)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=JdbcTwoLocalBean) --&gt; Ejb(deployment-id=JdbcTwo)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/AlternateDriverJarTest/app/JdbcTwo!org.superbiz.AlternateDriverJarTest$JdbcTwo) --&gt; Ejb(deployment-id=JdbcTwo)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/AlternateDriverJarTest/app/JdbcTwo) --&gt; Ejb(deployment-id=JdbcTwo)
+Apr 17, 2014 2:20:16 PM org.apache.openejb.cdi.CdiBuilder initializeOWB
+INFO: Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@5ddd4e70
+Apr 17, 2014 2:20:16 PM org.apache.openejb.cdi.CdiBuilder initializeOWB
+INFO: Succeeded in installing singleton service
+Apr 17, 2014 2:20:17 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container is starting...
+Apr 17, 2014 2:20:17 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [CdiPlugin]
+Apr 17, 2014 2:20:17 PM org.apache.webbeans.config.BeansDeployer validateInjectionPoints
+INFO: All injection points were validated successfully.
+Apr 17, 2014 2:20:17 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
+INFO: OpenWebBeans Container has started, it took 223 ms.
+Apr 17, 2014 2:20:17 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=JdbcTwo, ejb-name=JdbcTwo, container=Default Singleton Container)
+Apr 17, 2014 2:20:17 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=JdbcOne, ejb-name=JdbcOne, container=Default Singleton Container)
+Apr 17, 2014 2:20:17 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=JdbcTwo, ejb-name=JdbcTwo, container=Default Singleton Container)
+Apr 17, 2014 2:20:17 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=JdbcOne, ejb-name=JdbcOne, container=Default Singleton Container)
+Apr 17, 2014 2:20:17 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Deployed Application(path=C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest)
+Apr 17, 2014 2:20:20 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
+INFO: Undeploying app: C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest
+Apr 17, 2014 2:20:20 PM org.apache.openejb.assembler.classic.Assembler destroyResource
+INFO: Closing DataSource: JdbcTwo
+Apr 17, 2014 2:20:20 PM org.apache.openejb.assembler.classic.Assembler destroyResource
+INFO: Closing DataSource: JdbcOne
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.857 sec
+INFO - A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+INFO - Pausing ProtocolHandler [&quot;http-bio-55243&quot;]
+INFO - Pausing ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Stopping service Catalina
+INFO - Stopping ProtocolHandler [&quot;http-bio-55243&quot;]
+INFO - Stopping ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Stopping server services
+INFO - Undeploying app: openejb
+INFO - Closing DataSource: DatabaseOne
+INFO - Closing DataSource: DatabaseTwo
+INFO - Destroying ProtocolHandler [&quot;http-bio-55243&quot;]
+INFO - Destroying ProtocolHandler [&quot;ajp-bio-55245&quot;]
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

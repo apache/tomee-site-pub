@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Transaction Annotations</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p><em>Also see <a href="testing-transactions-example.html">Testing Transactions</a><br/> for an example of how to use and test EJB transaction attributes</em></p>
+<p>The <em>javax.ejb.TransactionAttribute</em> annotation (@TransactionAttribute) can be applied to a bean class or it's methods.</p>
+<p>Usage of the @TransactionAttribute requires you to specify one of six different transaction attribute types defined via the javax.ejb.TransactionAttributeType enum.</p>
+<ul>
+  <li>TransactionAttributeType.*MANDATORY*</li>
+  <li>TransactionAttributeType.*REQUIRED*</li>
+  <li>TransactionAttributeType.*REQUIRES_NEW*</li>
+  <li>TransactionAttributeType.*SUPPORTS*</li>
+  <li>TransactionAttributeType.*NOT_SUPPORTED*</li>
+  <li>TransactionAttributeType.*NEVER*</li>
+</ul>
+<p>Per EJB 3.0 the default transaction attribute for all EJB 3.0 applications is <em>REQUIRED</em>. The default transaction attribute for EJB 2.1, 2.0 and 1.1 applications is vendor specific. In OpenEJB EJB 2.1, 2.0 and 1.1 applications also use <em>REQUIRED</em> as the default.</p>
+<a name="TransactionAnnotations-AttributeTypessummary"></a>
+<h2>Attribute Types summary</h2>
+<p>A simplistic way to visualize the transaction attributes is as follows.</p>
+<table class="mdtable">
+<tr><td> </th><th> Failing </th><th> Correcting </th><th> No Change </th></tr>
+<tr><th> Transacted </td><td> MANDATORY </td><td> REQUIRED, REQUIRES_NEW </td><td> SUPPORTS </td></tr>
+<tr><th> Not Transacted </td><td> NEVER </td><td> NOT_SUPPORTED </td><td> SUPPORTS </td></tr>
+</table>
+<p>The "*Transacted*" and "*Not Transacted*" categories represent the container guarantee, i.e. if the bean method will or will not be invoked in a transaction. The "*Failing*", "*Correcting*", and "*No Change*" categories represent the action take by the container to achieve that guarantee.</p>
+<p>For example, <em>Never</em> and <em>Mandatory</em> are categorized as "*Failing*" and will cause the container to throw an exception to the caller if there is<br/>(Tx Never) or is not (Tx Mandatory) a transaction in progress when the<br/>method is called. The attributes <em>Required</em>, <em>RequiresNew</em>, and<br/><em>NotSupported</em> are categorized as "*Correcting*" as they will cause the<br/>container to adjust the transactional state automatically as needed to match the desired state, rather than blocking the invocation by throwing an exception.</p>
+<a name="TransactionAnnotations-DetaileddescriptionofeachAttribute"></a>
+<h3>Detailed description of each Attribute</h3>
+<a name="TransactionAnnotations-MANDATORY"></a>
+<h4>MANDATORY</h4>
+<p>A <em>MANDATORY</em> method is guaranteed to always be executed in a transaction. However, it's the caller's job to take care of suppling the transaction. If the caller attempts to invoke the method <em>outside</em> of a transaction, then the container will block the call and throw them an <em>exception</em>.</p>
+<a name="TransactionAnnotations-REQUIRED"></a>
+<h4>REQUIRED</h4>
+<p>A <em>REQUIRED</em> method is guaranteed to always be executed in a transaction. If the caller attempts to invoke the method <em>outside</em> of a transaction, the container will <em>start</em> a transaction, execute the method, then <em>commit</em> the transaction.</p>
+<a name="TransactionAnnotations-REQUIRES_NEW"></a>
+<h4>REQUIRES_NEW</h4>
+<p>A <em>REQUIRES_NEW</em> method is guaranteed to always be executed in a transaction. If the caller attempts to invoke the method <em>inside or outside</em> of a transaction, the container will still <em>start</em> a transaction, execute the method, then <em>commit</em> the transaction. Any transaction the caller may have in progress will be <em>suspended</em> before the method execution then <em>resumed</em> afterward.</p>
+<a name="TransactionAnnotations-NEVER"></a>
+<h4>NEVER</h4>
+<p>A <em>NEVER</em> method is guaranteed to never be executed in a transaction. However, it's the caller's job to ensure there is no transaction. If the caller attempts to invoke the method <em>inside</em> of a transaction, then the container will block the call and throw them an <em>exception</em>.</p>
+<a name="TransactionAnnotations-NOT_SUPPORTED"></a>
+<h4>NOT_SUPPORTED</h4>
+<p>A <em>NOT_SUPPORTED</em> method is guaranteed to never be executed in a transaction. If the caller attempts to invoke the method <em>inside</em> of a transaction, the container will <em>suspend</em> the caller's transaction, execute the method, then <em>resume</em> the caller's transaction.</p>
+<a name="TransactionAnnotations-SUPPORTS"></a>
+<h4>SUPPORTS</h4>
+<p>A <em>SUPPORTS</em> method is guaranteed to adopt the exact transactional state of the caller. These methods can be invoked by caller's <em>inside or outside</em> of a transaction. The container will do nothing to change that state.</p>
+<a name="TransactionAnnotations-OnMethods"></a>
+<h2>On Methods</h2>
+<pre><code>@Stateless
+public static class MyBean implements MyBusinessInterface {
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public String codeRed(String s) {
+    return s;
+    }
+
+    public String codeBlue(String s) {
+    return s;
+    }
+}
+</code></pre>
+<ul>
+  <li><em>codeRed</em> will be invoked with the attribute of <em>MANDATORY</em></li>
+  <li><em>codeBlue</em> will be invoked with the default attribute of <em>REQUIRED</em></li>
+</ul>
+<a name="TransactionAnnotations-OnClasses"></a>
+<h2>On Classes</h2>
+<pre><code>@Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
+public static class MyBean implements MyBusinessInterface {
+
+    public String codeRed(String s) {
+    return s;
+    }
+
+    public String codeBlue(String s) {
+    return s;
+    }
+}
+</code></pre>
+<ul>
+  <li><em>codeRed</em> and <em>codeBlue</em> will be invoked with the attribute of<br/><em>MANDATORY</em></li>
+</ul>
+<a name="TransactionAnnotations-Mixedonclassesandmethods"></a>
+<h2>Mixed on classes and methods</h2>
+<pre><code>@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public static class MyBean implements MyBusinessInterface {
+
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public String codeRed(String s) {
+    return s;
+    }
+
+    public String codeBlue(String s) {
+    return s;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String codeGreen(String s) {
+    return s;
+    }
+}
+</code></pre>
+<ul>
+  <li><em>codeRed</em> will be invoked with the attribute of <em>NEVER</em></li>
+  <li><em>codeBlue</em> will be invoked with the attribute of <em>SUPPORTS</em></li>
+  <li><em>codeGreen</em> will be invoked with the attribute of <em>REQUIRED</em></li>
+</ul>
+<a name="TransactionAnnotations-IllegalUsage"></a>
+<h1>Illegal Usage</h1>
+<p>Generally, transaction annotationss cannot be made on AroundInvoke methods and most callbacks.</p>
+<p>The following usages of @TransactionAttribute have no effect.</p>
+<pre><code>@Stateful
+public class MyStatefulBean implements  MyBusinessInterface  {
+
+    @PostConstruct
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public void constructed(){
+
+    }
+
+    @PreDestroy
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public void destroy(){
+
+    }
+
+    @AroundInvoke
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public Object invoke(InvocationContext invocationContext) throws Exception {
+    return invocationContext.proceed();
+    }
+
+    @PostActivate
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public void activated(){
+
+    }
+
+    @PrePassivate
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public void passivate(){
+
+    }
+}
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

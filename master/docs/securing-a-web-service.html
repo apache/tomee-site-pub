@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Securing a Web Service</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>Web Services are a very common way to implement a Service Oriented Architecture (SOA).</p>
+<p>There are lots of web service standards/specifications (XML, SOAP, WSDL, UUDI, WS-*, ...) coming from organizations like W3C, OASIS, WS-I, ... And there are java web service standards like JAX-WS 1.x (JSR 181), JAX-WS<br/>2.0 (JSR 224). </p>
+<p>OpenEJB provides a standard way to implement web services transport protocol throughout the JAX-WS specification. Java basic standards for web services (JAX-WS) do lack some features that are required in most real world applications, e.g. standard ways for handling security and authentication (there is no java specification for Oasis's WS-Security specification).</p>
+<p>OpenEJB provides two mechanisms to secure webservices - HTTP authentication and WS-Security: </p>
+<p>HTTPS : works at the transport level, enables a point-to-point security. It has no impact on developments. It allows you :</p>
+<ol>
+  <li>To secure data over the network with data encrypted during transport</li>
+  <li>To identify the end user with SSLv3 with client certificate required</li>
+  <li>OpenEJB supports BASIC authentication over HTTP(S), using the configured<br/>JAAS provider. This will honour any EJB security roles you have setup using<br/>@RolesAllowed. See the webservice-security example in the OpenEJB codebase <a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/">http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/</a></li>
+</ol>
+<p><em>Warning:<br/>Currently only BASIC is the only HTTP authentication mechanism available when running OpenEJB standalone or in a unit test, but we hope to support DIGEST in the future.</em></p>
+<p>WS-Security: works at the message (SOAP) level, enables a higher-level security, Nowadays, SOAP implementations use other protocols than just HTTP so we need to apply security to the message itself and not only at the transport layer. Moreover, HTTPS can only be used for securing point-to-point services which tend to decrease with Enterprise Service Bus for example. </p>
+<p>The Oasis organization has defined a standard (part of well-known WS-*) which aims at providing high level features in the context of web services: WS-Security. It provides a standard way to secure your services above and beyond transport level protocols such as HTTPS. WS-Security relies on other standards like XML-Encryption.</p>
+<p>Main features are:</p>
+<ol>
+  <li>Timestamp a message,</li>
+  <li>Pass credentials (plain text and/or ciphered) between services,</li>
+  <li>Sign messages,</li>
+  <li>Encrypt messages or part of messages.</li>
+</ol>
+<p>Again, JAX-WS doesn't standardize security for web services. OpenEJB provides a common and highly configurable way to configure WS-Security in association with the JAX-WS usage without vendor dependence. Internally, OpenEJB integrates Apache WSS4J as the WS-Security implementation. To use the integration, you will need to configure WSS4J using the<br/><em>openejb-jar.xml</em>.</p>
+<p><em>Warning:<br/>the proposed WS-Security integration is only used at server side. Currently, WS-Security client configuration is not managed by OpenEJB. You can use the JAX-WS API to create a stub and then rely on the implementation to set up WS-Security properties.</em> </p>
+<p>This configuration file lets you set up incoming and outgoing security parameters. Incoming and outgoing configuration is independent so that you can configure either one or the other or both. You can decide to check client credentials for incoming messages and sign outgoing messages<br/>(response).</p>
+<a name="SecuringaWebService-Configurationprinciples"></a>
+<h1>Configuration principles</h1>
+<p>The configuration is made in the <em>openejb-jar.xml</em>. Each endpoint web service can provide a set of properties to customize WS-Security behavior through the <properties> element. The content of this element is consistent with the overall structure of <em>openejb.xml</em>. The format for properties is the same as if you would use a common java property file.</p>
+<pre><code>&lt;properties&gt;
+  wss4j.in.action = UsernameToken
+  wss4j.in.passwordType = PasswordDigest
+  wss4j.in.passwordCallbackClass=org.superbiz.calculator.CustomPasswordHandler
+&lt;/properties&gt;
+</code></pre>
+<p>In order to recover WSS4J properties both for input and output, we use naming conventions. Each property is made of<br/> <wss4j>.&lt;in|out&gt;.<wss4j property name>=<wss4j property value></p>
+<p>For example : <em>wss4j.in.action = UsernameToken</em></p>
+<a name="SecuringaWebService-UsernameToken(Passworddigest)example"></a>
+<h1>Username Token (Password digest) example</h1>
+<a name="SecuringaWebService-Excerptfrom*openejb-jar.xml*."></a>
+<h4>Excerpt from <em>openejb-jar.xml</em>.</h4>
+<pre><code>&lt;openejb-jar xmlns=&quot;http://tomee.apache.org/xml/ns/openejb-jar-2.2&quot;&gt;
+    &lt;enterprise-beans&gt;
+    ...
+    &lt;session&gt;
+        &lt;ejb-name&gt;CalculatorImpl&lt;/ejb-name&gt;
+        &lt;web-service-security&gt;
+       &lt;security-realm-name/&gt;
+       &lt;transport-guarantee&gt;NONE&lt;/transport-guarantee&gt;
+       &lt;auth-method&gt;WS-SECURITY&lt;/auth-method&gt;
+       &lt;properties&gt;
+           wss4j.in.action = UsernameToken
+           wss4j.in.passwordType = PasswordDigest
+        wss4j.in.passwordCallbackClass=org.superbiz.calculator.CustomPasswordHandler
+       &lt;/properties&gt;
+        &lt;/web-service-security&gt;
+    &lt;/session&gt;
+    ...
+    &lt;/enterprise-beans&gt;
+&lt;/openejb-jar&gt;
+</code></pre>
+<a name="SecuringaWebService-Requestsentbytheclient."></a>
+<h4>Request sent by the client.</h4>
+<p>This request contains SOAP headers to manage security. You can see<br/><em>UsernameToken</em> tag from the WS-Security specification.</p>
+<pre><code>POST /CalculatorImplUsernameTokenHashedPassword HTTP/1.1
+Content-Type: text/xml; charset=UTF-8
+SOAPAction: &quot;&quot;
+Accept: *
+Cache-Control: no-cache
+Pragma: no-cache
+User-Agent: Java/1.5.0_05
+Host: 127.0.0.1:8204
+Connection: keep-alive
+Transfer-Encoding: chunked
+
+524
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Header&gt;
+    &lt;wsse:Security xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot; soap:mustUnderstand=&quot;1&quot;&gt;
+      &lt;wsse:UsernameToken xmlns:wsu=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;
+wsu:Id=&quot;UsernameToken-22402238&quot;
+xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;
+        &lt;wsse:Username xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;jane&lt;/wsse:Username&gt;
+        &lt;wsse:Password Type=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest&quot;
+xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;tf7k3a4GREIt1xec/KXVmBdRNIg=&lt;/wsse:Password&gt;
+        &lt;wsse:Nonce xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot;&gt;cKhUhmjQ1hGYPsdOLez5kA==&lt;/wsse:Nonce&gt;
+        &lt;wsu:Created xmlns:wsu=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot;&gt;2009-04-14T20:16:26.203Z&lt;/wsu:Created&gt;
+      &lt;/wsse:UsernameToken&gt;
+    &lt;/wsse:Security&gt;
+  &lt;/soap:Header&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sum xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;arg0&gt;4&lt;/arg0&gt;
+      &lt;arg1&gt;6&lt;/arg1&gt;
+    &lt;/ns1:sum&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<a name="SecuringaWebService-Theresponsereturnedfromtheserver."></a>
+<h4>The response returned from the server.</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Length: 200
+Connection: close
+Content-Type: text/xml; charset=UTF-8
+Server: OpenEJB/??? (unknown os)
+
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;return&gt;10&lt;/return&gt;
+    &lt;/ns1:sumResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<a name="SecuringaWebService-JAASwithWS-Security"></a>
+<h1>JAAS with WS-Security</h1>
+<p>@RolesAllowed doesn't work straight off with WS-Security, but you can add<br/>calls to the OpenEJB SecurityService to login to a JAAS provider to a CallbackHandler. Once you have done this, any permissions configured with<br/>@RolesAllowed should be honoured.</p>
+<p>Here is a snippet from the webservice-ws-security example demonstrating this:</p>
+<pre><code>public class CustomPasswordHandler implements CallbackHandler {
+
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
+
+        if (pc.getUsage() == WSPasswordCallback.USERNAME_TOKEN) {
+            // TODO get the password from the users.properties if possible
+            pc.setPassword(&quot;waterfall&quot;);
+
+        } else if (pc.getUsage() == WSPasswordCallback.DECRYPT) {
+
+            pc.setPassword(&quot;serverPassword&quot;);
+
+        } else if (pc.getUsage() == WSPasswordCallback.SIGNATURE) {
+
+            pc.setPassword(&quot;serverPassword&quot;);
+
+        }
+
+        if ((pc.getUsage() == WSPasswordCallback.USERNAME_TOKEN) || (pc.getUsage() == WSPasswordCallback.USERNAME_TOKEN_UNKNOWN)) {
+
+            SecurityService securityService = SystemInstance.get().getComponent(SecurityService.class);
+            Object token = null;
+            try {
+                securityService.disassociate();
+
+                token = securityService.login(pc.getIdentifer(), pc.getPassword());
+                securityService.associate(token);
+
+            } catch (LoginException e) {
+                e.printStackTrace();
+                throw new SecurityException(&quot;wrong password&quot;);
+            }
+        }
+    }
+}
+</code></pre>
+<a name="SecuringaWebService-Examples"></a>
+<h1>Examples</h1>
+<p>A full example (webservice-ws-security) is available with OpenEJB Examples.</p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

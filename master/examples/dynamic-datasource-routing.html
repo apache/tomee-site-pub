@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Dynamic Datasource Routing</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>The TomEE dynamic datasource api aims to allow to use multiple data sources as one from an application point of view.</p>
+<p>It can be useful for technical reasons (load balancing for example) or more generally functionnal reasons (filtering, aggregation, enriching...). However please note you can choose only one datasource by transaction. It means the goal of this feature is not to switch more than once of datasource in a transaction. The following code will not work:</p>
+<pre><code>@Stateless
+public class MyEJB {
+    @Resource private MyRouter router;
+    @PersistenceContext private EntityManager em;
+
+    public void workWithDataSources() {
+        router.setDataSource(&quot;ds1&quot;);
+        em.persist(new MyEntity());
+
+        router.setDataSource(&quot;ds2&quot;); // same transaction -&gt; this invocation doesn&#39;t work
+        em.persist(new MyEntity());
+    }
+}
+</code></pre>
+<p>In this example the implementation simply use a datasource from its name and needs to be set before using any JPA operation in the transaction (to keep the logic simple in the example).</p>
+<h1>The implementation of the Router</h1>
+<p>Our router has two configuration parameters:<br/>* a list of jndi names representing datasources to use<br/>* a default datasource to use</p>
+<h2>Router implementation</h2>
+<p>The interface Router (<code>org.apache.openejb.resource.jdbc.Router</code>) has only one method to implement, <code>public DataSource getDataSource()</code></p>
+<p>Our <code>DeterminedRouter</code> implementation uses a ThreadLocal to manage the currently used datasource. Keep in mind JPA used more than once the getDatasource() method for one operation. To change the datasource in one transaction is dangerous and should be avoid.</p>
+<pre><code>package org.superbiz.dynamicdatasourcerouting;
+
+import org.apache.openejb.resource.jdbc.AbstractRouter;
+
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class DeterminedRouter extends AbstractRouter {
+    private String dataSourceNames;
+    private String defaultDataSourceName;
+    private Map&lt;String, DataSource&gt; dataSources = null;
+    private ThreadLocal&lt;DataSource&gt; currentDataSource = new ThreadLocal&lt;DataSource&gt;();
+
+    /**
+     * @param datasourceList datasource resource name, separator is a space
+     */
+    public void setDataSourceNames(String datasourceList) {
+        dataSourceNames = datasourceList;
+    }
+
+    /**
+     * lookup datasource in openejb resources
+     */
+    private void init() {
+        dataSources = new ConcurrentHashMap&lt;String, DataSource&gt;();
+        for (String ds : dataSourceNames.split(&quot; &quot;)) {
+            try {
+                Object o = getOpenEJBResource(ds);
+                if (o instanceof DataSource) {
+                    dataSources.put(ds, DataSource.class.cast(o));
+                }
+            } catch (NamingException e) {
+                // ignored
+            }
+        }
+    }
+
+    /**
+     * @return the user selected data source if it is set
+     *         or the default one
+     *  @throws IllegalArgumentException if the data source is not found
+     */
+    @Override
+    public DataSource getDataSource() {
+        // lazy init of routed datasources
+        if (dataSources == null) {
+            init();
+        }
+
+        // if no datasource is selected use the default one
+        if (currentDataSource.get() == null) {
+            if (dataSources.containsKey(defaultDataSourceName)) {
+                return dataSources.get(defaultDataSourceName);
+
+            } else {
+                throw new IllegalArgumentException(&quot;you have to specify at least one datasource&quot;);
+            }
+        }
+
+        // the developper set the datasource to use
+        return currentDataSource.get();
+    }
+
+    /**
+     *
+     * @param datasourceName data source name
+     */
+    public void setDataSource(String datasourceName) {
+        if (dataSources == null) {
+            init();
+        }
+        if (!dataSources.containsKey(datasourceName)) {
+            throw new IllegalArgumentException(&quot;data source called &quot; + datasourceName + &quot; can&#39;t be found.&quot;);
+        }
+        DataSource ds = dataSources.get(datasourceName);
+        currentDataSource.set(ds);
+    }
+
+    /**
+     * reset the data source
+     */
+    public void clear() {
+        currentDataSource.remove();
+    }
+
+    public void setDefaultDataSourceName(String name) {
+        this.defaultDataSourceName = name;
+    }
+}
+</code></pre>
+<h2>Declaring the implementation</h2>
+<p>To be able to use your router as a resource you need to provide a service configuration. It is done in a file you can find in META-INF/org.router/ and called service-jar.xml<br/>(for your implementation you can of course change the package name).</p>
+<p>It contains the following code:</p>
+<pre><code>&lt;ServiceJar&gt;
+  &lt;ServiceProvider id=&quot;DeterminedRouter&quot; &lt;!-- the name you want to use --&gt;
+      service=&quot;Resource&quot;
+      type=&quot;org.apache.openejb.resource.jdbc.Router&quot;
+      class-name=&quot;org.superbiz.dynamicdatasourcerouting.DeterminedRouter&quot;&gt; &lt;!-- implementation class --&gt;
+
+    # the parameters
+
+    DataSourceNames
+    DefaultDataSourceName
+  &lt;/ServiceProvider&gt;
+&lt;/ServiceJar&gt;
+</code></pre>
+<h1>Using the Router</h1>
+<p>Here we have a <code>RoutedPersister</code> stateless bean which uses our <code>DeterminedRouter</code></p>
+<pre><code>package org.superbiz.dynamicdatasourcerouting;
+
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+@Stateless
+public class RoutedPersister {
+    @PersistenceContext(unitName = &quot;router&quot;)
+    private EntityManager em;
+
+    @Resource(name = &quot;My Router&quot;, type = DeterminedRouter.class)
+    private DeterminedRouter router;
+
+    public void persist(int id, String name, String ds) {
+        router.setDataSource(ds);
+        em.persist(new Person(id, name));
+    }
+}
+</code></pre>
+<h1>The test</h1>
+<p>In test mode and using property style configuration the foolowing configuration is used:</p>
+<pre><code>public class DynamicDataSourceTest {
+    @Test
+    public void route() throws Exception {
+        String[] databases = new String[]{&quot;database1&quot;, &quot;database2&quot;, &quot;database3&quot;};
+
+        Properties properties = new Properties();
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+
+        // resources
+        // datasources
+        for (int i = 1; i &lt;= databases.length; i++) {
+            String dbName = databases[i - 1];
+            properties.setProperty(dbName, &quot;new://Resource?type=DataSource&quot;);
+            dbName += &quot;.&quot;;
+            properties.setProperty(dbName + &quot;JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+            properties.setProperty(dbName + &quot;JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:db&quot; + i);
+            properties.setProperty(dbName + &quot;UserName&quot;, &quot;sa&quot;);
+            properties.setProperty(dbName + &quot;Password&quot;, &quot;&quot;);
+            properties.setProperty(dbName + &quot;JtaManaged&quot;, &quot;true&quot;);
+        }
+
+        // router
+        properties.setProperty(&quot;My Router&quot;, &quot;new://Resource?provider=org.router:DeterminedRouter&amp;type=&quot; + DeterminedRouter.class.getName());
+        properties.setProperty(&quot;My Router.DatasourceNames&quot;, &quot;database1 database2 database3&quot;);
+        properties.setProperty(&quot;My Router.DefaultDataSourceName&quot;, &quot;database1&quot;);
+
+        // routed datasource
+        properties.setProperty(&quot;Routed Datasource&quot;, &quot;new://Resource?provider=RoutedDataSource&amp;type=&quot; + Router.class.getName());
+        properties.setProperty(&quot;Routed Datasource.Router&quot;, &quot;My Router&quot;);
+
+        Context ctx = EJBContainer.createEJBContainer(properties).getContext();
+        RoutedPersister ejb = (RoutedPersister) ctx.lookup(&quot;java:global/dynamic-datasource-routing/RoutedPersister&quot;);
+        for (int i = 0; i &lt; 18; i++) {
+            // persisting a person on database db -&gt; kind of manual round robin
+            String name = &quot;record &quot; + i;
+            String db = databases[i % 3];
+            ejb.persist(i, name, db);
+        }
+
+        // assert database records number using jdbc
+        for (int i = 1; i &lt;= databases.length; i++) {
+            Connection connection = DriverManager.getConnection(&quot;jdbc:hsqldb:mem:db&quot; + i, &quot;sa&quot;, &quot;&quot;);
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(&quot;select count(*) from PERSON&quot;);
+            rs.next();
+            assertEquals(6, rs.getInt(1));
+            st.close();
+            connection.close();
+        }
+
+        ctx.close();
+    }
+}
+</code></pre>
+<h1>Configuration via openejb.xml</h1>
+<p>The testcase above uses properties for configuration. The identical way to do it via the <code>conf/openejb.xml</code> is as follows:</p>
+<pre><code>&lt;!-- Router and datasource --&gt;
+&lt;Resource id=&quot;My Router&quot; type=&quot;org.apache.openejb.router.test.DynamicDataSourceTest$DeterminedRouter&quot; provider=&quot;org.routertest:DeterminedRouter&quot;&gt;
+    DatasourceNames = database1 database2 database3
+    DefaultDataSourceName = database1
+&lt;/Resource&gt;
+&lt;Resource id=&quot;Routed Datasource&quot; type=&quot;org.apache.openejb.resource.jdbc.Router&quot; provider=&quot;RoutedDataSource&quot;&gt;
+    Router = My Router
+&lt;/Resource&gt;
+
+&lt;!-- real datasources --&gt;
+&lt;Resource id=&quot;database1&quot; type=&quot;DataSource&quot;&gt;
+    JdbcDriver = org.hsqldb.jdbcDriver
+    JdbcUrl = jdbc:hsqldb:mem:db1
+    UserName = sa
+    Password
+    JtaManaged = true
+&lt;/Resource&gt;
+&lt;Resource id=&quot;database2&quot; type=&quot;DataSource&quot;&gt;
+    JdbcDriver = org.hsqldb.jdbcDriver
+    JdbcUrl = jdbc:hsqldb:mem:db2
+    UserName = sa
+    Password
+    JtaManaged = true
+&lt;/Resource&gt;
+&lt;Resource id=&quot;database3&quot; type=&quot;DataSource&quot;&gt;
+    JdbcDriver = org.hsqldb.jdbcDriver
+    JdbcUrl = jdbc:hsqldb:mem:db3
+    UserName = sa
+    Password
+    JtaManaged = true
+&lt;/Resource&gt;
+</code></pre>
+<h2>Some hack for OpenJPA</h2>
+<p>Using more than one datasource behind one EntityManager means the databases are already created. If it is not the case, the JPA provider has to create the datasource at boot time.</p>
+<p>Hibernate do it so if you declare your databases it will work. However with OpenJPA<br/>(the default JPA provider for OpenEJB), the creation is lazy and it happens only once so when you'll switch of database<br/>it will no more work.</p>
+<p>Of course OpenEJB provides @Singleton and @Startup features of Java EE 6 and we can do a bean just making a simple find, even on none existing entities, just to force the database creation:</p>
+<pre><code>@Startup
+@Singleton
+public class BoostrapUtility {
+    // inject all real databases
+
+    @PersistenceContext(unitName = &quot;db1&quot;)
+    private EntityManager em1;
+
+    @PersistenceContext(unitName = &quot;db2&quot;)
+    private EntityManager em2;
+
+    @PersistenceContext(unitName = &quot;db3&quot;)
+    private EntityManager em3;
+
+    // force database creation
+
+    @PostConstruct
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public void initDatabase() {
+        em1.find(Person.class, 0);
+        em2.find(Person.class, 0);
+        em3.find(Person.class, 0);
+    }
+}
+</code></pre>
+<h2>Using the routed datasource</h2>
+<p>Now you configured the way you want to route your JPA operation, you registered the resources and you initialized your databases you can use it and see how it is simple:</p>
+<pre><code>@Stateless
+public class RoutedPersister {
+    // injection of the &quot;proxied&quot; datasource
+    @PersistenceContext(unitName = &quot;router&quot;)
+    private EntityManager em;
+
+    // injection of the router you need it to configured the database
+    @Resource(name = &quot;My Router&quot;, type = DeterminedRouter.class)
+    private DeterminedRouter router;
+
+    public void persist(int id, String name, String ds) {
+        router.setDataSource(ds); // configuring the database for the current transaction
+        em.persist(new Person(id, name)); // will use ds database automatically
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/dynamic-datasource-routing
+INFO - openejb.base = /Users/dblevins/examples/dynamic-datasource-routing
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=My Router, type=Resource, provider-id=DeterminedRouter)
+INFO - Configuring Service(id=database3, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring Service(id=database2, type=Resource, provider-id=Default JDBC Database)
+INFO - Configuring Service(id=Routed Datasource, type=Resource, provider-id=RoutedDataSource)
+INFO - Configuring Service(id=database1, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/dynamic-datasource-routing/target/classes
+INFO - Beginning load: /Users/dblevins/examples/dynamic-datasource-routing/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/dynamic-datasource-routing
+WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean BoostrapUtility: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean RoutedPersister: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Auto-linking resource-ref &#39;java:comp/env/My Router&#39; in bean RoutedPersister to Resource(id=My Router)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=router)
+INFO - Configuring PersistenceUnit(name=db1)
+INFO - Auto-creating a Resource with id &#39;database1NonJta&#39; of type &#39;DataSource for &#39;db1&#39;.
+INFO - Configuring Service(id=database1NonJta, type=Resource, provider-id=database1)
+INFO - Adjusting PersistenceUnit db1 &lt;non-jta-data-source&gt; to Resource ID &#39;database1NonJta&#39; from &#39;null&#39;
+INFO - Configuring PersistenceUnit(name=db2)
+INFO - Auto-creating a Resource with id &#39;database2NonJta&#39; of type &#39;DataSource for &#39;db2&#39;.
+INFO - Configuring Service(id=database2NonJta, type=Resource, provider-id=database2)
+INFO - Adjusting PersistenceUnit db2 &lt;non-jta-data-source&gt; to Resource ID &#39;database2NonJta&#39; from &#39;null&#39;
+INFO - Configuring PersistenceUnit(name=db3)
+INFO - Auto-creating a Resource with id &#39;database3NonJta&#39; of type &#39;DataSource for &#39;db3&#39;.
+INFO - Configuring Service(id=database3NonJta, type=Resource, provider-id=database3)
+INFO - Adjusting PersistenceUnit db3 &lt;non-jta-data-source&gt; to Resource ID &#39;database3NonJta&#39; from &#39;null&#39;
+INFO - Enterprise application &quot;/Users/dblevins/examples/dynamic-datasource-routing&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/dynamic-datasource-routing
+INFO - PersistenceUnit(name=router, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 504ms
+INFO - PersistenceUnit(name=db1, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 11ms
+INFO - PersistenceUnit(name=db2, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 7ms
+INFO - PersistenceUnit(name=db3, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 6ms
+INFO - Jndi(name=&quot;java:global/dynamic-datasource-routing/BoostrapUtility!org.superbiz.dynamicdatasourcerouting.BoostrapUtility&quot;)
+INFO - Jndi(name=&quot;java:global/dynamic-datasource-routing/BoostrapUtility&quot;)
+INFO - Jndi(name=&quot;java:global/dynamic-datasource-routing/RoutedPersister!org.superbiz.dynamicdatasourcerouting.RoutedPersister&quot;)
+INFO - Jndi(name=&quot;java:global/dynamic-datasource-routing/RoutedPersister&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule1519652738/org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest!org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule1519652738/org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest&quot;)
+INFO - Created Ejb(deployment-id=RoutedPersister, ejb-name=RoutedPersister, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest, ejb-name=org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=BoostrapUtility, ejb-name=BoostrapUtility, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=RoutedPersister, ejb-name=RoutedPersister, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest, ejb-name=org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=BoostrapUtility, ejb-name=BoostrapUtility, container=Default Singleton Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/dynamic-datasource-routing)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.504 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

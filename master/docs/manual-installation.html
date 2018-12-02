@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Manual Installation</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1>Overview</h1>
+<p>The manual installation process is significantly harder then the <a href="tomcat.html">automatic installation</a><br/> which we normally recommend. In this installation process you will do the<br/>following:</p>
+<ol>
+  <li>Install openejb.war</li>
+  <li>Download openejb.war from the <a href="http://tomee.apache.org/downloads.html">download page</a></li>
+  <li>Make webapps/openejb directory</li>
+  <li>Change to new webapps/openejb directory</li>
+  <li>Unpack the openejb.war file in the new directory</li>
+  <li>Add the OpenEJB listener the conf/server.xml file</li>
+  <li>Update the non-compliant Tomcat annotations-api.jar</li>
+  <li>Add the OpenEJB JavaAgent to the bin/catalina.bat or bin/catalina.bat<br/>script</li>
+</ol>
+<h2>Install openejb.war</h2>
+<p>Once Tomcat has been <a href="tomcat-installation.html">installed</a><br/>, the OpenEJB plugin for Tomcat can be installed. The war can be obtained<br/>from the <a href="http://tomee.apache.org/downloads.html">download page</a></p>
+<p>The commands in this example are executed from within the Tomcat installation directory.</p>
+<a name="ManualInstallation-UnpackOpenEJBTomcatplugininTomcatwebappsdirectory"></a>
+<h2>Unpack OpenEJB Tomcat plugin in Tomcat webapps directory</h2>
+<p>Be careful, this is the most error prone step. A web application does not contain a root directory, so if you unpack it in the wrong directory, it is difficult to undo. Please, follow this step closely, and most importantly make sure you execute the unpack command from within the new webapps/openejb directory</p>
+<p>Due to the structure of war files, you must create a new directory for OpenEJB, change to the new directory and execute the unpack command from within the new directory. If you get this wrong, it is difficult to undo, so follow the steps closely.</p>
+<pre><code>
+    C:\apache-tomcat-6.0.14>mkdir webapps\openejb
+    
+    C:\apache-tomcat-6.0.14>cd webapps\openejb
+    
+    C:\apache-tomcat-6.0.14\webapps\openejb>jar -xvf \openejb.war
+      created: WEB-INF/
+      created: WEB-INF/classes/
+      created: WEB-INF/classes/org/
+      created: WEB-INF/classes/org/apache/
+      created: WEB-INF/classes/org/apache/openejb/
+    ...snip...
+    
+    C:\apache-tomcat-6.0.14\webapps\openejb>dir
+     Volume in drive C has no label.
+     Volume Serial Number is 0000-0000
+    
+     Directory of C:\apache-tomcat-6.0.14\webapps\openejb
+    
+    09/21/2007  10:19 AM	<DIR>	       .
+    09/21/2007  10:19 AM	<DIR>	       ..
+    09/21/2007  10:19 AM		 1,000 index.html
+    09/21/2007  10:19 AM	<DIR>	       lib
+    09/21/2007  10:19 AM		11,358 LICENSE
+    09/21/2007  10:19 AM	<DIR>	       META-INF
+    09/21/2007  10:19 AM		11,649 NOTICE
+    09/21/2007  10:19 AM		 1,018 openejb.xml
+    09/21/2007  10:19 AM		 1,886 README.txt
+    09/21/2007  10:19 AM	<DIR>	       tomcat
+    09/21/2007  10:19 AM	<DIR>	       WEB-INF
+    	       5 File(s)	 26,911 bytes
+    	       6 Dir(s)   4,633,796,608 bytes free
+    
+    C:\apache-tomcat-6.0.14\webapps\openejb>cd ..\..
+    
+    C:\apache-tomcat-6.0.14>
+    
+        {card:label=Unix}{noformat:nopanel=true}
+        apache-tomcat-6.0.14$ mkdir webapps/openejb
+        
+        apache-tomcat-6.0.14$ cd webapps/openejb/
+        
+        apache-tomcat-6.0.14/webapps/openejb$ jar -xvf path/to/openejb.war 
+          created: WEB-INF/
+          created: WEB-INF/classes/
+          created: WEB-INF/classes/org/
+          created: WEB-INF/classes/org/apache/
+          created: WEB-INF/classes/org/apache/openejb/
+        ...snip...
+        
+        apache-tomcat-6.0.14/webapps/openejb$ ls
+        LICENSE      META-INF/	  NOTICE       README.txt   WEB-INF/	 index.html
+      lib/	       openejb.xml  tomcat/
+        
+        apache-tomcat-6.0.14/webapps/openejb$ cd ../..
+        
+        apache-tomcat-6.0.14$
+
+</code></pre>
+<a name="ManualInstallation-AddtheOpenEJBlistenertoTomcat"></a>
+<h2>Add the OpenEJB listener to Tomcat</h2>
+<p>All Tomcat listener classes must be available in the Tomcat common class loader, so the openejb-loader jar must be copied into the Tomcat lib directory.</p>
+<pre><code>    C:\apache-tomcat-6.0.14&gt;copy webapps\openejb\lib\openejb-loader-3.0.0-SNAPSHOT.jar lib\openejb-loader.jar
+    1 file(s) copied.
+
+    apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-loader-*.jar lib/openejb-loader.jar
+</code></pre>
+<p>Add the following <code>&lt;Listener className=&quot;org.apache.openejb.loader.OpenEJBListener&quot; /&gt;</code> to your conf/server.xml file to load the OpenEJB listener:</p>
+<p>The snippet is shown below</p>
+<pre><code>&lt;!-- Note:  A &quot;Server&quot; is not itself a &quot;Container&quot;, so you may not
+define subcomponents such as &quot;Valves&quot; at this
+level.
+Documentation at /docs/config/server.html
+ --&gt;
+
+&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
+&lt;!-- OpenEJB plugin for tomcat --&gt;
+&lt;Listener
+className=&quot;org.apache.openejb.loader.OpenEJBListener&quot; /&gt;
+
+&lt;!--APR library loader. Documentation at /docs/apr.html --&gt;    
+&lt;Listener
+className=&quot;org.apache.catalina.core.AprLifecycleListener&quot; SSLEngine=&quot;on&quot; /&gt;
+</code></pre>
+<a name="ManualInstallation-UpdatetheTomcatannotations-api.jarfile"></a>
+<h2>Update the Tomcat annotations-api.jar file</h2>
+<p>Tomcat contains an old non-compliant version of the javax.annotation classes and these invalid classes must be updated so OpenEJB can process annotations. Simply, replace the annotations-api.jar in the Tomcat lib directory with the updated annotations-api.jar in the OpenEJB war.</p>
+<pre><code>
+
+C:\apache-tomcat-6.0.14>copy webapps\openejb\tomcat\annotations-api.jar lib\annotations-api.jar Overwrite lib\annotations-api.jar? (Yes/No/All): y
+	1 file(s) copied.
+
+apache-tomcat-6.0.14$ cp webapps/openejb/tomcat/annotations-api.jar lib/annotations-api.jar 
+
+</code></pre>
+<a name="ManualInstallation-{anchor:javaagent}AddOpenEJBjavaagenttoTomcatstartup"></a>
+<h2>Add OpenEJB javaagent to Tomcat startup</h2>
+<p>OpenJPA, the Java Persistence implementation used by OpenEJB, currently must enhanced persistence classes to function properly, and this requires the installation of a javaagent into the Tomcat startup process.</p>
+<p>First, copy the OpenEJB JavaAgent jar into the lib directory.</p>
+<pre><code>
+
+    C:\apache-tomcat-6.0.14>copy webapps\openejb\lib\openejb-javaagent-3.0.0-SNAPSHOT.jar lib\openejb-javaagent.jar
+    	1 file(s) copied.
+    
+    apache-tomcat-6.0.14$ cp webapps/openejb/lib/openejb-javaagent-*.jar lib/openejb-javaagent.jar
+
+</code></pre>
+<p>Simply, add the snippet marked below in bin/catalina.bat (Windows) or bin/catalina.sh (Unix) file to enable the OpenEJB javaagent:</p>
+<pre><code>if not exist &quot;%CATALINA_BASE%\conf\logging.properties&quot; goto noJuli
+set JAVA_OPTS=%JAVA_OPTS%
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+-Djava.util.logging.config.file=&quot;%CATALINA_BASE%\conf\logging.properties&quot;
+:noJuli
+
+ # Start of Snippet to add
+ rem Add OpenEJB javaagent if not exist
+ &quot;%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar&quot; goto
+ noOpenEJBJavaagent set
+ JAVA_OPTS=&quot;-javaagent:%CATALINA_BASE%\webapps\openejb\lib\openejb-javaagent.jar&quot;
+ %JAVA_OPTS% :noOpenEJBJavaagent
+ # End of Snippet to add
+
+
+rem ----- Execute The Requested Command
+---------------------------------------
+echo Using CATALINA_BASE:   %CATALINA_BASE%
+echo Using CATALINA_HOME:   %CATALINA_HOME%
+
+
+
+# Set juli LogManager if it is present
+if [OPENEJB: -r &quot;$CATALINA_BASE&quot;/conf/logging.properties ](openejb:--r-&quot;$catalina_base&quot;/conf/logging.properties-.html)
+; then
+JAVA_OPTS=&quot;$JAVA_OPTS
+&quot;-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager&quot;
+&quot;-Djava.util.logging.config.file=&quot;$CATALINA_BASE/conf/logging.properties&quot;
+fi
+
+ #Start of Snippet to add
+ if [OPENEJB: -r &quot;$CATALINA_BASE&quot;/webapps/lib/openejb-javaagent.jar ](openejb:--r-&quot;$catalina_base&quot;/webapps/lib/openejb-javaagent.jar-.html)
+; then
+JAVA_OPTS=&quot;&quot;-javaagent:$CATALINA_BASE/lib/openejb-javaagent.jar&quot;
+$JAVA_OPTS&quot;
+fi
+#End of Snippet to add
+</code></pre>
+<h2>Note:</h2>
+<p>The example above is an excerpt from the middle of the<br/>bin/catalina.sh file. Search for the this section and add the snippet shown </p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

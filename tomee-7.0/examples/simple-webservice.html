@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>JAX-WS @WebService example</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>Creating Web Services with JAX-WS is quite easy. Little has to be done aside from annotating a class with <code>@WebService</code>. For the purposes of this example we will also annotate our component with <code>@Stateless</code> which takes some of the configuration out of the process and gives us some nice options such as transactions and security.</p>
+<h2>@WebService</h2>
+<p>The following is all that is required. No external xml files are needed. This class placed in a jar or war and deployed into a compliant Java EE server like TomEE is enough to have the Calculator class discovered and deployed and the webservice online.</p>
+<pre><code>import javax.ejb.Stateless;
+import javax.jws.WebService;
+
+@Stateless
+@WebService(
+        portName = &quot;CalculatorPort&quot;,
+        serviceName = &quot;CalculatorService&quot;,
+        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
+        endpointInterface = &quot;org.superbiz.calculator.ws.CalculatorWs&quot;)
+public class Calculator implements CalculatorWs {
+
+    public int sum(int add1, int add2) {
+        return add1 + add2;
+    }
+
+    public int multiply(int mul1, int mul2) {
+        return mul1 * mul2;
+    }
+}
+</code></pre>
+<h2>@WebService Endpoint Interface</h2>
+<p>Having an endpoint interface is not required, but it can make testing and using the web service from other Java clients far easier.</p>
+<pre><code>import javax.jws.WebService;
+
+@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+public interface CalculatorWs {
+
+    public int sum(int add1, int add2);
+
+    public int multiply(int mul1, int mul2);
+}
+</code></pre>
+<h2>Calculator WSDL</h2>
+<p>The wsdl for our service is autmatically created for us and available at <code>http://127.0.0.1:4204/Calculator?wsdl</code>. In TomEE or Tomcat this would be at <code>http://127.0.0.1:8080/simple-webservice/Calculator?wsdl</code></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;wsdl:definitions xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot; name=&quot;CalculatorService&quot;
+                  targetNamespace=&quot;http://superbiz.org/wsdl&quot;
+                  xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
+                  xmlns:tns=&quot;http://superbiz.org/wsdl&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+  &lt;wsdl:types&gt;
+    &lt;xsd:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;unqualified&quot;
+                targetNamespace=&quot;http://superbiz.org/wsdl&quot; xmlns:tns=&quot;http://superbiz.org/wsdl&quot;
+                xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+      &lt;xsd:element name=&quot;multiply&quot; type=&quot;tns:multiply&quot;/&gt;
+      &lt;xsd:complexType name=&quot;multiply&quot;&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name=&quot;arg0&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name=&quot;arg1&quot; type=&quot;xsd:int&quot;/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name=&quot;multiplyResponse&quot; type=&quot;tns:multiplyResponse&quot;/&gt;
+      &lt;xsd:complexType name=&quot;multiplyResponse&quot;&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name=&quot;return&quot; type=&quot;xsd:int&quot;/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name=&quot;sum&quot; type=&quot;tns:sum&quot;/&gt;
+      &lt;xsd:complexType name=&quot;sum&quot;&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name=&quot;arg0&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name=&quot;arg1&quot; type=&quot;xsd:int&quot;/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+      &lt;xsd:element name=&quot;sumResponse&quot; type=&quot;tns:sumResponse&quot;/&gt;
+      &lt;xsd:complexType name=&quot;sumResponse&quot;&gt;
+        &lt;xsd:sequence&gt;
+          &lt;xsd:element name=&quot;return&quot; type=&quot;xsd:int&quot;/&gt;
+        &lt;/xsd:sequence&gt;
+      &lt;/xsd:complexType&gt;
+    &lt;/xsd:schema&gt;
+  &lt;/wsdl:types&gt;
+  &lt;wsdl:message name=&quot;multiplyResponse&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:multiplyResponse&quot; name=&quot;parameters&quot;/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name=&quot;sumResponse&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:sumResponse&quot; name=&quot;parameters&quot;/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name=&quot;sum&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:sum&quot; name=&quot;parameters&quot;/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:message name=&quot;multiply&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:multiply&quot; name=&quot;parameters&quot;/&gt;
+  &lt;/wsdl:message&gt;
+  &lt;wsdl:portType name=&quot;CalculatorWs&quot;&gt;
+    &lt;wsdl:operation name=&quot;multiply&quot;&gt;
+      &lt;wsdl:input message=&quot;tns:multiply&quot; name=&quot;multiply&quot;/&gt;
+      &lt;wsdl:output message=&quot;tns:multiplyResponse&quot; name=&quot;multiplyResponse&quot;/&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name=&quot;sum&quot;&gt;
+      &lt;wsdl:input message=&quot;tns:sum&quot; name=&quot;sum&quot;/&gt;
+      &lt;wsdl:output message=&quot;tns:sumResponse&quot; name=&quot;sumResponse&quot;/&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:portType&gt;
+  &lt;wsdl:binding name=&quot;CalculatorServiceSoapBinding&quot; type=&quot;tns:CalculatorWs&quot;&gt;
+    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
+    &lt;wsdl:operation name=&quot;multiply&quot;&gt;
+      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
+      &lt;wsdl:input name=&quot;multiply&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name=&quot;multiplyResponse&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+    &lt;wsdl:operation name=&quot;sum&quot;&gt;
+      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
+      &lt;wsdl:input name=&quot;sum&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:input&gt;
+      &lt;wsdl:output name=&quot;sumResponse&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+  &lt;/wsdl:binding&gt;
+  &lt;wsdl:service name=&quot;CalculatorService&quot;&gt;
+    &lt;wsdl:port binding=&quot;tns:CalculatorServiceSoapBinding&quot; name=&quot;CalculatorPort&quot;&gt;
+      &lt;soap:address location=&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+&lt;/wsdl:definitions&gt;
+</code></pre>
+<h2>Accessing the @WebService with javax.xml.ws.Service</h2>
+<p>In our testcase we see how to create a client for our <code>Calculator</code> service via the <code>javax.xml.ws.Service</code> class and leveraging our <code>CalculatorWs</code> endpoint interface.</p>
+<p>With this we can get an implementation of the interfacce generated dynamically for us that can be used to send compliant SOAP messages to our service.</p>
+<pre><code>import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import java.net.URL;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class CalculatorTest {
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        //properties.setProperty(&quot;httpejbd.print&quot;, &quot;true&quot;);
+        //properties.setProperty(&quot;httpejbd.indent.xml&quot;, &quot;true&quot;);
+        EJBContainer.createEJBContainer(properties);
+    }
+
+    @Test
+    public void test() throws Exception {
+        Service calculatorService = Service.create(
+                new URL(&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;),
+                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorService&quot;));
+
+        assertNotNull(calculatorService);
+
+        CalculatorWs calculator = calculatorService.getPort(CalculatorWs.class);
+        assertEquals(10, calculator.sum(4, 6));
+        assertEquals(12, calculator.multiply(3, 4));
+    }
+}
+</code></pre>
+<p>For easy testing we'll use the Embeddable EJBContainer API part of EJB 3.1 to boot CXF in our testcase. This will deploy our application in the embedded container and bring the web service online so we can invoke it.</p>
+<h1>Running</h1>
+<p>Running the example can be done from maven with a simple 'mvn clean install' command run from the 'simple-webservice' directory.</p>
+<p>When run you should see output similar to the following.</p>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.calculator.ws.CalculatorTest
+INFO - ********************************************************************************
+INFO - OpenEJB http://tomee.apache.org/
+INFO - Startup: Sat Feb 18 19:11:50 PST 2012
+INFO - Copyright 1999-2012 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 4.0.0-beta-3
+INFO - Build date: 20120218
+INFO - Build time: 03:32
+INFO - ********************************************************************************
+INFO - openejb.home = /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
+INFO - openejb.base = /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@16bdb503
+INFO - succeeded in installing singleton service
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice/target/classes
+INFO - Using &#39;openejb.embedded=true&#39;
+INFO - Configuring enterprise application: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
+INFO - Auto-deploying ejb Calculator: EjbDeployment(deployment-id=Calculator)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean Calculator: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Creating Container(id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.calculator.ws.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T for stateful session passivation
+INFO - Enterprise application &quot;/Users/dblevins/work/all/trunk/openejb/examples/simple-webservice&quot; loaded.
+INFO - Assembling app: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
+INFO - ignoreXmlConfiguration == true
+INFO - ignoreXmlConfiguration == true
+INFO - existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@16bdb503
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took [62] ms.
+INFO - Created Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Stateless Container)
+INFO - Deployed Application(path=/Users/dblevins/work/all/trunk/openejb/examples/simple-webservice)
+INFO - Initializing network services
+INFO - can&#39;t find log4j MDC class
+INFO - Creating ServerService(id=httpejbd)
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=admin)
+INFO - Creating ServerService(id=ejbd)
+INFO - Creating ServerService(id=ejbds)
+INFO - Initializing network services
+INFO -   ** Starting Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       4204
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from class org.superbiz.calculator.ws.CalculatorWs
+INFO - Setting the server&#39;s publish address to be http://nopath:80
+INFO - Webservice(wsdl=http://127.0.0.1:4204/Calculator, qname={http://superbiz.org/wsdl}CalculatorService) --&gt; Ejb(id=Calculator)
+INFO -   admin thread         127.0.0.1       4200
+INFO -   ejbd                 127.0.0.1       4201
+INFO -   ejbd                 127.0.0.1       4203
+INFO - -------
+INFO - Ready!
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from WSDL: http://127.0.0.1:4204/Calculator?wsdl
+INFO - Default SAAJ universe not set
+INFO - TX NotSupported: Suspended transaction null
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.584 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+<h2>Inspecting the messages</h2>
+<p>The above test case will result in the following SOAP messages being sent between the clien and server.</p>
+<h3>sum(int, int)</h3>
+<p>Request SOAP message:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sum xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;arg0&gt;4&lt;/arg0&gt;
+      &lt;arg1&gt;6&lt;/arg1&gt;
+    &lt;/ns1:sum&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<p>Response SOAP message:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:sumResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;return&gt;10&lt;/return&gt;
+    &lt;/ns1:sumResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<h3>multiply(int, int)</h3>
+<p>Request SOAP message:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiply xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;arg0&gt;3&lt;/arg0&gt;
+      &lt;arg1&gt;4&lt;/arg1&gt;
+    &lt;/ns1:multiply&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<p>Response SOAP message:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;ns1:multiplyResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+      &lt;return&gt;12&lt;/return&gt;
+    &lt;/ns1:multiplyResponse&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<h2>Inside the jar</h2>
+<p>With so much going on it can make things look more complex than they are. It can be hard to believe that so much can happen with such little code. That's the benefit of having an app server.</p>
+<p>If we look at the jar built by maven, we'll see the application itself is quite small:</p>
+<pre><code>$ jar tvf target/simple-webservice-1.1.0-SNAPSHOT.jar
+     0 Sat Feb 18 19:17:06 PST 2012 META-INF/
+   127 Sat Feb 18 19:17:04 PST 2012 META-INF/MANIFEST.MF
+     0 Sat Feb 18 19:17:02 PST 2012 org/
+     0 Sat Feb 18 19:17:02 PST 2012 org/superbiz/
+     0 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/
+     0 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/
+   855 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/Calculator.class
+   288 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/CalculatorWs.class
+</code></pre>
+<p>This single jar could be deployed any any compliant Java EE implementation. In TomEE you'd simply place it in the <code>tomee.home/webapps/</code> directory. No war file necessary. If you did want to create a war, you'd simply place the jar in the <code>WEB-INF/lib/</code> directory of the war.</p>
+<p>The server already contains the right libraries to run the code, such as Apache CXF, so no need to include anything extra beyond your own application code.</p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

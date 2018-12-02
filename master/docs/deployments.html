@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Deployments</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <a name="Deployments-The'Deployments'elementinopenejb.xml"></a>
+<h1>The 'Deployments' element in openejb.xml</h1>
+<a name="Deployments-Asinglejar"></a>
+<h2>A single jar</h2>
+<p>To include a single jar by name, just declare a 'Deployments' element with a 'jar' attribute pointing to the jar file on the file system.</p>
+<pre><code>&lt;openejb&gt;
+...
+&lt;Deployments jar=&quot;c:\my\app\superEjbs.jar&quot; /&gt;
+&lt;Deployments jar=&quot;c:\someplace\purchasing.jar&quot; /&gt;
+&lt;Deployments jar=&quot;timeTrack.jar&quot; /&gt;
+&lt;/openejb&gt;
+</code></pre>
+<p>The last element in the example uses a relative path to point to the ejb jar. This path will be resolved relative to the openejb.base property. So, for example, of the value of openejb.base was 'c:\timeapp\' then OpenEJB would look for the jar 'c:\timeapp\timeTrack.jar'. See the [OPENEJB:Configuration]<br/> guide for more details.</p>
+<h2>A directory of jars</h2>
+<p>To point to a directory that contains several jar files that OpenEJB should load, simply declare a 'Deployments' element with a 'dir' attribute pointing to the directory containing the jar files.</p>
+<pre><code>&lt;openejb&gt;
+...
+
+&lt;Deployments dir=&quot;c:\my\app\beans\&quot; /&gt;
+&lt;Deployments dir=&quot;c:\crimestopper\lib&quot; /&gt;
+&lt;Deployments dir=&quot;ejbs&quot; /&gt;
+&lt;Deployments dir=&quot;beans&quot; /&gt;
+&lt;/openejb&gt;
+</code></pre>
+<p>The directories listed will be searched for jars containing<br/>'META-INF/ejb-jar.xml' files and will be added to the list of jars to load<br/>if they do. Better said, it's completely safe to point to a directory containing a mix of ejbs and regular jar files. OpenEJB will simply skip over jars that do contain the required 'META-INF/ejb-jar.xml' file.</p>
+<p>The last Deployments element declares a 'beans' directory relative to openejb.base for holding ejb jars. This declaration is simply convention and not required.</p>
+<a name="Deployments-Anunpackedjar"></a>
+<h2>An unpacked jar</h2>
+<p>As of 1.0 beta1, OpenEJB supports unpacked ejb jars. Simply meaning that you don't need to pack your ejb's into a jar file in order to use them in OpenEJB. You still need to follow the ejb jar layout and include an<br/>"META-INF/ejb-jar.xml" in the directory that contains your ejbs.</p>
+<p>For example, if you have a directory structure like this:</p>
+<pre><code>&gt; C:\myapp\
+&gt; C:\myapp\acmeEjbs\
+&gt; C:\myapp\acmeEjbs\META-INF\ejb-jar.xml
+&gt; C:\myapp\acmeEjbs\org\acme\Foo.class
+&gt; C:\myapp\acmeEjbs\org\acme\FooBean.class
+&gt; C:\myapp\acmeEjbs\org\acme\FooHome.class
+&gt; C:\myapp\acmeEjbs\org\acme\Bar.class
+&gt; C:\myapp\acmeEjbs\org\acme\BarBean.class
+&gt; C:\myapp\acmeEjbs\org\acme\BarHome.class
+</code></pre>
+<p>Then you would delcare a 'Deployments' element with the 'dir' attribute set to 'C:\myapp\acmeEjbs' as shown below.</p>
+<pre><code>&lt;openejb&gt;
+...
+
+&lt;Deployments dir=&quot;c:\myapp\acmeEjbs&quot; /&gt;
+&lt;/openejb&gt;
+</code></pre>
+<p>Note that this syntax is the same as the directory syntax above. If OpenEJB finds a META-INF directory with an 'ejb-jar.xml' fine inside, then OpenEJB will treat the directory as an unpacked ejb jar. Otherwise OpenEJB will look for ejb jar files to load as detailed in the above section.</p>
+<h1>Log file</h1>
+<p>When trying to figure out if your ejbs were loaded, the openejb.log file is an incredible asset.</p>
+<p>If your ejbs were loaded successfully you should see entries like the following (1.x and higher only):</p>
+<pre><code>INFO :  Loaded EJBs from
+/usr/local/openejb-1.0-beta1/beans/openejb-itests-beans.jar
+INFO :  Loaded EJBs from
+/usr/local/openejb-1.0-beta1/beans/openejb-webadmin-clienttools.jar
+</code></pre>
+<p>If your ejbs failed to load, you will see an entry similar to the following.</p>
+<pre><code>WARN :  Jar not loaded. /usr/local/openejb-1.0-beta1/beans/helloworld.jar.
+Jar failed validation.  Use the validation tool for more details
+</code></pre>
+<p>Additionally, all the successfully loaded ejbs are individually listed in the log file at startup. The Deployment ID listed is the JNDI name used to lookup the ejb from a client of the Local or Remote Servers. The beans listed below are from our test suite.</p>
+<pre><code>DEBUG:  Deployments    : 19
+DEBUG:  Type     Deployment ID
+DEBUG:     CMP_ENTITY  client/tests/entity/cmp/RMI-over-IIOP/EJBHome
+DEBUG:     STATEFUL    client/tests/stateful/EncBean
+DEBUG:     STATELESS   client/tests/stateless/BeanManagedBasicStatelessHome
+DEBUG:     STATEFUL    client/tests/stateful/BasicStatefulHome
+DEBUG:     STATELESS   client/tests/stateless/EncBean
+DEBUG:     STATEFUL   client/tests/stateful/BeanManagedTransactionTests/EJBHome
+DEBUG:     BMP_ENTITY  client/tests/entity/bmp/RMI-over-IIOP/EJBHome
+DEBUG:     STATEFUL    client/tests/stateful/RMI-over-IIOP/EJBHome
+DEBUG:     STATELESS  client/tests/stateless/BeanManagedTransactionTests/EJBHome
+DEBUG:     BMP_ENTITY client/tests/entity/bmp/allowed_operations/EntityHome
+DEBUG:     CMP_ENTITY  client/tests/entity/cmp/EncBean
+DEBUG:     STATEFUL    client/tests/stateful/BeanManagedBasicStatefulHome
+DEBUG:     BMP_ENTITY  client/tests/entity/bmp/BasicBmpHome
+DEBUG:     STATELESS   client/tests/stateless/BasicStatelessHome
+DEBUG:     CMP_ENTITY  client/tests/entity/cmp/BasicCmpHome
+DEBUG:     STATELESS   client/tools/DatabaseHome
+DEBUG:     CMP_ENTITY client/tests/entity/cmp/allowed_operations/EntityHome
+DEBUG:     BMP_ENTITY  client/tests/entity/bmp/EncBean
+DEBUG:     STATELESS   client/tests/stateless/RMI-over-IIOP/EJBHome
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

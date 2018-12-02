@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>DataSource Configuration</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>A DataSource can be declared via xml in the <code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file using a declaration like the following. All properties in the element body are optional.</p>
+<pre><code>&lt;Resource id=&quot;myDataSource&quot; type=&quot;javax.sql.DataSource&quot;&gt;
+    accessToUnderlyingConnectionAllowed = false
+    alternateUsernameAllowed = false
+    connectionProperties = 
+    defaultAutoCommit = true
+    defaultReadOnly = 
+    definition = 
+    ignoreDefaultValues = false
+    initialSize = 0
+    jdbcDriver = org.hsqldb.jdbcDriver
+    jdbcUrl = jdbc:hsqldb:mem:hsqldb
+    jtaManaged = true
+    maxActive = 20
+    maxIdle = 20
+    maxOpenPreparedStatements = 0
+    maxWaitTime = -1 millisecond
+    minEvictableIdleTime = 30 minutes
+    minIdle = 0
+    numTestsPerEvictionRun = 3
+    password = 
+    passwordCipher = PlainText
+    poolPreparedStatements = false
+    serviceId = 
+    testOnBorrow = true
+    testOnReturn = false
+    testWhileIdle = false
+    timeBetweenEvictionRuns = -1 millisecond
+    userName = sa
+    validationQuery = 
+&lt;/Resource&gt;
+</code></pre>
+<p>Alternatively, a DataSource can be declared via properties in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java VirtualMachine <code>-D</code> properties. The properties can also be used when embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or <code>InitialContext</code></p>
+<pre><code>myDataSource = new://Resource?type=javax.sql.DataSource
+myDataSource.accessToUnderlyingConnectionAllowed = false
+myDataSource.alternateUsernameAllowed = false
+myDataSource.connectionProperties = 
+myDataSource.defaultAutoCommit = true
+myDataSource.defaultReadOnly = 
+myDataSource.definition = 
+myDataSource.ignoreDefaultValues = false
+myDataSource.initialSize = 0
+myDataSource.jdbcDriver = org.hsqldb.jdbcDriver
+myDataSource.jdbcUrl = jdbc:hsqldb:mem:hsqldb
+myDataSource.jtaManaged = true
+myDataSource.maxActive = 20
+myDataSource.maxIdle = 20
+myDataSource.maxOpenPreparedStatements = 0
+myDataSource.maxWaitTime = -1 millisecond
+myDataSource.minEvictableIdleTime = 30 minutes
+myDataSource.minIdle = 0
+myDataSource.numTestsPerEvictionRun = 3
+myDataSource.password = 
+myDataSource.passwordCipher = PlainText
+myDataSource.poolPreparedStatements = false
+myDataSource.serviceId = 
+myDataSource.testOnBorrow = true
+myDataSource.testOnReturn = false
+myDataSource.testWhileIdle = false
+myDataSource.timeBetweenEvictionRuns = -1 millisecond
+myDataSource.userName = sa
+myDataSource.validationQuery = 
+</code></pre>
+<p>Properties and xml can be mixed. Properties will override the xml allowing for easy configuration change without the need for ${} style variable substitution. Properties are not case sensitive. If a property is specified that is not supported by the declared DataSource a warning will be logged. If a DataSource is needed by the application and one is not declared, TomEE will create one dynamically using default settings. Multiple DataSource declarations are allowed.</p>
+<p>See the <a href="common-datasource-configurations.html">Common DataSource Configurations</a> page for examples of configuring datasources for Derby, MySQL, Oracle and other common databases.</p>
+<h1>Supported Properties</h1>
+<table class="mdtable">
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+<tr>
+  <td><a href="#accessToUnderlyingConnectionAllowed">accessToUnderlyingConnectionAllowed</a></td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+If true the raw physical connection to the database can be accessed
+</td>
+</tr>
+</tr>
+<tr>
+  <td><a href="#alternateUsernameAllowed">alternateUsernameAllowed</a></td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+If true allow an alternate username and password to be specified on the connection, rather than those specified in the DataSource definition..
+</td>
+</tr>
+<tr>
+  <td><a href="#connectionProperties">connectionProperties</a></td>
+  <td>String</td>
+  <td></td>
+  <td>
+The connection properties that will be sent to the JDBC driver when establishing new connections
+</td>
+</tr>
+<tr>
+  <td>defaultAutoCommit</td>
+  <td>boolean</td>
+  <td>true</td>
+  <td>
+The default auto-commit state of new connections
+</td>
+</tr>
+<tr>
+  <td>defaultReadOnly</td>
+  <td>String</td>
+  <td></td>
+  <td>
+The default read-only state of new connections If not set then the setReadOnly method will not be called.
+(Some drivers don't support read only mode, ex: Informix)
+</td>
+</tr>
+<tr>
+  <td>definition</td>
+  <td>String</td>
+  <td></td>
+  <td>
+
+</td>
+</tr>
+<tr>
+  <td>ignoreDefaultValues</td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+use only all set values in this config will need a lot of properties but allow to not set some values
+</td>
+</tr>
+<tr>
+  <td><a href="#initialSize">initialSize</a></td>
+  <td>int</td>
+  <td>0</td>
+  <td>
+The size to reach when creating the datasource.
+</td>
+</tr>
+<tr>
+  <td>jdbcDriver</td>
+  <td>String</td>
+  <td>org.hsqldb.jdbcDriver</td>
+  <td>
+Driver class name
+</td>
+</tr>
+<tr>
+  <td>jdbcUrl</td>
+  <td>java.net.URI</td>
+  <td>jdbc:hsqldb:mem:hsqldb</td>
+  <td>
+Url for creating connections
+</td>
+</tr>
+<tr>
+  <td><a href="#jtaManaged">jtaManaged</a></td>
+  <td>boolean</td>
+  <td>true</td>
+  <td>
+Determines wether or not this data source should be JTA managed or user managed.
+</td>
+</tr>
+<tr>
+  <td>maxActive</td>
+  <td>int</td>
+  <td>20</td>
+  <td>
+The maximum number of active connections that can be allocated from this pool at the same time, or a negative number for no limit. N.B. When using dbcp2 with TomEE 7 ("DataSourceCreator dbcp"), "MaxTotal" should be used as opposed to "MaxActive".
+</td>
+</tr>
+<tr>
+  <td>maxIdle</td>
+  <td>int</td>
+  <td>20</td>
+  <td>
+The maximum number of connections that can remain idle in the pool, without extra ones being released, or a negative number for no limit.
+</td>
+</tr>
+<tr>
+  <td><a href="#maxOpenPreparedStatements">maxOpenPreparedStatements</a></td>
+  <td>int</td>
+  <td>0</td>
+  <td>
+The maximum number of open statements that can be allocated from the statement pool at the same time, or zero for no limit.
+</td>
+</tr>
+<tr>
+  <td>maxWaitTime</td>
+  <td><a href="configuring-durations.html">time</a></td>
+  <td>-1&nbsp;millisecond</td>
+  <td>
+The maximum number of time that the pool will wait
+(when there are no available connections) for a connection
+to be returned before throwing an exception, or -1 to wait indefinitely.
+</td>
+</tr>
+<tr>
+  <td>minEvictableIdleTime</td>
+  <td><a href="configuring-durations.html">time</a></td>
+  <td>30&nbsp;minutes</td>
+  <td>
+The minimum amount of time a connection may sit idle in the pool before it is eligable for eviction by the idle connection evictor (if any).
+</td>
+</tr>
+<tr>
+  <td>minIdle</td>
+  <td>int</td>
+  <td>0</td>
+  <td>
+The minimum number of connections that can remain idle in the pool, without extra ones being created, or zero to create none.
+</td>
+</tr>
+<tr>
+  <td>numTestsPerEvictionRun</td>
+  <td>int</td>
+  <td>3</td>
+  <td>
+The number of connectionss to examine during each run of the idle connection evictor thread (if any).
+</td>
+</tr>
+<tr>
+  <td>password</td>
+  <td>String</td>
+  <td></td>
+  <td>
+Default password
+</td>
+</tr>
+<tr>
+  <td>passwordCipher</td>
+  <td>String</td>
+  <td>PlainText</td>
+  <td>
+
+</td>
+</tr>
+<tr>
+  <td><a href="#poolPreparedStatements">poolPreparedStatements</a></td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+If true, a statement pool is created for each Connection and PreparedStatements created by one of the following methods are pooled:
+</td>
+</tr>
+<tr>
+  <td>serviceId</td>
+  <td>String</td>
+  <td></td>
+  <td>
+
+</td>
+</tr>
+<tr>
+  <td><a href="#testOnBorrow">testOnBorrow</a></td>
+  <td>boolean</td>
+  <td>true</td>
+  <td>
+If true connections will be validated before being returned from the pool. If the validation fails, the connection is destroyed, and a new conection will be retrieved from the pool (and validated).
+</td>
+</tr>
+<tr>
+  <td><a href="#testOnReturn">testOnReturn</a></td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+If true connections will be validated before being returned to the pool.  If the validation fails, the connection is destroyed instead of being returned to the pool.
+</td>
+</tr>
+<tr>
+  <td><a href="#testWhileIdle">testWhileIdle</a></td>
+  <td>boolean</td>
+  <td>false</td>
+  <td>
+If true connections will be validated by the idle connection evictor (if any). If the validation fails, the connection is destroyed and removed from the pool
+</td>
+</tr>
+<tr>
+  <td>timeBetweenEvictionRuns</td>
+  <td><a href="configuring-durations.html">time</a></td>
+  <td>-1&nbsp;millisecond</td>
+  <td>
+The number of milliseconds to sleep between runs of the idle connection evictor thread. When set to a negative number, no idle connection evictor thread will be run.
+</td>
+</tr>
+<tr>
+  <td>userName</td>
+  <td>String</td>
+  <td>sa</td>
+  <td>
+Default user name
+</td>
+</tr>
+<tr>
+  <td>validationQuery</td>
+  <td>String</td>
+  <td></td>
+  <td>
+The SQL query that will be used to validate connections from this pool before returning them to the caller. If specified, this query MUST be an SQL SELECT statement that returns at least one row.
+</td>
+</tr>
+<tr>
+<td>LogSql</td>
+<td>boolean</td>
+<td>false</td>
+<td>Wether SQL queries should be logged or not</td>
+</tr>
+</table>
+<a name="accessToUnderlyingConnectionAllowed"></a>
+<h2>accessToUnderlyingConnectionAllowed</h2>
+<p>If true the raw physical connection to the database can be accessed using the following construct:</p>
+<pre><code>Connection conn = ds.getConnection();
+Connection rawConn = ((DelegatingConnection) conn).getInnermostDelegate();
+...
+conn.close()
+</code></pre>
+<p>Default is false, because misbehaving programs can do harmfull things to the raw connection shuch as closing the raw connection or continuing to use the raw connection after it has been assigned to another logical connection. Be careful and only use when you need direct access to driver specific extensions.</p>
+<p>NOTE: Do NOT close the underlying connection, only the original logical connection wrapper.</p>
+<a name="connectionProperties"></a>
+<h2>connectionProperties</h2>
+<p>The connection properties that will be sent to the JDBC driver when establishing new connections</p>
+<p>Format of the string must be [propertyName=property;]*</p>
+<p>NOTE - The "user" and "password" properties will be passed explicitly, so they do not need to be included here.</p>
+<a name="TransactionIsolation"></a>
+<h2>TransactionIsolation</h2>
+<p>The default TransactionIsolation state of new connections.</p>
+<p>If not set then the <code>setTransactionIsolation</code> method will not be called. The allowed values for this property are:</p>
+<ul>
+  <li><code>NONE</code></li>
+  <li><code>READ_COMMITTED</code></li>
+  <li><code>READ_UNCOMMITTED</code></li>
+  <li><code>REPEATABLE_READ</code></li>
+  <li><code>SERIALIZABLE</code></li>
+</ul>
+<p>Note: Most JDBC drivers do not support all isolation levels DefaultTransactionIsolation</p>
+<a name="initialSize"></a>
+<h2>initialSize</h2>
+<p>The initial size to initialize the pool of connections.</p>
+<a name="jtaManaged"></a>
+<h2>jtaManaged</h2>
+<p>Determines wether or not this data source should be JTA managed or user managed.</p>
+<p>If set to 'true' it will automatically be enrolled in any ongoing transactions. Calling begin/commit/rollback or setAutoCommit on the datasource or connection will not be allowed. If you need to perform these functions yourself, set <code>JtaManaged</code> to <code>false</code></p>
+<p>In terms of JPA persistence.xml:</p>
+<ul>
+  <li><code>JtaManaged=true</code> can be used as a 'jta-data-source'</li>
+  <li><code>JtaManaged=false</code> can be used as a 'non-jta-data-source'</li>
+</ul>
+<a name="maxOpenPreparedStatements"></a>
+<h2>maxOpenPreparedStatements</h2>
+<p>The maximum number of open statements that can be allocated from the statement pool at the same time, or zero for no limit.</p>
+<p>NOTE - Some drivers have limits on the number of open statements, so make sure there are some resources left for the other (non-prepared) statements.</p>
+<a name="poolPreparedStatements"></a>
+<h2>poolPreparedStatements</h2>
+<p>If true, a statement pool is created for each Connection and PreparedStatements created by one of the following methods are pooled:</p>
+<pre><code>public PreparedStatement prepareStatement(String sql);
+public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency)
+</code></pre>
+<a name="testOnBorrow"></a>
+<h2>testOnBorrow</h2>
+<p>If true connections will be validated before being returned from the pool. If the validation fails, the connection is destroyed, and a new conection will be retrieved from the pool (and validated).</p>
+<p>NOTE - for a true value to have any effect, the ValidationQuery parameter must be set.</p>
+<a name="testOnReturn"></a>
+<h2>testOnReturn</h2>
+<p>If true connections will be validated before being returned to the pool. If the validation fails, the connection is destroyed instead of being returned to the pool.</p>
+<p>NOTE - for a true value to have any effect, the ValidationQuery parameter must be set.</p>
+<a name="testWhileIdle"></a>
+<h2>testWhileIdle</h2>
+<p>If true connections will be validated by the idle connection evictor (if any). If the validation fails, the connection is destroyed and removed from the pool</p>
+<p>NOTE - for a true value to have any effect, the timeBetweenEvictionRunsMillis property must be a positive number and the ValidationQuery parameter must be set.</p>
+<h1>XADataSource</h1>
+<p>There are several ways to configure a XADataSource. Depending the underlying datasource (Oracle, MySQL one or the other solution can be more adapted.</p>
+<p>This part deals with <code>JtaManaged</code> XaDataSource since a not managed XaDataSource can be defined as a standard resource using <code>class-name</code>.</p>
+<h2>Single definition</h2>
+<p>First solution is to define as <code>JdbcDriver</code> an XADataSource:</p>
+<pre><code>&lt;Resource id=&quot;myXaDs&quot; type=&quot;DataSource&quot;&gt;
+    JdbcDriver = org.foo.MyXaDataSource
+
+    myXaProperty = value
+
+    myPoolProperty = 10
+&lt;/Resource&gt;
+</code></pre>
+<p>This solution merges properties for the XaDataSource and the pool (tomcat-jdbc for TomEE, dbcp for OpenEJB by default but still configurable with DataSourceCreator).</p>
+<p>Note: in this case for Oracle for instance you'll define UserName for the pool and User for the datasource which can look weird if you don't know properties are used for 2 instances (pool and datasource).</p>
+<p>Note: this solution uses the same logic than @DataSourceDefinition factory mecanism.</p>
+<h2>Two resources definition</h2>
+<p>An alternative is to define a resource for the XaDataSource:</p>
+<pre><code>&lt;Resource id=&quot;myXa&quot; class-name=&quot;org.foo.MyXaDataSource&quot;&gt;
+    myXaProperty = value
+&lt;/Resource&gt;
+</code></pre>
+<p>And then wrap it in the pool:</p>
+<pre><code>&lt;Resource id=&quot;myXaDs&quot; type=&quot;DataSource&quot;&gt;
+    DataSourceCreator = [dbcp|dbcp-alternative]
+    myPoolProperty = 10
+&lt;/Resource&gt;
+</code></pre>
+<p>Note: <code>dbcp</code> is more adapted than <code>dbcp-alternative</code> in most of the case because it is reusing direct dbcp JTA management.</p>
+<h2>Known issues</h2>
+<p>For TomEE 1.7.0/1.7.1 you can need to add the property:</p>
+<pre><code> openejb.datasource.pool = true
+</code></pre>
+<p>in resource properties to ensure the resource is pooled.</p>
+<h2>Details about DataSource and their factories (advanced configuration)</h2>
+<p><a href="datasource-configuration-by-creator.html">Configuration by creator</a></p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

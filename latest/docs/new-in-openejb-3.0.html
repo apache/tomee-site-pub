@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1> New in OpenEJB 3.0</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <a name="NewinOpenEJB3.0-EJB3.0"></a>
+<h1>EJB 3.0</h1>
+<p>OpenEJB 3.0 supports the EJB 3.0 specification as well as the prior EJB<br/>2.1, EJB 2.0, and EJB 1.1. New features in EJB 3.0 include:</p>
+<ul>
+  <li>Annotations instead of xml</li>
+  <li>No home interfaces</li>
+  <li>Business Interfaces</li>
+  <li>Dependency Injection</li>
+  <li>Intercpetors</li>
+  <li>Java Persistence API</li>
+  <li>Service Locator (ala SessionContext.lookup)</li>
+  <li>POJO-style beans</li>
+</ul>
+<p>EJB 2.x features since OpenEJB 1.0 also include:<br/> - MessageDriven Beans<br/> - Container-Managed Persistence (CMP) 2.0<br/> - Timers</p>
+<p>The two aspects of EJB that OpenEJB does not yet support are:<br/> - Web Services (JAX-WS, JAX-RPC)<br/> - CORBA</p>
+<p>JAX-WS and CORBA support will be added in future releases. Support for the<br/>JAX-RPC API is not a planned feature.</p>
+<a name="NewinOpenEJB3.0-ExtensionstoEJB3.0"></a>
+<h1>Extensions to EJB 3.0</h1>
+<a name="NewinOpenEJB3.0-CMPviaJPA"></a>
+<h2>CMP via JPA</h2>
+<p>Our CMP implementation is a thin layer over the new Java Persistence API<br/>(JPA). This means when you deploy an old style CMP 1.1 or CMP 2.1 bean it<br/>is internally converted and ran as a JPA bean. This makes it possible to<br/>use both CMP and JPA in the same application without any coherence issues<br/>that can come from using two competing persistence technologies against the<br/>same data. Everything is ultimately JPA in the end.</p>
+<a name="NewinOpenEJB3.0-ExtendedDependencyInjection"></a>
+<h2>Extended Dependency Injection</h2>
+<p>Dependency Injection in EJB 3.0 via @Resource is largely limited to objects<br/>provided by the container, such as DataSources, JMS Topics and Queues. It<br/>is possible for you to supply your own configuration information for<br/>injection, but standard rules allow for only data of type String,<br/>Character, Boolean, Integer, Short, Long, Double, Float and Byte. If you<br/>needed a URL, for example, you'd have to have it injected as a String then<br/>convert it yourself to a URL. This is just plain silly as the conversion<br/>of Strings to other basic data types has existed in JavaBeans long before<br/>Enterprise JavaBeans existed. </p>
+<p>OpenEJB 3.0 supports injection of any data type for which you can supply a<br/>JavaBeans PropertyEditor. We include several built-in PropertyEditors<br/>already such as Date, InetAddress, Class, File, URL, URI, Map, List and<br/>more.</p>
+<pre><code>import java.net.URI;
+import java.io.File;
+import java.util.Date;
+
+@Stateful 
+public class MyBean {
+    @Resource URI blog;
+    @Resource Date birthday;
+    @Resource File homeDirectory;
+}
+</code></pre>
+<a name="NewinOpenEJB3.0-TheMETA-INF/env-entries.properties"></a>
+<h2>The META-INF/env-entries.properties</h2>
+<p>Along the lines of injection, one of the last remaining things in EJB 3<br/>that people need an ejb-jar.xml file for is to supply the value of<br/>env-entries. Env Entries are the source of data for all user supplied data<br/>injected into your bean; the afore mentioned String, Boolean, Integer, etc.<br/> This is a very big burden as each env-entry is going to cost you 5 lines<br/>of xml and the complication of having to figure out how to add you bean<br/>declaration in xml as an override of an existing bean and not accidentally<br/>as a new bean. All this can be very painful when all you want is to supply<br/>the value of a few @Resource String fields in you bean class. </p>
+<p>To fix this, OpenEJB supports the idea of a META-INF/env-entries.properties<br/>file where we will look for the value of things that need injection that<br/>are not container controlled resources (i.e. datasources and things of that<br/>nature). You can configure you ejbs via a properties file and skip the<br/>need for an ejb-jar.xml and it's 5 lines per property madness.</p>
+<pre><code>blog = http://acme.org/myblog
+birthday = locale=en_US style=MEDIUM Mar 1, 1954
+homeDirectory = /home/esmith/
+</code></pre>
+<a name="NewinOpenEJB3.0-SupportforGlassFishdescriptors"></a>
+<h2>Support for GlassFish descriptors</h2>
+<p>Unit testing EJBs with OpenEJB is a major feature and draw for people, even<br/>for people who may still use other app servers for final deployment such as<br/>Geronimo or GlassFish. The descriptor format for Geronimo is natively<br/>understood by OpenEJB as OpenEJB is the EJB Container provider for<br/>Geronimo. However, OpenEJB also supports the GlassFish descriptors so<br/>people using GlassFish as their final server can still use OpenEJB for<br/>testing EJBs via plain JUnit tests in their build and only have one set of<br/>vendor descriptors to maintain.</p>
+<a name="NewinOpenEJB3.0-JavaEE5EARandApplicationClientsupport"></a>
+<h2>JavaEE 5 EAR and Application Client support</h2>
+<p>JavaEE 5 EARs and Application Clients can be deployed in addition to ejb<br/>jars. EAR support is limited to ejbs, application clients, and libraries;<br/>WAR files and RAR files will be ignored. Per the JavaEE 5 spec, the<br/>META-INF/application.xml and META-INF/application-client.xml files are<br/>optional.</p>
+<a name="NewinOpenEJB3.0-ApplicationValidationforEJB3.0"></a>
+<h2>Application Validation for EJB 3.0</h2>
+<p>Incorrect usage of various new aspects of EJB 3.0 are checked for and<br/>reported during the deployment process preventing strange errors and<br/>failures. </p>
+<p>As usual validation failures (non-compliant issues with your application)<br/>are printed out in complier-style "all-at-once" output allowing you to see<br/>and fix all your issues in one go. For example, if you have 10<br/>@PersistenceContext annotations that reference an invalid persistence unit,<br/>you get all 10 errors on the <em>first</em> deploy rather than one failure on the<br/>first deploy with 9 more failed deployments to go.</p>
+<p>Validation output comes in three levels. The most verbose level will tell<br/>you in detail what you did wrong, what the options are, and what to do<br/>next... even including valid code and annotation usage tailored to your app<br/>that you can copy and paste into your application. Very ideal for<br/>beginners and people using OpenEJB in a classroom setting.</p>
+<a name="NewinOpenEJB3.0-MostconfigurableJNDInamesever"></a>
+<h2>Most configurable JNDI names ever</h2>
+<a name="NewinOpenEJB3.0-GeneralImprovements"></a>
+<h1>General Improvements</h1>
+<a name="NewinOpenEJB3.0-OnlineDeployment"></a>
+<h2>Online Deployment</h2>
+<a name="NewinOpenEJB3.0-SecurityService"></a>
+<h2>Security Service</h2>
+<a name="NewinOpenEJB3.0-ConnectionPooling"></a>
+<h2>Connection Pooling</h2>
+<a name="NewinOpenEJB3.0-ConfigurationOverriding"></a>
+<h2>Configuration Overriding</h2>
+<a name="NewinOpenEJB3.0-FlexibleJNDINameFormatting"></a>
+<h2>Flexible JNDI Name Formatting</h2>
+<a name="NewinOpenEJB3.0-CleanerEmbedding"></a>
+<h2>Cleaner Embedding</h2>
+<a name="NewinOpenEJB3.0-Tomcat6Support"></a>
+<h2>Tomcat 6 Support</h2>
+<a name="NewinOpenEJB3.0-Businesslocalsremotable"></a>
+<h2>Business locals remotable</h2>
+<p>If you want to make business local interfaces remotable, you can set this<br/>property:</p>
+<pre><code>  openejb.remotable.businessLocals=true
+</code></pre>
+<p>Then you can lookup your business local interfaces from remote clients.</p>
+<p>You'd still have to ensure that the you pass back and forth is<br/>serializable.</p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

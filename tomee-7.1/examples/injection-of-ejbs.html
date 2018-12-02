@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Injection Of Ejbs</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>This example shows how to use the @EJB annotation on a bean class to refer to other beans.</p>
+<p>This functionality is often referred as dependency injection (see <a href="http://www.martinfowler.com/articles/injection.html)">http://www.martinfowler.com/articles/injection.html)</a>, and has been recently introduced in Java EE 5.</p>
+<p>In this particular example, we will create two session stateless beans</p>
+<ul>
+  <li>a DataStore session bean</li>
+  <li>a DataReader session bean</li>
+</ul>
+<p>The DataReader bean uses the DataStore to retrieve some informations, and we will see how we can, inside the DataReader bean, get a reference to the DataStore bean using the @EJB annotation, thus avoiding the use of the JNDI API.</p>
+<h2>DataReader</h2>
+<pre><code>package org.superbiz.injection;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+/**
+ * This is an EJB 3.1 style pojo stateless session bean
+ * Every stateless session bean implementation must be annotated
+ * using the annotation @Stateless
+ * This EJB has 2 business interfaces: DataReaderRemote, a remote business
+ * interface, and DataReaderLocal, a local business interface
+ * &lt;p/&gt;
+ * The instance variables &#39;dataStoreRemote&#39; is annotated with the @EJB annotation:
+ * this means that the application server, at runtime, will inject in this instance
+ * variable a reference to the EJB DataStoreRemote
+ * &lt;p/&gt;
+ * The instance variables &#39;dataStoreLocal&#39; is annotated with the @EJB annotation:
+ * this means that the application server, at runtime, will inject in this instance
+ * variable a reference to the EJB DataStoreLocal
+ */
+//START SNIPPET: code
+@Stateless
+public class DataReader {
+
+    @EJB
+    private DataStoreRemote dataStoreRemote;
+    @EJB
+    private DataStoreLocal dataStoreLocal;
+    @EJB
+    private DataStore dataStore;
+
+    public String readDataFromLocalStore() {
+        return &quot;LOCAL:&quot; + dataStoreLocal.getData();
+    }
+
+    public String readDataFromLocalBeanStore() {
+        return &quot;LOCALBEAN:&quot; + dataStore.getData();
+    }
+
+    public String readDataFromRemoteStore() {
+        return &quot;REMOTE:&quot; + dataStoreRemote.getData();
+    }
+}
+</code></pre>
+<h2>DataStore</h2>
+<pre><code>package org.superbiz.injection;
+
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+
+/**
+ * This is an EJB 3 style pojo stateless session bean
+ * Every stateless session bean implementation must be annotated
+ * using the annotation @Stateless
+ * This EJB has 2 business interfaces: DataStoreRemote, a remote business
+ * interface, and DataStoreLocal, a local business interface
+ */
+//START SNIPPET: code
+@Stateless
+@LocalBean
+public class DataStore implements DataStoreLocal, DataStoreRemote {
+
+    public String getData() {
+        return &quot;42&quot;;
+    }
+}
+</code></pre>
+<h2>DataStoreLocal</h2>
+<pre><code>package org.superbiz.injection;
+
+import javax.ejb.Local;
+
+/**
+ * This is an EJB 3 local business interface
+ * A local business interface may be annotated with the @Local
+ * annotation, but it&#39;s optional. A business interface which is
+ * not annotated with @Local or @Remote is assumed to be Local
+ */
+//START SNIPPET: code
+@Local
+public interface DataStoreLocal {
+
+    public String getData();
+}
+</code></pre>
+<h2>DataStoreRemote</h2>
+<pre><code>package org.superbiz.injection;
+
+import javax.ejb.Remote;
+
+/**
+ * This is an EJB 3 remote business interface
+ * A remote business interface must be annotated with the @Remote
+ * annotation
+ */
+//START SNIPPET: code
+@Remote
+public interface DataStoreRemote {
+
+    public String getData();
+}
+</code></pre>
+<h2>EjbDependencyTest</h2>
+<pre><code>package org.superbiz.injection;
+
+import junit.framework.TestCase;
+
+import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+
+/**
+ * A test case for DataReaderImpl ejb, testing both the remote and local interface
+ */
+//START SNIPPET: code
+public class EjbDependencyTest extends TestCase {
+
+    public void test() throws Exception {
+        final Context context = EJBContainer.createEJBContainer().getContext();
+
+        DataReader dataReader = (DataReader) context.lookup(&quot;java:global/injection-of-ejbs/DataReader&quot;);
+
+        assertNotNull(dataReader);
+
+        assertEquals(&quot;LOCAL:42&quot;, dataReader.readDataFromLocalStore());
+        assertEquals(&quot;REMOTE:42&quot;, dataReader.readDataFromRemoteStore());
+        assertEquals(&quot;LOCALBEAN:42&quot;, dataReader.readDataFromLocalBeanStore());
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.EjbDependencyTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/injection-of-ejbs
+INFO - openejb.base = /Users/dblevins/examples/injection-of-ejbs
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/injection-of-ejbs/target/classes
+INFO - Beginning load: /Users/dblevins/examples/injection-of-ejbs/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/injection-of-ejbs
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean DataReader: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.injection.EjbDependencyTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Enterprise application &quot;/Users/dblevins/examples/injection-of-ejbs&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/injection-of-ejbs
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataReader!org.superbiz.injection.DataReader&quot;)
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataReader&quot;)
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStore&quot;)
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreLocal&quot;)
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreRemote&quot;)
+INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest!org.superbiz.injection.EjbDependencyTest&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest&quot;)
+INFO - Created Ejb(deployment-id=DataReader, ejb-name=DataReader, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=DataStore, ejb-name=DataStore, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.injection.EjbDependencyTest, ejb-name=org.superbiz.injection.EjbDependencyTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=DataReader, ejb-name=DataReader, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=DataStore, ejb-name=DataStore, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.injection.EjbDependencyTest, ejb-name=org.superbiz.injection.EjbDependencyTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/injection-of-ejbs)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.225 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

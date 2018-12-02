@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Decorators</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+<h2>AccessDeniedException</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+import javax.ejb.ApplicationException;
+
+/**
+ * @version $Revision$ $Date$
+ */
+@ApplicationException
+public class AccessDeniedException extends RuntimeException {
+    public AccessDeniedException(String s) {
+        super(s);
+    }
+}
+</code></pre>
+<h2>Calculator</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+/**
+ * @version $Revision$ $Date$
+ */
+public interface Calculator {
+
+    public int add(int a, int b);
+
+    public int subtract(int a, int b);
+
+    public int multiply(int a, int b);
+
+    public int divide(int a, int b);
+
+    public int remainder(int a, int b);
+}
+</code></pre>
+<h2>CalculatorBean</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Produces;
+
+@Stateless
+public class CalculatorBean implements Calculator {
+
+    @Produces
+    @Resource
+    private SessionContext sessionContext;
+
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public int divide(int a, int b) {
+        return a / b;
+    }
+
+    public int remainder(int a, int b) {
+        return a % b;
+    }
+}
+</code></pre>
+<h2>CalculatorLogging</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+import javax.decorator.Decorator;
+import javax.decorator.Delegate;
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+@Decorator
+public class CalculatorLogging implements Calculator {
+
+    private Logger logger = Logger.getLogger(&quot;Calculator&quot;);
+
+    @Inject
+    @Delegate
+    private Calculator calculator;
+
+    @Override
+    public int add(int a, int b) {
+        logger.fine(String.format(&quot;add(%s, %s)&quot;, a, b));
+        return calculator.add(a, b);
+    }
+
+    @Override
+    public int subtract(int a, int b) {
+        return calculator.subtract(a, b);
+    }
+
+    @Override
+    public int multiply(int a, int b) {
+        logger.finest(String.format(&quot;multiply(%s, %s)&quot;, a, b));
+        return calculator.multiply(a, b);
+    }
+
+    @Override
+    public int divide(int a, int b) {
+        return calculator.divide(a, b);
+    }
+
+    @Override
+    public int remainder(int a, int b) {
+        logger.info(String.format(&quot;remainder(%s, %s)&quot;, a, b));
+        return calculator.remainder(a, b);
+    }
+}
+</code></pre>
+<h2>CalculatorSecurity</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+import javax.decorator.Decorator;
+import javax.decorator.Delegate;
+import javax.ejb.SessionContext;
+import javax.inject.Inject;
+
+@Decorator
+public class CalculatorSecurity implements Calculator {
+
+    @Inject
+    @Delegate
+    private Calculator calculator;
+
+    @Inject
+    private SessionContext sessionContext;
+
+    @Override
+    public int add(int a, int b) {
+        return calculator.add(a, b);
+    }
+
+    @Override
+    public int subtract(int a, int b) {
+        // Caller must pass a security check to call subtract
+        if (!sessionContext.isCallerInRole(&quot;Manager&quot;)) throw new AccessDeniedException(sessionContext.getCallerPrincipal().getName());
+
+        return calculator.subtract(a, b);
+    }
+
+    @Override
+    public int multiply(int a, int b) {
+        return calculator.multiply(a, b);
+    }
+
+    @Override
+    public int divide(int a, int b) {
+        return calculator.divide(a, b);
+    }
+
+    @Override
+    public int remainder(int a, int b) {
+        return calculator.remainder(a, b);
+    }
+}
+</code></pre>
+<h2>beans.xml</h2>
+<pre><code>&lt;beans&gt;
+  &lt;!--
+  Explicitly declaring decorators is required by the CDI specification.
+  The order decorators are listed in the xml is the order in which they are invoked.
+  --&gt;
+  &lt;decorators&gt;
+    &lt;class&gt;org.superbiz.cdi.decorators.CalculatorSecurity&lt;/class&gt;
+    &lt;class&gt;org.superbiz.cdi.decorators.CalculatorLogging&lt;/class&gt;
+  &lt;/decorators&gt;
+&lt;/beans&gt;
+</code></pre>
+<h2>CalculatorTest</h2>
+<pre><code>package org.superbiz.cdi.decorators;
+
+import junit.framework.TestCase;
+
+import javax.annotation.security.RunAs;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.embeddable.EJBContainer;
+import java.util.concurrent.Callable;
+
+public class CalculatorTest extends TestCase {
+
+    @EJB
+    private Calculator calculator;
+
+    @EJB
+    private ManagerBean manager;
+
+    /**
+     * Bootstrap the Embedded EJB Container
+     *
+     * @throws Exception
+     */
+    protected void setUp() throws Exception {
+        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+    }
+
+    /**
+     * Test Add method
+     */
+    public void testAdd() {
+
+        assertEquals(10, calculator.add(4, 6));
+    }
+
+    /**
+     * Test Subtract method
+     */
+    public void testSubtract() {
+
+        try {
+            calculator.subtract(4, 6);
+
+            fail(&quot;AccessDeniedException should have been thrown for unauthenticated access&quot;);
+        } catch (AccessDeniedException expected) {
+            // pass
+        }
+
+        final int result = manager.call(new Callable&lt;Integer&gt;() {
+            public Integer call() {
+                return calculator.subtract(4, 6);
+            }
+        });
+
+        assertEquals(-2, result);
+    }
+
+    /**
+     * Test Multiply method
+     */
+    public void testMultiply() {
+
+        assertEquals(24, calculator.multiply(4, 6));
+    }
+
+    /**
+     * Test Divide method
+     */
+    public void testDivide() {
+
+        assertEquals(2, calculator.divide(12, 6));
+    }
+
+    /**
+     * Test Remainder method
+     */
+    public void testRemainder() {
+
+        assertEquals(4, calculator.remainder(46, 6));
+    }
+
+    @Stateless
+    @RunAs(&quot;Manager&quot;)
+    public static class ManagerBean {
+
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) {
+            try {
+                return callable.call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<pre><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.cdi.decorators.CalculatorTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/decorators
+INFO - openejb.base = /Users/dblevins/examples/decorators
+INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/decorators/target/classes
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/decorators/target/test-classes
+INFO - Beginning load: /Users/dblevins/examples/decorators/target/classes
+INFO - Beginning load: /Users/dblevins/examples/decorators/target/test-classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/decorators
+WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean decorators.Comp: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean CalculatorBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Enterprise application &quot;/Users/dblevins/examples/decorators&quot; loaded.
+INFO - Assembling app: /Users/dblevins/examples/decorators
+INFO - Jndi(name=&quot;java:global/decorators/decorators.Comp!org.apache.openejb.BeanContext$Comp&quot;)
+INFO - Jndi(name=&quot;java:global/decorators/decorators.Comp&quot;)
+INFO - Jndi(name=&quot;java:global/decorators/CalculatorBean!org.superbiz.cdi.decorators.Calculator&quot;)
+INFO - Jndi(name=&quot;java:global/decorators/CalculatorBean&quot;)
+INFO - Jndi(name=&quot;java:global/decorators/ManagerBean!org.superbiz.cdi.decorators.CalculatorTest$ManagerBean&quot;)
+INFO - Jndi(name=&quot;java:global/decorators/ManagerBean&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest!org.superbiz.cdi.decorators.CalculatorTest&quot;)
+INFO - Jndi(name=&quot;java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest&quot;)
+INFO - Created Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=decorators.Comp, ejb-name=decorators.Comp, container=Default Managed Container)
+INFO - Created Ejb(deployment-id=ManagerBean, ejb-name=ManagerBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=org.superbiz.cdi.decorators.CalculatorTest, ejb-name=org.superbiz.cdi.decorators.CalculatorTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=decorators.Comp, ejb-name=decorators.Comp, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=ManagerBean, ejb-name=ManagerBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=org.superbiz.cdi.decorators.CalculatorTest, ejb-name=org.superbiz.cdi.decorators.CalculatorTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/decorators)
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+Oct 29, 2011 11:41:04 AM org.apache.webbeans.decorator.DelegateHandler invoke
+SEVERE: Exception in calling method : [subtract] in decorator class : [org.superbiz.cdi.decorators.CalculatorSecurity]. Look in the log for target checked exception.
+org.superbiz.cdi.decorators.AccessDeniedException: guest
+    at org.superbiz.cdi.decorators.CalculatorSecurity.subtract(CalculatorSecurity.java:43)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.apache.webbeans.decorator.DelegateHandler.invoke(DelegateHandler.java:98)
+    at org.apache.openejb.cdi.CdiInterceptor.invoke(CdiInterceptor.java:127)
+    at org.apache.openejb.cdi.CdiInterceptor.access$000(CdiInterceptor.java:45)
+    at org.apache.openejb.cdi.CdiInterceptor$1.call(CdiInterceptor.java:66)
+    at org.apache.openejb.cdi.CdiInterceptor.aroundInvoke(CdiInterceptor.java:72)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.apache.openejb.core.interceptor.ReflectionInvocationContext$Invocation.invoke(ReflectionInvocationContext.java:181)
+    at org.apache.openejb.core.interceptor.ReflectionInvocationContext.proceed(ReflectionInvocationContext.java:163)
+    at org.apache.openejb.core.interceptor.InterceptorStack.invoke(InterceptorStack.java:130)
+    at org.apache.openejb.core.stateless.StatelessContainer._invoke(StatelessContainer.java:226)
+    at org.apache.openejb.core.stateless.StatelessContainer.invoke(StatelessContainer.java:178)
+    at org.apache.openejb.core.ivm.EjbObjectProxyHandler.synchronizedBusinessMethod(EjbObjectProxyHandler.java:255)
+    at org.apache.openejb.core.ivm.EjbObjectProxyHandler.businessMethod(EjbObjectProxyHandler.java:235)
+    at org.apache.openejb.core.ivm.EjbObjectProxyHandler._invoke(EjbObjectProxyHandler.java:92)
+    at org.apache.openejb.core.ivm.BaseEjbProxyHandler.invoke(BaseEjbProxyHandler.java:284)
+    at $Proxy44.subtract(Unknown Source)
+    at org.superbiz.cdi.decorators.CalculatorTest.testSubtract(CalculatorTest.java:59)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at junit.framework.TestCase.runTest(TestCase.java:168)
+    at junit.framework.TestCase.runBare(TestCase.java:134)
+    at junit.framework.TestResult$1.protect(TestResult.java:110)
+    at junit.framework.TestResult.runProtected(TestResult.java:128)
+    at junit.framework.TestResult.run(TestResult.java:113)
+    at junit.framework.TestCase.run(TestCase.java:124)
+    at junit.framework.TestSuite.runTest(TestSuite.java:232)
+    at junit.framework.TestSuite.run(TestSuite.java:227)
+    at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:83)
+    at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:35)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:115)
+    at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:97)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    at java.lang.reflect.Method.invoke(Method.java:597)
+    at org.apache.maven.surefire.booter.ProviderFactory$ClassLoaderProxy.invoke(ProviderFactory.java:103)
+    at $Proxy0.invoke(Unknown Source)
+    at org.apache.maven.surefire.booter.SurefireStarter.invokeProvider(SurefireStarter.java:150)
+    at org.apache.maven.surefire.booter.SurefireStarter.runSuitesInProcess(SurefireStarter.java:91)
+    at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:69)
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.338 sec
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container section-padded">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>CDI Interceptors</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>Let's write a simple application that would allow us to book tickets for a movie show. As with all applications, logging is one cross-cutting concern that we have. Apart from that, there are some methods in our application, that can be accessed only in the working hours. If accessed at non-working-hours we'll throw out an AccessDeniedException.</p>
+<p>How do we mark which methods are to be intercepted? Wouldn't it be handy to annotate a method like</p>
+<pre><code>@Log
+public void aMethod(){...}
+</code></pre>
+<p>or</p>
+<pre><code>@TimeRestricted
+public void bMethod(){...}
+</code></pre>
+<p>Let's create these annotations that would "mark" a method for interception.</p>
+<pre><code>@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+public @interface Log {
+}
+</code></pre>
+<p>And</p>
+<pre><code>@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+public @interface TimeRestricted {
+}
+</code></pre>
+<p>Sure, you haven't missed the <code>@InterceptorBinding</code> annotation above! Now that our custom annotations are created, lets attach them (or to use a better term for it, "bind them") to interceptors.</p>
+<p>So here's our logging interceptor. An <code>@AroundInvoke</code> method and we are almost done.</p>
+<pre><code>@Interceptor
+@Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
+public class BookForAShowLoggingInterceptor implements Serializable {
+    private static final long serialVersionUID = 8139854519874743530L;
+    private Logger logger = Logger.getLogger(&quot;BookForAShowApplicationLogger&quot;);
+    @AroundInvoke
+    public Object logMethodEntry(InvocationContext ctx) throws Exception {
+        logger.info(&quot;Before entering method:&quot; + ctx.getMethod().getName());
+        InterceptionOrderTracker.getMethodsInterceptedList().add(ctx.getMethod().getName());
+        InterceptionOrderTracker.getInterceptedByList().add(this.getClass().getSimpleName());
+        return ctx.proceed();
+    }
+}
+</code></pre>
+<p>Now the <code>@Log</code> annotation we created is bound to this interceptor. (Likewise we bind <code>@TimeRestrict</code> for <code>TimeBasedRestrictingInterceptor</code>. See links below for source)</p>
+<p>That done, let's annotate at class-level or method-level and have fun intercepting!</p>
+<pre><code>@Log
+@Stateful
+public class BookForAShowOneInterceptorApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add(&quot;12 Angry Men&quot;);
+        moviesAvailable.add(&quot;Kings speech&quot;);
+        return moviesAvailable;
+    }
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+    // assume more methods are present
+}
+</code></pre>
+<p>The <code>@Log</code> annotation applied at class level denotes that all the methods should be intercepted with <code>BookForAShowLoggingInterceptor</code>.</p>
+<p>Before we say "all done" there's one last thing we are left with! To enable the interceptors!</p>
+<p>Lets quickly put up a <code>beans.xml</code> file like the following in <code>src/main/resources/META-INF/beans.xml</code>:</p>
+<pre><code>&lt;beans&gt;
+  &lt;interceptors&gt;
+    &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.BookForAShowLoggingInterceptor
+    &lt;/class&gt;
+    &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.TimeBasedRestrictingInterceptor
+    &lt;/class&gt;
+  &lt;/interceptors&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>By default, a bean archive has no enabled interceptors; an interceptor must be explicitly enabled by listing its class in the <code>beans.xml</code>.</p>
+<p>The order of the interceptor annotations has no real significance. Eg:</p>
+<pre><code>@TimeRestrict
+@Log
+void cMethod(){}
+</code></pre>
+<p>It is the <code>interceptor</code> elements in <code>beans.xml</code> that not only "enable" the interceptors, but also define the "order of execution" of the interceptors. In this case the <code>BookForAShowLoggingInterceptor</code> would be applied first and then <code>TimeBasedRestrictingInterceptor</code></p>
+<p>So now you know that the order is only determined by the order within the <code>interceptors</code> element within the <code>beans.xml</code>. The rule is simple, interceptors which occur earlier in the list are called first.</p>
+<p>Also note that a method can be marked for interception using multiple interceptors by applying multiple annotations as above.</p>
+<p>This brings us to another question. In the above case there were two interceptors applied together. What if I would require about 4 such interceptors that would go along.... Having to annotate so much makes the code a little clumsy?</p>
+<p>No worries! Just create a custom annotation which inherits from others</p>
+<pre><code>@Inherited
+@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+@Log
+@TimeRestricted
+public @interface TimeRestrictAndLog {
+}
+</code></pre>
+<p>This is interceptor binding inheritance.</p>
+<p>The code below demonstrates the many cases that we have discussed.</p>
+<p>Not to forget, the old style binding with <code>@Interceptors(WhicheverInterceptor.class)</code> is also supported. Have a look at <code>BookForAShowOldStyleInterceptorBinding</code> where the comments explain how the newer way discussed above is better.</p>
+<h1>The Code</h1>
+<h2>BookForAShowOneInterceptorApplied</h2>
+<p><code>BookForAShowOneInterceptorApplied</code> shows a simple <code>@Log</code> interceptor applied.</p>
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.Log;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Log
+@Stateful
+public class BookForAShowOneInterceptorApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add(&quot;12 Angry Men&quot;);
+        moviesAvailable.add(&quot;Kings speech&quot;);
+        return moviesAvailable;
+    }
+
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+<h2>BookForAShowTwoInterceptorsApplied</h2>
+<p><code>BookForAShowTwoInterceptorsApplied</code> shows both <code>@Log</code> and <code>@TimeRestricted</code> being applied.</p>
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.Log;
+import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestricted;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Log
+@Stateful
+public class BookForAShowTwoInterceptorsApplied implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add(&quot;12 Angry Men&quot;);
+        moviesAvailable.add(&quot;Kings speech&quot;);
+        return moviesAvailable;
+    }
+
+    @TimeRestricted
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+<h2>BookShowInterceptorBindingInheritanceExplored</h2>
+<p><code>BookShowInterceptorBindingInheritanceExplored</code> shows how <code>@TimeRestrictAndLog</code> (interceptor-binding-inheritance) can be used as an alternative for annotating a method with multiple annotations explicitly.</p>
+<pre><code>package org.superbiz.cdi.bookshow.beans;
+
+import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestrictAndLog;
+
+import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+@Stateful
+public class BookShowInterceptorBindingInheritanceExplored implements Serializable {
+    private static final long serialVersionUID = 6350400892234496909L;
+
+    public List&lt;String&gt; getMoviesList() {
+        List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
+        moviesAvailable.add(&quot;12 Angry Men&quot;);
+        moviesAvailable.add(&quot;Kings speech&quot;);
+        return moviesAvailable;
+    }
+
+    @TimeRestrictAndLog
+    public Integer getDiscountedPrice(int ticketPrice) {
+        return ticketPrice - 50;
+    }
+}
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
