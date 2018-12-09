@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,55 +95,118 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="DynamicDatasource-OpenEJBdynamicdatasource"></a>
-<h1>OpenEJB dynamic datasource</h1>
-<a name="DynamicDatasource-Goal"></a>
-<h2>Goal</h2>
-<p>The openejb dynamic datasource api aims to allow to use multiple data sources as one.</p>
-<p>It can be useful for technical reasons (load balancing for example) or functionnal reasons (filtering, aggregation, enriching...).</p>
-<a name="DynamicDatasource-TheAPI"></a>
-<h2>The API</h2>
-<p>The interface Router (*org.apache.openejb.resource.jdbc.Router*) have only one method to get the datasource to use:</p>
-<pre><code>Router.getDataSource()
-</code></pre>
-<p>The <em>org.apache.openejb.resource.jdbc.RoutedDataSource</em> wraps a classical data source. It has to be used to declare your datasource.</p>
+                <h1 id="_openejb_dynamic_datasource" class="sect0">OpenEJB dynamic datasource</h1>
+<div class="sect1">
+<h2 id="_goal">Goal</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The openejb dynamic datasource api aims to allow to use multiple data
+sources as one.</p>
+</div>
+<div class="paragraph">
+<p>It can be useful for technical reasons (load balancing for example) or
+functionnal reasons (filtering, aggregation, enriching&#8230;&#8203;).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_api">The API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The interface Router (<em>org.apache.openejb.resource.jdbc.Router</em>) have
+only one method to get the datasource to use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Router.getDataSource()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>org.apache.openejb.resource.jdbc.RoutedDataSource</em> wraps a
+classical data source. It has to be used to declare your datasource.</p>
+</div>
+<div class="paragraph">
 <p>You can implement all the policy you want in your Router implementation.</p>
-<p>A class called <em>org.apache.openejb.resource.jdbc.AbstractRouter</em> is available to ease router development.</p>
-<a name="DynamicDatasource-Knownlimitation(s)"></a>
-<h2>Known limitation(s)</h2>
-<p>You have to use the same kind of databases (same version, same configuration...).</p>
-<p>All database have to be created when you use the router. The way to do it automatically can depend of your JPA provider.</p>
-<a name="DynamicDatasource-OpenJPA"></a>
-<h3>OpenJPA</h3>
-<p>OpenJPA initializes its database when the entitymanager is called for the first time so you need to initialize all your proxied datasource before using the other one. It can be done using an Init EJB doing a find() on each proxied datasource.</p>
-<a name="DynamicDatasource-Hibernate"></a>
-<h3>Hibernate</h3>
-<p>Hibernate initializes the database when it starts so if you declare a persistence unit by database all databases will be initialized at the start up.</p>
-<a name="DynamicDatasource-Example"></a>
-<h2>Example</h2>
-<a name="DynamicDatasource-Thestory(theunittestexample)"></a>
-<h3>The story (the unit test example)</h3>
-<p>You want to use only one datasource in the code but you have a criteria to set to choose the real database to use between three.</p>
+</div>
+<div class="paragraph">
+<p>A class called <em>org.apache.openejb.resource.jdbc.AbstractRouter</em> is
+available to ease router development.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_limitation_s">Known limitation(s)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have to use the same kind of databases (same version, same
+configuration&#8230;&#8203;).</p>
+</div>
+<div class="paragraph">
+<p>All database have to be created when you use the router. The way to do
+it automatically can depend of your JPA provider.</p>
+</div>
+<div class="sect2">
+<h3 id="_openjpa">OpenJPA</h3>
+<div class="paragraph">
+<p>OpenJPA initializes its database when the entitymanager is called for
+the first time so you need to initialize all your proxied datasource
+before using the other one. It can be done using an Init EJB doing a
+find() on each proxied datasource.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hibernate">Hibernate</h3>
+<div class="paragraph">
+<p>Hibernate initializes the database when it starts so if you declare a
+persistence unit by database all databases will be initialized at the
+start up.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_story_the_unit_test_example">The story (the unit test example)</h3>
+<div class="paragraph">
+<p>You want to use only one datasource in the code but you have a criteria
+to set to choose the real database to use between three.</p>
+</div>
+<div class="paragraph">
 <p>So in your code you want something like:</p>
-<pre><code>public class RoutedEJBBean {
-    @PersistenceContext(unitName = &quot;router&quot;)
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class RoutedEJBBean {
+    @PersistenceContext(unitName = "router")
     private EntityManager em;
 
     // this router is not automatic, we
     // need it to select the database to use
-    @Resource(name = &quot;My Router&quot;)
+    @Resource(name = "My Router")
     private DeterminedRouter router;
 
     public void persist(int id, String name, String clientDatasource) {
         router.setDataSource(clientDatasource);
         em.persist(new Person(id, name));
     }
-}
-</code></pre>
-<a name="DynamicDatasource-Therouterimplementation"></a>
-<h2>The router implementation</h2>
-<p>The router will simply manage a map to store proxied datasources and a field to store the datasource used in the current thread (ThreadLocal).</p>
-<pre><code>public class DeterminedRouter implements Router {
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_router_implementation">The router implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The router will simply manage a map to store proxied datasources and a
+field to store the datasource used in the current thread (ThreadLocal).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class DeterminedRouter implements Router {
     private String dataSourceNames; // used to store configuration (openejb.xml)
     private String defaultDataSourceName; // defautl data source name
     private Map&lt;String, DataSource&gt; dataSources = null; // proxied data sources
@@ -161,13 +224,13 @@
      */
     private void init() { // looking up datasources declared as proxied
         dataSources = new ConcurrentHashMap&lt;String, DataSource&gt;();
-        for (String ds : dataSourceNames.split(&quot; &quot;)) {
+        for (String ds : dataSourceNames.split(" ")) {
             ContainerSystem containerSystem = SystemInstance.get().getComponent(ContainerSystem.class);
 
             Object o = null;
             Context ctx = containerSystem.getJNDIContext();
             try {
-                o = ctx.lookup(&quot;openejb:Resource/&quot; + ds);
+                o = ctx.lookup("openejb:Resource/" + ds);
                 if (o instanceof DataSource) {
                     dataSources.put(ds, (DataSource) o);
                 }
@@ -193,7 +256,7 @@
                 return dataSources.get(defaultDataSourceName);
 
             } else {
-                throw new IllegalArgumentException(&quot;you have to specify at least one datasource&quot;);
+                throw new IllegalArgumentException("you have to specify at least one datasource");
             }
         }
 
@@ -210,7 +273,7 @@
             init();
         }
         if (!dataSources.containsKey(datasourceName)) {
-            throw new IllegalArgumentException(&quot;data source called &quot; + datasourceName + &quot; can&#39;t be found.&quot;);
+            throw new IllegalArgumentException("data source called " + datasourceName + " can't be found.");
         }
         DataSource ds = dataSources.get(datasourceName);
         currentDataSource.set(ds);
@@ -219,53 +282,77 @@
     public void setDefaultDataSourceName(String name) {
         this.defaultDataSourceName = name;
     }
-}
-</code></pre>
-<a name="DynamicDatasource-Creationoftheserviceproviderfortherouter"></a>
-<h2>Creation of the service provider for the router</h2>
-<p>To be able to use your router add a file called service-jar.xml under META-INF/<package>. For example META-INF/org.router.</p>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creation_of_the_service_provider_for_the_router">Creation of the service provider for the router</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To be able to use your router add a file called service-jar.xml under
+META-INF/. For example META-INF/org.router.</p>
+</div>
+<div class="paragraph">
 <p>This file will contain something like:</p>
-<pre><code>&lt;ServiceJar&gt;
-  &lt;ServiceProvider id=&quot;DeterminedRouter&quot; service=&quot;Resource&quot;
-          type=&quot;org.apache.openejb.resource.jdbc.Router&quot; class-name=&quot;implementation class&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ServiceJar&gt;
+  &lt;ServiceProvider id="DeterminedRouter" service="Resource"
+           type="org.apache.openejb.resource.jdbc.Router" class-name="implementation class"&gt;
     Param defaultValue
     ParamWithNoDefaultValue
   &lt;/ServiceProvider&gt;
-&lt;/ServiceJar&gt;
-</code></pre>
-<h2>openejb.xml</h2>
-<p>In the openejb.xml file, you have to declare your dynamic database and in our example it needs the proxied datasources too:</p>
-<pre><code>&lt;Resource id=&quot;router&quot; type=&quot;&lt;your implementation&gt;&quot; provider=&quot;&lt;your provider&gt;&quot;&gt;
+&lt;/ServiceJar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openejb_xml">openejb.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the openejb.xml file, you have to declare your dynamic database and
+in our example it needs the proxied datasources too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="router" type="&lt;your implementation&gt;" provider="&lt;your provider&gt;"&gt;
   Param value
 &lt;/Resource&gt;
 
-&lt;Resource id=&quot;route db&quot; type=&quot;DataSource&quot; provider=&quot;RoutedDataSource&quot;&gt;
+&lt;Resource id="route db" type="DataSource" provider="RoutedDataSource"&gt;
   Router router
 &lt;/Resource&gt;
 
 &lt;!–- real databases – for our example --&gt;
-&lt;Resource id=&quot;db1&quot; type=&quot;DataSource&quot;&gt;
+&lt;Resource id="db1" type="DataSource"&gt;
   JdbcDriver org.hsqldb.jdbcDriver
   JdbcUrl jdbc:hsqldb:mem:db1
   UserName sa
   Password
   JtaManaged true
 &lt;/Resource&gt;
-&lt;Resource id=&quot;db2&quot; type=&quot;DataSource&quot;&gt;
+&lt;Resource id="db2" type="DataSource"&gt;
   JdbcDriver org.hsqldb.jdbcDriver
   JdbcUrl jdbc:hsqldb:mem:db2
   UserName sa
   Password
   JtaManaged true
 &lt;/Resource&gt;
-&lt;Resource id=&quot;db3&quot; type=&quot;DataSource&quot;&gt;
+&lt;Resource id="db3" type="DataSource"&gt;
   JdbcDriver org.hsqldb.jdbcDriver
   JdbcUrl jdbc:hsqldb:mem:db3
   UserName sa
   Password
   JtaManaged true
-&lt;/Resource&gt;
-</code></pre>
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -294,7 +381,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

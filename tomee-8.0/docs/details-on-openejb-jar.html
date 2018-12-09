@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,51 +95,103 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="Detailsonopenejb-jar-Whatisanopenejb-jar.xml?"></a>
-<h1>What is an openejb-jar.xml?</h1>
-<p>This is the file created by the Deploy Tool that maps your bean's deployment descriptor (ejb-jar.xml) to actual containers and resources declared in your OpenEJB configuration (openejb.conf). In fact, the Deploy tool really does nothing more than create this file and put it in your jar, that's it.</p>
-<a name="Detailsonopenejb-jar-Whenistheopenejb-jar.xmlused?"></a>
-<h1>When is the openejb-jar.xml used?</h1>
-<p>At startup, any jar containing a openejb-jar.xml is loaded by the container system. The configuration tools will go looking in all the directories and jars you have declared in your openejb.conf with the <Deployment> element. For every jar file it finds, it will look inside for an openejb-jar.xml. If it finds one, it will attempt to load and deploy it into the container system.</p>
-<a name="Detailsonopenejb-jar-DoIevenneedthedeploytoolthen?"></a>
-<h1>Do I even need the deploy tool then?</h1>
-<p>Nope. Typically you would only use the deploy tool to create your openejb-jar.xml, then just keep your openejb-jar.xml in your CVS (or other repository). If you learn how to maintain this openejb-jar.xml file, you'll never need the deploy tool again! You can do all your builds and deploys automatically.</p>
-<a name="Detailsonopenejb-jar-WheredoIputtheopenejb-jar.xmlinmyjar?"></a>
-<h1>Where do I put the openejb-jar.xml in my jar?</h1>
-<p>The openejb-jar.xml file just goes in the META-INF directory of your jar next to the ejb-jar.xml file.</p>
-<a name="Detailsonopenejb-jar-Isthefileformateasy?"></a>
-<h1>Is the file format easy?</h1>
-<p>If you can understand the ejb-jar.xml, the openejb-jar.xml should be a breeze.</p>
-<p>This is the openejb-jar.xml that is created by the Deploy tool in the Hello World example. As you can see, the file format is extremely simple.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;openejb-jar xmlns=&quot;http://www.openejb.org/openejb-jar/1.1&quot;&gt;
-    &lt;ejb-deployment  ejb-name=&quot;Hello&quot;
-         deployment-id=&quot;Hello&quot;
-         container-id=&quot;Default Stateless Container&quot;/&gt;
-&lt;/openejb-jar&gt;
-</code></pre>
-<p>The <em>ejb-name</em> attribute is the name you gave the bean in your ejb-jar.xml. The <em>deployment-id</em> is the name you want to use to lookup the bean in your client's JNDI namespace. The <em>container-id</em> is the name of the container in your openejb.conf file that you would like the bean to run in. There MUST be one <em>ejb-deployment</em> element for each EJB in your jar.</p>
-<h1>What if my bean uses a JDBC datasource?</h1>
-<p>Then you simply add a <resource-link> element to your <ejb-deployment> element like this</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;openejb-jar xmlns=&quot;http://www.openejb.org/openejb-jar/1.1&quot;&gt;
+                <h1 id="_what_is_an_openejb_jar_xml" class="sect0">What is an openejb-jar.xml?</h1>
+<div class="paragraph">
+<p>This is the file created by the Deploy Tool that maps your bean&#8217;s
+deployment descriptor (ejb-jar.xml) to actual containers and resources
+declared in your OpenEJB configuration (openejb.conf). In fact, the
+Deploy tool really does nothing more than create this file and put it in
+your jar, that&#8217;s it.</p>
+</div>
+<h1 id="_when_is_the_openejb_jar_xml_used" class="sect0">When is the openejb-jar.xml used?</h1>
+<div class="paragraph">
+<p>At startup, any jar containing a openejb-jar.xml is loaded by the
+container system. The configuration tools will go looking in all the
+directories and jars you have declared in your openejb.conf with the
+element. For every jar file it finds, it will look inside for an
+openejb-jar.xml. If it finds one, it will attempt to load and deploy it
+into the container system.</p>
+</div>
+<h1 id="_do_i_even_need_the_deploy_tool_then" class="sect0">Do I even need the deploy tool then?</h1>
+<div class="paragraph">
+<p>Nope. Typically you would only use the deploy tool to create your
+openejb-jar.xml, then just keep your openejb-jar.xml in your CVS (or
+other repository). If you learn how to maintain this openejb-jar.xml
+file, you&#8217;ll never need the deploy tool again! You can do all your
+builds and deploys automatically.</p>
+</div>
+<h1 id="_where_do_i_put_the_openejb_jar_xml_in_my_jar" class="sect0">Where do I put the openejb-jar.xml in my jar?</h1>
+<div class="paragraph">
+<p>The openejb-jar.xml file just goes in the META-INF directory of your jar
+next to the ejb-jar.xml file.</p>
+</div>
+<h1 id="_is_the_file_format_easy" class="sect0">Is the file format easy?</h1>
+<div class="paragraph">
+<p>If you can understand the ejb-jar.xml, the openejb-jar.xml should be a
+breeze.</p>
+</div>
+<div class="paragraph">
+<p>This is the openejb-jar.xml that is created by the Deploy tool in the
+Hello World example. As you can see, the file format is extremely
+simple.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;openejb-jar xmlns="http://www.openejb.org/openejb-jar/1.1"&gt;
+    &lt;ejb-deployment  ejb-name="Hello"
+         deployment-id="Hello"
+         container-id="Default Stateless Container"/&gt;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>ejb-name</em> attribute is the name you gave the bean in your
+ejb-jar.xml. The <em>deployment-id</em> is the name you want to use to lookup
+the bean in your client&#8217;s JNDI namespace. The <em>container-id</em> is the name
+of the container in your openejb.conf file that you would like the bean
+to run in. There MUST be one <em>ejb-deployment</em> element for each EJB in
+your jar.</p>
+</div>
+<div class="sect1">
+<h2 id="_what_if_my_bean_uses_a_jdbc_datasource">What if my bean uses a JDBC datasource?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Then you simply add a element to your element like this</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;openejb-jar xmlns="http://www.openejb.org/openejb-jar/1.1"&gt;
 
-    &lt;ejb-deployment  ejb-name=&quot;Hello&quot; 
-            deployment-id=&quot;Hello&quot; 
-            container-id=&quot;Default Stateless Container&quot; &gt;
+    &lt;ejb-deployment  ejb-name="Hello"
+             deployment-id="Hello"
+             container-id="Default Stateless Container" &gt;
 
-    &lt;resource-link res-ref-name=&quot;jdbc/basic/entityDatabase&quot; 
-            res-id=&quot;Default JDBC Database&quot;/&gt;
+    &lt;resource-link res-ref-name="jdbc/basic/entityDatabase"
+             res-id="Default JDBC Database"/&gt;
 
     &lt;/ejb-deployment&gt;
 
-&lt;/openejb-jar&gt;
-</code></pre>
-<p>The <em>res-ref-name</em> attribute refers to the <res-ref-name> element of the bean's <resource-ref> declaration in the ejb-jar.xml. The <em>res-id</em> attribute refers to the id of the <Connector> declared in your openejb.conf that will handle the connections and provide access to the desired resource.</p>
-<a name="Detailsonopenejb-jar-Howmanyresource-linkelementswillIneed?"></a>
-<h1>How many resource-link elements will I need?</h1>
-<p>You will need one <resource-link> element for every <resource-ref> element in your ejb-jar.xml. So if you had an ejb-jar.xml like the following</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>res-ref-name</em> attribute refers to the element of the bean&#8217;s
+declaration in the ejb-jar.xml. The <em>res-id</em> attribute refers to the id
+of the declared in your openejb.conf that will handle the connections
+and provide access to the desired resource.</p>
+</div>
+</div>
+</div>
+<h1 id="_how_many_resource_link_elements_will_i_need" class="sect0">How many resource-link elements will I need?</h1>
+<div class="paragraph">
+<p>You will need one element for every element in your ejb-jar.xml. So if
+you had an ejb-jar.xml like the following</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
 &lt;ejb-jar&gt;
   &lt;enterprise-beans&gt;
     &lt;session&gt;
@@ -170,27 +222,38 @@
 
     &lt;/session&gt;
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<p>Then you would need two <resource-link> elements for that bean in your openejb-jar.xml file as such.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;openejb-jar xmlns=&quot;http://www.openejb.org/openejb-jar/1.1&quot;&gt;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you would need two elements for that bean in your openejb-jar.xml
+file as such.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;openejb-jar xmlns="http://www.openejb.org/openejb-jar/1.1"&gt;
 
-    &lt;ejb-deployment  ejb-name=&quot;MyExampleBean&quot; 
-            deployment-id=&quot;MyExampleBean&quot; 
-            container-id=&quot;Default Stateless Container&quot; &gt;
+    &lt;ejb-deployment  ejb-name="MyExampleBean"
+             deployment-id="MyExampleBean"
+             container-id="Default Stateless Container" &gt;
 
-    &lt;resource-link res-ref-name=&quot;jdbc/myFirstDatabase&quot; 
-            res-id=&quot;My Oracle JDBC Database&quot;/&gt;
+    &lt;resource-link res-ref-name="jdbc/myFirstDatabase"
+             res-id="My Oracle JDBC Database"/&gt;
 
-    &lt;resource-link res-ref-name=&quot;jdbc/anotherDatabase&quot; 
-            res-id=&quot;My PostgreSQL JDBC Database&quot;/&gt;
+    &lt;resource-link res-ref-name="jdbc/anotherDatabase"
+             res-id="My PostgreSQL JDBC Database"/&gt;
 
     &lt;/ejb-deployment&gt;
 
-&lt;/openejb-jar&gt;
-</code></pre>
-<p>This would require two <Connector> declarations in your openejb.conf, one with the <em>id</em> attribute set to <em>"My Oracle JDBC Database"</em> , and another with it's <em>id</em> attribute set to <em>"My PostgreSQL JDBC Database"</em> </p>
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This would require two declarations in your openejb.conf, one with the
+<em>id</em> attribute set to <em>"My Oracle JDBC Database"</em> , and another with
+it&#8217;s <em>id</em> attribute set to <em>"My PostgreSQL JDBC Database"</em></p>
+</div>
             </div>
             
         </div>
@@ -219,7 +282,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

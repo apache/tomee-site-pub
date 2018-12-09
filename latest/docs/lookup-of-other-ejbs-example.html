@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,62 +95,193 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="LookupofotherEJBsExample-Overview"></a>
-<h1>Overview</h1>
-<p>This example shows how to configure JNDI to lookup other EJBs using either the <em>@EJB</em> annotation or the <em>ejb-jar.xml</em> deployment descriptor.</p>
-<p>There are a couple interesting aspects in this example intended to flush out some of the more confusing, and perhaps frustrating, aspects of referring to EJBs.</p>
+                <h1 id="_overview" class="sect0">Overview</h1>
+<div class="paragraph">
+<p>This example shows how to configure JNDI to lookup other EJBs using
+either the <em>@EJB</em> annotation or the <em>ejb-jar.xml</em> deployment descriptor.</p>
+</div>
+<div class="paragraph">
+<p>There are a couple interesting aspects in this example intended to flush
+out some of the more confusing, and perhaps frustrating, aspects of
+referring to EJBs.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>beans themselves do not have JNDI names (this was only recently added in<br/>Java EE 6)</li>
+<li>
+<p>beans themselves do not have JNDI names (this was only recently added
+in Java EE 6)</p>
+</li>
 </ul>
-<p>This is the most frustrating and hard to accept. Java EE 5 does not have a global namespace and therefore there is no <em>singular</em> name for your EJB. It does not matter what you do to your EJB, there is no standard way to<br/>"give" the bean a name that can be used by the application globally.</p>
+</div>
+<div class="paragraph">
+<p>This is the most frustrating and hard to accept. Java EE 5 does not have
+a global namespace and therefore there is no <em>singular</em> name for your
+EJB. It does not matter what you do to your EJB, there is no standard
+way to "give" the bean a name that can be used by the application
+globally.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>each EJB owns its own private <em>java:comp/env</em> namespace<br/>(*java:comp/env* is not global and cannot be treated that way)</li>
-  <li>names do not magically appear in <em>java:comp/env</em>, they must be<br/>explicitly added.</li>
-  <li>to get a reference to bean <em>B</em> in the <em>java:comp/env</em> namespace of<br/>bean <em>A</em>, bean <em>A</em> must declare a reference to bean <em>B</em>.</li>
+<li>
+<p>each EJB owns its own private <em>java:comp/env</em> namespace
+(<em>java:comp/env</em> is not global and cannot be treated that way)</p>
+</li>
+<li>
+<p>names do not magically appear in <em>java:comp/env</em>, they must be
+explicitly added.</p>
+</li>
+<li>
+<p>to get a reference to bean <em>B</em> in the <em>java:comp/env</em> namespace of
+bean <em>A</em>, bean <em>A</em> must declare a reference to bean <em>B</em>.</p>
+</li>
 </ul>
-<p>You read this right. If you have 10 EJBs and all of them want to refer to bean <em>B</em>, then you must declare bean <em>B</em> as a reference 10 times (once for each of the 10 beans). There is no standard way in Java EE 5 to do this just once for all beans. In Java EE 6 there is a "*java:global*" namespace, a "*java:app*" namespace, and a "*java:module*" namespace where names can be defined with the desired scope. Java EE 5 has only<br/><em>java:comp</em>.</p>
+</div>
+<div class="paragraph">
+<p>You read this right. If you have 10 EJBs and all of them want to refer
+to bean <em>B</em>, then you must declare bean <em>B</em> as a reference 10 times
+(once for each of the 10 beans). There is no standard way in Java EE 5
+to do this just once for all beans. In Java EE 6 there is a
+"<em>java:global</em>" namespace, a "<em>java:app</em>" namespace, and a
+"<em>java:module</em>" namespace where names can be defined with the desired
+scope. Java EE 5 has only <em>java:comp</em>.</p>
+</div>
+<div class="paragraph">
 <p>There are two things which make this even more confusing:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Servlets have always defined <em>java:comp/env</em> differently. In a<br/>webapp, the <em>java:comp/env</em> namespace is shared by all servlets. This is essentially equivalent to the <em>java:module</em> namespace in Java EE 6. Understand there is a conflict in definition here and that for EJBs,<br/><em>java:comp</em> is scoped at the component (the EJB itself) not the module as<br/>with webapps.</li>
-  <li>All vendors have some proprietary concept of global JNDI. So you may be<br/>able to lookup "*java:/MyBean*" or "*MyBeanLocal*", but these are vendor-specific and non-portable.</li>
+<li>
+<p>Servlets have always defined <em>java:comp/env</em> differently. In a webapp,
+the <em>java:comp/env</em> namespace is shared by all servlets. This is
+essentially equivalent to the <em>java:module</em> namespace in Java EE 6.
+Understand there is a conflict in definition here and that for EJBs,
+<em>java:comp</em> is scoped at the component (the EJB itself) not the module
+as with webapps.</p>
+</li>
+<li>
+<p>All vendors have some proprietary concept of global JNDI. So you may
+be able to lookup "<em>java:/MyBean</em>" or "<em>MyBeanLocal</em>", but these are
+vendor-specific and non-portable.</p>
+</li>
 </ul>
-<p>As well this example shows some other interesting aspects of referring to EJBs:</p>
+</div>
+<div class="paragraph">
+<p>As well this example shows some other interesting aspects of referring
+to EJBs:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Two beans may use the same business interfaces, the interface alone does<br/>not necessarily identify the exact bean</li>
-  <li>circular references are possible</li>
+<li>
+<p>Two beans may use the same business interfaces, the interface alone
+does not necessarily identify the exact bean</p>
+</li>
+<li>
+<p>circular references are possible</p>
+</li>
 </ul>
-<p>To illustrate all of this, we have two simple @Stateless beans, <em>RedBean</em> and <em>BlueBean</em>. Both implement the same business local interface,<br/><em>Friend</em>. Both <em>RedBean</em> and <em>BlueBean</em> define<br/><em>java:comp/env/myFriend</em> differently which is allowed as <em>java:comp</em> is<br/>a namespace that is private to each bean and not visible to other beans -- so the names do not have to match. </p>
-<a name="LookupofotherEJBsExample-TheCode"></a>
-<h1>The Code</h1>
-<p>Here we show the code for <em>RedBean</em> and <em>BlueBean</em> and their shared business local interface <em>Friend</em>.<br/>{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/RedBean.java|lang=java}<br/>{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/BlueBean.java|lang=java}<br/>{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/Friend.java|lang=java}</p>
-<p>The key items in the above are the following:<br/> - <em>@EJB</em> has been used at the <em>class level</em> to declare <em>myFriend</em> in<br/>the <em>java:comp/env</em> namespace of each EJB<br/> - because both beans share the <em>same interface</em>, <em>Friend</em>, we need to<br/>add <strong>beanName</strong> to the <em>@EJB</em> usage to specify the exact EJB we want<br/> - for <em>BlueBean</em> the <em>java:comp/env/myFriend</em> name has been configured<br/>to point to <em>RedBean</em><br/> - for <em>RedBean</em> the <em>java:comp/env/myFriend</em> name has been configured<br/>to point to <em>BlueBean</em></p>
-<a name="LookupofotherEJBsExample-Alternativetoannotations"></a>
-<h2>Alternative to annotations</h2>
-<p>If there is a desire to not use annotations, the above annotation usage is equivalent to the following ejb-jar.xml<br/>{snippet:url=openejb3/examples/lookup-of-ejbs-with-descriptor/src/main/resources/META-INF/ejb-jar.xml|lang=xml}</p>
-<a name="LookupofotherEJBsExample-Writingaunittestfortheexample"></a>
-<h1>Writing a unit test for the example</h1>
-<p>Writing an unit test for this example is quite simple. We need just to write a setup method to create and initialize the InitialContext, and then write our test methods</p>
-<p>{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/test/java/org/superbiz/ejblookup/EjbDependencyTest.java|lang=java}</p>
-<a name="LookupofotherEJBsExample-Running"></a>
-<h1>Running</h1>
-<p>Running the example is fairly simple. In the "lookup-of-ejbs" directory of the <a href="openejb:download.html">examples zip</a><br/>, just run:</p>
+</div>
+<div class="paragraph">
+<p>To illustrate all of this, we have two simple @Stateless beans,
+<em>RedBean</em> and <em>BlueBean</em>. Both implement the same business local
+interface, <em>Friend</em>. Both <em>RedBean</em> and <em>BlueBean</em> define
+<em>java:comp/env/myFriend</em> differently which is allowed as <em>java:comp</em> is
+a namespace that is private to each bean and not visible to other beans&#8201;&#8212;&#8201;so the names do not have to match.</p>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="paragraph">
+<p>Here we show the code for <em>RedBean</em> and <em>BlueBean</em> and their shared
+business local interface <em>Friend</em>.
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/RedBean.java|lang=java}
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/BlueBean.java|lang=java}
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/Friend.java|lang=java}</p>
+</div>
+<div class="paragraph">
+<p>The key items in the above are the following: - <em>@EJB</em> has been used at
+the <em>class level</em> to declare <em>myFriend</em> in the <em>java:comp/env</em> namespace
+of each EJB - because both beans share the <em>same interface</em>, <em>Friend</em>,
+we need to add <strong>beanName</strong> to the <em>@EJB</em> usage to specify the exact EJB
+we want - for <em>BlueBean</em> the <em>java:comp/env/myFriend</em> name has been
+configured to point to <em>RedBean</em> - for <em>RedBean</em> the
+<em>java:comp/env/myFriend</em> name has been configured to point to <em>BlueBean</em></p>
+</div>
+<div class="sect1">
+<h2 id="_alternative_to_annotations">Alternative to annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If there is a desire to not use annotations, the above annotation usage
+is equivalent to the following ejb-jar.xml
+\{snippet:url=openejb3/examples/lookup-of-ejbs-with-descriptor/src/main/resources/META-INF/ejb-jar.xml|lang=xml}</p>
+</div>
+</div>
+</div>
+<h1 id="_writing_a_unit_test_for_the_example" class="sect0">Writing a unit test for the example</h1>
+<div class="paragraph">
+<p>Writing an unit test for this example is quite simple. We need just to
+write a setup method to create and initialize the InitialContext, and
+then write our test methods</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/test/java/org/superbiz/ejblookup/EjbDependencyTest.java|lang=java}</p>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the "lookup-of-ejbs" directory
+of the openejb:download.html[examples zip] , just run:</p>
+</div>
+<div class="quoteblock">
 <blockquote>
-  <p>$ mvn clean install</p>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
 </blockquote>
+</div>
+<div class="paragraph">
 <p>Which should create output like the following.</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.ejblookup.EjbDependencyTest
 Apache OpenEJB 3.1.5-SNAPSHOT    build: 20101129-09:51
 http://tomee.apache.org/
-INFO - openejb.home =
-</code></pre>
-<p>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs<br/> INFO - openejb.base =<br/>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs<br/> INFO - Configuring Service(id=Default Security Service,<br/>type=SecurityService, provider-id=Default Security Service)<br/> INFO - Configuring Service(id=Default Transaction Manager,<br/>type=TransactionManager, provider-id=Default Transaction Manager)<br/> INFO - Found EjbModule in classpath:<br/>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes<br/> INFO - Beginning load:<br/>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes<br/> INFO - Configuring enterprise application: classpath.ear<br/> INFO - Configuring Service(id=Default Stateless Container, type=Container,<br/>provider-id=Default Stateless Container)<br/> INFO - Auto-creating a container for bean BlueBean:<br/>Container(type=STATELESS, id=Default Stateless Container)<br/> INFO - Enterprise application "classpath.ear" loaded.<br/> INFO - Assembling app: classpath.ear<br/> INFO - Jndi(name=BlueBeanLocal) --&gt; Ejb(deployment-id=BlueBean)<br/> INFO - Jndi(name=RedBeanLocal) --&gt; Ejb(deployment-id=RedBean)<br/> INFO - Created Ejb(deployment-id=RedBean, ejb-name=RedBean,<br/>container=Default Stateless Container)<br/> INFO - Created Ejb(deployment-id=BlueBean, ejb-name=BlueBean,<br/>container=Default Stateless Container)<br/> INFO - Deployed Application(path=classpath.ear)<br/> Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.244 sec</p>
-<pre><code>Results :
+INFO - openejb.home =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs INFO -
+openejb.base =
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs INFO -
+Configuring Service(id=Default Security Service, type=SecurityService,
+provider-id=Default Security Service) INFO - Configuring
+Service(id=Default Transaction Manager, type=TransactionManager,
+provider-id=Default Transaction Manager) INFO - Found EjbModule in
+classpath:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+INFO - Beginning load:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+INFO - Configuring enterprise application: classpath.ear INFO -
+Configuring Service(id=Default Stateless Container, type=Container,
+provider-id=Default Stateless Container) INFO - Auto-creating a
+container for bean BlueBean: Container(type=STATELESS, id=Default
+Stateless Container) INFO - Enterprise application "classpath.ear"
+loaded. INFO - Assembling app: classpath.ear INFO -
+Jndi(name=BlueBeanLocal) -&#8594; Ejb(deployment-id=BlueBean) INFO -
+Jndi(name=RedBeanLocal) -&#8594; Ejb(deployment-id=RedBean) INFO - Created
+Ejb(deployment-id=RedBean, ejb-name=RedBean, container=Default Stateless
+Container) INFO - Created Ejb(deployment-id=BlueBean, ejb-name=BlueBean,
+container=Default Stateless Container) INFO - Deployed
+Application(path=classpath.ear) Tests run: 2, Failures: 0, Errors: 0,
+Skipped: 0, Time elapsed: 1.244 sec</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -179,7 +310,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

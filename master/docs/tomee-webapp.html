@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,19 +95,79 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Notice: Licensed to the Apache Software Foundation (ASF) under one<br/> or more contributor license agreements. See the NOTICE file<br/> distributed with this work for additional information<br/> regarding copyright ownership. The ASF licenses this file<br/> to you under the Apache License, Version 2.0 (the<br/> "License"); you may not use this file except in compliance<br/> with the License. You may obtain a copy of the License at<br/> .<br/> <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br/> .<br/> Unless required by applicable law or agreed to in writing,<br/> software distributed under the License is distributed on an<br/> "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<br/> KIND, either express or implied. See the License for the<br/> specific language governing permissions and limitations<br/> under the License.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Licensed to the Apache Software
+Foundation (ASF) under one or more contributor license agreements. See
+the NOTICE file distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file to you under
+the Apache License, Version 2.0 (the "License"); you may not use this
+file except in compliance with the License. You may obtain a copy of the
+License at . <a href="http://www.apache.org/licenses/LICENSE-2.0" class="bare">http://www.apache.org/licenses/LICENSE-2.0</a> . Unless
+required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. See the License
+for the specific language governing permissions and limitations under
+the License.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>There are two forms of the <code>tomee</code> webapp to consider:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>from an <strong>tomee-1.x.x.war</strong> that has been downloaded and added to a Tomcat 7 install. This <code>tomee</code> webapp will contain all the necessary libraries to add the missing Java EE functionality to Tomcat as well as a small console.</li>
-  <li>from an <strong>apache-tomee-1.x.x.zip</strong>. The <code>tomee</code> webapp shipped inside a TomEE zip or tar is the same webapp as above, but with the libraries moved into the <code>&lt;tomcat-home&gt;/lib/</code> directory</li>
+<li>
+<p>from an <strong>tomee-1.x.x.war</strong> that has been downloaded and added to a
+Tomcat 7 install. This <code>tomee</code> webapp will contain all the necessary
+libraries to add the missing Java EE functionality to Tomcat as well as
+a small console.</p>
+</li>
+<li>
+<p>from an <strong>apache-tomee-1.x.x.zip</strong>. The <code>tomee</code> webapp shipped inside a
+TomEE zip or tar is the same webapp as above, but with the libraries
+moved into the <code>&lt;tomcat-home&gt;/lib/</code> directory</p>
+</li>
 </ul>
-<p>The only real difference between a "Tomcat with drop-in tomee.war" and a "TomEE" install is where the additional libraries live.</p>
-<h2>Deleting from plain Tomcat</h2>
-<p>Deleting the <code>tomee</code> webapp from a plain Tomcat install will effectively uninstall TomEE from Tomcat.</p>
-<h2>Deleting from TomEE</h2>
-<p>Deleting the <code>tomee</code> webapp from a TomEE install is safe as the needed libraries have been moved into <code>&lt;tomcat-home&gt;/lib/</code></p>
-<p>The only loss of functionality would be the ability to remotely execute EJBs over HTTP. However this can easily be added to a different webapp like so:</p>
-<pre><code>&lt;servlet&gt;
+</div>
+<div class="paragraph">
+<p>The only real difference between a "Tomcat with drop-in tomee.war" and a
+"TomEE" install is where the additional libraries live.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deleting_from_plain_tomcat">Deleting from plain Tomcat</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deleting the <code>tomee</code> webapp from a plain Tomcat install will effectively
+uninstall TomEE from Tomcat.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deleting_from_tomee">Deleting from TomEE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deleting the <code>tomee</code> webapp from a TomEE install is safe as the needed
+libraries have been moved into <code>&lt;tomcat-home&gt;/lib/</code></p>
+</div>
+<div class="paragraph">
+<p>The only loss of functionality would be the ability to remotely execute
+EJBs over HTTP. However this can easily be added to a different webapp
+like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;servlet&gt;
   &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
   &lt;servlet-class&gt;org.apache.openejb.server.httpd.ServerServlet&lt;/servlet-class&gt;
 &lt;/servlet&gt;
@@ -115,20 +175,29 @@
 &lt;servlet-mapping&gt;
   &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
   &lt;url-pattern&gt;/myejbs/*&lt;/url-pattern&gt;
-&lt;/servlet-mapping&gt;
-</code></pre>
-<p>Then you can create an <code>InitialContext</code> that points to that webapp like so:</p>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(&quot;java.naming.provider.url&quot;, &quot;http://127.0.0.1:8080/mywebapp/myejbs&quot;);
+&lt;/servlet-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you can create an <code>InitialContext</code> that points to that webapp like
+so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put("java.naming.provider.url", "http://127.0.0.1:8080/mywebapp/myejbs");
 // user and pass optional
-p.put(&quot;java.naming.security.principal&quot;, &quot;myuser&quot;);
-p.put(&quot;java.naming.security.credentials&quot;, &quot;mypass&quot;);
+p.put("java.naming.security.principal", "myuser");
+p.put("java.naming.security.credentials", "mypass");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -157,7 +226,7 @@ MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

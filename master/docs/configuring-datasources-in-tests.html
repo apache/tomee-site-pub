@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,36 +95,81 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="ConfiguringDataSourcesinTests-InitialContextproperties"></a>
-<h1>InitialContext properties</h1>
-<p>You can configure data sources from within your test case (avoiding the need for an <code>openejb.xml</code> entirely) like so:</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+                <h1 id="_initialcontext" class="sect0">InitialContext</h1>
+<div class="paragraph">
+<p>properties</p>
+</div>
+<div class="paragraph">
+<p>You can configure data sources from within your test case (avoiding the
+need for an <code>openejb.xml</code> entirely) like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
-p.put(&quot;myDataSource&quot;, &quot;new://Resource?type=DataSource&quot;);
-p.put(&quot;myDataSource.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
-p.put(&quot;myDataSource.JdbcUrl&quot;, &quot;jdbc:derby:derbyDB;create=true&quot;);
-p.put(&quot;myDataSource.JtaManaged&quot;, &quot;true&quot;);
+p.put("myDataSource", "new://Resource?type=DataSource");
+p.put("myDataSource.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+p.put("myDataSource.JdbcUrl", "jdbc:derby:derbyDB;create=true");
+p.put("myDataSource.JtaManaged", "true");
 
-Context context = new InitialContext(p);
-</code></pre>
-<p>Under certain circumstances it may be necessary to load two versions of the same driver. This is possible by definition of a classpath for the resource which points to the specific driver files required for the DataSource:</p>
-<pre><code>p.put(&quot;myDataSourceOne&quot;, &quot;new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionOne.jar&quot;);
-p.put(&quot;myDataSourceOne.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
-p.put(&quot;myDataSource.JdbcUrl&quot;, &quot;jdbc:derby:myDatabaseOne;create=true&quot;);
-....
-p.put(&quot;myDataSourceTwo&quot;, &quot;new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionTwo.jar&quot;);
-p.put(&quot;myDataSourceTwo.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
-p.put(&quot;myDataSource.JdbcUrl&quot;, &quot;jdbc:derby:myDatabaseTwo;create=true&quot;);
-</code></pre>
-<p>This will allow an application to communicate through legacy drivers to the same JDBC provider.</p>
-<p>See <a href="embedded-configuration.html">Embedded Configuration</a><br/> for further details on properties and overrides.</p>
-<p>See <a href="containers-and-resources.html">Containers and Resources</a><br/> for a full list of supported Resource types and their properties.</p>
-<a name="ConfiguringDataSourcesinTests-Noteon<jta-data-source>and<non-jta-data-source>"></a>
-<h2>Note on &lt;jta-data-source&gt; and &lt;non-jta-data-source&gt;</h2>
-<p>When configuring DataSources to be used by persistence.xml files, the DataSource supplied for <code>&lt;jta-data-source&gt;</code> is typically identical to the<br/><code>&lt;non-jta-data-source&gt;</code>, but with the <code>JtaManaged</code> property set differently.<br/>Keeping with our philosophy to free you up from redundant configuration, we will happily auto-create a missing jta-data-source or non-jta-data-source based upon the supplied DataSource.</p>
-<p>In the example above, a new DataSource would be generated as an exact copy but with the name "myDataSourceUnmanaged" and its <code>JtaManaged</code> flag set to<br/><code>false</code>. If the supplied DataSource was not <code>JtaManaged</code>, then the generated<br/>DataSource would be called "myDataSourceJta" and have its <code>JtaManaged</code> flag set to <code>true</code>.</p>
-<p>When relying on this functionality it is not necessary to specify the name of the generated DataSource in the <code>persistence.xml</code> file.</p>
+Context context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Under certain circumstances it may be necessary to load two versions of
+the same driver. This is possible by definition of a classpath for the
+resource which points to the specific driver files required for the
+DataSource:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">p.put("myDataSourceOne", "new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionOne.jar");
+p.put("myDataSourceOne.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+p.put("myDataSource.JdbcUrl", "jdbc:derby:myDatabaseOne;create=true");
+
+p.put("myDataSourceTwo", "new://Resource?type=DataSource&amp;classpath=/path/to/driverVersionTwo.jar");
+p.put("myDataSourceTwo.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+p.put("myDataSource.JdbcUrl", "jdbc:derby:myDatabaseTwo;create=true");
+[source,java]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will allow an application to communicate through legacy drivers to
+the same JDBC provider.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="embedded-configuration.html">Embedded Configuration</a> for further
+details on properties and overrides.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="containers-and-resources.html">Containers and Resources</a> for a
+full list of supported Resource types and their properties.</p>
+</div>
+<div class="sect1">
+<h2 id="_note_on_jta_data_source_and_non_jta_data_source">Note on &lt;jta-data-source&gt; and &lt;non-jta-data-source&gt;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When configuring DataSources to be used by persistence.xml files, the
+DataSource supplied for <code>&lt;jta-data-source&gt;</code> is typically identical to
+the <code>&lt;non-jta-data-source&gt;</code>, but with the <code>JtaManaged</code> property set
+differently. Keeping with our philosophy to free you up from redundant
+configuration, we will happily auto-create a missing jta-data-source or
+non-jta-data-source based upon the supplied DataSource.</p>
+</div>
+<div class="paragraph">
+<p>In the example above, a new DataSource would be generated as an exact
+copy but with the name "myDataSourceUnmanaged" and its <code>JtaManaged</code> flag
+set to <code>false</code>. If the supplied DataSource was not <code>JtaManaged</code>, then
+the generated DataSource would be called "myDataSourceJta" and have its
+<code>JtaManaged</code> flag set to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>When relying on this functionality it is not necessary to specify the
+name of the generated DataSource in the <code>persistence.xml</code> file.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -153,7 +198,7 @@ p.put(&quot;myDataSource.JdbcUrl&quot;, &quot;jdbc:derby:myDatabaseTwo;create=tr
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

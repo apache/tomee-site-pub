@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,22 +95,81 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Notice: Licensed to the Apache Software Foundation (ASF) under one<br/> or more contributor license agreements. See the NOTICE file<br/> distributed with this work for additional information<br/> regarding copyright ownership. The ASF licenses this file<br/> to you under the Apache License, Version 2.0 (the<br/> "License"); you may not use this file except in compliance<br/> with the License. You may obtain a copy of the License at<br/> .<br/> <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a><br/> .<br/> Unless required by applicable law or agreed to in writing,<br/> software distributed under the License is distributed on an<br/> "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY<br/> KIND, either express or implied. See the License for the<br/> specific language governing permissions and limitations<br/> under the License.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Licensed to the Apache Software
+Foundation (ASF) under one or more contributor license agreements. See
+the NOTICE file distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file to you under
+the Apache License, Version 2.0 (the "License"); you may not use this
+file except in compliance with the License. You may obtain a copy of the
+License at . <a href="http://www.apache.org/licenses/LICENSE-2.0" class="bare">http://www.apache.org/licenses/LICENSE-2.0</a> . Unless
+required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. See the License
+for the specific language governing permissions and limitations under
+the License.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>ActiveMQ is the default JMS provider in Apache TomEE and OpenEJB.</p>
-<p>Changing JMS implementation is as simple as using that implementation's Java EE Connector. The connector which will be a <code>.rar</code> file should be bundled with the application in a <code>.ear</code> file. All JMS usage in that <code>.ear</code> will favor the JMS ConnectionFactory and Topic and Queue implementations that are configured in the <code>.rar</code> file rather than ActiveMQ.</p>
-<p>If the JMS implementation does not have a <code>.rar</code> file, there are still some options for wiring in an alternate implementation.</p>
-<h1>Generic JMS Resource Adapter</h1>
-<p>If the JMS implementation does not have a Resource Archive (<code>.rar</code> file) that defines a compliant Resource Adapter, the <a href="http://genericjmsra.java.net/">Generic Resource Adapter for JMS</a> should work fine.</p>
-<p>To use this Adapter in TomEE or OpenEJB you'll need to create a <code>service-jar.xml</code> file and include that in a jar file and add it to the <code>&lt;tomee.home&gt;/lib/</code> directory. Then you can declare <code>ConnectionFactory</code>, <code>Topic</code>, and <code>Queue</code> and more via the <code>tomee.xml</code> file.</p>
-<p>The one below should be considered boiler plate. Updating it to contain some useful default values for your JMS implementation would be good. These values can be overridden in the <code>tomee.xml</code> or <code>openejb.xml</code></p>
-<p>Let's say that the following file lives in the jar at <code>META-INF/org.superbiz/service-jar.xml</code></p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</div>
+<div class="paragraph">
+<p>Changing JMS implementation is as simple as using that implementation&#8217;s
+Java EE Connector. The connector which will be a <code>.rar</code> file should be
+bundled with the application in a <code>.ear</code> file. All JMS usage in that
+<code>.ear</code> will favor the JMS ConnectionFactory and Topic and Queue
+implementations that are configured in the <code>.rar</code> file rather than
+ActiveMQ.</p>
+</div>
+<div class="paragraph">
+<p>If the JMS implementation does not have a <code>.rar</code> file, there are still
+some options for wiring in an alternate implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generic_jms_resource_adapter">Generic JMS Resource Adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the JMS implementation does not have a Resource Archive (<code>.rar</code> file)
+that defines a compliant Resource Adapter, the
+<a href="http://genericjmsra.java.net/">Generic Resource Adapter for JMS</a> should
+work fine.</p>
+</div>
+<div class="paragraph">
+<p>To use this Adapter in TomEE or OpenEJB you&#8217;ll need to create a
+<code>service-jar.xml</code> file and include that in a jar file and add it to the
+<code>&lt;tomee.home&gt;/lib/</code> directory. Then you can declare <code>ConnectionFactory</code>,
+<code>Topic</code>, and <code>Queue</code> and more via the <code>tomee.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>The one below should be considered boiler plate. Updating it to contain
+some useful default values for your JMS implementation would be good.
+These values can be overridden in the <code>tomee.xml</code> or <code>openejb.xml</code></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say that the following file lives in the jar at
+<code>META-INF/org.superbiz/service-jar.xml</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;ServiceJar&gt;
   &lt;ServiceProvider
-      id=&quot;genericra&quot;
-      service=&quot;Resource&quot;
-      types=&quot;GenericJMSRA&quot;
-      class-name=&quot;com.sun.genericra.GenericJMSRA&quot;&gt;
+      id="genericra"
+      service="Resource"
+      types="GenericJMSRA"
+      class-name="com.sun.genericra.GenericJMSRA"&gt;
           UserName
           Password
           ProviderIntegrationMode
@@ -134,10 +193,10 @@
   &lt;/ServiceProvider&gt;
 
   &lt;ServiceProvider
-      id=&quot;ConnectionFactory&quot;
-      service=&quot;Resource&quot;
-      types=&quot;javax.jms.ConnectionFactory, javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory, QueueConnectionFactory, TopicConnectionFactory&quot;
-      class-name=&quot;com.sun.genericra.outbound.ManagedJMSConnectionFactory&quot;&gt;
+      id="ConnectionFactory"
+      service="Resource"
+      types="javax.jms.ConnectionFactory, javax.jms.QueueConnectionFactory, javax.jms.TopicConnectionFactory, QueueConnectionFactory, TopicConnectionFactory"
+      class-name="com.sun.genericra.outbound.ManagedJMSConnectionFactory"&gt;
           ConnectionFactoryJndiName
           ClientId
           ConnectionValidationEnabled
@@ -145,10 +204,10 @@
   &lt;/ServiceProvider&gt;
 
   &lt;ServiceProvider
-      id=&quot;Queue&quot;
-      service=&quot;Resource&quot;
-      types=&quot;javax.jms.Queue, Queue&quot;
-      class-name=&quot;com.sun.genericra.outbound.QueueProxy&quot;&gt;
+      id="Queue"
+      service="Resource"
+      types="javax.jms.Queue, Queue"
+      class-name="com.sun.genericra.outbound.QueueProxy"&gt;
           DestinationJndiName
           ResourceAdapter
           UserName
@@ -158,10 +217,10 @@
   &lt;/ServiceProvider&gt;
 
   &lt;ServiceProvider
-      id=&quot;Topic&quot;
-      service=&quot;Resource&quot;
-      types=&quot;javax.jms.Topic, Topic&quot;
-      class-name=&quot;com.sun.genericra.outbound.TopicProxy&quot;&gt;
+      id="Topic"
+      service="Resource"
+      types="javax.jms.Topic, Topic"
+      class-name="com.sun.genericra.outbound.TopicProxy"&gt;
           DestinationJndiName
           ResourceAdapter
           UserName
@@ -169,28 +228,66 @@
           JndiProperties
           TopicClassName
   &lt;/ServiceProvider&gt;
-&lt;/ServiceJar&gt;
-</code></pre>
-<p>It is strongly recommended to not leave the values in the service-jar.xml file blank as shown above. It is possible to setup several sets of defaults in a <code>service-jar.xml</code> or via several <code>service-jar.xml</code> files.</p>
-<p>Once this file is packed in a jar and added to the <code>&lt;tomee.home&gt;/lib</code> or <code>&lt;openejb.home&gt;/lib</code> directory, you can then declare and configure "instances" of these things in your <code>tomee.xml</code> or <code>openejb.xml</code> config file as follows:</p>
-<pre><code>&lt;Resource id=&quot;My Generic Adapter&quot; type=&quot;GenericJMSRA&quot; provider=&quot;org.superbiz:genericra&quot;&gt;
+&lt;/ServiceJar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is strongly recommended to not leave the values in the
+service-jar.xml file blank as shown above. It is possible to setup
+several sets of defaults in a <code>service-jar.xml</code> or via several
+<code>service-jar.xml</code> files.</p>
+</div>
+<div class="paragraph">
+<p>Once this file is packed in a jar and added to the <code>&lt;tomee.home&gt;/lib</code> or
+<code>&lt;openejb.home&gt;/lib</code> directory, you can then declare and configure
+"instances" of these things in your <code>tomee.xml</code> or <code>openejb.xml</code> config
+file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="My Generic Adapter" type="GenericJMSRA" provider="org.superbiz:genericra"&gt;
 AdapterProperty1 PropertyValue1
 AdapterProperty2 PropertyValue2
 ...
-&lt;/Resource&gt;
-</code></pre>
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Or in properties like so:</p>
-<pre><code>myGenericAdapter = new://Resource?type=GenericJMSRA&amp;provider=org.superbiz:genericra
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">myGenericAdapter = new://Resource?type=GenericJMSRA&amp;provider=org.superbiz:genericra
 myGenericAdapter.AdapterProperty1 = PropertyValue1
-myGenericAdapter.AdapterProperty2 = PropertyValue2
-</code></pre>
-<p>This is basically the same as all configuration in TomEE/OpenEJB, but with the addition that you must specify the <code>provider</code> attribute so the server knows where to look for the <code>service-jar.xml</code> file that defines the resource and all its defaults.</p>
+myGenericAdapter.AdapterProperty2 = PropertyValue2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is basically the same as all configuration in TomEE/OpenEJB, but
+with the addition that you must specify the <code>provider</code> attribute so the
+server knows where to look for the <code>service-jar.xml</code> file that defines
+the resource and all its defaults.</p>
+</div>
+<div class="paragraph">
 <p>In this example:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>the file is <code>META-INF/org.superbiz/service-jar.xml</code></li>
-  <li>so the <code>provider</code> attribute is <code>org.superbiz</code></li>
+<li>
+<p>the file is <code>META-INF/org.superbiz/service-jar.xml</code></p>
+</li>
+<li>
+<p>so the <code>provider</code> attribute is <code>org.superbiz</code></p>
+</li>
 </ul>
-<p>You can use whatever prefix you like for the <code>provider</code> id, though for obvious reasons we'd advise not using <code>org.apache.openejb</code> or <code>org.apache.tomee</code> in the prefix.</p>
+</div>
+<div class="paragraph">
+<p>You can use whatever prefix you like for the <code>provider</code> id, though for
+obvious reasons we&#8217;d advise not using <code>org.apache.openejb</code> or
+<code>org.apache.tomee</code> in the prefix.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -219,7 +316,7 @@ myGenericAdapter.AdapterProperty2 = PropertyValue2
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

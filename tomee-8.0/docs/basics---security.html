@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,35 +95,81 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This section is under construction, please check back later.</p>
-<a name="Basics-Security-RelatedDocuments"></a>
-<h2>Related Documents</h2>
-<p><a href="security.html">Security</a><br/> - login module configuration<br/><a href="security-annotations.html">Security Annotations</a><br/> - EJB3 related annotation based security.</p>
-<a name="Basics-Security-ServerSideSecurity"></a>
-<h2>Server Side Security</h2>
-<p>There's a few things that should be noted about security from the server side perspective.</p>
-<a name="Basics-Security-SecurityPropagation"></a>
-<h3>Security Propagation</h3>
-<p>Note, this is partially documented in the EJB 3 spec section 14.8.1.1.</p>
-<ol>
-  <li>Once a remote bean has been instantiated, from within the container, it<br/>inherits the entire security context, and all roles will be inherited the same as the method where the bean is being looked up.</li>
-  <li>Looking up a bean via an <code>InitialContext</code>, or via injection, will inherit<br/>the security context (user, roles, etc), thereby propagating the security through to any container bean in the chain of method calls.</li>
-  <li>No properties are allowed for the <code>InitialContext</code>, and you <em>MUST</em> be<br/>calling the no args constructor only. There are documents elsewhere that describe using the OpenEJB initial context factories and such, with usernames and passwords, etc; it should be noted that this method of using the factories is OpenEJB specific, to facilitate non-standard clients not running in an EJB container, etc.</li>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section is under construction, please check back later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_related_documents">Related Documents</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="security.html">Security</a> - login module configuration
+<a href="security-annotations.html">Security Annotations</a> - EJB3 related
+annotation based security.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_server_side_security">Server Side Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There&#8217;s a few things that should be noted about security from the server
+side perspective.</p>
+</div>
+<div class="sect2">
+<h3 id="_security_propagation_note_this_is_partially_documented_in_the_ejb_3">Security Propagation Note, this is partially documented in the EJB 3</h3>
+<div class="paragraph">
+<p>spec section 14.8.1.1.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Once a remote bean has been instantiated, from within the container,
+it inherits the entire security context, and all roles will be inherited
+the same as the method where the bean is being looked up.</p>
+</li>
+<li>
+<p>Looking up a bean via an <code>InitialContext</code>, or via injection, will
+inherit the security context (user, roles, etc), thereby propagating the
+security through to any container bean in the chain of method calls.</p>
+</li>
+<li>
+<p>No properties are allowed for the <code>InitialContext</code>, and you <em>MUST</em> be
+calling the no args constructor only. There are documents elsewhere that
+describe using the OpenEJB initial context factories and such, with
+usernames and passwords, etc; it should be noted that this method of
+using the factories is OpenEJB specific, to facilitate non-standard
+clients not running in an EJB container, etc.</p>
+</li>
 </ol>
-<p>For example, here is an EJB that returns another bean, through a remote method call. In this case, the <em>OtherBean</em> instance, will have the same security as <em>MyBean</em>, including the principal (username), roles, etc.</p>
-<pre><code>import javax.ejb.EJB;
+</div>
+<div class="paragraph">
+<p>For example, here is an EJB that returns another bean, through a remote
+method call. In this case, the <em>OtherBean</em> instance, will have the same
+security as <em>MyBean</em>, including the principal (username), roles, etc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.EJB;
 import javax.naming.InitialContext;
 
-@EJB(name = &quot;otherBean&quot;, beanInterface = IOtherBean.class)
+@EJB(name = "otherBean", beanInterface = IOtherBean.class)
 public class MyBean
 {
     public IOtherBean getOtherBean()
     {
     InitialContext context = new InitialContext();
-    return (IOtherBean) context.lookup(&quot;java:comp/env/otherBean&quot;);
+    return (IOtherBean) context.lookup("java:comp/env/otherBean");
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -152,7 +198,7 @@ public class MyBean
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

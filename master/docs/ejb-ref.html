@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,35 +95,47 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="ejb-ref-Viaannotation"></a>
-<h1>Via annotation</h1>
-<pre><code>package org.superbiz.refs;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>=
+Via annotation</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.refs;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.InitialContext;
 
 @Stateless
-@EJB(name = &quot;myFooEjb&quot;, beanInterface = FooRemote.class)
+@EJB(name = "myFooEjb", beanInterface = FooRemote.class)
 public class MyEjbRemoteRefBean implements MyBeanInterface {
 
     @EJB
     private BarRemote myBarEjb;
 
     public void someBusinessMethod() throws Exception {
-        if (myBarEjb == null) throw new NullPointerException(&quot;myBarEjb not injected&quot;);
+        if (myBarEjb == null) throw new NullPointerException("myBarEjb not injected");
 
         // Both can be looked up from JNDI as well
         InitialContext context = new InitialContext();
-        FooRemote fooRemote = (FooRemote) context.lookup(&quot;java:comp/env/myFooEjb&quot;);
-        BarRemote barRemote = (BarRemote) context.lookup(&quot;java:comp/env/org.superbiz.refs.MyEjbRemoteRefBean/myBarEjb&quot;);
+        FooRemote fooRemote = (FooRemote) context.lookup("java:comp/env/myFooEjb");
+        BarRemote barRemote = (BarRemote) context.lookup("java:comp/env/org.superbiz.refs.MyEjbRemoteRefBean/myBarEjb");
     }
-}
-</code></pre>
-<a name="ejb-ref-Viaxml"></a>
-<h1>Via xml</h1>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_via_xml" class="sect0">Via xml</h1>
+<div class="paragraph">
 <p>The above @EJB annotation usage is 100% equivalent to the following xml.</p>
-<pre><code>&lt;ejb-ref&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-ref&gt;
     &lt;ejb-ref-name&gt;myFooEjb&lt;/ejb-ref-name&gt;
     &lt;remote&gt;org.superbiz.refs.FooRemote&lt;/remote&gt;
 &lt;/ejb-ref&gt;
@@ -135,8 +147,9 @@ public class MyEjbRemoteRefBean implements MyBeanInterface {
       &lt;injection-target-class&gt;org.superbiz.refs.MyEjbRemoteRefBean&lt;/injection-target-class&gt;
       &lt;injection-target-name&gt;myBarEjb&lt;/injection-target-name&gt;
     &lt;/injection-target&gt;
-&lt;/ejb-ref&gt;
-</code></pre>
+&lt;/ejb-ref&gt;</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -165,7 +178,7 @@ public class MyEjbRemoteRefBean implements MyBeanInterface {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

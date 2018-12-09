@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,141 +95,270 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Apache TomEE ships with OpenJPA as the default JPA provider, however any valid JPA 2.0 provider can be used.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache TomEE ships with OpenJPA as the default JPA provider, however any
+valid JPA 2.0 provider can be used.</p>
+</div>
+<div class="paragraph">
 <p>The basic steps are:</p>
-<ol>
-  <li>Add the Hibernate jars to <code>&lt;tomee-home&gt;/lib/</code></li>
-  <li>Configure the webapp or the server to use Hibernate</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the Hibernate jars to <code>&lt;tomee-home&gt;/lib/</code></p>
+</li>
+<li>
+<p>Configure the webapp or the server to use Hibernate</p>
+</li>
 </ol>
-<p><strong>The atifact versions defined here are just for example, so please feel free to use current library versions.</strong></p>
-<h1>Webapp Configuration</h1>
-<p>Any webapp can specify the JPA provider it would like to use via the <code>persistence.xml</code> file, which can be at any of the following locations in a webapp</p>
+</div>
+<div class="paragraph">
+<p><strong>The atifact versions defined here are just for example, so please feel
+free to use current library versions.</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webapp_configuration">Webapp Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Any webapp can specify the JPA provider it would like to use via the
+<code>persistence.xml</code> file, which can be at any of the following locations
+in a webapp</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>WEB-INF/persistence.xml</code> of the <code>.war</code> file</li>
-  <li><code>META-INF/persistence.xml</code> in any jar located in <code>WEB-INF/lib/</code></li>
+<li>
+<p><code>WEB-INF/persistence.xml</code> of the <code>.war</code> file</p>
+</li>
+<li>
+<p><code>META-INF/persistence.xml</code> in any jar located in <code>WEB-INF/lib/</code></p>
+</li>
 </ul>
-<p>A single webapp may have many <code>persistence.xml</code> files and each may use whichever JPA provider it needs.</p>
-<p>The following is an example of a fairly common <code>persistence.xml</code> for Hibernate</p>
-<pre><code>&lt;persistence version=&quot;1.0&quot;
-       xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence
-       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd&quot;&gt;
+</div>
+<div class="paragraph">
+<p>A single webapp may have many <code>persistence.xml</code> files and each may use
+whichever JPA provider it needs.</p>
+</div>
+<div class="paragraph">
+<p>The following is an example of a fairly common <code>persistence.xml</code> for
+Hibernate</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence version="1.0"
+       xmlns="http://java.sun.com/xml/ns/persistence"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"&gt;
 
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
 
     &lt;properties&gt;
-      &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create-drop&quot;/&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<p>Note, TomEE will automatically add the following property unless it is explicitly configured:</p>
-<pre><code>      &lt;property name=&quot;hibernate.transaction.manager_lookup_class&quot;
-                value=&quot;org.apache.openejb.hibernate.TransactionManagerLookup&quot;/&gt;
-</code></pre>
-<h1>Server Configuration</h1>
-<p>The default JPA provider can be changed at the server level to favor Hibernate over OpenJPA.</p>
-<p>Using the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or any other valid means of setting <code>java.lang.System.getProperties()</code>, the following standard properties can set the detault for any <code>persistence.xml</code> file.</p>
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note, TomEE will automatically add the following property unless it is
+explicitly configured:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">      &lt;property name="hibernate.transaction.manager_lookup_class"
+                value="org.apache.openejb.hibernate.TransactionManagerLookup"/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_server_configuration">Server Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The default JPA provider can be changed at the server level to favor
+Hibernate over OpenJPA.</p>
+</div>
+<div class="paragraph">
+<p>Using the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or any other valid
+means of setting <code>java.lang.System.getProperties()</code>, the following
+standard properties can set the detault for any <code>persistence.xml</code> file.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>javax.persistence.provider</code></li>
-  <li><code>javax.persistence.transactionType</code></li>
-  <li><code>javax.persistence.jtaDataSource</code></li>
-  <li><code>javax.persistence.nonJtaDataSource</code></li>
+<li>
+<p><code>javax.persistence.provider</code></p>
+</li>
+<li>
+<p><code>javax.persistence.transactionType</code></p>
+</li>
+<li>
+<p><code>javax.persistence.jtaDataSource</code></p>
+</li>
+<li>
+<p><code>javax.persistence.nonJtaDataSource</code></p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>So, for example, Hibernate can become the default provider via setting</p>
+</div>
+<div class="paragraph">
 <p><code>CATALINA_OPTS=-Djavax.persistence.provider=org.hibernate.ejb.HibernatePersistence</code></p>
-<p>You <strong>must</strong> of course add the Hibernate libraries to <code>&lt;tomee-home&gt;/lib/</code> for this to work.</p>
-<h1>Hibernate libraries</h1>
+</div>
+<div class="paragraph">
+<p>You <strong>must</strong> of course add the Hibernate libraries to <code>&lt;tomee-home&gt;/lib/</code>
+for this to work.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hibernate_libraries">Hibernate libraries</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Jars needed for Hibernate 4.x:</p>
+</div>
+<div class="paragraph">
 <p>Add:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>&lt;tomee-home&gt;/lib/antlr-2.7.7.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/dom4j-1.6.1.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/hibernate-commons-annotations-4.0.1.Final.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/hibernate-core-4.1.4.Final.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/hibernate-entitymanager-4.1.4.Final.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/hibernate-validator-4.3.0.Final.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/jboss-logging-3.1.0.GA.jar</code></li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/antlr-2.7.7.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/dom4j-1.6.1.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/hibernate-commons-annotations-4.0.1.Final.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/hibernate-core-4.1.4.Final.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/hibernate-entitymanager-4.1.4.Final.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/hibernate-validator-4.3.0.Final.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/jboss-logging-3.1.0.GA.jar</code></p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>Remove (optional):</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>&lt;tomee-home&gt;/lib/asm-3.2.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/openjpa-2.2.0.jar</code></li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/asm-3.2.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/openjpa-2.2.0.jar</code></p>
+</li>
 </ul>
-<h1>Ehcache (optional)</h1>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ehcache_optional">Ehcache (optional)</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>To use Hibernate with Ehcache, add:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>&lt;tomee-home&gt;/lib/hibernate-ehcache-4.1.4.Final.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/ehcache-core-2.5.1.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/ehcache-terracotta-2.5.1.jar</code></li>
-  <li><code>&lt;tomee-home&gt;/lib/terracotta-toolkit-1.4-runtime-4.1.0.jar</code></li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/hibernate-ehcache-4.1.4.Final.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/ehcache-core-2.5.1.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/ehcache-terracotta-2.5.1.jar</code></p>
+</li>
+<li>
+<p><code>&lt;tomee-home&gt;/lib/terracotta-toolkit-1.4-runtime-4.1.0.jar</code></p>
+</li>
 </ul>
-<h1>Infinispan (optional)</h1>
-<p>To use Infinispan cache (default Hibernate 2nd level cache) you need the below jars:</p>
-<pre><code>
-    <lib>org.infinispan:infinispan-core:5.1.4.FINAL</lib>
-    <lib>org.hibernate:hibernate-infinispan:${hibernate.core.version}</lib>
-    <lib>org.jgroups:jgroups:3.0.9.Final</lib>
-    <lib>org.jboss.marshalling:jboss-marshalling-river:1.3.11.GA:</lib>
-    <lib>org.jboss.marshalling:jboss-marshalling:1.3.11.GA</lib>
-    <lib>org.codehaus.woodstox:woodstox-core-asl:4.1.1</lib>
-    <lib>org.codehaus.woodstox:stax2-api:3.1.1</lib>
-    <lib>org.rhq.helpers:rhq-pluginAnnotations:3.0.4</lib>
-    <lib>org.jboss.logmanager:jboss-logmanager:1.2.2.GA</lib>
-</code></pre>
-<p>There are many guides on how to use 2nd level cache with JPA 2. You can remove OpenJPA jar so less jars are in <code>&lt;tomee-home&gt;/lib</code> folder. Also, be sure to put your Database JDBC driver in <code>&lt;tomee-home&gt;/lib</code>.</p>
-<p>The actual Maven dependencies for your project can be added in the usual way:</p>
-<pre><code>    &lt;!-- Hibernate --&gt;     
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_infinispan_optional">Infinispan (optional)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use Infinispan cache (default Hibernate 2nd level cache) you need the
+below jars:</p>
+</div>
+<div class="paragraph">
+<p>There are many guides on how to use 2nd level cache with JPA 2. You can
+remove OpenJPA jar so less jars are in <code>&lt;tomee-home&gt;/lib</code> folder. Also,
+be sure to put your Database JDBC driver in <code>&lt;tomee-home&gt;/lib</code>.</p>
+</div>
+<div class="paragraph">
+<p>The actual Maven dependencies for your project can be added in the usual
+way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">    &lt;!-- Hibernate --&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;antlr&lt;/groupId&gt;
-       &lt;artifactId&gt;antlr&lt;/artifactId&gt;
-       &lt;version&gt;2.7.7&lt;/version&gt;
-    &lt;/dependency&gt;   
-    &lt;dependency&gt;
-       &lt;groupId&gt;dom4j&lt;/groupId&gt;
-       &lt;artifactId&gt;dom4j&lt;/artifactId&gt;
-       &lt;version&gt;1.6.1&lt;/version&gt;
+        &lt;groupId&gt;antlr&lt;/groupId&gt;
+        &lt;artifactId&gt;antlr&lt;/artifactId&gt;
+        &lt;version&gt;2.7.7&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.hibernate.common&lt;/groupId&gt;
-       &lt;artifactId&gt;hibernate-commons-annotations&lt;/artifactId&gt;
-       &lt;version&gt;4.0.5.Final&lt;/version&gt;
+        &lt;groupId&gt;dom4j&lt;/groupId&gt;
+        &lt;artifactId&gt;dom4j&lt;/artifactId&gt;
+        &lt;version&gt;1.6.1&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
-       &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
-       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+        &lt;groupId&gt;org.hibernate.common&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-commons-annotations&lt;/artifactId&gt;
+        &lt;version&gt;4.0.5.Final&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
-       &lt;artifactId&gt;hibernate-ehcache&lt;/artifactId&gt;
-       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+        &lt;version&gt;4.2.16.Final&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
-       &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
-       &lt;version&gt;4.2.16.Final&lt;/version&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-ehcache&lt;/artifactId&gt;
+        &lt;version&gt;4.2.16.Final&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
-       &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
-       &lt;version&gt;4.3.2.Final&lt;/version&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+        &lt;version&gt;4.2.16.Final&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.jboss.logging&lt;/groupId&gt;
-       &lt;artifactId&gt;jboss-logging&lt;/artifactId&gt;
-       &lt;version&gt;3.1.0.GA&lt;/version&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
+        &lt;version&gt;4.3.2.Final&lt;/version&gt;
     &lt;/dependency&gt;
     &lt;dependency&gt;
-       &lt;groupId&gt;org.javassist&lt;/groupId&gt;
-       &lt;artifactId&gt;javassist&lt;/artifactId&gt;
-       &lt;version&gt;3.15.0-GA&lt;/version&gt;
+        &lt;groupId&gt;org.jboss.logging&lt;/groupId&gt;
+        &lt;artifactId&gt;jboss-logging&lt;/artifactId&gt;
+        &lt;version&gt;3.1.0.GA&lt;/version&gt;
     &lt;/dependency&gt;
-</code></pre>
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.javassist&lt;/groupId&gt;
+        &lt;artifactId&gt;javassist&lt;/artifactId&gt;
+        &lt;version&gt;3.15.0-GA&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -258,7 +387,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

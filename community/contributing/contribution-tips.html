@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Contribution Tips</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="sect2">
+<h3 id="_subscribe_to_the_developer_mailing_list">Subscribe to the developer mailing list</h3>
+<div class="paragraph">
+<p>To get started send an email from the email address you want to use to the
+TomEE developers mailing list (<a href="mailto:dev-subscribe@tomee.apache.org">dev-subscribe@tomee.apache.org</a>). After you
+send the subscribe request, the list manager will send you a confirmation
+e-mail in reply.  You must reply to this e-mail to complete the process. If
+you have not received the confirmation request, check that it has not been
+marked as spam.  A confirmation will put you on the
+<a href="mailto:dev@tomee.apache.org">dev@tomee.apache.org</a> mailing
+list where you can talk to the rest of the community!</p>
+</div>
+<div class="paragraph">
+<p>Once your subscription is confirmed (sometimes it takes a few hours), send
+a message to <a href="mailto:dev@tomee.apache.org">dev@tomee.apache.org</a> with the Subject line "How can I help?"
+and write a little bit about yourself like where you live and what you
+might be interested in working on. You will probably be given some tasks
+outside your interest area just to get you started, but once you get the
+hang of it you can move to a specific area if you want.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;re really looking forward to seeing you on the list and learning more
+about you. Welcome to the adventure!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_is_the_process">What is the process?</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>public void contributeToOpenSource() {
+
+    boolean stillInterestedAndHavingFun = true;
+    int taskSize = 1; // start small!
+
+    contributing:
+    while (stillInterestedAndHavingFun) {
+
+        Task task = findSomethingInteresting(taskSize++);
+
+        if (!task.hasJira()) {
+            createJira(task);
+        } else {
+            requestToBeAssignedToJira(task.jiraId());
+        }
+
+        while (task.inProgress()) {
+
+            chatOnListALittleGetCleverIdeas(task, new Ideas(task));
+            hackALittle(task);
+
+            if (task.tooHard() || task.notFun()) {
+                // no big deal, try again with something else
+                taskSize--;
+                continue contributing;
+            }
+        }
+
+        File patchFile = createSvnOrGitPatch(task);
+        attachToJira(task.jiraId(), patchFile);
+        askForReviewOnList(task.jiraId());
+
+        while (!committed(patchFile)) {
+
+            try {
+                pokeAtSometingElse();
+                helpOnUserList();
+                dayDream();
+            } catch (MoreThanAWeekException e) {
+                // Assume it fell off the radar -- happens.
+                // Evidence we need more committers.
+                bumpThreadOnList(task);
+            }
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After a while when people feel comfortable with you as contributor, they vote you in as a committer and &#8230;&#8203; big surprise &#8230;&#8203; there&#8217;s almost no change in the daily routine. You get access to svn and pretty much everything else stays the same. Instead of submitting patches, now you have to help review them and commit them. Instead of learning how to contribute to an open source project, now you have to learn how to help others get involved. And of course it doesn&#8217;t happen all at once, you never stop learning these things and you never stop wishing you had more time.</p>
+</div>
+<div class="paragraph">
+<p>No one cares how much code you can write or how fast you can write it. We all just contribute what we can when we can and there are no expectations on how much, how often, or where.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s very much about the journey and there is no real end as long as you&#8217;re having fun and learning.</p>
+</div>
+<div class="paragraph">
+<p>Probably finding something to do when you do have time is the hardest part &#8230;&#8203; that never changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_be_brave">Be Brave</h3>
+<div class="paragraph">
+<p>Don&#8217;t assume everything has already been discussed a million times and you&#8217;re the only one who doesn&#8217;t know and so you shouldn&#8217;t bother anyone and should just figure it out on your own. That thinking is your enemy. Don&#8217;t do that or you will get nowhere &#8230;&#8203; very slowly. So slowly that now you feel you really can&#8217;t ask about it because surely everyone assumes you know it or have done it by now. That thinking is a terrible trap. Ask questions. Post your thoughts.</p>
+</div>
+<div class="paragraph">
+<p>Don&#8217;t worry about asking "stupid" questions on the list&#8201;&#8212;&#8201;even simple questions have great value. They often lead to surprisingly good discussions. They also have a profound impact on the people around you, the ones you don&#8217;t see.</p>
+</div>
+<div class="paragraph">
+<p>There are always a handful of people silently reading the list and wishing they could participate, but are less brave. Whenever someone like you finally does show up and asks basic questions and shows it&#8217;s ok, we usually get another 1 or 2 new faces who suddenly find the courage to speak up.</p>
+</div>
+<div class="paragraph">
+<p>Maybe it&#8217;s like Karaoke; if the people singing sound like you when you sing, there are better odds you might get up and sign too. Seeing people like yourself do the things you want to do is inspiring.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_start_small">Start Small</h3>
+<div class="paragraph">
+<p>You may suddenly get a creative surge and see many many things that could be done. One thing you learn about open source is that you never know when life is going to intervene and you have to stop. So it&#8217;s always really good to get a little tiny thing working, checked in, and just grow it iteratively as time permits. It is a practice that is key for people of any skill level. And it goes wonderfully with Open Source as it adds plenty of space for new ideas. Stone soup starts with the stone, not the soup!</p>
+</div>
+<div class="paragraph">
+<p>So no matter how big the idea or task, ask yourself "do I really need all of this to get started?". Start with the tiniest possible version. And then cut it down again :)</p>
+</div>
+<div class="paragraph">
+<p>Code is easier to grow than change. And with today&#8217;s refactoring tools even change is pretty easy. What&#8217;s hard is taking a big piece of code and jamming it into another big piece of code. Don&#8217;t work too long in isolation.</p>
+</div>
+<div class="paragraph">
+<p>Start small, get it checked in (or patch submitted) and work iteratively.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_things_that_always_need_doing">Things that always need doing</h3>
+<div class="paragraph">
+<p>Final variables &amp; fields are preferred where possible, but a lot of the code is old. Feel free to add them and hand the code back.
+If you have any skills with code coverage tools, then you&#8217;ll probably find way too much to do! Tests are always welcome.
+There are over a 1,000 TODO comments in the code. Maybe some should be deleted. Maybe some could be completed. They probably all should have a JIRA id on them.
+Pick a random class, see if you can figure out what it is doing and javadoc it.
+Add @Override where applicable
+Intellij has an 'Inspect Code' feature. Yikes does it produce a lot of output.
+No doubt there is some exception handling that can be greatly improved.
+Obviously, one could get quite bored doing just the above. But sometimes the above tasks can lead to more fun and exciting things. Anything that gets you in and looking at code and actually touching and changing it usually results in questions, discussions and ideas&#8230;&#8203; then little passions and late nights and lack of sleep and caffeine abuse.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_things_to_avoid">Things to avoid</h3>
+<div class="sect3">
+<h4 id="_huge_patches">Huge patches</h4>
+<div class="paragraph">
+<p>Huge patches are hard to digest. Try to avoid them whenever possible. Any step forward is a good one. Small steps allow people to see where you&#8217;re headed and give input. That&#8217;s true regardless if you are a committer or contributor.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_be_careful_with_reformatting">Be careful with reformatting</h4>
+<div class="paragraph">
+<p>Try to never mix logic changes with code reformatting. It makes it nearly impossible for others to see what the actual change was.</p>
+</div>
+<div class="paragraph">
+<p>If you are a committer and want to reformat something, do the reformat as a separate commit before or after the real change. As long as they are separate and clearly marked it should be easy for people to see what is going on.
+If you are a contributor and want to reformat something, maybe suggest it on the list, but avoid submitting patches that are just reformatting.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

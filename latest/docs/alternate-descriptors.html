@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,72 +95,198 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>As of OpenEJB 3.1.1, you have the ability to specify an alternate set of deployment descriptors to use for a given environment. This is focused mostly on testing where it is often desirable to use a slightly different configuration for a set of tests or even a specific test.</p>
-<h1>When nothing else does the trick</h1>
-<p>Note that this approach was added as a catch-all for when one of the simpler overriding techniques will not work. For the common case of needing to tweak your persistence.xml, see the <a href="configuring-persistenceunits-in-tests.html">Configuring PersistenceUnits in Tests</a><br/> page for a simpler approach.</p>
-<p>For many reasons it is very inconvenient to have to maintain two sets of descriptors, one for production and one for testing. We aggressively add features based on user feedback and questions. If you are looking for a way to solve a problem without duplicating entire descriptors, please let us know. You should never have to go the long way to do something simple.</p>
-<a name="AlternateDescriptors-openejb.altdd.prefix"></a>
-<h1>openejb.altdd.prefix</h1>
-<p>To use this functionality, just set the new "openejb.altdd.prefix" system property or <code>InitialContext</code> property to something like "_test_", then any descriptors in your META-INF/ directory that start with "_test._" will override the regular descriptor. So for example with an app like this:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As of OpenEJB 3.1.1, you have the
+ability to specify an alternate set of deployment descriptors to use for
+a given environment. This is focused mostly on testing where it is often
+desirable to use a slightly different configuration for a set of tests
+or even a specific test.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_when_nothing_else_does_the_trick">When nothing else does the trick</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that this approach was added as a catch-all for when one of the
+simpler overriding techniques will not work. For the common case of
+needing to tweak your persistence.xml, see the
+<a href="configuring-persistenceunits-in-tests.html">Configuring
+PersistenceUnits in Tests</a> page for a simpler approach.</p>
+</div>
+<div class="paragraph">
+<p>For many reasons it is very inconvenient to have to maintain two sets of
+descriptors, one for production and one for testing. We aggressively add
+features based on user feedback and questions. If you are looking for a
+way to solve a problem without duplicating entire descriptors, please
+let us know. You should never have to go the long way to do something
+simple.</p>
+</div>
+</div>
+</div>
+<h1 id="_openejb_altdd_prefix" class="sect0">openejb.altdd.prefix</h1>
+<div class="paragraph">
+<p>To use this functionality, just set the new "openejb.altdd.prefix"
+system property or <code>InitialContext</code> property to something like "<em>test</em>",
+then any descriptors in your META-INF/ directory that start with
+"<em>test.</em>" will override the regular descriptor. So for example with an
+app like this:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>META-INF/ejb-jar.xml</li>
-  <li>META-INF/*test*.ejb-jar.xml</li>
-  <li>META-INF/persistence.xml</li>
-  <li>META-INF/*test*.env-entry.properties</li>
+<li>
+<p>META-INF/ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/<em>test</em>.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/persistence.xml</p>
+</li>
+<li>
+<p>META-INF/<em>test</em>.env-entry.properties</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>Just initialize your test case like so:</p>
-<pre><code> Properties properties = new Properties();
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"> Properties properties = new Properties();
  properties.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-      &quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
- properties.setProperty(&quot;openejb.altdd.prefix&quot;, &quot;test&quot;);
+      "org.apache.openejb.client.LocalInitialContextFactory");
+ properties.setProperty("openejb.altdd.prefix", "test");
 
- InitialContext initialContext = new InitialContext(properties);
-</code></pre>
-<p>The logical result will be the prefixed file replacing the non-prefixed file as the active descriptor:</p>
+ InitialContext initialContext = new InitialContext(properties);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The logical result will be the prefixed file replacing the non-prefixed
+file as the active descriptor:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>META-INF/ejb-jar.xml -&gt; <em>test</em>.ejb-jar.xml</li>
-  <li>META-INF/persistence.xml</li>
-  <li>META-INF/env-entry.properties -&gt; <em>test</em>.env-entry.properties</li>
+<li>
+<p>META-INF/ejb-jar.xml &#8594; <em>test</em>.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/persistence.xml</p>
+</li>
+<li>
+<p>META-INF/env-entry.properties &#8594; <em>test</em>.env-entry.properties</p>
+</li>
 </ul>
-<p>This will work in any environment in which OpenEJB works (embedded, standalone, tomcat, geronimo, etc.).</p>
-<p>Note that there does <em>not</em> have to be an equivalent non-prefixed version of the file. In the example above, only a "test.env-entry.properties" file exists and there is no equivalent plain "env-entry.properties" file. This prefixing works for any deployment descriptor in the META-INF/ directory or WEB-INF/ directory. The prefix does not have to be "test" and could be anything you choose. You can also have as many prefixed files as you need and could even go as far as to have one prefix per individual test.</p>
-<a name="AlternateDescriptors-Morethanoneprefix"></a>
-<h1>More than one prefix</h1>
-<p>It is possible to have several prefixes, specified in order of preference, so that it is possible to avoid duplicating descriptors that are used in more than one "profile". For example, the "foo" test case uses the same<br/>"env-entries.properties" file as the "bar" test case, but both have their<br/>own ejb-jar.xml files:</p>
+</div>
+<div class="paragraph">
+<p>This will work in any environment in which OpenEJB works (embedded,
+standalone, tomcat, geronimo, etc.).</p>
+</div>
+<div class="paragraph">
+<p>Note that there does <em>not</em> have to be an equivalent non-prefixed version
+of the file. In the example above, only a "test.env-entry.properties"
+file exists and there is no equivalent plain "env-entry.properties"
+file. This prefixing works for any deployment descriptor in the
+META-INF/ directory or WEB-INF/ directory. The prefix does not have to
+be "test" and could be anything you choose. You can also have as many
+prefixed files as you need and could even go as far as to have one
+prefix per individual test.</p>
+</div>
+<h1 id="_more_than_one_prefix" class="sect0">More than one prefix</h1>
+<div class="paragraph">
+<p>It is possible to have several prefixes, specified in order of
+preference, so that it is possible to avoid duplicating descriptors that
+are used in more than one "profile". For example, the "foo" test case
+uses the same "env-entries.properties" file as the "bar" test case, but
+both have their own ejb-jar.xml files:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>META-INF/ejb-jar.xml</li>
-  <li>META-INF/test.ejb-jar.xml</li>
-  <li>META-INF/footest.ejb-jar.xml</li>
-  <li>META-INF/bartest.ejb-jar.xml</li>
-  <li>META-INF/persistence.xml</li>
-  <li>META-INF/test.env-entry.properties</li>
+<li>
+<p>META-INF/ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/test.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/footest.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/bartest.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/persistence.xml</p>
+</li>
+<li>
+<p>META-INF/test.env-entry.properties</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>The "foo" test case could set the <em>openejb.altdd.prefix</em> as follows:</p>
-<pre><code> //...
- properties.setProperty(&quot;openejb.altdd.prefix&quot;, &quot;footest, test&quot;);
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"> //...
+ properties.setProperty("openejb.altdd.prefix", "footest, test");
 
- InitialContext initialContext = new InitialContext(properties);
-</code></pre>
+ InitialContext initialContext = new InitialContext(properties);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Resulting the following logical view of the app:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>META-INF/ejb-jar.xml -&gt; <em>footest</em>.ejb-jar.xml</li>
-  <li>META-INF/persistence.xml</li>
-  <li>META-INF/env-entry.properties -&gt; test.env-entry.properties</li>
+<li>
+<p>META-INF/ejb-jar.xml &#8594; <em>footest</em>.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/persistence.xml</p>
+</li>
+<li>
+<p>META-INF/env-entry.properties &#8594; test.env-entry.properties</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>And the "bar" test case could set the <em>openejb.altdd.prefix</em> as follows:</p>
-<pre><code> //...
- properties.setProperty(&quot;openejb.altdd.prefix&quot;, &quot;footest, test&quot;);
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java"> //...
+ properties.setProperty("openejb.altdd.prefix", "footest, test");
 
- InitialContext initialContext = new InitialContext(properties);
-</code></pre>
+ InitialContext initialContext = new InitialContext(properties);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Resulting the following logical view of the app:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>META-INF/ejb-jar.xml -&gt; <em>bartest</em>.ejb-jar.xml</li>
-  <li>META-INF/persistence.xml</li>
-  <li>META-INF/env-entry.properties -&gt; test.env-entry.properties</li>
+<li>
+<p>META-INF/ejb-jar.xml &#8594; <em>bartest</em>.ejb-jar.xml</p>
+</li>
+<li>
+<p>META-INF/persistence.xml</p>
+</li>
+<li>
+<p>META-INF/env-entry.properties &#8594; test.env-entry.properties</p>
+</li>
 </ul>
-<p>In both scenarios the same env-entry.properties file<br/>(test.env-entry.properties) is shared.</p>
-<p>Note that there is a "test.ejb-jar.xml" file that is present, however in both cases it is not used as the order of preference in the list is "left to right" meaning most preferred first.</p>
+</div>
+<div class="paragraph">
+<p>In both scenarios the same env-entry.properties file
+(test.env-entry.properties) is shared.</p>
+</div>
+<div class="paragraph">
+<p>Note that there is a "test.ejb-jar.xml" file that is present, however in
+both cases it is not used as the order of preference in the list is
+"left to right" meaning most preferred first.</p>
+</div>
             </div>
             
         </div>
@@ -189,7 +315,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

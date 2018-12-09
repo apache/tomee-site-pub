@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,50 +95,148 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This document details the various ways to get OpenEJB to detect applications you would like deployed while in an embedded mode.</p>
-<a name="Applicationdiscoveryviatheclasspath-Emptyejb-jar.xmlapproach(recommended)"></a>
-<h1>Empty ejb-jar.xml approach (recommended)</h1>
-<p>Simplify the issue of searching for annotated applications by adding an ejb-jar.xml like this to your app:</p>
-<pre><code>&lt;ejb-jar/&gt;
-</code></pre>
-<p>OpenEJB will find the app in the classpath and deploy it along with any annotated beans it may contain.</p>
-<p>The ejb-jar.xml can contain more than just "<ejb-jar/>" as usual.</p>
-<p>This is the recommended approach for people using OpenEJB for unit testing as it allows OpenEJB to find your application in the classpath without the need for you to specify any path information which tends to complicate builds.</p>
-<h1>Including/Excluding paths (advanced)</h1>
-<p>If you do not like the idea of having the ejb-jar.xml in your app or an openejb.xml, we can search the classpath for annotated beans (@Stateless,<br/>@Stateful, @MessageDriven) and load them automatically just as if they<br/>contained an ejb-jar.xml.</p>
-<p>This form of searching, however, is very expensive as it involves iterating over every path in the classpath and reading in each class definition contained thereunder and checking it for annotations.</p>
-<p>This approach can only be made faster by helping us trim down or pinpoint the paths we should search via the <em>openejb.deployments.classpath.include</em> property which can be specified as a <em>system property</em> or a property passed into the <em>InitialContext</em>. </p>
-<p>The value of this property is a regular expression and therefore can be absolute or relative. For example the path<br/>"/Users/dblevins/work/swizzle/swizzle-stream/target/classes" which contains<br/>the class files of an application you wish to test could be included in any of the following values to the "openejb.deployments.classpath.include" property:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document
+details the various ways to get OpenEJB to detect applications you would
+like deployed while in an embedded mode.</p>
+</div>
+</div>
+</div>
+<h1 id="_empty_ejb_jar_xml_approach_recommended" class="sect0">Empty ejb-jar.xml approach (recommended)</h1>
+<div class="paragraph">
+<p>Simplify the issue of searching for annotated applications by adding an
+ejb-jar.xml like this to your app:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenEJB will find the app in the classpath and deploy it along with any
+annotated beans it may contain.</p>
+</div>
+<div class="paragraph">
+<p>The ejb-jar.xml can contain more than just "" as usual.</p>
+</div>
+<div class="paragraph">
+<p>This is the recommended approach for people using OpenEJB for unit
+testing as it allows OpenEJB to find your application in the classpath
+without the need for you to specify any path information which tends to
+complicate builds.</p>
+</div>
+<div class="sect1">
+<h2 id="_including_excluding_paths_advanced">Including/Excluding paths (advanced)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you do not like the idea of having the ejb-jar.xml in your app or an
+openejb.xml, we can search the classpath for annotated beans
+(@Stateless, @Stateful, @MessageDriven) and load them automatically just
+as if they contained an ejb-jar.xml.</p>
+</div>
+<div class="paragraph">
+<p>This form of searching, however, is very expensive as it involves
+iterating over every path in the classpath and reading in each class
+definition contained thereunder and checking it for annotations.</p>
+</div>
+<div class="paragraph">
+<p>This approach can only be made faster by helping us trim down or
+pinpoint the paths we should search via the
+<em>openejb.deployments.classpath.include</em> property which can be specified
+as a <em>system property</em> or a property passed into the <em>InitialContext</em>.</p>
+</div>
+<div class="paragraph">
+<p>The value of this property is a regular expression and therefore can be
+absolute or relative. For example the path
+"/Users/dblevins/work/swizzle/swizzle-stream/target/classes" which
+contains the class files of an application you wish to test could be
+included in any of the following values to the
+"openejb.deployments.classpath.include" property:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>"file:///Users/dblevins/work/swizzle/swizzle-stream/target/classes/" <em>(an absolute path)</em></li>
-  <li>"file:///Users/dblevins/work/swizzle/.*" <em>(relative)</em></li>
-  <li>".*swizzle-stream.*" <em>(very relative)</em></li>
-  <li>".*(swizzle-stream|swizzle-jira|acme-rocket-app).*" <em>(including several paths)</em></li>
-  <li>".*(swizzle-stream^|swizzle-jira^|acme-rocket-app).*" <em>(including several paths with Win specific escapes)</em></li>
+<li>
+<p>"file:///Users/dblevins/work/swizzle/swizzle-stream/target/classes/"
+<em>(an absolute path)</em></p>
+</li>
+<li>
+<p>"file:///Users/dblevins/work/swizzle/.*" <em>(relative)</em></p>
+</li>
+<li>
+<p>".<strong>swizzle-stream.</strong>" <em>(very relative)</em></p>
+</li>
+<li>
+<p>".<strong>(swizzle-stream|swizzle-jira|acme-rocket-app).</strong>" <em>(including
+several paths)</em></p>
+</li>
+<li>
+<p>".<strong>(swizzle-stream<sup>|swizzle-jira</sup>|acme-rocket-app).</strong>" <em>(including
+several paths with Win specific escapes)</em></p>
+</li>
 </ul>
-<p>Note the filtering is done on URLs in the classpath, so forward slashes should always be used even on OSs using backslash ("\").</p>
-<p>There are also the <em>openejb.deployments.classpath.exclude</em> and <em>openejb.exclude-include.order</em> properties if you wish to work in the opposite direction or change the processing order. The default values for the properties are as follows:</p>
-<pre><code>  openejb.exclude-include.order=include-exclude //Defines the processing order
-   openejb.deployments.classpath.include=&quot;&quot;      //Include nothing
-   openejb.deployments.classpath.exclude=&quot;.*&quot;    //Exclude everything
-</code></pre>
-<p>The exclude and the include are applied separately and the results of each are combined together to create the list of paths OpenEJB will scrape for annotations.</p>
-<pre><code>*Note:* by default these settings will only affect which jars OpenEJB will
+</div>
+<div class="paragraph">
+<p>Note the filtering is done on URLs in the classpath, so forward slashes
+should always be used even on OSs using backslash ("").</p>
+</div>
+<div class="paragraph">
+<p>There are also the <em>openejb.deployments.classpath.exclude</em> and
+<em>openejb.exclude-include.order</em> properties if you wish to work in the
+opposite direction or change the processing order. The default values
+for the properties are as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">  openejb.exclude-include.order=include-exclude //Defines the processing order
+   openejb.deployments.classpath.include=""      //Include nothing
+   openejb.deployments.classpath.exclude=".*"    //Exclude everything</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The exclude and the include are applied separately and the results of
+each are combined together to create the list of paths OpenEJB will
+scrape for annotations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">*Note:* by default these settings will only affect which jars OpenEJB will
  scan for annotated components when no descriptor is found.  If you would
  like to use these settings to also filter out jars that do contain
  descriptors, set the *openejb.deployments.classpath.filter.descriptors*
- property to _true_.  The default is _false_.
-</code></pre>
-<h1>Troubleshooting</h1>
-<p>If the include/exclude is not being processed as you expect first try reversing the order to <em>openejb.exclude-include.order</em>=exclude-include There are a number internal filters that may result in an unexpected exclusion.</p>
-<p>If you're having trouble determining if the META-INF/ejb-jar.xml file for your ejb module is in the classpath, a little debug code like this in your test setup will help you see what OpenEJB sees (which may be nothing):</p>
-<pre><code>Enumeration&lt;URL&gt; ejbJars =
-this.getClass().getClassLoader().getResources(&quot;META-INF/ejb-jar.xml&quot;);
+ property to _true_.  The default is _false_.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the include/exclude is not being processed as you expect first try
+reversing the order to <em>openejb.exclude-include.order</em>=exclude-include
+There are a number internal filters that may result in an unexpected
+exclusion.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re having trouble determining if the META-INF/ejb-jar.xml file
+for your ejb module is in the classpath, a little debug code like this
+in your test setup will help you see what OpenEJB sees (which may be
+nothing):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Enumeration&lt;URL&gt; ejbJars =
+this.getClass().getClassLoader().getResources("META-INF/ejb-jar.xml");
 while (ejbJars.hasMoreElements()) {
     URL url = ejbJars.nextElement();
-    System.out.println(&quot;app = &quot; + url);
-}
-</code></pre>
+    System.out.println("app = " + url);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -167,7 +265,7 @@ while (ejbJars.hasMoreElements()) {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,26 +95,84 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="SingletonBeans-SingletonOverview"></a>
-<h1>Singleton Overview</h1>
-<p>For the first time in years EJB has a new bean type, the <em>@Singleton</em>. In my opinion, the javax.ejb.Singleton will replace a lot of what people are using @Stateless for today. </p>
-<p>The Singleton is essentially what you get if you take a Stateless bean and adjust the pool size to be exactly 1 resulting in there being exactly one instance of the Singleton bean in the application which can be invoked concurrently by multiple threads, like a servlet. It can do everything a Stateless can do such as support local and remote business interfaces, web services, security, transactions, and more. Additionally, the Singleton can have its @PostConstruct method called with the application starts up and its @PreDestroy method called when the application shuts down. This allows it to serve as an application lifecycle listener which is something only Servlets could do before. It has an <em>@Startup</em> annotation which is similar in concept to the servlet <load-on-startup>, but unlike servlets it doesn't take a number as an argument. Instead, you can use an <em>@DependsOn</em> annotation to say which other Singletons you need and the container will ensure they start before you.</p>
-<p>See the <a href="singleton-example.html">Singleton Example</a><br/> for sample bean code and client.</p>
-<a name="SingletonBeans-Concurrency"></a>
-<h2>Concurrency</h2>
-<p>Singletons support two modes of concurrent access, Container-Managed Concurrency (the default) and Bean-Managed Concurrency.</p>
-<a name="SingletonBeans-Bean-ManagedConcurrency"></a>
-<h3>Bean-Managed Concurrency</h3>
-<p>With Bean-Managed Concurrency, annotated as <em>@ConcurrencyManagement(BEAN)</em>, the container sends all invocations into the bean and lets the Singleton bean instance decide how and when to synchronize access, if at all. Here the 'synchronization' keyword is allowed as well as the full javax.util.concurrent set of libraries. </p>
-<a name="SingletonBeans-Container-ManagedConcurrency"></a>
-<h3>Container-Managed Concurrency</h3>
-<p>With Container-Managed Concurrency, annotated as<br/><em>@ConcurrencyManagement(CONTAINER)</em>, the container will enforce concurrency<br/>for you via locking method access to the bean. Two modes, called locks exist and can be assigned to both the bean class and methods of the bean class.</p>
-<a name="SingletonBeans-Locktype"></a>
-<h4>Lock type</h4>
-<p>The first and the default is a "write" lock, annotated as <em>@Lock(WRITE)</em>. Essentially, with a write lock the caller holds an exclusive lock on the bean for the duration of the method call and all other threads for that or any other method must wait. </p>
-<p>The second option is a "read" lock, annotated as <em>@Lock(READ)</em>. The read lock allows full concurrent access to the methods (assuming no write locks are held). The default mode of "write" essentially makes your bean a single-threaded bean, which is very slow. The more conservative<br/>@Lock(WRITE) was chosen as the default as this is how all the other bean<br/>types work (only a single thread may access a bean instance at any given time). Those that are aware of how to handle concurrent access can easily put @Lock(READ) on their bean class, thus changing the default, and then<br/>@Lock(WRITE) on specific methods if needed. </p>
-<p>The locking modes of Container-Managed Concurrency map directly to the *<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReadWriteLock.html">java.util.concurrent.ReadWriteLock</a><br/>* API which looks like this:</p>
-<pre><code>public interface ReadWriteLock {
+                <h1 id="_singleton_overview_for_the_first_time_in_years_ejb_has_a_new" class="sect0">Singleton Overview For the first time in years EJB has a new</h1>
+<div class="paragraph">
+<p>bean type, the <em>@Singleton</em>. In my opinion, the javax.ejb.Singleton will
+replace a lot of what people are using @Stateless for today.</p>
+</div>
+<div class="paragraph">
+<p>The Singleton is essentially what you get if you take a Stateless bean
+and adjust the pool size to be exactly 1 resulting in there being
+exactly one instance of the Singleton bean in the application which can
+be invoked concurrently by multiple threads, like a servlet. It can do
+everything a Stateless can do such as support local and remote business
+interfaces, web services, security, transactions, and more.
+Additionally, the Singleton can have its @PostConstruct method called
+with the application starts up and its @PreDestroy method called when
+the application shuts down. This allows it to serve as an application
+lifecycle listener which is something only Servlets could do before. It
+has an <em>@Startup</em> annotation which is similar in concept to the servlet
+, but unlike servlets it doesn&#8217;t take a number as an argument. Instead,
+you can use an <em>@DependsOn</em> annotation to say which other Singletons you
+need and the container will ensure they start before you.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="singleton-example.html">Singleton Example</a> for sample bean
+code and client.</p>
+</div>
+<div class="sect1">
+<h2 id="_concurrency">Concurrency</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Singletons support two modes of concurrent access, Container-Managed
+Concurrency (the default) and Bean-Managed Concurrency.</p>
+</div>
+<div class="sect2">
+<h3 id="_bean_managed_concurrency">Bean-Managed Concurrency</h3>
+<div class="paragraph">
+<p>With Bean-Managed Concurrency, annotated as
+<em>@ConcurrencyManagement(BEAN)</em>, the container sends all invocations into
+the bean and lets the Singleton bean instance decide how and when to
+synchronize access, if at all. Here the 'synchronization' keyword is
+allowed as well as the full javax.util.concurrent set of libraries.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_container_managed_concurrency">Container-Managed Concurrency</h3>
+<div class="paragraph">
+<p>With Container-Managed Concurrency, annotated as
+<em>@ConcurrencyManagement(CONTAINER)</em>, the container will enforce
+concurrency for you via locking method access to the bean. Two modes,
+called locks exist and can be assigned to both the bean class and
+methods of the bean class.</p>
+</div>
+<div class="sect3">
+<h4 id="_lock_type">Lock type</h4>
+<div class="paragraph">
+<p>The first and the default is a "write" lock, annotated as
+<em>@Lock(WRITE)</em>. Essentially, with a write lock the caller holds an
+exclusive lock on the bean for the duration of the method call and all
+other threads for that or any other method must wait.</p>
+</div>
+<div class="paragraph">
+<p>The second option is a "read" lock, annotated as <em>@Lock(READ)</em>. The read
+lock allows full concurrent access to the methods (assuming no write
+locks are held). The default mode of "write" essentially makes your bean
+a single-threaded bean, which is very slow. The more conservative
+@Lock(WRITE) was chosen as the default as this is how all the other bean
+types work (only a single thread may access a bean instance at any given
+time). Those that are aware of how to handle concurrent access can
+easily put @Lock(READ) on their bean class, thus changing the default,
+and then @Lock(WRITE) on specific methods if needed.</p>
+</div>
+<div class="paragraph">
+<p>The locking modes of Container-Managed Concurrency map directly to the
+_http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReadWriteLock.html[java.util.concurrent.ReadWriteLock]
+_ API which looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface ReadWriteLock {
    /**
     * Returns the lock used for reading.
     *
@@ -128,18 +186,51 @@
     * @return the lock used for writing.
     */
    Lock writeLock();
-}
-</code></pre>
-<p>Literally 100% of the Singleton locking we're talking about is taken from this interface and its javadoc is a great source of information. It's safe to imagine that under the covers the Singleton Container has an instance of ReadWriteLock which it uses to enforce the locking for all the Singleton bean's methods. Essentially:</p>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Literally 100% of the Singleton locking we&#8217;re talking about is taken
+from this interface and its javadoc is a great source of information.
+It&#8217;s safe to imagine that under the covers the Singleton Container has
+an instance of ReadWriteLock which it uses to enforce the locking for
+all the Singleton bean&#8217;s methods. Essentially:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>@Lock(READ) == theSingletonReadWriteLock.readLock().lock()</li>
-  <li>@Lock(WRITE) == theSingletonReadWriteLock.writeLock().lock()</li>
+<li>
+<p>@Lock(READ) == theSingletonReadWriteLock.readLock().lock()</p>
+</li>
+<li>
+<p>@Lock(WRITE) == theSingletonReadWriteLock.writeLock().lock()</p>
+</li>
 </ul>
-<p>The EJB container may use something other than ReadWriteLock but the semantics of a ReadWriteLock must be followed. Internally, we use an instance of <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">java.util.concurrent.ReentrantReadWriteLock</a><br/> which supports correct memory synchronization, some reentrancy, lock<br/>downgrading, and [more|http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html]<br/>.</p>
-<a name="SingletonBeans-AcquiringtheLock"></a>
-<h4>Acquiring the Lock</h4>
-<p>The <em>@AccessTimetout</em> annotation can configure how long a thread will wait to acquire the read or write lock. This annotation can be used on the bean class or individual methods. The annotation maps directly to the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/Lock.html">java.util.concurrent.locks.Lock</a><br/> interface.</p>
-<pre><code>public interface Lock {
+</div>
+<div class="paragraph">
+<p>The EJB container may use something other than ReadWriteLock but the
+semantics of a ReadWriteLock must be followed. Internally, we use an
+instance of
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">java.util.concurrent.ReentrantReadWriteLock</a>
+which supports correct memory synchronization, some reentrancy, lock
+downgrading, and</p>
+</div>
+<div class="paragraph sun com/j2se/1 5 0/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock html">
+<p>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_acquiring_the_lock">Acquiring the Lock</h4>
+<div class="paragraph">
+<p>The <em>@AccessTimetout</em> annotation can configure how long a thread will
+wait to acquire the read or write lock. This annotation can be used on
+the bean class or individual methods. The annotation maps directly to
+the
+<a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/locks/Lock.html">java.util.concurrent.locks.Lock</a>
+interface.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface Lock {
 
     /**
      * Blocks (potentially) forever
@@ -157,41 +248,115 @@
 
     /**
      * Blocks (potentially) up to a limit
-     * 
+     *
      * @AccessTimout(30, TimeUnit.SECONDS)
      */
     boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
 
-}
-</code></pre>
-<p>In the event it is not possible to acquire the lock a<br/><em>javax.ejb.ConcurrentAccessException</em> or<br/><em>javax.ejb.ConcurrentAccessTimeoutException</em> will be thrown.</p>
-<a name="SingletonBeans-DefaultTimeout"></a>
-<h4>Default Timeout</h4>
-<p>The default value of <em>@AccessTimeout</em> annotation is vendor specific. In OpenEJB it defaults to the value of the <em>AccessTimeout</em> property which can be configured in many different scopes. Here is the order of preference:</p>
-<ol>
-  <li>bean-level in<br/>openejb-jar.xml/<openejb-jar>/<ejb-deployment>/<properties></li>
-  <li>jar-level in openejb-jar.xml/<openejb-jar>/<properties></li>
-  <li>container-level in openejb.xml/<openejb>/<Container></li>
-  <li>boot-level via InitialContext(Properties) or<br/>EJBContainer.createEjbContainer(Map&lt;Object,Object&gt;)</li>
-  <li>system-level in System.getProperties()</li>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the event it is not possible to acquire the lock a
+<em>javax.ejb.ConcurrentAccessException</em> or
+<em>javax.ejb.ConcurrentAccessTimeoutException</em> will be thrown.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_default_timeout">Default Timeout</h4>
+<div class="paragraph">
+<p>The default value of <em>@AccessTimeout</em> annotation is vendor specific. In
+OpenEJB it defaults to the value of the <em>AccessTimeout</em> property which
+can be configured in many different scopes. Here is the order of
+preference:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>bean-level in openejb-jar.xml///</p>
+</li>
+<li>
+<p>jar-level in openejb-jar.xml//</p>
+</li>
+<li>
+<p>container-level in openejb.xml//</p>
+</li>
+<li>
+<p>boot-level via InitialContext(Properties) or
+EJBContainer.createEjbContainer(Map&lt;Object,Object&gt;)</p>
+</li>
+<li>
+<p>system-level in System.getProperties()</p>
+</li>
 </ol>
-<p>The value of the property can be phrased in plain english such as "1 hour and 23 minutes and 17 seconds" see <a href="configuring-durations.html">Configuring Durations</a><br/> for details.</p>
-<a name="SingletonBeans-StartupandStartupOrdering"></a>
-<h2>Startup and Startup Ordering</h2>
-<p>Singletons have an <em>@Startup</em> annotation which can be applied to the bean class. When used, the Container will instantiate the Singleton instance<br/><em>eagerly</em> when the application starts up, otherwise the Container will<br/>instantiate the Singleton instance <em>lazily</em> when the bean is first accessed.</p>
-<p>If one Singleton refers to another Singleton in the @PostConstruct or<br/>@PreDestroy method, there must be some measure taken to ensure the other<br/>Singleton exists and is started. This sort of ordering is achieved with the <em>@DependsOn</em> annotation which can be used to list the names of Singleton beans that must be started before the Singleton bean using the annotation.</p>
-<pre><code>@DependsOn({&quot;SingletonB&quot;, &quot;SingletonC&quot;})
+</div>
+<div class="paragraph">
+<p>The value of the property can be phrased in plain english such as "1
+hour and 23 minutes and 17 seconds" see
+<a href="configuring-durations.html">Configuring Durations</a> for details.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_startup_and_startup_ordering">Startup and Startup Ordering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Singletons have an <em>@Startup</em> annotation which can be applied to the
+bean class. When used, the Container will instantiate the Singleton
+instance <em>eagerly</em> when the application starts up, otherwise the
+Container will instantiate the Singleton instance <em>lazily</em> when the bean
+is first accessed.</p>
+</div>
+<div class="paragraph">
+<p>If one Singleton refers to another Singleton in the @PostConstruct or
+@PreDestroy method, there must be some measure taken to ensure the other
+Singleton exists and is started. This sort of ordering is achieved with
+the <em>@DependsOn</em> annotation which can be used to list the names of
+Singleton beans that must be started before the Singleton bean using the
+annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@DependsOn({"SingletonB", "SingletonC"})
 @Singleton
 public class SingletonA {
 
-}
-</code></pre>
-<p>Circular references are not supported. If BeanA uses @DependsOn to point to BeanB and BeanB also uses @DependsOn to point at BeanA, the result is a deployment exception. Be aware that circular references can happen in less trivial ways such as A referring to B which refers to C which refers to D which refers back to A. We will detect and print all circular dependencies<br/>(called circuits) at deploy time.</p>
-<p>Note that @DependsOn is only required (and should only be used) if a Singleton <em>uses</em> another Singleton in its @PostConstruct method or<br/>@PreDestroy method. Simply having a reference to another Singleton and<br/>using it in other business methods does not require an @DependsOn declaration. The @DependsOn allows the Container to calculate the correct startup order and shutdown order so that it can guarantee the Singletons you need are available in your @PostConstruct or @PreDestroy methods. All Singletons will automatically be available to your business methods regardless if @DependsOn is used. Because of the greater chance of creating circular dependencies, it is better not to use the @DependsOn annotation "just in case" and should only be used when truly needed.</p>
-<a name="SingletonBeans-XMLandAnnotationOverriding"></a>
-<h1>XML and Annotation Overriding</h1>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Circular references are not supported. If BeanA uses @DependsOn to point
+to BeanB and BeanB also uses @DependsOn to point at BeanA, the result is
+a deployment exception. Be aware that circular references can happen in
+less trivial ways such as A referring to B which refers to C which
+refers to D which refers back to A. We will detect and print all
+circular dependencies (called circuits) at deploy time.</p>
+</div>
+<div class="paragraph">
+<p>Note that @DependsOn is only required (and should only be used) if a
+Singleton <em>uses</em> another Singleton in its @PostConstruct method or
+@PreDestroy method. Simply having a reference to another Singleton and
+using it in other business methods does not require an @DependsOn
+declaration. The @DependsOn allows the Container to calculate the
+correct startup order and shutdown order so that it can guarantee the
+Singletons you need are available in your @PostConstruct or @PreDestroy
+methods. All Singletons will automatically be available to your business
+methods regardless if @DependsOn is used. Because of the greater chance
+of creating circular dependencies, it is better not to use the
+@DependsOn annotation "just in case" and should only be used when truly
+needed.</p>
+</div>
+</div>
+</div>
+<h1 id="_xml_and_annotation_overriding" class="sect0">XML and Annotation Overriding</h1>
+<div class="paragraph">
 <p>Singletons can be declared in the ejb-jar.xml as follows:</p>
-<pre><code>&lt;ejb-jar&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar&gt;
   &lt;enterprise-beans&gt;
     &lt;session&gt;
       &lt;ejb-name&gt;MySingletonBean&lt;/ejb-name&gt;
@@ -204,8 +369,9 @@ public class SingletonA {
       &lt;/depends-on&gt;
     &lt;/session&gt;
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -234,7 +400,7 @@ public class SingletonA {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

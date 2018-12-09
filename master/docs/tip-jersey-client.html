@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,18 +95,39 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>If you have an application that uses jersey-client in any way then it may fail with an error along the lines of:</p>
-<pre><code>Caused by: java.lang.ClassNotFoundException: com.sun.jersey.core.util.FeaturesAndProperties
+                <div class="paragraph">
+<p>If you have an application that uses jersey-client in any way then it
+may fail with an error along the lines of:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Caused by: java.lang.ClassNotFoundException: com.sun.jersey.core.util.FeaturesAndProperties
 at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java)
 at org.apache.catalina.loader.WebappClassLoader.loadClass(WebappClassLoader.java)
 at org.apache.tomee.catalina.LazyStopWebappClassLoader.loadClass(LazyStopWebappClassLoader.java)
-... 34 more
-</code></pre>
-<p>This is due to the fact that the jersey-core.jar contains some classes that should not be deployed as part of a javaEE application. For example, it contains javax.ws.rs.Path but does not contain javax.ws.rs.core.Configurable, so the jar is usually ignored by TomEE. </p>
-<p>You could switch to using the <a href="http://cxf.apache.org/">Apache CXF Client</a>, which is what we would recommend. If you really want to keep Jersey then you can use set the following property in your <em>[TomEE]\conf\system.properties</em></p>
-<pre><code>openejb.api.javax.ws.rs.Path.validation=false
-</code></pre>
-<p>This will then allow Jersey classes to be loaded by TomEE (After a restart).</p>
+... 34 more</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is due to the fact that the jersey-core.jar contains some classes
+that should not be deployed as part of a javaEE application. For
+example, it contains javax.ws.rs.Path but does not contain
+javax.ws.rs.core.Configurable, so the jar is usually ignored by TomEE.</p>
+</div>
+<div class="paragraph">
+<p>You could switch to using the <a href="http://cxf.apache.org/">Apache CXF Client</a>,
+which is what we would recommend. If you really want to keep Jersey then
+you can use set the following property in your <em>[TomEE].properties</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">openejb.api.javax.ws.rs.Path.validation=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will then allow Jersey classes to be loaded by TomEE (After a
+restart).</p>
+</div>
             </div>
             
         </div>
@@ -135,7 +156,7 @@ at org.apache.tomee.catalina.LazyStopWebappClassLoader.loadClass(LazyStopWebappC
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

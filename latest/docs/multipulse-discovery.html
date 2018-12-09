@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,46 +95,148 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>MultiPulse is an alternative multicast lookup that does not use a regular heartbeat. Instead, servers listen for a multicast request packet (a pulse) to which a response is then sent. Multicast network traffic is effectively reduced to an absolute minimum.</p>
-<p>MultiPulse is only useful in network scenarios where both client and server can be configured to send multicast UDP packets.</p>
-<h1>Server Configuration</h1>
-<p>After you boot the server for the first time the default configuration will create the file <code>conf/conf.d/multipulse.properties</code> containing:</p>
-<pre><code>server      = org.apache.openejb.server.discovery.MulticastPulseAgent
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>MultiPulse is an alternative multicast lookup that does not use a
+regular heartbeat. Instead, servers listen for a multicast request
+packet (a pulse) to which a response is then sent. Multicast network
+traffic is effectively reduced to an absolute minimum.</p>
+</div>
+<div class="paragraph">
+<p>MultiPulse is only useful in network scenarios where both client and
+server can be configured to send multicast UDP packets.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_server_configuration">Server Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you boot the server for the first time the default configuration
+will create the file <code>conf/conf.d/multipulse.properties</code> containing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.discovery.MulticastPulseAgent
 bind        = 239.255.2.3
 port        = 6142
 disabled    = true
-group       = default
-</code></pre>
-<p>You just need to enable the agent by setting <code>disabled = false</code>. It is advisable to disable multicast in the <code>multicast.properties file</code>, or at least to use a different bind address or port should you wish to use both.</p>
-<p>All of the above settings except <code>server</code> can be modified as required. The <code>port</code> and <code>bind</code> must be valid for general multicast/udp network communication.</p>
-<p>The <code>group</code> setting can be changed to further group/cluster servers that may use the same multicast channel. As shown below the client also has an optional <code>group</code> setting which can be used to select an appropriate server cluster from the multicast channel (See MultiPulse Client).</p>
-<p>The next step is to ensure that the advertised services are configured for discovery. Edit the <code>ejbd.properties</code> file (and any other enabled services such as http, etc.) and ensure that the <code>discovery</code> option is set to a value that remote clients will be able to resolve.</p>
-<pre><code>server      = org.apache.openejb.server.ejbd.EjbServer
+group       = default</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You just need to enable the agent by setting <code>disabled = false</code>. It is
+advisable to disable multicast in the <code>multicast.properties file</code>, or at
+least to use a different bind address or port should you wish to use
+both.</p>
+</div>
+<div class="paragraph">
+<p>All of the above settings except <code>server</code> can be modified as required.
+The <code>port</code> and <code>bind</code> must be valid for general multicast/udp network
+communication.</p>
+</div>
+<div class="paragraph">
+<p>The <code>group</code> setting can be changed to further group/cluster servers that
+may use the same multicast channel. As shown below the client also has
+an optional <code>group</code> setting which can be used to select an appropriate
+server cluster from the multicast channel (See MultiPulse Client).</p>
+</div>
+<div class="paragraph">
+<p>The next step is to ensure that the advertised services are configured
+for discovery. Edit the <code>ejbd.properties</code> file (and any other enabled
+services such as http, etc.) and ensure that the <code>discovery</code> option is
+set to a value that remote clients will be able to resolve.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.ejbd.EjbServer
 bind        = 0.0.0.0
 port        = 4201
 disabled    = false
 threads     = 20
-discovery   = ejb:ejbd://{bind}:{port}
-</code></pre>
-<p>NOTE: If either <code>0.0.0.0</code> (IPv4) or <code>[::]</code> (IPv6) wildcard bind addresses are used then the server will actually broadcast all of it's known public hosts to clients. Clients will then cycle though and attempt to connect to the provided hosts until successful.</p>
-<p>If <code>localhost</code> is used then only clients on the same physical machine will actually 'see' the server response.</p>
-<h1>MultiPulse Client</h1>
-<p>The multipulse functionality is not just for servers to find each other in a cluster, it can also be used for EJB clients to discover a server. A special <code>multipulse://</code> URL can be used in the <code>InitialContext</code> properties to signify that multipulse should be used to seed the connection process. Such as:</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(Context.PROVIDER_URL, &quot;multipulse://239.255.2.3:6142?group=default&amp;timeout=250&quot;);
-InitialContext remoteContext = new InitialContext(p);
-</code></pre>
-<p>The URL has optional query parameters such as <code>schemes</code> and <code>group</code> and<br/><code>timeout</code> which allow you to zero in on a particular type of service of a<br/>particular cluster group as well as set how long you are willing to wait in the discovery process till finally giving up. The first matching service that it sees "flowing" around on the UDP stream is the one it picks and sticks to for that and subsequent requests, ensuring UDP is only used when there are no other servers to talk to.</p>
-<p>Note that EJB clients do not need to use multipulse to find a server. If the client knows the URL of a server in the cluster, it may use it and connect directly to that server, at which point that server will share the full list of its peers.</p>
-<h1>Multicast Servers with TCP Clients</h1>
-<p>Note that clients do not need to use multipulse to communicate with servers. Servers can use multicast to discover each other, but clients are still free to connect to servers in the network using the server's TCP address.</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY,  &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(Context.PROVIDER_URL, &quot;ejbd://192.168.1.30:4201&quot;);
-InitialContext remoteContext = new InitialContext(p);
-</code></pre>
-<p>When the client connects, the server will send the URLs of all the servers in the group and failover will take place normally.</p>
+discovery   = ejb:ejbd://{bind}:{port}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If either <code>0.0.0.0</code> (IPv4) or <code>[::]</code> (IPv6) wildcard bind
+addresses are used then the server will actually broadcast all of it&#8217;s
+known public hosts to clients. Clients will then cycle though and
+attempt to connect to the provided hosts until successful.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <code>localhost</code> is used then only clients on the same physical machine
+will actually 'see' the server response.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multipulse_client">MultiPulse Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The multipulse functionality is not just for servers to find each other
+in a cluster, it can also be used for EJB clients to discover a server.
+A special <code>multipulse://</code> URL can be used in the <code>InitialContext</code>
+properties to signify that multipulse should be used to seed the
+connection process. Such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "multipulse://239.255.2.3:6142?group=default&amp;timeout=250");
+InitialContext remoteContext = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URL has optional query parameters such as <code>schemes</code> and <code>group</code> and
+<code>timeout</code> which allow you to zero in on a particular type of service of
+a particular cluster group as well as set how long you are willing to
+wait in the discovery process till finally giving up. The first matching
+service that it sees "flowing" around on the UDP stream is the one it
+picks and sticks to for that and subsequent requests, ensuring UDP is
+only used when there are no other servers to talk to.</p>
+</div>
+<div class="paragraph">
+<p>Note that EJB clients do not need to use multipulse to find a server. If
+the client knows the URL of a server in the cluster, it may use it and
+connect directly to that server, at which point that server will share
+the full list of its peers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multicast_servers_with_tcp_clients">Multicast Servers with TCP Clients</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that clients do not need to use multipulse to communicate with
+servers. Servers can use multicast to discover each other, but clients
+are still free to connect to servers in the network using the server&#8217;s
+TCP address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,  "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "ejbd://192.168.1.30:4201");
+InitialContext remoteContext = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the client connects, the server will send the URLs of all the
+servers in the group and failover will take place normally.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -163,7 +265,7 @@ InitialContext remoteContext = new InitialContext(p);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

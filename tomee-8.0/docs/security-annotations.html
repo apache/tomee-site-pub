@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,27 +95,69 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This page shows the correct usage of the security related annotations:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page shows the correct usage of the security
+related annotations:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>javax.annotation.security.RolesAllowed</li>
-  <li>javax.annotation.security.PermitAll</li>
-  <li>javax.annotation.security.DenyAll</li>
-  <li>javax.annotation.security.RunAs</li>
-  <li>javax.annotation.security.DeclareRoles</li>
+<li>
+<p>javax.annotation.security.RolesAllowed</p>
+</li>
+<li>
+<p>javax.annotation.security.PermitAll</p>
+</li>
+<li>
+<p>javax.annotation.security.DenyAll</p>
+</li>
+<li>
+<p>javax.annotation.security.RunAs</p>
+</li>
+<li>
+<p>javax.annotation.security.DeclareRoles</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-Basicidea"></a>
-<h2>Basic idea</h2>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_idea">Basic idea</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>By default all methods of a business interface are accessible, logged in<br/>or not</li>
-  <li>The annotations go on the bean class, not the business interface</li>
-  <li>Security annotations can be applied to entire class and/or individual<br/>methods</li>
-  <li>The names of any security roles used must be declared via @DeclareRoles</li>
+<li>
+<p>By default all methods of a business interface are accessible, logged
+in or not</p>
+</li>
+<li>
+<p>The annotations go on the bean class, not the business interface</p>
+</li>
+<li>
+<p>Security annotations can be applied to entire class and/or individual
+methods</p>
+</li>
+<li>
+<p>The names of any security roles used must be declared via
+@DeclareRoles</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-Norestrictions"></a>
-<h2>No restrictions</h2>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_no_restrictions">No restrictions</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Allow anyone logged in or not to invoke 'svnCheckout'.</p>
+</div>
+<div class="paragraph">
 <p>These three examples are all equivalent.</p>
-<pre><code>@Stateless
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 public class OpenSourceProjectBean implements Project {
 
     public String svnCheckout(String s) {
@@ -141,19 +183,32 @@ public class OpenSourceProjectBean implements Project {
     public String svnCheckout(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow anyone logged in or not to invoke 'svnCheckout'.</li>
+<li>
+<p>Allow anyone logged in or not to invoke 'svnCheckout'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-RestrictingaMethod"></a>
-<h2>Restricting a Method</h2>
-<p>Restrict the 'svnCommit' method to only individuals logged in and part of the "committer" role. Note that more than one role can be listed.</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;})
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_restricting_a_method">Restricting a Method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Restrict the 'svnCommit' method to only individuals logged in and part
+of the "committer" role. Note that more than one role can be listed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer"})
 public class OpenSourceProjectBean implements Project {
 
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
     public String svnCommit(String s) {
     return s;
     }
@@ -161,39 +216,64 @@ public class OpenSourceProjectBean implements Project {
     public String svnCheckout(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow only logged in users in the "committer" role to invoke<br/>'svnCommit'.</li>
-  <li>Allow anyone logged in or not to invoke 'svnCheckout'.</li>
+<li>
+<p>Allow only logged in users in the "committer" role to invoke
+'svnCommit'.</p>
+</li>
+<li>
+<p>Allow anyone logged in or not to invoke 'svnCheckout'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-DeclareRoles"></a>
-<h2>DeclareRoles</h2>
-<p>You need to update the @DeclareRoles when referencing roles via isCallerInRole(roleName).</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;, &quot;contributor&quot;})
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declareroles">DeclareRoles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to update the @DeclareRoles when referencing roles via
+isCallerInRole(roleName).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer", "contributor"})
 public class OpenSourceProjectBean implements Project {
 
     @Resource SessionContext ctx;
 
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
     public String svnCommit(String s) {
-    ctx.isCallerInRole(&quot;committer&quot;); // Referencing a Role
+    ctx.isCallerInRole("committer"); // Referencing a Role
     return s;
     }
 
-    @RolesAllowed({&quot;contributor&quot;})
+    @RolesAllowed({"contributor"})
     public String submitPatch(String s) {
     return s;
     }
-}
-</code></pre>
-<a name="SecurityAnnotations-Restrictingallmethodsinaclass"></a>
-<h2>Restricting all methods in a class</h2>
-<p>Placing the annotation at the class level changes the default of PermitAll</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;})
-@RolesAllowed({&quot;committer&quot;})
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_restricting_all_methods_in_a_class">Restricting all methods in a class</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Placing the annotation at the class level changes the default of
+PermitAll</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer"})
+@RolesAllowed({"committer"})
 public class OpenSourceProjectBean implements Project {
 
     public String svnCommit(String s) {
@@ -207,17 +287,32 @@ public class OpenSourceProjectBean implements Project {
     public String submitPatch(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow only logged in users in the "committer" role to invoke 'svnCommit',<br/>'svnCheckout' or 'submitPatch'.</li>
+<li>
+<p>Allow only logged in users in the "committer" role to invoke
+'svnCommit', 'svnCheckout' or 'submitPatch'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-Mixingclassandmethodlevelrestrictions"></a>
-<h2>Mixing class and method level restrictions</h2>
-<p>Security annotations can be used at the class level and method level at the same time. These rules do not stack, so marking 'submitPatch' overrides the default of "committers".</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;, &quot;contributor&quot;})
-@RolesAllowed({&quot;committer&quot;})
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mixing_class_and_method_level_restrictions">Mixing class and method level restrictions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Security annotations can be used at the class level and method level at
+the same time. These rules do not stack, so marking 'submitPatch'
+overrides the default of "committers".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer", "contributor"})
+@RolesAllowed({"committer"})
 public class OpenSourceProjectBean implements Project {
 
     public String svnCommit(String s) {
@@ -228,22 +323,40 @@ public class OpenSourceProjectBean implements Project {
     return s;
     }
 
-    @RolesAllowed({&quot;contributor&quot;})
+    @RolesAllowed({"contributor"})
     public String submitPatch(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow only logged in users in the "committer" role to invoke 'svnCommit'<br/>or 'svnCheckout'</li>
-  <li>Allow only logged in users in the "contributor" role to invoke<br/>'submitPatch'.</li>
+<li>
+<p>Allow only logged in users in the "committer" role to invoke
+'svnCommit' or 'svnCheckout'</p>
+</li>
+<li>
+<p>Allow only logged in users in the "contributor" role to invoke
+'submitPatch'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-PermitAll"></a>
-<h2>PermitAll</h2>
-<p>When annotating a bean class with @RolesAllowed, the @PermitAll annotation becomes very useful on individual methods to open them back up again.</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;, &quot;contributor&quot;})
-@RolesAllowed({&quot;committer&quot;})
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_permitall">PermitAll</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When annotating a bean class with @RolesAllowed, the @PermitAll
+annotation becomes very useful on individual methods to open them back
+up again.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer", "contributor"})
+@RolesAllowed({"committer"})
 public class OpenSourceProjectBean implements Project {
 
     public String svnCommit(String s) {
@@ -255,23 +368,43 @@ public class OpenSourceProjectBean implements Project {
     return s;
     }
 
-    @RolesAllowed({&quot;contributor&quot;})
+    @RolesAllowed({"contributor"})
     public String submitPatch(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow only logged in users in the "committer" role to invoke<br/>'svnCommit'.</li>
-  <li>Allow only logged in users in the "contributor" role to invoke<br/>'submitPatch'.</li>
-  <li>Allow anyone logged in or not to invoke 'svnCheckout'.</li>
+<li>
+<p>Allow only logged in users in the "committer" role to invoke
+'svnCommit'.</p>
+</li>
+<li>
+<p>Allow only logged in users in the "contributor" role to invoke
+'submitPatch'.</p>
+</li>
+<li>
+<p>Allow anyone logged in or not to invoke 'svnCheckout'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-DenyAll"></a>
-<h2>DenyAll</h2>
-<p>The @DenyAll annotation can be used to restrict business interface access from anyone, logged in or not. The method is still invokable from within the bean class itself.</p>
-<pre><code>@Stateless
-@DeclareRoles({&quot;committer&quot;, &quot;contributor&quot;})
-@RolesAllowed({&quot;committer&quot;})
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_denyall">DenyAll</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The @DenyAll annotation can be used to restrict business interface
+access from anyone, logged in or not. The method is still invokable from
+within the bean class itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@DeclareRoles({"committer", "contributor"})
+@RolesAllowed({"committer"})
 public class OpenSourceProjectBean implements Project {
 
     public String svnCommit(String s) {
@@ -283,7 +416,7 @@ public class OpenSourceProjectBean implements Project {
     return s;
     }
 
-    @RolesAllowed({&quot;contributor&quot;})
+    @RolesAllowed({"contributor"})
     public String submitPatch(String s) {
     return s;
     }
@@ -292,52 +425,79 @@ public class OpenSourceProjectBean implements Project {
     public String deleteProject(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li>Allow only logged in users in the "committer" role to invoke<br/>'svnCommit'.</li>
-  <li>Allow only logged in users in the "contributor" role to invoke<br/>'submitPatch'.</li>
-  <li>Allow anyone logged in or not to invoke 'svnCheckout'.</li>
-  <li>Allow <em>no one</em> logged in or not to invoke 'deleteProject'.</li>
+<li>
+<p>Allow only logged in users in the "committer" role to invoke
+'svnCommit'.</p>
+</li>
+<li>
+<p>Allow only logged in users in the "contributor" role to invoke
+'submitPatch'.</p>
+</li>
+<li>
+<p>Allow anyone logged in or not to invoke 'svnCheckout'.</p>
+</li>
+<li>
+<p>Allow <em>no one</em> logged in or not to invoke 'deleteProject'.</p>
+</li>
 </ul>
-<a name="SecurityAnnotations-IllegalUsage"></a>
-<h1>Illegal Usage</h1>
-<p>Generally, security restrictions cannot be made on AroundInvoke methods and most callbacks.</p>
+</div>
+</div>
+</div>
+<h1 id="_illegal_usage" class="sect0">Illegal Usage</h1>
+<div class="paragraph">
+<p>Generally, security restrictions cannot be made on AroundInvoke methods
+and most callbacks.</p>
+</div>
+<div class="paragraph">
 <p>The following usages of @RolesAllowed have no effect.</p>
-<pre><code>@Stateful
-@DecalredRoles({&quot;committer&quot;})
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateful
+@DecalredRoles({"committer"})
 public class MyStatefulBean implements  MyBusinessInterface  {
 
     @PostConstruct
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
     public void constructed(){
 
     }
 
     @PreDestroy
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
     public void destroy(){
 
     }
 
     @AroundInvoke
-    @RolesAllowed({&quot;committer&quot;})
-    public Object invoke(InvocationContext invocationContext) throws
-</code></pre>
-<p>Exception {<br/> return invocationContext.proceed();<br/> }</p>
-<pre><code>    @PostActivate
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
+    public Object invoke(InvocationContext invocationContext) throws</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Exception \{ return invocationContext.proceed(); }</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @PostActivate
+    @RolesAllowed({"committer"})
     public void activated(){
 
     }
 
     @PrePassivate
-    @RolesAllowed({&quot;committer&quot;})
+    @RolesAllowed({"committer"})
     public void passivate(){
 
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -366,7 +526,7 @@ public class MyStatefulBean implements  MyBusinessInterface  {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

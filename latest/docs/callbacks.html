@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,28 +95,69 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Correct usage of PostConstruct, PreDestroy, PrePassivate, PostActivate, and AroundInvoke for EJBs and Interceptors.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Correct usage of PostConstruct, PreDestroy, PrePassivate, PostActivate,
+and AroundInvoke for EJBs and Interceptors.</p>
+</div>
+<div class="paragraph">
 <p>For Stateful, Stateless, and MessageDriven, the syntax is as follows:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>@PostConstruct &lt;any-scope&gt; void &lt;method-name&gt;()</li>
-  <li>@PreDestroy &lt;any-scope&gt; void &lt;method-name&gt;()</li>
-  <li>@PrePassivate &lt;any-scope&gt; void &lt;method-name&gt;()</li>
-  <li>@PostActivate &lt;any-scope&gt; void &lt;method-name&gt;()</li>
+<li>
+<p>@PostConstruct &lt;any-scope&gt; void &lt;method-name&gt;()</p>
+</li>
+<li>
+<p>@PreDestroy &lt;any-scope&gt; void &lt;method-name&gt;()</p>
+</li>
+<li>
+<p>@PrePassivate &lt;any-scope&gt; void &lt;method-name&gt;()</p>
+</li>
+<li>
+<p>@PostActivate &lt;any-scope&gt; void &lt;method-name&gt;()</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>For an Interceptor, the syntax includes InvocationContext as follows:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>@PostConstruct &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</li>
-  <li>@PreDestroy &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</li>
-  <li>@PrePassivate &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</li>
-  <li>@PostActivate &lt;any-scope&gt; void &amp;ltmethod-name&gt;(InvocationContext)</li>
+<li>
+<p>@PostConstruct &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</p>
+</li>
+<li>
+<p>@PreDestroy &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</p>
+</li>
+<li>
+<p>@PrePassivate &lt;any-scope&gt; void &lt;method-name&gt;(InvocationContext)</p>
+</li>
+<li>
+<p>@PostActivate &lt;any-scope&gt; void &amp;ltmethod-name&gt;(InvocationContext)</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>The AroundInvoke syntax for an EJB or Interceptor is the same:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>@AroundInvoke &lt;any-scope&gt; Object &lt;method-name&gt;(InvocationContext) throws Exception</li>
+<li>
+<p>@AroundInvoke &lt;any-scope&gt; Object &lt;method-name&gt;(InvocationContext)
+throws Exception</p>
+</li>
 </ul>
-<a name="Callbacks-Stateless"></a>
-<h2>Stateless</h2>
-<pre><code>import javax.ejb.Stateless;
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stateless">Stateless</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.Stateless;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.interceptor.AroundInvoke;
@@ -139,11 +180,17 @@ public class MyStatelessBean implements  MyBusinessInterface  {
     public Object invoke(InvocationContext invocationContext) throws Exception {
     return invocationContext.proceed();
     }
-}
-</code></pre>
-<a name="Callbacks-Stateful"></a>
-<h2>Stateful</h2>
-<pre><code>import javax.ejb.Stateful;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stateful">Stateful</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.Stateful;
 import javax.ejb.PostActivate;
 import javax.ejb.PrePassivate;
 import javax.annotation.PostConstruct;
@@ -178,11 +225,17 @@ public class MyStatefulBean implements  MyBusinessInterface  {
     public void passivate(){
 
     }
-}
-</code></pre>
-<a name="Callbacks-MessageDriven"></a>
-<h2>MessageDriven</h2>
-<pre><code>import javax.ejb.MessageDriven;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_messagedriven">MessageDriven</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.MessageDriven;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.interceptor.AroundInvoke;
@@ -205,11 +258,17 @@ public class MyMessageDrivenBean implements  MyListenerInterface  {
     public Object invoke(InvocationContext invocationContext) throws Exception {
           return invocationContext.proceed();
     }
-}
-</code></pre>
-<a name="Callbacks-Interceptor"></a>
-<h2>Interceptor</h2>
-<pre><code>import javax.annotation.PostConstruct;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_interceptor">Interceptor</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.interceptor.InvocationContext;
 import javax.interceptor.AroundInvoke;
@@ -242,8 +301,11 @@ public class MyInterceptor {
     public void passivate(InvocationContext invocationContext){
 
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -272,7 +334,7 @@ public class MyInterceptor {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

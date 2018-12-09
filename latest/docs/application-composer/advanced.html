@@ -83,77 +83,192 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>null</h1>
+              <h1>Application Composer Advanced</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Application Composer Advanced</h1>
-<p><a href="getting-started.html">Getting Started</a> page gives you already a lot of inputs but you caneven go further.</p>
-<h2>@Descriptors</h2>
-<p>You can reuse existing file descriptors using <code>@Descriptors</code>. The name is the file name and the path either a classpath path or a file path:</p>
-<pre><code>// runner if needed etc...
-@Descriptors(@Descriptor(name = &quot;persistence.xml&quot;, path = &quot;META-INF/persistence.xml&quot;))
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="getting-started.html">Getting Started</a> page gives you already a lot
+of inputs but you caneven go further.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__descriptors">@Descriptors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can reuse existing file descriptors using <code>@Descriptors</code>. The name
+is the file name and the path either a classpath path or a file path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// runner if needed etc...
+@Descriptors(@Descriptor(name = "persistence.xml", path = "META-INF/persistence.xml"))
 public class MyTest {
    //...
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Note: this can be put in a <code>@Module</code> method as well.</p>
-<h2>Services</h2>
-<p>If you want to test a JAXRS or JAXWS service you need to activate these services.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_services">Services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to test a JAXRS or JAXWS service you need to activate these
+services.</p>
+</div>
+<div class="paragraph">
 <p>To do so just add the needed dependency and use <code>@EnableServices</code>:</p>
-<pre><code>// runner if needed etc...
-@EnableService(&quot;jaxrs&quot;) // jaxws supported as well
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// runner if needed etc...
+@EnableService("jaxrs") // jaxws supported as well
 public class MyTest {
    //...
-}
-</code></pre>
-<h2>Random port</h2>
-<p>Services like JAXRS and JAXWS relies on HTTP. Often it is nice to have a random port to be able to deploy multiple tests/projects on the same CI platform at the same time.</p>
-<p>To shortcut all the needed logic you can use <code>@RandomPort</code>. It is simply an injection giving you either the port (<code>int</code>) or the root context (<code>URL</code>):</p>
-<pre><code>// runner, services if needed etc...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_random_port">Random port</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Services like JAXRS and JAXWS relies on HTTP. Often it is nice to have a
+random port to be able to deploy multiple tests/projects on the same CI
+platform at the same time.</p>
+</div>
+<div class="paragraph">
+<p>To shortcut all the needed logic you can use <code>@RandomPort</code>. It is simply
+an injection giving you either the port (<code>int</code>) or the root context
+(<code>URL</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// runner, services if needed etc...
 public class MyTest {
-   @RandomPort(&quot;http&quot;)
+   @RandomPort("http")
    private int port;
-}
-</code></pre>
-<p>Note: you can generate this way multiple ports. The value is the name of the service it will apply on (being said http is an alias for httpejbd which is our embedded http layer).</p>
-<h2>Nice logs</h2>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: you can generate this way multiple ports. The value is the name of
+the service it will apply on (being said http is an alias for httpejbd
+which is our embedded http layer).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nice_logs">Nice logs</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p><code>@SimpleLog</code> annotation allows you to have one liner logs</p>
-<h2>@JaxrsProvider</h2>
-<p><code>@JaxrsProvider</code> allows you to specify on a <code>@Module</code> method the list of JAXRS provider you want to use.</p>
-<h2>Dependencies without hacky code</h2>
-<p><code>@Jars</code> allows you to add dependencies (scanned) to your application automatically (like CDI libraries):</p>
-<pre><code>@Module
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__jaxrsprovider">@JaxrsProvider</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@JaxrsProvider</code> allows you to specify on a <code>@Module</code> method the list of
+JAXRS provider you want to use.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependencies_without_hacky_code">Dependencies without hacky code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@Jars</code> allows you to add dependencies (scanned) to your application
+automatically (like CDI libraries):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Module
 @Classes(cdi = true, value = { C1.class, C2.class, E1.class })
-@Jars(&quot;deltaspike-&quot;)
+@Jars("deltaspike-")
 public WebApp app() {
     return new WebApp();
-}
-</code></pre>
-<h2>@Default</h2>
-<p><code>@Default</code> automatically adds in the application <code>target/classes</code> as binaries and <code>src/main/webapp</code> as resources for maven projects.</p>
-<h2>@CdiExtensions</h2>
-<p>This annotation allows you to control which extensions are activated during the test.</p>
-<h2>@AppResource</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__default">@Default</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@Default</code> automatically adds in the application <code>target/classes</code> as
+binaries and <code>src/main/webapp</code> as resources for maven projects.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__cdiextensions">@CdiExtensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This annotation allows you to control which extensions are activated
+during the test.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__appresource">@AppResource</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>This annotation allows injection of few particular test resources like:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>the test <code>AppModule</code> (application meta)</li>
-  <li>the test <code>Context</code> (JNDI)</li>
-  <li>the test <code>ApplicationComposers</code> (underlying runner)</li>
-  <li><code>ContextProvider</code>: allow to mock JAXRS contexts</li>
+<li>
+<p>the test <code>AppModule</code> (application meta)</p>
+</li>
+<li>
+<p>the test <code>Context</code> (JNDI)</p>
+</li>
+<li>
+<p>the test <code>ApplicationComposers</code> (underlying runner)</p>
+</li>
+<li>
+<p><code>ContextProvider</code>: allow to mock JAXRS contexts</p>
+</li>
 </ul>
-<h2>@MockInjector</h2>
-<p>Allows to mock EJB injections. It decorates a dedicated method returning an instance (or Class) implementing <code>FallbackPropertyInjector</code>.</p>
-<h2>@WebResource</h2>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__mockinjector">@MockInjector</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Allows to mock EJB injections. It decorates a dedicated method returning
+an instance (or Class) implementing <code>FallbackPropertyInjector</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__webresource">@WebResource</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Allow for web application to add folders containing web resources.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -182,7 +297,7 @@ public WebApp app() {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

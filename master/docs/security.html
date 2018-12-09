@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,46 +95,268 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="Security-Security-HowTo."></a>
-<h1>Security - How To.</h1>
-<p>We currently have two authentication mechanisms to choose from:<br/>* <em>PropertiesLoginModule</em> (a basic text file based login that looks up<br/>users and groups from the specified properties files)<br/>* <em>SQLLoginModule</em> (database based login that looks up users and groups<br/>in a database through SQL queries)</p>
-<p>To make your program authenticate itself to the server, simply construct your InitialContext with the standard javax.naming.Context properties for user/pass info, which is:</p>
-<pre><code>Properties props = new Properties();
-props.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-props.setProperty(Context.PROVIDER_URL, &quot;ejbd://localhost:4201&quot;);
-props.setProperty(Context.SECURITY_PRINCIPAL, &quot;someuser&quot;);
-props.setProperty(Context.SECURITY_CREDENTIALS, &quot;thepass&quot;);
-props.setProperty(&quot;openejb.authentication.realmName&quot;, &quot;PropertiesLogin&quot;);
+                <h1 id="_security_how_to" class="sect0">Security - How To.</h1>
+<div class="paragraph">
+<p>We currently have two authentication mechanisms to choose from: *
+<em>PropertiesLoginModule</em> (a basic text file based login that looks up
+users and groups from the specified properties files) * <em>SQLLoginModule</em>
+(database based login that looks up users and groups in a database
+through SQL queries)</p>
+</div>
+<div class="paragraph">
+<p>To make your program authenticate itself to the server, simply construct
+your InitialContext with the standard javax.naming.Context properties
+for user/pass info, which is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
+props.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+props.setProperty(Context.PROVIDER_URL, "ejbd://localhost:4201");
+props.setProperty(Context.SECURITY_PRINCIPAL, "someuser");
+props.setProperty(Context.SECURITY_CREDENTIALS, "thepass");
+props.setProperty("openejb.authentication.realmName", "PropertiesLogin");
 // optional
 InitialContext ctx = new InitialContext(props);
-ctx.lookup(...);
-</code></pre>
-<p>That will get you logged in and all your calls from that context should execute as you.</p>
-<p><em>${openejb.base}/conf/login.config</em> is a standard JAAS config file.<br/>Here, you can configure any number of security realms to authenticate against. To specify which of the realms you want to authenticate against, you can set the <em>openejb.authentication.realmName</em> property to any of the configured realm names in <em>login.config</em>. If you don't speficy a realm name, the default (currently<br/><em>PropertiesLogin</em>) is used.<br/>For examples and more information on JAAS configuration, see the <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">JAAS Reference Guide</a><br/>.</p>
-<a name="Security-PropertiesLoginModule"></a>
-<h2>PropertiesLoginModule</h2>
-<p>Supported options:<br/><table class="mdtable"><br/><tr><th>Option</th><th>Description</th><th>Required</th></tr><br/><tr><td>UsersFile</td><td>name of the properties file that contains the users and their<br/>passwords</td><td>*yes*</td></tr><br/><tr><td>GroupsFile</td><td>name of the properties file that contains the groups and their<br/>member lists</td><td>*yes*</td></tr><br/></table></p>
-<p><em>UsersFile</em> and <em>GroupsFile</em> are read in on every login, so +you can<br/>update them+ on a running system and those users will "show up" immediately<br/>+without the need for a restart+ of any kind.</p>
-<a name="Security-SQLLoginModule"></a>
-<h2>SQLLoginModule</h2>
-<p>You can either use a data source or configure the JDBC URL through which the user/group lookups will be made.</p>
-<p>If you use a <em>DataSource</em>, you must specify its JNDI name with the<br/><em>dataSourceName</em> option.</p>
-<p>If you use JDBC directly, you have to specify at least the JDBC URL of the database. The driver should be autodetected (provided the appropriate jar is on your classpath), but if that fails for some reason, you can force a specific driver using the <em>jdbcDriver</em> option. For more information on JDBC URLs, see the <a href="http://java.sun.com/javase/6/docs/technotes/guides/jdbc/">JDBC Guide</a></p>
-<p>The <em>userSelect</em> query must return a two-column list of user names<br/>(column 1) and passwords (column 2). This query should normally return a<br/>single row, which can be achieved by the use of a query parameter placeholder "?". Any such placeholders in both queries will be filled in with the username that the client is trying to log in with. The <em>groupSelect</em> query must return a two-column list of user names and their groups (or "roles" in the EJB world).</p>
-<p>Supported options:<br/><table class="mdtable"><br/><tr><th>Option</th><th>Description</th><th>Required</th></tr><br/><tr><td>dataSourceName</td><td>the name of a data source</td><td>*yes* (alternative 1)</td></tr><br/><tr><td>jdbcURL</td><td>a standard JDBC URL</td><td>*yes* (alternative 2)</td></tr><br/><tr><td>jdbcDriver</td><td>the fully qualified class name of the database driver</td><td>no</td></tr><br/><tr><td>jdbcUser</td><td>the user name for accessing the database</td><td>no</td></tr><br/><tr><td>jdbcPassword</td><td>the password for accessing the database</td><td>no</td></tr><br/><tr><td>userSelect</td><td>the SQL query that returns a list of users and their<br/>passwords</td><td>*yes*<br/></tr><br/><tr><td>groupSelect</td><td>the SQL query that returns a list of users and groups<br/>(roles)</td><td>*yes*<br/></tr><br/><tr><td>digest</td><td>the name of the digest algorithm (e.g. "MD5" or "SHA") for digest<br/>authentication</td><td>no</td></tr><br/><tr><td>encoding</td><td>the digest encoding, can be "hex" or "base64"</td><td>no</td></tr><br/></table></p>
-<a name="Security-PLUGPOINTS"></a>
-<h1>PLUG POINTS</h1>
-<p>There are four-five different plug points where you could customize the functionality. From largest to smallest:<br/>- <em>The SecurityService interface</em>: As before all security work<br/>(authentication and authorization) is behind this interface, only the<br/>methods on it have been updated. If you want to do something really "out there" or need total control, this is where you go. Plugging in your own SecurityService should really be a last resort. We still have our "do nothing" SecurityService implementation just as before, but it is no longer the default. +You can add a new SecurityService impl by creating a service-jar.xml and packing it in your jar+. You can configure OpenEJB to use a different SecurityService via the openejb.xml.</p>
+ctx.lookup(...);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That will get you logged in and all your calls from that context should
+execute as you.</p>
+</div>
+<div class="paragraph">
+<p><em>$\{openejb.base}/conf/login.config</em> is a standard JAAS config file.
+Here, you can configure any number of security realms to authenticate
+against. To specify which of the realms you want to authenticate
+against, you can set the <em>openejb.authentication.realmName</em> property to
+any of the configured realm names in <em>login.config</em>. If you don&#8217;t
+speficy a realm name, the default (currently <em>PropertiesLogin</em>) is used.
+For examples and more information on JAAS configuration, see the
+<a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html">JAAS
+Reference Guide</a> .</p>
+</div>
+<div class="sect1">
+<h2 id="_propertiesloginmodule">PropertiesLoginModule</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Supported options:</p>
+</div>
+<div class="paragraph">
+<p>Option</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>Required</p>
+</div>
+<div class="paragraph">
+<p>UsersFile</p>
+</div>
+<div class="paragraph">
+<p>name of the properties file that contains the users and their passwords</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em></p>
+</div>
+<div class="paragraph">
+<p>GroupsFile</p>
+</div>
+<div class="paragraph">
+<p>name of the properties file that contains the groups and their member
+lists</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em></p>
+</div>
+<div class="paragraph">
+<p><em>UsersFile</em> and <em>GroupsFile</em> are read in on every login, so you can
+update them on a running system and those users will "show up"
+immediately without the need for a restart of any kind.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sqlloginmodule">SQLLoginModule</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can either use a data source or configure the JDBC URL through which
+the user/group lookups will be made.</p>
+</div>
+<div class="paragraph">
+<p>If you use a <em>DataSource</em>, you must specify its JNDI name with the
+<em>dataSourceName</em> option.</p>
+</div>
+<div class="paragraph">
+<p>If you use JDBC directly, you have to specify at least the JDBC URL of
+the database. The driver should be autodetected (provided the
+appropriate jar is on your classpath), but if that fails for some
+reason, you can force a specific driver using the <em>jdbcDriver</em> option.
+For more information on JDBC URLs, see the
+<a href="http://java.sun.com/javase/6/docs/technotes/guides/jdbc/">JDBC Guide</a></p>
+</div>
+<div class="paragraph">
+<p>The <em>userSelect</em> query must return a two-column list of user names
+(column 1) and passwords (column 2). This query should normally return a
+single row, which can be achieved by the use of a query parameter
+placeholder "?". Any such placeholders in both queries will be filled in
+with the username that the client is trying to log in with. The
+<em>groupSelect</em> query must return a two-column list of user names and
+their groups (or "roles" in the EJB world).</p>
+</div>
+<div class="paragraph">
+<p>Supported options:</p>
+</div>
+<div class="paragraph">
+<p>Option</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>Required</p>
+</div>
+<div class="paragraph">
+<p>dataSourceName</p>
+</div>
+<div class="paragraph">
+<p>the name of a data source</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em> (alternative 1)</p>
+</div>
+<div class="paragraph">
+<p>jdbcURL</p>
+</div>
+<div class="paragraph">
+<p>a standard JDBC URL</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em> (alternative 2)</p>
+</div>
+<div class="paragraph">
+<p>jdbcDriver</p>
+</div>
+<div class="paragraph">
+<p>the fully qualified class name of the database driver</p>
+</div>
+<div class="paragraph">
+<p>no</p>
+</div>
+<div class="paragraph">
+<p>jdbcUser</p>
+</div>
+<div class="paragraph">
+<p>the user name for accessing the database</p>
+</div>
+<div class="paragraph">
+<p>no</p>
+</div>
+<div class="paragraph">
+<p>jdbcPassword</p>
+</div>
+<div class="paragraph">
+<p>the password for accessing the database</p>
+</div>
+<div class="paragraph">
+<p>no</p>
+</div>
+<div class="paragraph">
+<p>userSelect</p>
+</div>
+<div class="paragraph">
+<p>the SQL query that returns a list of users and their passwords</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em></p>
+</div>
+<div class="paragraph">
+<p>groupSelect</p>
+</div>
+<div class="paragraph">
+<p>the SQL query that returns a list of users and groups (roles)</p>
+</div>
+<div class="paragraph">
+<p><em>yes</em></p>
+</div>
+<div class="paragraph">
+<p>digest</p>
+</div>
+<div class="paragraph">
+<p>the name of the digest algorithm (e.g. "MD5" or "SHA") for digest
+authentication</p>
+</div>
+<div class="paragraph">
+<p>no</p>
+</div>
+<div class="paragraph">
+<p>encoding</p>
+</div>
+<div class="paragraph">
+<p>the digest encoding, can be "hex" or "base64"</p>
+</div>
+<div class="paragraph">
+<p>no</p>
+</div>
+</div>
+</div>
+<h1 id="_plug_points" class="sect0">PLUG POINTS</h1>
+<div class="paragraph">
+<p>There are four-five different plug points where you could customize the
+functionality. From largest to smallest: - <em>The SecurityService
+interface</em>: As before all security work (authentication and
+authorization) is behind this interface, only the methods on it have
+been updated. If you want to do something really "out there" or need
+total control, this is where you go. Plugging in your own
+SecurityService should really be a last resort. We still have our "do
+nothing" SecurityService implementation just as before, but it is no
+longer the default. You can add a new SecurityService impl by creating
+a service-jar.xml and packing it in your jar. You can configure OpenEJB
+to use a different SecurityService via the openejb.xml.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-  <p><em>JaccProvider super class</em>: If you want to plug in your own JACC<br/>implementation to perform custom authorization (maybe do some fancy auditing), this is one way to do it without really having to understand JACC too much. We will plug your provider in to all the places required by JACC if you simply +set the system property+<br/>"*org.apache.openejb.core.security.JaccProvider*" with the name of your<br/>JaccProvider impl.</p></li>
-  <li>
-  <p><em>Regular JACC</em>. The JaccProvider is simply a wrapper around the many<br/>things you have to do to create and plugin a JACC provider, but you can still plugin a JACC provider in the standard ways. Read the JACC spec for that info.</p></li>
-  <li>
-  <p><em>JAAS LoginModule</em>. You can setup a different JAAS LoginModule to do all<br/>your authentication by simply editing the conf/login.config file which is a plain JAAS config file. At the moment we only support username/password based login modules. At some point it would be nice to support any kind of input for a JAAS LoginModule, but username/password at least covers the majority. It actually <em>is</em> possible to support any LoginModule, but you would have to supply your clients with your own way to authenticate to it and write a strategy for telling the OpenEJB client what data to send to the server with each invocation request. See the <a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASLMDevGuide.html">JAAS LoginModule Developer's Guide</a><br/> for more information.</p></li>
-  <li>
-  <p><em>Client IdentityResolver</em>. This is the just mentioned interface you<br/>would have to implement to supply the OpenEJB client with alternate data to send to the server with each invocation request. If you're plugging in a new version of this it is likely that you may also want to plugin in your own SecurityService implementation. Reason being, the object returned from IdentiyResolve.getIdentity() is sent across the wire and straight in to the SecurityService.associate(Object) method.</p></li>
+<li>
+<p><em>JaccProvider super class</em>: If you want to plug in your own JACC
+implementation to perform custom authorization (maybe do some fancy
+auditing), this is one way to do it without really having to understand
+JACC too much. We will plug your provider in to all the places required
+by JACC if you simply set the system property
+"<em>org.apache.openejb.core.security.JaccProvider</em>" with the name of your
+JaccProvider impl.</p>
+</li>
+<li>
+<p><em>Regular JACC</em>. The JaccProvider is simply a wrapper around the many
+things you have to do to create and plugin a JACC provider, but you can
+still plugin a JACC provider in the standard ways. Read the JACC spec
+for that info.</p>
+</li>
+<li>
+<p><em>JAAS LoginModule</em>. You can setup a different JAAS LoginModule to do
+all your authentication by simply editing the conf/login.config file
+which is a plain JAAS config file. At the moment we only support
+username/password based login modules. At some point it would be nice to
+support any kind of input for a JAAS LoginModule, but username/password
+at least covers the majority. It actually <em>is</em> possible to support any
+LoginModule, but you would have to supply your clients with your own way
+to authenticate to it and write a strategy for telling the OpenEJB
+client what data to send to the server with each invocation request. See
+the
+<a href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASLMDevGuide.html">JAAS
+LoginModule Developer&#8217;s Guide</a> for more information.</p>
+</li>
+<li>
+<p><em>Client IdentityResolver</em>. This is the just mentioned interface you
+would have to implement to supply the OpenEJB client with alternate data
+to send to the server with each invocation request. If you&#8217;re plugging
+in a new version of this it is likely that you may also want to plugin
+in your own SecurityService implementation. Reason being, the object
+returned from IdentiyResolve.getIdentity() is sent across the wire and
+straight in to the SecurityService.associate(Object) method.</p>
+</li>
 </ul>
+</div>
             </div>
             
         </div>
@@ -163,7 +385,7 @@ ctx.lookup(...);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

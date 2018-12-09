@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,81 +95,221 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="ConfiguringPersistenceUnitsinTests-Overridingthepersistence.xml"></a>
-<h1>Overriding the persistence.xml</h1>
-<p>The most common situation in EJB related testing by far is the need to alter your persistence.xml for a test environment.</p>
-<a name="ConfiguringPersistenceUnitsinTests-Overridingthe<jta-data-source>and<non-jta-data-source>"></a>
-<h2>Overriding the jta-data-source and non-jta-data-source</h2>
-<p>OpenEJB will automatically use the DataSources you have setup in your test environment, we're pretty good at guessing the right DataSources you intend even if the names don't match exactly -- or in some cases at all. If there is only one DataSource configured, it's very easy for us to guess the DataSource to use.</p>
-<p>This allows you to keep your persistence.xml configured for your production environment and helps eliminate the need for a "test" persistence.xml<br/>(though we do have that functionality). A log line will be printed saying<br/>if we had to adjust the DataSources of your persistence.xml.</p>
-<a name="ConfiguringPersistenceUnitsinTests-Overridingthepersistence-unit<properties>"></a>
-<h2>Overriding the persistence-unit properties</h2>
-<p>You can override any property in your test setup via either system properties or the initial context properties. The format is:</p>
+                <h1 id="_overriding_the" class="sect0">Overriding the</h1>
+<div class="paragraph">
+<p>persistence.xml</p>
+</div>
+<div class="paragraph">
+<p>The most common situation in EJB related testing by far is the need to
+alter your persistence.xml for a test environment.</p>
+</div>
+<div class="sect1">
+<h2 id="_overriding_the_jta_data_source_and_non_jta_data_source">Overriding the jta-data-source and non-jta-data-source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenEJB will automatically use the DataSources you have setup in your
+test environment, we&#8217;re pretty good at guessing the right DataSources
+you intend even if the names don&#8217;t match exactly&#8201;&#8212;&#8201;or in some cases at
+all. If there is only one DataSource configured, it&#8217;s very easy for us
+to guess the DataSource to use.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to keep your persistence.xml configured for your
+production environment and helps eliminate the need for a "test"
+persistence.xml (though we do have that functionality). A log line will
+be printed saying if we had to adjust the DataSources of your
+persistence.xml.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overriding_the_persistence_unit_properties">Overriding the persistence-unit properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can override any property in your test setup via either system
+properties or the initial context properties. The format is:</p>
+</div>
+<div class="paragraph">
 <p><code>&lt;unit-name&gt;.&lt;property&gt;=&lt;value&gt;</code></p>
+</div>
+<div class="paragraph">
 <p>So for example with the following persistence.xml:</p>
-<pre><code>&lt;persistence&gt;
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create-drop&quot;/&gt;
-      &lt;property name=&quot;hibernate.max_fetch_depth&quot; value=&quot;3&quot;/&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
+      &lt;property name="hibernate.max_fetch_depth" value="3"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<p>You can override and add persistence unit properties in your test case. There are currently no facilities for removing them (if you have a need for that let us know -- it hasn't really come up so far).</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY,&quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can override and add persistence unit properties in your test case.
+There are currently no facilities for removing them (if you have a need
+for that let us know&#8201;&#8212;&#8201;it hasn&#8217;t really come up so far).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
 
-p.put(&quot;movie-unit.hibernate.hbm2ddl.auto&quot;, &quot;update&quot;);
-p.put(&quot;movie-unit.hibernate.dialect&quot;, &quot;org.hibernate.dialect.HSQLDialect&quot;);
+p.put("movie-unit.hibernate.hbm2ddl.auto", "update");
+p.put("movie-unit.hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
-context = new InitialContext(p);
-</code></pre>
+context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The overriding order is as follows: 1 = highest, 4 = lowest.</p>
-<ol>
-  <li>InitialContext properties</li>
-  <li>jndi.properties from the classpath</li>
-  <li>System properties</li>
-  <li>persistence.xml properties</li>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>InitialContext properties</p>
+</li>
+<li>
+<p>jndi.properties from the classpath</p>
+</li>
+<li>
+<p>System properties</p>
+</li>
+<li>
+<p>persistence.xml properties</p>
+</li>
 </ol>
-<p>By default there are no overrides in 1-3, so #4 is the only source of information. </p>
-<p>In the above example there would be exactly three properties for the "movie-unit" persistence unit:</p>
+</div>
+<div class="paragraph">
+<p>By default there are no overrides in 1-3, so #4 is the only source of
+information.</p>
+</div>
+<div class="paragraph">
+<p>In the above example there would be exactly three properties for the
+"movie-unit" persistence unit:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>hibernate.hbm2ddl.auto = update</li>
-  <li>hibernate.max_fetch_depth = 3</li>
-  <li>hibernate.dialect = org.hibernate.dialect.HSQLDialect</li>
+<li>
+<p>hibernate.hbm2ddl.auto = update</p>
+</li>
+<li>
+<p>hibernate.max_fetch_depth = 3</p>
+</li>
+<li>
+<p>hibernate.dialect = org.hibernate.dialect.HSQLDialect</p>
+</li>
 </ul>
-<p>These properties would be passed by OpenEJB directly to the persistence provider (in this case Hibernate). With one exception OpenEJB does not understand or modify these properties. Details on that one exception below.</p>
-<h3>Common mistakes</h3>
-<p>Note that you <strong>must</strong> use the <strong>unit name</strong> as the prefix. This will not work:</p>
-<pre><code>    Properties p = new Properties();
-    p.put(Context.INITIAL_CONTEXT_FACTORY,&quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
+</div>
+<div class="paragraph">
+<p>These properties would be passed by OpenEJB directly to the persistence
+provider (in this case Hibernate). With one exception OpenEJB does not
+understand or modify these properties. Details on that one exception
+below.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_common_mistakes">Common mistakes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that you <strong>must</strong> use the <strong>unit name</strong> as the prefix. This will not
+work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    Properties p = new Properties();
+    p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
 
-    p.put(&quot;hibernate.hbm2ddl.auto&quot;, &quot;update&quot;);
-    p.put(&quot;hibernate.dialect&quot;, &quot;org.hibernate.dialect.HSQLDialect&quot;);
+    p.put("hibernate.hbm2ddl.auto", "update");
+    p.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 
-    context = new InitialContext(p);
-</code></pre>
-<p>Currently, only properties that start with the unit name are search and applied.</p>
-<h3>No need to specify a "transaction lookup" property</h3>
-<p>All vendors have such a property for getting a reference to the container's TransactionManager and nothing works if this is not set correctly to the OpenEJB specific class. To make the lives of users easier, OpenEJB will take the liberty of setting it for you.</p>
-<p>Here are the persistence provider classes we understand and the defaults we will set for you:</p>
-<h4>Provider org.hibernate.ejb.HibernatePersistence</h4>
-<p>When using this provider, the <em>hibernate.transaction.manager_lookup_class</em> will be automatically set by OpenEJB to<br/><em>org.apache.openejb.hibernate.TransactionManagerLookup</em>. If the property<br/>is already set in the persistence unit it will be overwritten if it starts with the standard "org.hibernate.transaction." prefix. </p>
+    context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Currently, only properties that start with the unit name are search and
+applied.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_no_need_to_specify_a_transaction_lookup_property">No need to specify a "transaction lookup" property</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All vendors have such a property for getting a reference to the
+container&#8217;s TransactionManager and nothing works if this is not set
+correctly to the OpenEJB specific class. To make the lives of users
+easier, OpenEJB will take the liberty of setting it for you.</p>
+</div>
+<div class="paragraph">
+<p>Here are the persistence provider classes we understand and the defaults
+we will set for you:</p>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_hibernate_ejb_hibernatepersistence">Provider org.hibernate.ejb.HibernatePersistence</h3>
+<div class="paragraph">
+<p>When using this provider, the
+<em>hibernate.transaction.manager_lookup_class</em> will be automatically set
+by OpenEJB to <em>org.apache.openejb.hibernate.TransactionManagerLookup</em>.
+If the property is already set in the persistence unit it will be
+overwritten if it starts with the standard "org.hibernate.transaction."
+prefix.</p>
+</div>
+<div class="paragraph">
 <p>Custom lookup implementations will never be overwritten automatically.</p>
-<h4>Provider oracle.toplink.essentials.PersistenceProvider</h4>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_oracle_toplink_essentials_persistenceprovider">Provider oracle.toplink.essentials.PersistenceProvider</h3>
+<div class="paragraph">
 <p>Or <em>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</em>.</p>
-<p>When using this provider, the <em>toplink.target-server</em> will be automatically set by OpenEJB to <em>org.apache.openejb.toplink.JTATransactionController</em>. If the property is already set in the persistence unit it will be overwritten if it starts with the standard "oracle.toplink.transaction." prefix. </p>
-<p>Custom transaction controller implementations will never be overwritten automatically.</p>
-<h4>Provider org.eclipse.persistence.jpa.PersistenceProvider</h4>
+</div>
+<div class="paragraph">
+<p>When using this provider, the <em>toplink.target-server</em> will be
+automatically set by OpenEJB to
+<em>org.apache.openejb.toplink.JTATransactionController</em>. If the property
+is already set in the persistence unit it will be overwritten if it
+starts with the standard "oracle.toplink.transaction." prefix.</p>
+</div>
+<div class="paragraph">
+<p>Custom transaction controller implementations will never be overwritten
+automatically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_eclipse_persistence_jpa_persistenceprovider">Provider org.eclipse.persistence.jpa.PersistenceProvider</h3>
+<div class="paragraph">
 <p>Or <em>org.eclipse.persistence.jpa.osgi.PersistenceProvider</em>.</p>
-<p>When using this provider, the <em>eclipselink.target-server</em> will be automatically set by OpenEJB to<br/><em>org.apache.openejb.eclipselink.JTATransactionController</em>. If the property<br/>is already set in the persistence unit it will be overwritten if it starts with the standard "org.eclipse.persistence.transaction." prefix. </p>
-<p>Custom transaction controller implementations will never be overwritten automatically.</p>
-<h4>Provider org.apache.openjpa.persistence.PersistenceProviderImpl</h4>
-<p>OpenJPA is capable of discovering the correct method for locating the TransactionManager without the need for users to specify the specific strategy. Therefore no specific "magic" is required.</p>
+</div>
+<div class="paragraph">
+<p>When using this provider, the <em>eclipselink.target-server</em> will be
+automatically set by OpenEJB to
+<em>org.apache.openejb.eclipselink.JTATransactionController</em>. If the
+property is already set in the persistence unit it will be overwritten
+if it starts with the standard "org.eclipse.persistence.transaction."
+prefix.</p>
+</div>
+<div class="paragraph">
+<p>Custom transaction controller implementations will never be overwritten
+automatically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_apache_openjpa_persistence_persistenceproviderimpl">Provider org.apache.openjpa.persistence.PersistenceProviderImpl</h3>
+<div class="paragraph">
+<p>OpenJPA is capable of discovering the correct method for locating the
+TransactionManager without the need for users to specify the specific
+strategy. Therefore no specific "magic" is required.</p>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -198,7 +338,7 @@ context = new InitialContext(p);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

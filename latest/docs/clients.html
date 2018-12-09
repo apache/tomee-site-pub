@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,84 +95,127 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="Clients-LocalClient(embeddedcontainer)"></a>
-<h3>Local Client (embedded container)</h3>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
+                <div class="sect1">
+<h2 id="_local_client_embedded_container">Local Client (embedded container)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.LocalInitialContextFactory");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
-<a name="Clients-LocalClient(non-defaultrealmname)"></a>
-<h3>Local Client (non-default realm name)</h3>
-<a name="Clients-Loginconfigurationfile(conf/login.config)"></a>
-<h3>Login configuration file (conf/login.config)</h3>
-<pre><code>PropertiesLogin {
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_local_client_non_default_realm_name">Local Client (non-default realm name)</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_login_configuration_file_conf_login_config">Login configuration file (conf/login.config)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">PropertiesLogin {
     org.apache.openejb.core.security.jaas.PropertiesLoginModule required
     Debug=true
-    UsersFile=&quot;users.properties&quot;
-    GroupsFile=&quot;groups.properties&quot;;
+    UsersFile="users.properties"
+    GroupsFile="groups.properties";
 };
 MyApp {
     org.apache.openejb.core.security.jaas.SQLLoginModule required
-    dataSourceName=&quot;MyDataSource&quot;
-    userSelect=&quot;SELECT username, password FROM users WHERE username=?&quot;
-    groupSelect=&quot;SELECT username, grp FROM users WHERE username=?&quot;;
-};
-</code></pre>
-<a name="Clients-Programcode"></a>
-<h3>Code</h3>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
-p.put(&quot;openejb.authentication.realmName&quot;, &quot;MyApp&quot;);
+    dataSourceName="MyDataSource"
+    userSelect="SELECT username, password FROM users WHERE username=?"
+    groupSelect="SELECT username, grp FROM users WHERE username=?";
+};</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_code">Code</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.LocalInitialContextFactory");
+p.put("openejb.authentication.realmName", "MyApp");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
-<a name="Clients-RemoteClient(openejbstandalone)"></a>
-<h3>Remote Client (openejb standalone)</h3>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(&quot;java.naming.provider.url&quot;, &quot;ejbd://localhost:4201&quot;);
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_client_openejb_standalone">Remote Client (openejb standalone)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put("java.naming.provider.url", "ejbd://localhost:4201");
 // user and pass optional
-p.put(&quot;java.naming.security.principal&quot;, &quot;myuser&quot;);
-p.put(&quot;java.naming.security.credentials&quot;, &quot;mypass&quot;);
+p.put("java.naming.security.principal", "myuser");
+p.put("java.naming.security.credentials", "mypass");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
-<a name="Clients-RemoteClientwithHTTP(openejbstandalone)"></a>
-<h3>Remote Client with HTTP (openejb standalone)</h3>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(&quot;java.naming.provider.url&quot;, &quot;http://localhost:4204/ejb&quot;);
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_client_with_http_openejb_standalone">Remote Client with HTTP (openejb standalone)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put("java.naming.provider.url", "http://localhost:4204/ejb");
 // user and pass optional
-p.put(&quot;java.naming.security.principal&quot;, &quot;myuser&quot;);
-p.put(&quot;java.naming.security.credentials&quot;, &quot;mypass&quot;);
+p.put("java.naming.security.principal", "myuser");
+p.put("java.naming.security.credentials", "mypass");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
-<a name="Clients-RemoteClientwithHTTP(intomcat)"></a>
-<h3>Remote Client with HTTP (in TomEE)</h3>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(&quot;java.naming.provider.url&quot;, &quot;http://127.0.0.1:8080/tomee/ejb&quot;);
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_client_with_http_in_tomee">Remote Client with HTTP (in TomEE)</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put("java.naming.provider.url", "http://127.0.0.1:8080/tomee/ejb");
 // user and pass optional
-p.put(&quot;java.naming.security.principal&quot;, &quot;myuser&quot;);
-p.put(&quot;java.naming.security.credentials&quot;, &quot;mypass&quot;);
+p.put("java.naming.security.principal", "myuser");
+p.put("java.naming.security.credentials", "mypass");
 
 InitialContext ctx = new InitialContext(p);
 
-MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
-</code></pre>
-<a name="RemoteClientUsingEjbInjection)"></a>
-<h3>Remote Client using @EJB Injection</h3>
-<p>see here:<br/><a href="http://tomee.apache.org/ejb-refs.html">ejb-refs</a></p>
+MyBean myBean = (MyBean) ctx.lookup("MyBeanRemote");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_client_using_ejb_injection_see_here_ejb_refs">Remote Client using @EJB Injection see here: ejb-refs</h2>
+<div class="sectionbody">
+
+</div>
+</div>
             </div>
             
         </div>
@@ -201,7 +244,7 @@ MyBean myBean = (MyBean) ctx.lookup(&quot;MyBeanRemote&quot;);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

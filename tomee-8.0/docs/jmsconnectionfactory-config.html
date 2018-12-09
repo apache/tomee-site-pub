@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,83 +95,134 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>A JmsConnectionFactory can be declared via xml in the <code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file using a declaration like the following. All properties in the element body are optional.</p>
-<pre><code>&lt;Resource id=&quot;myJmsConnectionFactory&quot; type=&quot;javax.jms.ConnectionFactory&quot;&gt;
+                <div class="paragraph">
+<p>A JmsConnectionFactory can be declared via xml in the
+<code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file
+using a declaration like the following. All properties in the element
+body are optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="myJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
     connectionMaxIdleTime = 15 Minutes
     connectionMaxWaitTime = 5 seconds
     poolMaxSize = 10
     poolMinSize = 0
     resourceAdapter = Default JMS Resource Adapter
     transactionSupport = xa
-&lt;/Resource&gt;
-</code></pre>
-<p>Alternatively, a JmsConnectionFactory can be declared via properties in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java VirtualMachine <code>-D</code> properties. The properties can also be used when embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or <code>InitialContext</code></p>
-<pre><code>myJmsConnectionFactory = new://Resource?type=javax.jms.ConnectionFactory
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, a JmsConnectionFactory can be declared via properties in
+the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java
+VirtualMachine <code>-D</code> properties. The properties can also be used when
+embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or
+<code>InitialContext</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">myJmsConnectionFactory = new://Resource?type=javax.jms.ConnectionFactory
 myJmsConnectionFactory.connectionMaxIdleTime = 15 Minutes
 myJmsConnectionFactory.connectionMaxWaitTime = 5 seconds
 myJmsConnectionFactory.poolMaxSize = 10
 myJmsConnectionFactory.poolMinSize = 0
 myJmsConnectionFactory.resourceAdapter = Default JMS Resource Adapter
-myJmsConnectionFactory.transactionSupport = xa
-</code></pre>
-<p>Properties and xml can be mixed. Properties will override the xml allowing for easy configuration change without the need for ${} style variable substitution. Properties are not case sensitive. If a property is specified that is not supported by the declared JmsConnectionFactory a warning will be logged. If a JmsConnectionFactory is needed by the application and one is not declared, TomEE will create one dynamically using default settings. Multiple JmsConnectionFactory declarations are allowed.</p>
-<h1>Supported Properties</h1>
-<table class="mdtable">
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-<tr>
-  <td>connectionMaxIdleTime</td>
-  <td><a href="configuring-durations.html">time</a></td>
-  <td>15&nbsp;Minutes</td>
-  <td>
-Maximum amount of time a connection can be idle before being reclaimed
-</td>
-</tr>
-<tr>
-  <td>connectionMaxWaitTime</td>
-  <td><a href="configuring-durations.html">time</a></td>
-  <td>5&nbsp;seconds</td>
-  <td>
-Maximum amount of time to wait for a connection
-</td>
-</tr>
-<tr>
-  <td>poolMaxSize</td>
-  <td>int</td>
-  <td>10</td>
-  <td>
-Maximum number of physical connection to the ActiveMQ broker
-</td>
-</tr>
-<tr>
-  <td>poolMinSize</td>
-  <td>int</td>
-  <td>0</td>
-  <td>
-Minimum number of physical connection to the ActiveMQ broker
-</td>
-</tr>
-<tr>
-  <td>resourceAdapter</td>
-  <td>String</td>
-  <td>Default&nbsp;JMS&nbsp;Resource&nbsp;Adapter</td>
-  <td>
-
-</td>
-</tr>
-<tr>
-  <td>transactionSupport</td>
-  <td>String</td>
-  <td>xa</td>
-  <td>
-Specifies if the connection is enrolled in global transaction allowed values: xa, local or none
-</td>
-</tr>
-</table>
+myJmsConnectionFactory.transactionSupport = xa</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Properties and xml can be mixed. Properties will override the xml
+allowing for easy configuration change without the need for $\{} style
+variable substitution. Properties are not case sensitive. If a property
+is specified that is not supported by the declared JmsConnectionFactory
+a warning will be logged. If a JmsConnectionFactory is needed by the
+application and one is not declared, TomEE will create one dynamically
+using default settings. Multiple JmsConnectionFactory declarations are
+allowed. # Supported Properties</p>
+</div>
+<div class="paragraph">
+<p>Property</p>
+</div>
+<div class="paragraph">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p>Default</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>connectionMaxIdleTime</p>
+</div>
+<div class="paragraph">
+<p>time</p>
+</div>
+<div class="paragraph">
+<p>15 Minutes</p>
+</div>
+<div class="paragraph">
+<p>Maximum amount of time a connection can be idle before being reclaimed</p>
+</div>
+<div class="paragraph">
+<p>connectionMaxWaitTime</p>
+</div>
+<div class="paragraph">
+<p>time</p>
+</div>
+<div class="paragraph">
+<p>5 seconds</p>
+</div>
+<div class="paragraph">
+<p>Maximum amount of time to wait for a connection</p>
+</div>
+<div class="paragraph">
+<p>poolMaxSize</p>
+</div>
+<div class="paragraph">
+<p>int</p>
+</div>
+<div class="paragraph">
+<p>10</p>
+</div>
+<div class="paragraph">
+<p>Maximum number of physical connection to the ActiveMQ broker</p>
+</div>
+<div class="paragraph">
+<p>poolMinSize</p>
+</div>
+<div class="paragraph">
+<p>int</p>
+</div>
+<div class="paragraph">
+<p>0</p>
+</div>
+<div class="paragraph">
+<p>Minimum number of physical connection to the ActiveMQ broker</p>
+</div>
+<div class="paragraph">
+<p>resourceAdapter</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>Default JMS Resource Adapter</p>
+</div>
+<div class="paragraph">
+<p>transactionSupport</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>xa</p>
+</div>
+<div class="paragraph">
+<p>Specifies if the connection is enrolled in global transaction allowed
+values: xa, local or none</p>
+</div>
             </div>
             
         </div>
@@ -200,7 +251,7 @@ Specifies if the connection is enrolled in global transaction allowed values: xa
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,20 +95,39 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>TomEE complains it doesn't know the container type, so I added type="javax.naming.InitialContext" and it worked (mostly).<br/><a name="EJBRefs-Referencingabeaninanotherjar(withannotations)"></a></p>
-<h2>Referencing a bean in another jar (with annotations)</h2>
-<p>When using annotations to reference a bean from another ejb in your ear you have to supplement the @EJB reference with a small chunk of xml in the ejb-jar.xml of the referring bean.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE complains it doesn&#8217;t know the container type, so I added
+type="javax.naming.InitialContext" and it worked (mostly). ##
+Referencing a bean in another jar (with annotations)</p>
+</div>
+<div class="paragraph">
+<p>When using annotations to reference a bean from another ejb in your ear
+you have to supplement the @EJB reference with a small chunk of xml in
+the ejb-jar.xml of the referring bean.</p>
+</div>
+<div class="paragraph">
 <p>So in ejb app A colorsApp.jar you have this bean:</p>
-<pre><code>package com.foo.colors;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.foo.colors;
 
 import javax.ejb.Stateless;
 
 @Stateless
 public class OrangeBean implements OrangeRemote {
-}
-</code></pre>
-<p>Then in ejb app B shapesApp.jar you have this bean with a reference to OrangeRemote:</p>
-<pre><code>package com.foo.shapes;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in ejb app B shapesApp.jar you have this bean with a reference to
+OrangeRemote:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.foo.shapes;
 
 import javax.ejb.Stateless;
 import com.foo.colors.OrangeRemote;
@@ -116,10 +135,16 @@ import com.foo.colors.OrangeRemote;
 @Stateless
 public class SquareBean implements SquareRemote {
     @EJB OrangeRemote orangeRemote;
-}
-</code></pre>
-<p>To hook this reference up you need to override this ref and add more info in the ejb-jar.xml of shapesApp.jar as follows:</p>
-<pre><code>&lt;ejb-jar&gt;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To hook this reference up you need to override this ref and add more
+info in the ejb-jar.xml of shapesApp.jar as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar&gt;
   &lt;enterprise-beans&gt;
 
     &lt;session&gt;
@@ -131,22 +156,38 @@ public class SquareBean implements SquareRemote {
     &lt;/session&gt;
 
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<a name="EJBRefs-Referencingabeaninanotherjar(xmlonly,noannotations)"></a>
-<h2>Referencing a bean in another jar (xml only, no annotations)</h2>
-<p>The same basic approach applies and dependency injection is still possible, however more information must be described in the xml.</p>
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_referencing_a_bean_in_another_jar_xml_only_no_annotations">Referencing a bean in another jar (xml only, no annotations)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The same basic approach applies and dependency injection is still
+possible, however more information must be described in the xml.</p>
+</div>
+<div class="paragraph">
 <p>In ejb app A colorsApp.jar you have this bean:</p>
-<pre><code>package com.foo.colors;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.foo.colors;
 
 import javax.ejb.Stateless;
 
 @Stateless
 public class OrangeBean implements OrangeRemote {
-}
-</code></pre>
-<p>Then in ejb app B shapesApp.jar -- note there is no @EJB annotation:</p>
-<pre><code>package com.foo.shapes;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then in ejb app B shapesApp.jar&#8201;&#8212;&#8201;note there is no @EJB annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.foo.shapes;
 
 import javax.ejb.Stateless;
 import com.foo.colors.OrangeRemote;
@@ -154,10 +195,17 @@ import com.foo.colors.OrangeRemote;
 @Stateless
 public class SquareBean implements SquareRemote {
     OrangeRemote orangeRemote;
-}
-</code></pre>
-<p>Here's how you would hook this reference up, injection and all, with just xml. The following would be added to the ejb-jar.xml of shapesApp.jar:</p>
-<pre><code>&lt;ejb-jar&gt;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s how you would hook this reference up, injection and all, with
+just xml. The following would be added to the ejb-jar.xml of
+shapesApp.jar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar&gt;
   &lt;enterprise-beans&gt;
 
     &lt;session&gt;
@@ -175,54 +223,115 @@ public class SquareBean implements SquareRemote {
     &lt;/session&gt;
 
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<p>Note that the value of <ejb-ref-name> could actually be anything and the above example would still work as there is no annotation that needs to match the <ejb-ref-name> and no one will likely be looking up the EJB as it's injected.</p>
-<h1>Referencing a bean in another server</h1>
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the value of could actually be anything and the above example
+would still work as there is no annotation that needs to match the and
+no one will likely be looking up the EJB as it&#8217;s injected.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_referencing_a_bean_in_another_server">Referencing a bean in another server</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>As of OpenEJB 4.0.0-beta-3, server to server references work.</p>
-<p>First we need to configure and name the InitialContext that will be used to satisfy the lookup to the other server.</p>
+</div>
+<div class="paragraph">
+<p>First we need to configure and name the InitialContext that will be used
+to satisfy the lookup to the other server.</p>
+</div>
+<div class="paragraph">
 <p>In this example we are calling our InitialContext <code>shoe</code> for fun.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
 &lt;openejb&gt;
 
-  &lt;JndiProvider id=&quot;shoe&quot; type=&quot;javax.naming.InitialContext&quot;&gt;
+  &lt;JndiProvider id="shoe" type="javax.naming.InitialContext"&gt;
     java.naming.provider.url = ejbd://localhost:4201
     java.naming.factory.initial = org.apache.openejb.client.RemoteInitialContextFactory
   &lt;/JndiProvider&gt;
 
-&lt;/openejb&gt;
-</code></pre>
-<p>Declaring the <code>@EJB</code> reference is then done using a <code>mappedName</code> that references the named <code>InitialContext</code></p>
-<pre><code>public class BlueBean implements BlueRemote {
+&lt;/openejb&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Declaring the <code>@EJB</code> reference is then done using a <code>mappedName</code> that
+references the named <code>InitialContext</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class BlueBean implements BlueRemote {
 
-    @EJB(mappedName = &quot;jndi:ext://shoe/OrangeBeanRemote&quot;)
+    @EJB(mappedName = "jndi:ext://shoe/OrangeBeanRemote")
     private OrangeRemote orangeRemote;
 
     public void hasOrangeRemote() {
-        Assert.assertNotNull(&quot;orangeRemote is null&quot;, orangeRemote);
-        assertEquals(&quot;olleh&quot;, orangeRemote.echo(&quot;hello&quot;));
+        Assert.assertNotNull("orangeRemote is null", orangeRemote);
+        assertEquals("olleh", orangeRemote.echo("hello"));
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Specifically, the <code>mappedName</code> syntax is as follows:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>jndi:<a href="ext://`">ext://`</a><contextId><code>/</code><jndiName>`</li>
+<li>
+<p>jndi:ext://<code>&lt;contextId&gt;</code>/<code>&lt;jndiName&gt;</code></p>
+</li>
 </ul>
-<h2>Referencing a bean in "many" servers</h2>
-<p>Note the above also works with the various forms of failover that TomEE supports.</p>
-<p>If say, there are two servers that have the <code>OrangeBeanRemote</code> bean, you could expand the <code>&lt;JndiProvider&gt;</code> delcaration like so:</p>
-<pre><code>  &lt;JndiProvider id=&quot;shoe&quot; type=&quot;javax.naming.InitialContext&quot;&gt;
+</div>
+<div class="sect2">
+<h3 id="_referencing_a_bean_in_many_servers">Referencing a bean in "many" servers</h3>
+<div class="paragraph">
+<p>Note the above also works with the various forms of failover that TomEE
+supports.</p>
+</div>
+<div class="paragraph">
+<p>If say, there are two servers that have the <code>OrangeBeanRemote</code> bean, you
+could expand the <code>&lt;JndiProvider&gt;</code> delcaration like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">  &lt;JndiProvider id="shoe" type="javax.naming.InitialContext"&gt;
     java.naming.provider.url = failover:ejbd://192.168.1.20:4201,ejbd://192.168.1.30:4201
     java.naming.factory.initial = org.apache.openejb.client.RemoteInitialContextFactory
-  &lt;/JndiProvider&gt;
-</code></pre>
-<p>In the event that the <code>ejbd://192.168.1.20:4201</code> server cannot be contacted, the second server will be tried.</p>
-<p>This sort of arangement can also happen dynamicall against a list of servers that continuously grows and shrinks. The server list is maintained behind the scenes using server discovery logic that can function on either UDP or TCP. See these docs for more details on Failover and Discovery:</p>
+  &lt;/JndiProvider&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the event that the <code>ejbd://192.168.1.20:4201</code> server cannot be
+contacted, the second server will be tried.</p>
+</div>
+<div class="paragraph">
+<p>This sort of arangement can also happen dynamicall against a list of
+servers that continuously grows and shrinks. The server list is
+maintained behind the scenes using server discovery logic that can
+function on either UDP or TCP. See these docs for more details on
+Failover and Discovery:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><a href="multicast-discovery.html">Multicast Discovery (UDP)</a></li>
-  <li><a href="multipulse-discovery.html">Multipulse Discovery (TCP)</a></li>
-  <li><a href="multipoint-discovery.html">Multipoint Discovery (TCP)</a></li>
+<li>
+<p><a href="multicast-discovery.html">Multicast Discovery (UDP)</a></p>
+</li>
+<li>
+<p><a href="multipulse-discovery.html">Multipulse Discovery (TCP)</a></p>
+</li>
+<li>
+<p><a href="multipoint-discovery.html">Multipoint Discovery (TCP)</a></p>
+</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -251,7 +360,7 @@ public class SquareBean implements SquareRemote {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

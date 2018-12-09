@@ -83,71 +83,148 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Embedded Configuration</h1>
+              <h1>OpenEJB Embedded Configuration</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <a name="EmbeddedConfiguration-Defaults,OverridesandOrder"></a>
-<h1>Defaults, Overrides and Order</h1>
-<p>When booting up OpenEJB for testing via the <code>LocalInitialContextFactory</code> or the newer <code>EJBContainer.createEJBContainer()</code> API part of EJB 3.1 there is quite a bit of flexibility to how things are configured.</p>
-<p>OpenEJB will function fine with no configuration at all and will happily create things as needed and select defaults for everything. So in a real sense configuration is all about overriding those defaults. There are several places to put your overrides and an a specific order how they are applied. Here they are in order of preference; 1 = highest, 5 = lowest.</p>
-<p>{row<br/>{span8<br/><strong>InitialContext</strong></p>
-<ol>
-  <li>InitialContext properties</li>
-  <li>jndi.properties from the classpath</li>
-  <li>System properties</li>
-  <li>openejb.xml declarations/properties</li>
-  <li>service-jar.xml declarations/properties (internal concept)<br/>}</li>
+                <h1 id="_defaults_overrides_and_order" class="sect0">Defaults, Overrides and Order</h1>
+<div class="paragraph">
+<p>When booting up OpenEJB for testing via the <code>LocalInitialContextFactory</code>
+or the newer <code>EJBContainer.createEJBContainer()</code> API part of EJB 3.1
+there is quite a bit of flexibility to how things are configured.</p>
+</div>
+<div class="paragraph">
+<p>OpenEJB will function fine with no configuration at all and will happily
+create things as needed and select defaults for everything. So in a real
+sense configuration is all about overriding those defaults. There are
+several places to put your overrides and an a specific order how they
+are applied. Here they are in order of preference; 1 = highest, 5 =
+lowest.</p>
+</div>
+<div class="paragraph">
+<p><strong>InitialContext</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>InitialContext properties</p>
+</li>
+<li>
+<p>jndi.properties from the classpath</p>
+</li>
+<li>
+<p>System properties</p>
+</li>
+<li>
+<p>openejb.xml declarations/properties</p>
+</li>
+<li>
+<p>service-jar.xml declarations/properties (internal concept) }</p>
+</li>
 </ol>
-<p>{span8<br/><strong>EJBContainer API</strong><br/>1. EJBContainer.createEJBContainer(Map) entries<br/>1. System properties<br/>1. openejb.xml declarations/properties<br/>1. service-jar.xml declarations/properties (internal concept)</p>
-<p>}<br/>}</p>
-<p>It opens up some interesting possibilities in how you configure your environment. You could do 100% of your configuration in your test case via InitialContext propertes, or you could do say 80% in a jndi.properties file or openejb.xml file and 20% in your test case via InitialContext properties. You can put 100% of your configuration in a <code>jndi.properties</code> or<br/><code>openejb.xml</code> file and override them via <code>InitialContext</code> properties.</p>
-<p>You can manage the properties how you wish and there is no need for redundant definitions if you do not want them.</p>
-<a name="EmbeddedConfiguration-Whatisconfigurable?"></a>
-<h1>What is configurable?</h1>
-<p>Everything you can configure via an openejb.xml (minus the <Deployment> element) can be configured/overridden via properties. See <a href="configuring-containers-in-tests.html">Configuring Containers in Tests</a><br/> and <a href="configuring-datasources-in-tests.html">Configuring DataSources in Tests</a>.</p>
-<p>Everything in your logging.properties can be configured/overridden via properties. See <a href="configuring-logging-in-tests.html">Configuring Logging in Tests</a>.</p>
-<p>The properties of persistence units declared in a persistence.xml can be configured/overridden via properties. See <a href="configuring-persistenceunits-in-tests.html">Configuring PersistenceUnits in Tests</a>.</p>
-<p>OpenEJB has many flags that can also be set as properties. See <a href="properties-listing.html">OpenEJB Properties</a><br/> for details on those.</p>
-<a name="EmbeddedConfiguration-ExampleofusingInitialContextproperties"></a>
-<h1>Example of using InitialContext properties</h1>
-<pre><code>Properties p = new Properties();
+</div>
+<div class="paragraph">
+<p><strong>EJBContainer API</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>EJBContainer.createEJBContainer(Map) entries</p>
+</li>
+<li>
+<p>System properties</p>
+</li>
+<li>
+<p>openejb.xml declarations/properties</p>
+</li>
+<li>
+<p>service-jar.xml declarations/properties (internal concept)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>It opens up some interesting possibilities in how you configure your
+environment. You could do 100% of your configuration in your test case
+via InitialContext propertes, or you could do say 80% in a
+jndi.properties file or openejb.xml file and 20% in your test case via
+InitialContext properties. You can put 100% of your configuration in a
+<code>jndi.properties</code> or <code>openejb.xml</code> file and override them via
+<code>InitialContext</code> properties.</p>
+</div>
+<div class="paragraph">
+<p>You can manage the properties how you wish and there is no need for
+redundant definitions if you do not want them.</p>
+</div>
+<h1 id="_what_is_configurable" class="sect0">What is configurable?</h1>
+<div class="paragraph">
+<p>Everything you can configure via an openejb.xml (minus the element) can
+be configured/overridden via properties. See
+<a href="configuring-containers-in-tests.html">Configuring Containers in
+Tests</a> and <a href="configuring-datasources-in-tests.html">Configuring
+DataSources in Tests</a>.</p>
+</div>
+<div class="paragraph">
+<p>Everything in your logging.properties can be configured/overridden via
+properties. See <a href="configuring-logging-in-tests.html">Configuring
+Logging in Tests</a>.</p>
+</div>
+<div class="paragraph">
+<p>The properties of persistence units declared in a persistence.xml can be
+configured/overridden via properties. See
+<a href="configuring-persistenceunits-in-tests.html">Configuring
+PersistenceUnits in Tests</a>.</p>
+</div>
+<div class="paragraph">
+<p>OpenEJB has many flags that can also be set as properties. See
+<a href="properties-listing.html">OpenEJB Properties</a> for details on those.</p>
+</div>
+<h1 id="_example_of_using_initialcontext_properties" class="sect0">Example of using InitialContext properties</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
 
 // set the initial context factory
-p.put(&quot;java.naming.factory.initial &quot;, &quot;org.apache.openejb.client.LocalInitialContextFactory&quot;);
+p.put("java.naming.factory.initial ", "org.apache.openejb.client.LocalInitialContextFactory");
 
 // change some logging
-p.put(&quot;log4j.category.OpenEJB.options &quot;, &quot; debug&quot;);
-p.put(&quot;log4j.category.OpenEJB.startup &quot;, &quot; debug&quot;);
-p.put(&quot;log4j.category.OpenEJB.startup.config &quot;, &quot; debug&quot;);
+p.put("log4j.category.OpenEJB.options ", " debug");
+p.put("log4j.category.OpenEJB.startup ", " debug");
+p.put("log4j.category.OpenEJB.startup.config ", " debug");
 
 // create some resources
-p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-p.put(&quot;movieDatabase.JdbcDriver &quot;, &quot; org.hsqldb.jdbcDriver&quot;);
-p.put(&quot;movieDatabase.JdbcUrl &quot;, &quot; jdbc:hsqldb:mem:moviedb&quot;);
+p.put("movieDatabase", "new://Resource?type=DataSource");
+p.put("movieDatabase.JdbcDriver ", " org.hsqldb.jdbcDriver");
+p.put("movieDatabase.JdbcUrl ", " jdbc:hsqldb:mem:moviedb");
 
-// override properties on your &quot;movie-unit&quot; persistence unit
-p.put(&quot;movie-unit.hibernate.dialect &quot;, &quot;org.hibernate.dialect.HSQLDialect&quot;);
+// override properties on your "movie-unit" persistence unit
+p.put("movie-unit.hibernate.dialect ", "org.hibernate.dialect.HSQLDialect");
 
 // set some openejb flags
-p.put(&quot;openejb.jndiname.format &quot;, &quot; {ejbName}/{interfaceClass}&quot;);
-p.put(&quot;openejb.descriptors.output &quot;, &quot; true&quot;);
-p.put(&quot;openejb.validation.output.level &quot;, &quot; verbose&quot;);
+p.put("openejb.jndiname.format ", " {ejbName}/{interfaceClass}");
+p.put("openejb.descriptors.output ", " true");
+p.put("openejb.validation.output.level ", " verbose");
 
-InitialContext initialContext = new InitialContext(p);
-</code></pre>
-<a name="EmbeddedConfiguration-Exampleofusingjndi.properties"></a>
-<h1>Example of using jndi.properties</h1>
-<p>Here's an example of the same properties being specified via a<br/><code>jndi.properties file</code>. This file just needs to be placed in the classpath,<br/>not in a subdirectory of a path in the classpath such as META-INF, but at the root of any of the paths in the classpath.</p>
-<pre><code># set the initial context factory
+InitialContext initialContext = new InitialContext(p);</code></pre>
+</div>
+</div>
+<h1 id="_example_of_using_jndi_properties" class="sect0">Example of using jndi.properties</h1>
+<div class="paragraph">
+<p>Here&#8217;s an example of the same properties being specified via a
+<code>jndi.properties file</code>. This file just needs to be placed in the
+classpath, not in a subdirectory of a path in the classpath such as
+META-INF, but at the root of any of the paths in the classpath.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties"># set the initial context factory
 java.naming.factory.initial = org.apache.openejb.client.LocalInitialContextFactory
 
 # change some logging
@@ -160,21 +237,28 @@ movieDatabase = new://Resource?type=DataSource
 movieDatabase.JdbcDriver = org.hsqldb.jdbcDriver
 movieDatabase.JdbcUrl = jdbc:hsqldb:mem:moviedb
 
-# override properties on your &quot;movie-unit&quot; persistence unit
+# override properties on your "movie-unit" persistence unit
 movie-unit.hibernate.dialect = org.hibernate.dialect.HSQLDialect
 
 # set some openejb flags
 openejb.jndiname.format = {ejbName}/{interfaceClass}
 openejb.descriptors.output = true
-openejb.validation.output.level = verbose
-</code></pre>
-<p>Then OpenEJB can be booted via the <code>InitialContext</code> as normal. Properties can still be used to override any of the above properties:</p>
-<pre><code>Properties p = new Properties();
+openejb.validation.output.level = verbose</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then OpenEJB can be booted via the <code>InitialContext</code> as normal.
+Properties can still be used to override any of the above properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
 
-p.put(&quot;openejb.validation.output.level &quot;, &quot; medium&quot;);
+p.put("openejb.validation.output.level ", " medium");
 
-InitialContext initialContext = new InitialContext(p);
-</code></pre>
+InitialContext initialContext = new InitialContext(p);</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -203,7 +287,7 @@ InitialContext initialContext = new InitialContext(p);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

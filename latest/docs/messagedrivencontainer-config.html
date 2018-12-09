@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,63 +95,110 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>A MessageDrivenContainer can be declared via xml in the <code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file using a declaration like the following. All properties in the element body are optional.</p>
-<pre><code>&lt;Container id=&quot;myMessageDrivenContainer&quot; type=&quot;MESSAGE&quot;&gt;
+                <div class="paragraph">
+<p>A MessageDrivenContainer can be declared via xml in the
+<code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file
+using a declaration like the following. All properties in the element
+body are optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Container id="myMessageDrivenContainer" type="MESSAGE"&gt;
     activationSpecClass = org.apache.activemq.ra.ActiveMQActivationSpec
     instanceLimit = 10
     messageListenerInterface = javax.jms.MessageListener
     resourceAdapter = Default JMS Resource Adapter
-&lt;/Container&gt;
-</code></pre>
-<p>Alternatively, a MessageDrivenContainer can be declared via properties in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java VirtualMachine <code>-D</code> properties. The properties can also be used when embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or <code>InitialContext</code></p>
-<pre><code>myMessageDrivenContainer = new://Container?type=MESSAGE
+&lt;/Container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, a MessageDrivenContainer can be declared via properties
+in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java
+VirtualMachine <code>-D</code> properties. The properties can also be used when
+embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or
+<code>InitialContext</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">myMessageDrivenContainer = new://Container?type=MESSAGE
 myMessageDrivenContainer.activationSpecClass = org.apache.activemq.ra.ActiveMQActivationSpec
 myMessageDrivenContainer.instanceLimit = 10
 myMessageDrivenContainer.messageListenerInterface = javax.jms.MessageListener
-myMessageDrivenContainer.resourceAdapter = Default JMS Resource Adapter
-</code></pre>
-<p>Properties and xml can be mixed. Properties will override the xml allowing for easy configuration change without the need for ${} style variable substitution. Properties are not case sensitive. If a property is specified that is not supported by the declared MessageDrivenContainer a warning will be logged. If a MessageDrivenContainer is needed by the application and one is not declared, TomEE will create one dynamically using default settings. Multiple MessageDrivenContainer declarations are allowed.</p>
-<h1>Supported Properties</h1>
-<table class="mdtable">
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-<tr>
-  <td>activationSpecClass</td>
-  <td>String</td>
-  <td>org.apache.activemq.ra.ActiveMQActivationSpec</td>
-  <td>
-Specifies the activation spec class
-</td>
-</tr>
-<tr>
-  <td>instanceLimit</td>
-  <td>int</td>
-  <td>10</td>
-  <td>
-Specifies the maximum number of bean instances that are allowed to exist for each MDB deployment.
-</td>
-</tr>
-<tr>
-  <td>messageListenerInterface</td>
-  <td>String</td>
-  <td>javax.jms.MessageListener</td>
-  <td>
-Specifies the message listener interface handled by this container
-</td>
-</tr>
-<tr>
-  <td>resourceAdapter</td>
-  <td>String</td>
-  <td>Default&nbsp;JMS&nbsp;Resource&nbsp;Adapter</td>
-  <td>
-The resource adapter delivers messages to the container
-</td>
-</tr>
-</table>
+myMessageDrivenContainer.resourceAdapter = Default JMS Resource Adapter</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Properties and xml can be mixed. Properties will override the xml
+allowing for easy configuration change without the need for $\{} style
+variable substitution. Properties are not case sensitive. If a property
+is specified that is not supported by the declared
+MessageDrivenContainer a warning will be logged. If a
+MessageDrivenContainer is needed by the application and one is not
+declared, TomEE will create one dynamically using default settings.
+Multiple MessageDrivenContainer declarations are allowed. # Supported
+Properties</p>
+</div>
+<div class="paragraph">
+<p>Property</p>
+</div>
+<div class="paragraph">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p>Default</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>activationSpecClass</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>org.apache.activemq.ra.ActiveMQActivationSpec</p>
+</div>
+<div class="paragraph">
+<p>Specifies the activation spec class</p>
+</div>
+<div class="paragraph">
+<p>instanceLimit</p>
+</div>
+<div class="paragraph">
+<p>int</p>
+</div>
+<div class="paragraph">
+<p>10</p>
+</div>
+<div class="paragraph">
+<p>Specifies the maximum number of bean instances that are allowed to exist
+for each MDB deployment.</p>
+</div>
+<div class="paragraph">
+<p>messageListenerInterface</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>javax.jms.MessageListener</p>
+</div>
+<div class="paragraph">
+<p>Specifies the message listener interface handled by this container</p>
+</div>
+<div class="paragraph">
+<p>resourceAdapter</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>Default JMS Resource Adapter</p>
+</div>
+<div class="paragraph">
+<p>The resource adapter delivers messages to the container</p>
+</div>
             </div>
             
         </div>
@@ -180,7 +227,7 @@ The resource adapter delivers messages to the container
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,26 +95,42 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Check out the <a href="arquillian-getting-started.html">Getting started</a> page if you are not at all familiar with Arquillian.</p>
-<p>All the Arquillian Adapters for TomEE support the following configuration options in the <strong>src/test/resources/arquillian.xml</strong>:</p>
-<pre><code>&lt;container qualifier=&quot;tomee&quot; default=&quot;true&quot;&gt;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Check out the <a href="arquillian-getting-started.html">Getting started</a> page
+if you are not at all familiar with Arquillian.</p>
+</div>
+<div class="paragraph">
+<p>All the Arquillian Adapters for TomEE support the following
+configuration options in the <strong>src/test/resources/arquillian.xml</strong>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;container qualifier="tomee" default="true"&gt;
     &lt;configuration&gt;
-        &lt;property name=&quot;httpPort&quot;&gt;-1&lt;/property&gt;
-        &lt;property name=&quot;stopPort&quot;&gt;-1&lt;/property&gt;
+        &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+        &lt;property name="stopPort"&gt;-1&lt;/property&gt;
         &lt;!--Optional Container Properties--&gt;
-        &lt;property name=&quot;properties&quot;&gt;
+        &lt;property name="properties"&gt;
             aproperty=something
         &lt;/property&gt;
         &lt;!--Optional Remote Adapter Deployer Properties
-        &lt;property name=&quot;deployerProperties&quot;&gt;
+        &lt;property name="deployerProperties"&gt;
             aproperty=something
         &lt;/property&gt;
         --&gt;
     &lt;/configuration&gt;
-&lt;/container&gt;
-</code></pre>
-<p>The above can also be set as system properties rather than via the <strong>src/test/resources/arquillian.xml</strong> file.</p>
-<pre><code>&lt;build&gt;
+&lt;/container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above can also be set as system properties rather than via the
+<strong>src/test/resources/arquillian.xml</strong> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;build&gt;
   &lt;plugins&gt;
     &lt;plugin&gt;
       &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
@@ -127,24 +143,64 @@
       &lt;/configuration&gt;
     &lt;/plugin&gt;
   &lt;/plugins&gt;
-&lt;/build&gt;
-</code></pre>
-<p>When a port is set to -1, a random port will be chosen. This is key to avoiding port conflicts on CI systems or for just plain clean testing.</p>
-<p>The TomEE Arquillian adapters will export the actual port chosen back as a system property using the same name. The test case can use the property to retrieve the port and contact the server.</p>
-<pre><code>URL url = new URL(&quot;http://localhost:&quot; + System.getProperty(&quot;tomee.httpPort&quot;);
-// use the URL to connect to the server
-</code></pre>
-<p>If that property returns null </p>
-<p>When you are actually using a test on the client side, you can use instead</p>
-<pre><code>import org.jboss.arquillian.test.api.ArquillianResource;
+&lt;/build&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When a port is set to -1, a random port will be chosen. This is key to
+avoiding port conflicts on CI systems or for just plain clean testing.</p>
+</div>
+<div class="paragraph">
+<p>The TomEE Arquillian adapters will export the actual port chosen back as
+a system property using the same name. The test case can use the
+property to retrieve the port and contact the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">URL url = new URL("http://localhost:" + System.getProperty("tomee.httpPort");
+// use the URL to connect to the server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If that property returns null</p>
+</div>
+<div class="paragraph">
+<p>When you are actually using a test on the client side, you can use
+instead</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.jboss.arquillian.test.api.ArquillianResource;
 ...
-@ArquillianResource private URL url;
-</code></pre>
-<p>The URL will get injected by Arquillian. Be careful, that injection only works if your are on the client side (it does not make sense in the server side). So, if for a specific need to need it, just use the system property.</p>
-<h1>TomEE Embedded Adapter</h1>
-<p>The TomEE Embedded Adapter will boot TomEE right inside the test case itself resulting in one JVM running both the application and the test case. This is generally much faster than the TomEE Remote Adapter and great for development. That said, it is strongly recommended to also run all tests in a Continuous Integration system using the TomEE Remote Adapter.</p>
-<p>To use the TomEE Embedded Arquillian Adapter, simply add these Maven dependencies to your Maven pom.xml:</p>
-<pre><code>&lt;dependency&gt;
+@ArquillianResource private URL url;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URL will get injected by Arquillian. Be careful, that injection only
+works if your are on the client side (it does not make sense in the
+server side). So, if for a specific need to need it, just use the system
+property.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tomee_embedded_adapter">TomEE Embedded Adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The TomEE Embedded Adapter will boot TomEE right inside the test case
+itself resulting in one JVM running both the application and the test
+case. This is generally much faster than the TomEE Remote Adapter and
+great for development. That said, it is strongly recommended to also run
+all tests in a Continuous Integration system using the TomEE Remote
+Adapter.</p>
+</div>
+<div class="paragraph">
+<p>To use the TomEE Embedded Arquillian Adapter, simply add these Maven
+dependencies to your Maven pom.xml:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
   &lt;artifactId&gt;arquillian-tomee-embedded&lt;/artifactId&gt;
   &lt;version&gt;1.7.1&lt;/version&gt; &lt;!--Current version--&gt;
@@ -164,31 +220,83 @@
   &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
   &lt;artifactId&gt;tomee-jaxrs&lt;/artifactId&gt;
   &lt;version&gt;1.7.1&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>As mentioned above the Embedded Adapter has the following properties which can be specified in the <strong>src/test/resources/arquillian.xml</strong> file:</p>
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As mentioned above the Embedded Adapter has the following properties
+which can be specified in the <strong>src/test/resources/arquillian.xml</strong> file:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>httpPort</code></li>
-  <li><code>stopPort</code></li>
-  <li><code>properties</code> (System properties for container)</li>
+<li>
+<p><code>httpPort</code></p>
+</li>
+<li>
+<p><code>stopPort</code></p>
+</li>
+<li>
+<p><code>properties</code> (System properties for container)</p>
+</li>
 </ul>
-<p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
+</div>
+<div class="paragraph">
+<p>Or alternatively as System properties, possibly shared with other TomEE
+Arquillian Adapters:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>tomee.httpPort</code></li>
-  <li><code>tomee.stopPort</code></li>
+<li>
+<p><code>tomee.httpPort</code></p>
+</li>
+<li>
+<p><code>tomee.stopPort</code></p>
+</li>
 </ul>
-<p>Or more specifically as a System properties only applicable to the Embedded Adapter:</p>
+</div>
+<div class="paragraph">
+<p>Or more specifically as a System properties only applicable to the
+Embedded Adapter:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>tomee.embedded.httpPort</code></li>
-  <li><code>tomee.embedded.stopPort</code></li>
+<li>
+<p><code>tomee.embedded.httpPort</code></p>
+</li>
+<li>
+<p><code>tomee.embedded.stopPort</code></p>
+</li>
 </ul>
-<h1>TomEE Remote Adapter</h1>
-<p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus distribution. Once setup, the server will execute in a separate process. This will be slower, but with the added benefit it is 100% match with the production system environment.</p>
-<p>On a local machine clients can get the remote server port using the following System property:</p>
-<pre><code>final String port = System.getProperty(&quot;server.http.port&quot;);
-</code></pre>
-<p>The following shows a typical configuration for testing against TomEE (webprofile version). The same can be done against TomEE+ by changing <code>&lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;</code> to <code>&lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;</code></p>
-<pre><code>&lt;properties&gt;
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tomee_remote_adapter">TomEE Remote Adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The TomEE Remote Adapter will unzip and setup a TomEE or TomEE Plus
+distribution. Once setup, the server will execute in a separate process.
+This will be slower, but with the added benefit it is 100% match with
+the production system environment.</p>
+</div>
+<div class="paragraph">
+<p>On a local machine clients can get the remote server port using the
+following System property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">final String port = System.getProperty("server.http.port");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following shows a typical configuration for testing against TomEE
+(webprofile version). The same can be done against TomEE+ by changing
+<code>&lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;</code> to
+<code>&lt;tomee.classifier&gt;plus&lt;/tomee.classifier&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;properties&gt;
   &lt;tomee.version&gt;1.7.1&lt;/tomee.version&gt;
   &lt;tomee.classifier&gt;webprofile&lt;/tomee.classifier&gt;
 &lt;/properties&gt;
@@ -219,34 +327,88 @@
     &lt;classifier&gt;${tomee.classifier}&lt;/classifier&gt;
     &lt;type&gt;zip&lt;/type&gt;
   &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<p>The Remote Adapter has the following properties which can be specified in the <strong>src/test/resources/arquillian.xml</strong> file:</p>
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Remote Adapter has the following properties which can be specified
+in the <strong>src/test/resources/arquillian.xml</strong> file:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>httpPort</code></li>
-  <li><code>stopPort</code></li>
-  <li><code>version</code></li>
-  <li><code>classifier</code> (Must be either <code>webprofile</code> or <code>plus</code>)</li>
-  <li><code>properties</code> (System properties for container)</li>
-  <li><code>deployerProperties</code> (Sent to Deployer)</li>
+<li>
+<p><code>httpPort</code></p>
+</li>
+<li>
+<p><code>stopPort</code></p>
+</li>
+<li>
+<p><code>version</code></p>
+</li>
+<li>
+<p><code>classifier</code> (Must be either <code>webprofile</code> or <code>plus</code>)</p>
+</li>
+<li>
+<p><code>properties</code> (System properties for container)</p>
+</li>
+<li>
+<p><code>deployerProperties</code> (Sent to Deployer)</p>
+</li>
 </ul>
-<p>Or alternatively as System properties, possibly shared with other TomEE Arquillian Adapters:</p>
+</div>
+<div class="paragraph">
+<p>Or alternatively as System properties, possibly shared with other TomEE
+Arquillian Adapters:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>tomee.httpPort</code></li>
-  <li><code>tomee.stopPort</code></li>
-  <li><code>tomee.version</code></li>
-  <li><code>tomee.classifier</code></li>
+<li>
+<p><code>tomee.httpPort</code></p>
+</li>
+<li>
+<p><code>tomee.stopPort</code></p>
+</li>
+<li>
+<p><code>tomee.version</code></p>
+</li>
+<li>
+<p><code>tomee.classifier</code></p>
+</li>
 </ul>
-<p>Or more specifically as a System properties only applicable to the Remote Adapter:</p>
+</div>
+<div class="paragraph">
+<p>Or more specifically as a System properties only applicable to the
+Remote Adapter:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>tomee.remote.httpPort</code></li>
-  <li><code>tomee.remote.stopPort</code></li>
-  <li><code>tomee.remote.version</code></li>
-  <li><code>tomee.remote.classifier</code></li>
+<li>
+<p><code>tomee.remote.httpPort</code></p>
+</li>
+<li>
+<p><code>tomee.remote.stopPort</code></p>
+</li>
+<li>
+<p><code>tomee.remote.version</code></p>
+</li>
+<li>
+<p><code>tomee.remote.classifier</code></p>
+</li>
 </ul>
-<h1>Maven Profiles</h1>
-<p>Setting up both adapters is quite easy via Maven profiles. Here the default adapter is the Embedded Adapter, the Remote Adapter will run with <code>-Ptomee-webprofile-remote</code> specified as a <code>mvn</code> command argument.</p>
-<pre><code>&lt;profiles&gt;
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_maven_profiles">Maven Profiles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Setting up both adapters is quite easy via Maven profiles. Here the
+default adapter is the Embedded Adapter, the Remote Adapter will run
+with <code>-Ptomee-webprofile-remote</code> specified as a <code>mvn</code> command argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;profiles&gt;
 
   &lt;profile&gt;
     &lt;id&gt;tomee-embedded&lt;/id&gt;
@@ -334,8 +496,11 @@
     &lt;/dependencies&gt;
   &lt;/profile&gt;
 
-&lt;/profiles&gt;
-</code></pre>
+&lt;/profiles&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -364,7 +529,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,8 +95,9 @@
         <div class="row">
             
             <div class="col-md-12">
-                <div class="sect2">
-<h3 id="_session_clustering">Session clustering</h3>
+                <div class="sect1">
+<h2 id="_session_clustering">Session clustering</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>TomEE fully relies on Tomcat clustering: <a href="https://tomcat.apache.org/tomcat-7.0-doc/cluster-howto.html">Tomcat Clustering</a>.</p>
 </div>
@@ -105,8 +106,10 @@
 through the session.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_hazelcast_as_session_provider">Hazelcast as session provider</h3>
+</div>
+<div class="sect1">
+<h2 id="_hazelcast_as_session_provider">Hazelcast as session provider</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Hazelcast did a post on this topic on <a href="https://hazelcast.com/use-cases/web-session-clustering/session-clustering-tomee/">Session Clustering With TomEE</a>.</p>
 </div>
@@ -114,8 +117,10 @@ through the session.</p>
 <p>Tomitribe also demonstrated you can distributed <code>@Stateful</code> beans easily relying on hazelcast: <a href="https://github.com/tomitribe/hazelcast-tomee-poc">Hazelcast TomEE PoC</a>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_load_balancing">Load balancing</h3>
+</div>
+<div class="sect1">
+<h2 id="_load_balancing">Load balancing</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>TomEE being a HTTP server all HTTP load balancer such as HTTPd (a.k.a. Apache2), ngnix, F5 etc&#8230;&#8203; will work.</p>
 </div>
@@ -123,28 +128,30 @@ through the session.</p>
 <p>More documentation on HTTPd link can be found on <a href="https://tomcat.apache.org/connectors-doc/webserver_howto/apache.html">Tomcat</a> website.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_ejbd">EJBd</h3>
+</div>
+<div class="sect1">
+<h2 id="_ejbd">EJBd</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>If you use the EJBd protocol (<code>@Remote</code> EJB proprietary protocol of TomEE) you can get cluster features on the client
 part.</p>
 </div>
-<div class="sect3">
-<h4 id="_multicast">Multicast</h4>
+<div class="sect2">
+<h3 id="_multicast">Multicast</h3>
 <div class="paragraph">
 <p>Multicast is the preferred way to broadcast the heartbeat on the network. The simple technique of broadcasting a non-changing service URI on the network has specific advantages to multicast. The URI itself is essentially stateless and there is no "i&#8217;m alive" URI or an "i&#8217;m dead" URI.</p>
 </div>
 <div class="paragraph">
 <p>In this way the issues with UDP being unordered and unreliable melt away as state is no longer a concern and packet sizes are always small. Complicated libraries that ride atop UDP and attempt to offer reliability (retransmission) and ordering on UDP can be avoided. As well the advantages UDP has over TCP are retained as there are no java layers attempting to force UDP communication to be more TCP-like. The simple design means UDP/Multicast is only used for discovery and from there on out critical information is transmitted over TCP/IP which is obviously going to do a better job at ensuring reliability and ordering.</p>
 </div>
-<div class="sect4">
-<h5 id="_server_configuration">Server Configuration</h5>
+<div class="sect3">
+<h4 id="_server_configuration">Server Configuration</h4>
 <div class="paragraph">
 <p>When you boot the server there should be a conf/multicast.properties file containing:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">server      = org.apache.openejb.server.discovery.MulticastDiscoveryAgent
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.discovery.MulticastDiscoveryAgent
 bind        = 239.255.2.3
 port        = 6142
 disabled    = true
@@ -232,7 +239,6 @@ for multicast to work you need to have ejbd activated as a normal service. This 
 <div class="paragraph">
 <p>text</p>
 </div>
-</div>
 <div class="sect4">
 <h5 id="_multicast_client">Multicast Client</h5>
 <div class="paragraph">
@@ -285,7 +291,7 @@ When the client connects, the server will send the URLs of all the servers in th
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">server      = org.apache.openejb.server.discovery.MulticastPulseAgent
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.discovery.MulticastPulseAgent
 bind        = 239.255.2.3
 port        = 6142
 disabled    = true
@@ -306,7 +312,7 @@ group       = default</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">server      = org.apache.openejb.server.ejbd.EjbServer
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.ejbd.EjbServer
 bind        = 0.0.0.0
 port        = 4201
 disabled    = false
@@ -389,7 +395,7 @@ InitialContext remoteContext = new InitialContext(p);</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">server      = org.apache.openejb.server.discovery.MultipointDiscoveryAgent
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.discovery.MultipointDiscoveryAgent
 bind        = 127.0.0.1
 port        = 4212
 disabled    = false
@@ -463,6 +469,8 @@ InitialContext remoteContext = new InitialContext(p);</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
             </div>
             
         </div>
@@ -491,7 +499,7 @@ InitialContext remoteContext = new InitialContext(p);</code></pre>
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

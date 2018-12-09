@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,11 +95,40 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Network size</h1>
-<p>The general disadvantage of this topology is the number of connections required. The number of connections for the network of servers is equal to<br/><code>(n * n - n) / 2</code>, where n is the number of servers. For example, with 5<br/>servers you need 10 connections, with 10 servers you need 45 connections, and with 50 servers you need 1225 connections. This is of course the number of connections across the entire network, each individual server only needs <code>n - 1</code> connections.</p>
-<p>The handling of these sockets is all asynchronous Java NIO code which allows the server to handle many connections (all of them) with one thread.<br/> From a pure threading perspective, the option is extremely efficient with<br/>just one thread to listen and broadcast to many peers. </p>
-<h1>Double connect</h1>
-<p>It is possible in this process that two servers learn of each other at the same time and each attempts to connect to the other simultaneously, resulting in two connections between the same two servers. When this happens both servers will detect the extra connection and one of the connections will be dropped and one will be kept. In practice this race condition rarely happens and can be avoided almost entirely by fanning out server startup by as little as 100 milliseconds.</p>
+                <div class="sect1">
+<h2 id="_network_size">Network size</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The general disadvantage of this topology is the number of connections
+required. The number of connections for the network of servers is equal
+to <code>(n * n - n) / 2</code>, where n is the number of servers. For example,
+with 5 servers you need 10 connections, with 10 servers you need 45
+connections, and with 50 servers you need 1225 connections. This is of
+course the number of connections across the entire network, each
+individual server only needs <code>n - 1</code> connections.</p>
+</div>
+<div class="paragraph">
+<p>The handling of these sockets is all asynchronous Java NIO code which
+allows the server to handle many connections (all of them) with one
+thread. From a pure threading perspective, the option is extremely
+efficient with just one thread to listen and broadcast to many peers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_double_connect">Double connect</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is possible in this process that two servers learn of each other at
+the same time and each attempts to connect to the other simultaneously,
+resulting in two connections between the same two servers. When this
+happens both servers will detect the extra connection and one of the
+connections will be dropped and one will be kept. In practice this race
+condition rarely happens and can be avoided almost entirely by fanning
+out server startup by as little as 100 milliseconds.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -128,7 +157,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

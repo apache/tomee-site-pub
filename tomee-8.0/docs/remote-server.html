@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,42 +95,103 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>!<a href="http://www.openejb.org/images/diagram-remote-server.gif|valign=top">http://www.openejb.org/images/diagram-remote-server.gif|valign=top</a>,<br/>align=right, hspace=15!<br/><a name="RemoteServer-AccessingEJBsRemotely"></a></p>
-<h1>Accessing EJBs Remotely</h1>
-<p>When using OpenEJB as a stand-alone server you can connect across a network and access EJBs from a remote client. The client code for accessing an EJB's Remote Interface is the same, however to actually connect across a network to the server, you need to specify different JNDI parameters.</p>
-<a name="RemoteServer-Shortversion"></a>
-<h1>Short version</h1>
-<p>Using OpenEJB's default remote server implementation is pretty straight forward. You simply need to:</p>
-<ol>
-  <li>Deploy your bean.</li>
-  <li>Start the server on the IP and Port you want, 25.14.3.92 and 4201 for<br/>example.</li>
-  <li>Use that information in your client to create an initial context</li>
-  <li>Add the right jars to your client's classpath</li>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>!http://www.openejb.org/images/diagram-remote-server.gif|valign=top,
+align=right, hspace=15! # Accessing EJBs Remotely</p>
+</div>
+<div class="paragraph">
+<p>When using OpenEJB as a stand-alone server you can connect across a
+network and access EJBs from a remote client. The client code for
+accessing an EJB&#8217;s Remote Interface is the same, however to actually
+connect across a network to the server, you need to specify different
+JNDI parameters.</p>
+</div>
+</div>
+</div>
+<h1 id="_short_version" class="sect0">Short version</h1>
+<div class="paragraph">
+<p>Using OpenEJB&#8217;s default remote server implementation is pretty straight
+forward. You simply need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Deploy your bean.</p>
+</li>
+<li>
+<p>Start the server on the IP and Port you want, 25.14.3.92 and 4201 for
+example.</p>
+</li>
+<li>
+<p>Use that information in your client to create an initial context</p>
+</li>
+<li>
+<p>Add the right jars to your client&#8217;s classpath</p>
+</li>
 </ol>
+</div>
+<div class="paragraph">
 <p>So, here it is in short.</p>
+</div>
+<div class="paragraph">
 <p>Deploy your bean with the Deploy Tool:</p>
-<pre><code>c:\openejb&gt; openejb.bat deploy beans\myBean.jar
-</code></pre>
-<p>See the <a href="openejbx30:deploy-tool.html">OPENEJBx30:Deploy Tool</a><br/> documentation for more details on deploying beans.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">c:\openejb&gt; openejb.bat deploy beans\myBean.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the openejbx30:deploy-tool.html[OPENEJBx30:Deploy Tool]
+documentation for more details on deploying beans.</p>
+</div>
+<div class="paragraph">
 <p>Start the server:</p>
-<pre><code>c:\openejb&gt; openejb.bat start -h 25.14.3.92 -p 4201
-</code></pre>
-<p>See the Remote Server command-line guide for more details on starting the Remote Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">c:\openejb&gt; openejb.bat start -h 25.14.3.92 -p 4201</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See the Remote Server command-line guide for more details on starting
+the Remote Server.</p>
+</div>
+<div class="paragraph">
 <p>Create an initial context in your client as such:</p>
-<pre><code>Properties p = new Properties();
-p.put(&quot;java.naming.factory.initial&quot;, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(&quot;java.naming.provider.url&quot;, &quot;ejbd://25.14.3.92:4201&quot;);
-p.put(&quot;java.naming.security.principal&quot;, &quot;myuser&quot;);
-p.put(&quot;java.naming.security.credentials&quot;, &quot;mypass&quot;);
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put("java.naming.factory.initial", "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put("java.naming.provider.url", "ejbd://25.14.3.92:4201");
+p.put("java.naming.security.principal", "myuser");
+p.put("java.naming.security.credentials", "mypass");
 
-InitialContext ctx = new InitialContext(p);
-</code></pre>
-<p>If you don't have any EJBs or clients to run, try the ubiquitous <a href="openejbx30:hello-world.html">Hello World</a><br/> example.<br/>Add the following library to your clients classpath:</p>
+InitialContext ctx = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t have any EJBs or clients to run, try the ubiquitous
+openejbx30:hello-world.html[Hello World] example. Add the following
+library to your clients classpath:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>openejb-client-x.x.x.jar</li>
-  <li>javaee-api-x.x.jar</li>
+<li>
+<p>openejb-client-x.x.x.jar</p>
+</li>
+<li>
+<p>javaee-api-x.x.jar</p>
+</li>
 </ul>
-<p>Both can be found in the lib directory where you installed OpenEJB or in Maven repositories.</p>
+</div>
+<div class="paragraph">
+<p>Both can be found in the lib directory where you installed OpenEJB or in
+Maven repositories.</p>
+</div>
             </div>
             
         </div>
@@ -159,7 +220,7 @@ InitialContext ctx = new InitialContext(p);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

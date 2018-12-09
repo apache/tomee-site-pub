@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,42 +95,99 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="SystemProperties-Overridingopenejb.xml"></a>
-<p>You can find a list of properties <a href="properties-listing.html">here</a>. But read on to understand how these can be used.</p>
-<h1>Overriding openejb.xml</h1>
-<p>Anything in the openejb.xml file can be overridden via system properties of the format: </p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can find a list of properties <a href="properties-listing.html">here</a>.
+But read on to understand how these can be used.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overriding_openejb_xml">Overriding openejb.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Anything in the openejb.xml file can be overridden via system properties
+of the format:</p>
+</div>
+<div class="paragraph">
 <p><code>-D&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt;</code></p>
-<p>..where id is the value in the config file for example: </p>
-<pre><code>&lt;Connector id=&quot;mysql&quot;&gt; 
-    JdbcDriver com.mysql.jdbc.Driver 
-    JdbcUrl jdbc:mysql://localhost/test 
-    UserName test 
-&lt;/Connector&gt; 
-</code></pre>
-<p>Could be overridden as follows via system properties on the command line: </p>
+</div>
+<div class="paragraph">
+<p>..where id is the value in the config file for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Connector id="mysql"&gt;
+    JdbcDriver com.mysql.jdbc.Driver
+    JdbcUrl jdbc:mysql://localhost/test
+    UserName test
+&lt;/Connector&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Could be overridden as follows via system properties on the command
+line:</p>
+</div>
+<div class="quoteblock">
 <blockquote>
-  <p>./bin/openejb start -Dmysql.JdbcDriver=com.mysql.jdbc.Driver<br/>-Dmysql.JdbcUrl=jdbc:<a href="mysql://localhost/test">mysql://localhost/test</a> -Dmysql.UserName=test</p>
+<div class="paragraph">
+<div class="title">/bin/openejb start -Dmysql.JdbcDriver=com.mysql.jdbc.Driver</div>
+<p>-Dmysql.JdbcUrl=jdbc:mysql://localhost/test -Dmysql.UserName=test</p>
+</div>
 </blockquote>
-<a name="SystemProperties-OverridingServerServices"></a>
-<h1>Overriding Server Services</h1>
-<p>Any server service installed into OpenEJB can be overridden in the same fashion as things in the openejb.xml file. </p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overriding_server_services">Overriding Server Services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Any server service installed into OpenEJB can be overridden in the same
+fashion as things in the openejb.xml file.</p>
+</div>
+<div class="paragraph">
 <p>For example, when OpenEJB starts it prints out the following:</p>
-<pre><code>  ** Starting Services **
-  NAME          IP          PORT  
-  httpejbd         0.0.0.0          4204  
-  telnet           0.0.0.0        4202  
-  ejbd          0.0.0.0         4201  
-  hsql          0.0.0.0         9001  
-  activemq         127.0.0.1       4206  
-  derbynet         0.0.0.0          4205  
-  admin thread         0.0.0.0          4200  
-</code></pre>
-<p>Each of those has the same standard xinet.d-like properties which can also be configured as such:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  ** Starting Services **
+  NAME             IP          PORT
+  httpejbd         0.0.0.0         4204
+  telnet           0.0.0.0         4202
+  ejbd             0.0.0.0         4201
+  hsql             0.0.0.0         9001
+  activemq         127.0.0.1       4206
+  derbynet         0.0.0.0         4205
+  admin thread         0.0.0.0         4200</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each of those has the same standard xinet.d-like properties which can
+also be configured as such:</p>
+</div>
+<div class="paragraph">
 <p><code>-D&lt;id&gt;.&lt;property-name&gt;=&lt;property-value&gt;</code></p>
-<p>... where 'id' is the name of the server service and 'property-name' is one<br/>of the following: bind, port, threads, disabled, only_from.</p>
-<p>So to set the address and port the ejbd service will bind to, simply specify this on the command line:</p>
-<pre><code>./bin/openejb start -Dejbd.bind=192.168.1.12 -Dejbd.port=9988
-</code></pre>
+</div>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>where 'id' is the name of the server service and 'property-name' is
+one of the following: bind, port, threads, disabled, only_from.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>So to set the address and port the ejbd service will bind to, simply
+specify this on the command line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">./bin/openejb start -Dejbd.bind=192.168.1.12 -Dejbd.port=9988</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -159,7 +216,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

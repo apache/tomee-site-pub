@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,58 +95,112 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Purpose</h1>
+                <div class="sect1">
+<h2 id="_purpose">Purpose</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>You want to use JAAS in TomEE with custom (or OpenEJB) LoginModules.</p>
-<h1>Solution</h1>
-<p>TomEE tries to keep as possible as it is Tomcat so simply configure your JAAS LoginModule as in Tomcat.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solution">Solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE tries to keep as possible as it is Tomcat so simply configure your
+JAAS LoginModule as in Tomcat.</p>
+</div>
+<div class="paragraph">
 <p>Note: only the first one will be used.</p>
-<h1>Configuration</h1>
-<p>Add to your <code>CATALINA_OPTS</code> the <code>java.security.auth.login.config</code> system property:</p>
-<pre><code>-Djava.security.auth.login.config=$CATALINA_BASE/conf/login.config
-</code></pre>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Add to your <code>CATALINA_OPTS</code> the <code>java.security.auth.login.config</code> system
+property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">-Djava.security.auth.login.config=$CATALINA_BASE/conf/login.config</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Configure your realm in server.xml file</p>
-<pre><code>&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;
-&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
-  &lt;Listener className=&quot;org.apache.tomee.loader.OpenEJBListener&quot; /&gt;
-  &lt;Listener className=&quot;org.apache.catalina.security.SecurityListener&quot; /&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;Server port="8005" shutdown="SHUTDOWN"&gt;
+  &lt;Listener className="org.apache.tomee.loader.OpenEJBListener" /&gt;
+  &lt;Listener className="org.apache.catalina.security.SecurityListener" /&gt;
 
-  &lt;Service name=&quot;Catalina&quot;&gt;
-    &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; 
-               connectionTimeout=&quot;20000&quot; 
-               redirectPort=&quot;8443&quot; /&gt;
-    &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt;
-    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;
+  &lt;Service name="Catalina"&gt;
+    &lt;Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" /&gt;
+    &lt;Connector port="8009" protocol="AJP/1.3" redirectPort="8443" /&gt;
+    &lt;Engine name="Catalina" defaultHost="localhost"&gt;
       &lt;!-- here is the magic --&gt;
-      &lt;Realm className=&quot;org.apache.catalina.realm.JAASRealm&quot; appName=&quot;PropertiesLogin&quot;
-             userClassNames=&quot;org.apache.openejb.core.security.jaas.UserPrincipal&quot;
-             roleClassNames=&quot;org.apache.openejb.core.security.jaas.GroupPrincipal&quot;&gt;
+      &lt;Realm className="org.apache.catalina.realm.JAASRealm" appName="PropertiesLogin"
+             userClassNames="org.apache.openejb.core.security.jaas.UserPrincipal"
+             roleClassNames="org.apache.openejb.core.security.jaas.GroupPrincipal"&gt;
       &lt;/Realm&gt;
 
-      &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;
-            unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot; /&gt;
+      &lt;Host name="localhost"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true" /&gt;
     &lt;/Engine&gt;
   &lt;/Service&gt;
-&lt;/Server&gt;
-</code></pre>
+&lt;/Server&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Configure your <code>login.config</code> file</p>
-<pre><code>PropertiesLogin {
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">PropertiesLogin {
     org.apache.openejb.core.security.jaas.PropertiesLoginModule required
     Debug=false
-    UsersFile=&quot;users.properties&quot;
-    GroupsFile=&quot;groups.properties&quot;;
-};
-</code></pre>
-<p>Configure your login module specifically (<code>users.properties</code> for snippets of this page for instance).</p>
-<p>Place <code>users.properties</code> and <code>groups.properties</code> files in <code>$CATALINA_BASE/conf/</code> folder.<br/><code>users.properties</code> file contains user name and associated password entries, ex.:</p>
-<pre><code>me=password
-tomee=tomee
-</code></pre>
+    UsersFile="users.properties"
+    GroupsFile="groups.properties";
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure your login module specifically (<code>users.properties</code> for
+snippets of this page for instance).</p>
+</div>
+<div class="paragraph">
+<p>Place <code>users.properties</code> and <code>groups.properties</code> files in
+<code>$CATALINA_BASE/conf/</code> folder. <code>users.properties</code> file contains user
+name and associated password entries, ex.:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">me=password
+tomee=tomee</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p><code>groups.properties</code> file specifies groups and their users, ex.:</p>
-<pre><code>my-role=me
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">my-role=me
 manager-gui=tomee,me
-tomee-admin=tomee
-</code></pre>
-<p><strong>NOTE</strong>: <code>users.properties</code> and <code>groups.properties</code> file names and file location are fixed. If other names are used, the files must be placed in <code>%CATALINA_BASE/lib/</code> folder instead.</p>
+tomee-admin=tomee</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>NOTE</strong>: <code>users.properties</code> and <code>groups.properties</code> file names and file
+location are fixed. If other names are used, the files must be placed in
+<code>%CATALINA_BASE/lib/</code> folder instead.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -175,7 +229,7 @@ tomee-admin=tomee
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

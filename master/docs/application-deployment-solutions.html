@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,43 +95,133 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Deploying An Application To TomEE Or OpenEJB</h1>
-<h2>How to deploy my application under TomEE</h2>
-<h3>Description</h3>
-<p>This aims to be more dynamic in the way you deploy your applications. It is clearly cloud oriented.</p>
-<h3>Webapp and TomEE deployment</h3>
-<p>Webapp can be deployed as Tomcat does. Simply put it in webapps folder<br/>(or the one you configured) and start TomEE.</p>
-<h3>TomEE specific deployment</h3>
-<p>By default TomEE deploys applications (ear, war, jar) contained in $CATALINA_BASE/apps directory at start up.</p>
-<h3>Deployer</h3>
-<p>OpenEJB provides a Deployer EJB to do this task. It can be used in your own software looking up remotely the "openejb/DeployerBusinessRemote" EJB. Its interface is "org.apache.openejb.assembler.Deployer". The needed dependency is org.apache.openejb:openejb-core.</p>
-<p>Once you got your deployer simply invoke the "deploy" method. Give it the location of your application (can be a file, http, https, maven location depending on the way you configured your container, for more information have a look to TomEE provisionning).</p>
+                <div class="sect1">
+<h2 id="_deploying_an_application_to_tomee_or_openejb">Deploying An Application To TomEE Or OpenEJB</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_how_to_deploy_my_application_under_tomee">How to deploy my application under TomEE</h3>
+<div class="sect3">
+<h4 id="_description">Description</h4>
+<div class="paragraph">
+<p>This aims to be more dynamic in the way you deploy your applications. It
+is clearly cloud oriented.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_webapp_and_tomee_deployment">Webapp and TomEE deployment</h4>
+<div class="paragraph">
+<p>Webapp can be deployed as Tomcat does. Simply put it in webapps folder
+(or the one you configured) and start TomEE.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tomee_specific_deployment">TomEE specific deployment</h4>
+<div class="paragraph">
+<p>By default TomEE deploys applications (ear, war, jar) contained in
+$CATALINA_BASE/apps directory at start up.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deployer">Deployer</h4>
+<div class="paragraph">
+<p>OpenEJB provides a Deployer EJB to do this task. It can be used in your
+own software looking up remotely the "openejb/DeployerBusinessRemote"
+EJB. Its interface is "org.apache.openejb.assembler.Deployer". The
+needed dependency is org.apache.openejb:openejb-core.</p>
+</div>
+<div class="paragraph">
+<p>Once you got your deployer simply invoke the "deploy" method. Give it
+the location of your application (can be a file, http, https, maven
+location depending on the way you configured your container, for more
+information have a look to TomEE provisionning).</p>
+</div>
+<div class="paragraph">
 <p>Note: the "undeploy" method exists too and take the same path.</p>
+</div>
+<div class="paragraph">
 <p>The Deployer is the base of all other solutions</p>
-<h3>Maven plugin</h3>
-<p><a href="maven/index.html">org.apache.openejb:tomee-maven-plugin</a> can be used to deploy/undeploy your application. Once this plugin is added to your pom you have access to the following configuration:</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_maven_plugin">Maven plugin</h4>
+<div class="paragraph">
+<p><a href="maven/index.html">org.apache.openejb:tomee-maven-plugin</a> can be used
+to deploy/undeploy your application. Once this plugin is added to your
+pom you have access to the following configuration:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>tomeeHttpPort</li>
-  <li>tomeeHost</li>
+<li>
+<p>tomeeHttpPort</p>
+</li>
+<li>
+<p>tomeeHost</p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>Then simply run</p>
-<pre><code>mvn tomee:deploy &lt;path&gt;
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn tomee:deploy &lt;path&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>or</p>
-<pre><code>mvn tomee:undeploy &lt;path&gt;
-</code></pre>
-<h4>The Deployer through TomEE Webapp</h4>
-<p>When you start TomEE you can locally access the TomEE webapps (<a href="http://host:ip/tomee/)">http://host:ip/tomee/)</a>.</p>
-<p>Then simply go to JNDI tree, select the deployer in the tree, then click on "invoke this ejb", select the deploy (or undeploy) method, fill the path and click on "invoke".</p>
-<h4>Cloud idea</h4>
-<p>If you want to cloudify your application, you'll get a configuration database (or any other storage system ;)).</p>
-<p>So it means it is easy for you to get a host and a port...so it is easy to deploy on all your server using the deployer: simply use the maven provisioning then run the deployer on all your nodes and that's all!</p>
-<h3>Doing it with camel?</h3>
-<p>If you are using a route to deploy/undeploy your applications you can have a look to the proposed camel-openejb component:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn tomee:undeploy &lt;path&gt;</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_the_deployer_through_tomee_webapp">The Deployer through TomEE Webapp</h5>
+<div class="paragraph">
+<p>When you start TomEE you can locally access the TomEE webapps
+(<a href="http://host:ip/tomee/" class="bare">http://host:ip/tomee/</a>).</p>
+</div>
+<div class="paragraph">
+<p>Then simply go to JNDI tree, select the deployer in the tree, then click
+on "invoke this ejb", select the deploy (or undeploy) method, fill the
+path and click on "invoke".</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_cloud_idea">Cloud idea</h5>
+<div class="paragraph">
+<p>If you want to cloudify your application, you&#8217;ll get a configuration
+database (or any other storage system ;)).</p>
+</div>
+<div class="paragraph">
+<p>So it means it is easy for you to get a host and a port&#8230;&#8203;so it is easy
+to deploy on all your server using the deployer: simply use the maven
+provisioning then run the deployer on all your nodes and that&#8217;s all!</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_doing_it_with_camel">Doing it with camel?</h4>
+<div class="paragraph">
+<p>If you are using a route to deploy/undeploy your applications you can
+have a look to the proposed camel-openejb component:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>base code: <a href="http://svn.apache.org/repos/asf/tomee/sandbox/camel/camel-openejb/">http://svn.apache.org/repos/asf/tomee/sandbox/camel/camel-openejb/</a></li>
-  <li>proposed to be added to camel: <a href="https://issues.apache.org/jira/browse/CAMEL-4935">https://issues.apache.org/jira/browse/CAMEL-4935</a></li>
+<li>
+<p>base code:
+<a href="http://svn.apache.org/repos/asf/tomee/sandbox/camel/camel-openejb/" class="bare">http://svn.apache.org/repos/asf/tomee/sandbox/camel/camel-openejb/</a></p>
+</li>
+<li>
+<p>proposed to be added to camel:
+<a href="https://issues.apache.org/jira/browse/CAMEL-4935" class="bare">https://issues.apache.org/jira/browse/CAMEL-4935</a></p>
+</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -160,7 +250,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

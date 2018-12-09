@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,36 +95,43 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="ejb-local-ref-Viaannotation"></a>
-<h1>Via annotation</h1>
+                <h1 id="_via_annotation" class="sect0">Via annotation</h1>
+<div class="paragraph">
 <p>Usable by EJB, Interceptor, Servlet, Filter, or Listener</p>
-<pre><code>package org.superbiz.refs;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.refs;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.naming.InitialContext;
 
 @Stateless
-@EJB(name = &quot;myFooEjb&quot;, beanInterface = FooLocal.class)
+@EJB(name = "myFooEjb", beanInterface = FooLocal.class)
 public class MyEjbLocalRefBean implements MyBeanInterface {
 
     @EJB
     private BarLocal myBarEjb;
 
     public void someBusinessMethod() throws Exception {
-        if (myBarEjb == null) throw new NullPointerException(&quot;myBarEjb not injected&quot;);
+        if (myBarEjb == null) throw new NullPointerException("myBarEjb not injected");
 
         // Both can be looked up from JNDI as well
         InitialContext context = new InitialContext();
-        FooLocal fooLocal = (FooLocal) context.lookup(&quot;java:comp/env/myFooEjb&quot;);
-        BarLocal barLocal = (BarLocal) context.lookup(&quot;java:comp/env/org.superbiz.refs.MyEjbLocalRefBean/myBarEjb&quot;);
+        FooLocal fooLocal = (FooLocal) context.lookup("java:comp/env/myFooEjb");
+        BarLocal barLocal = (BarLocal) context.lookup("java:comp/env/org.superbiz.refs.MyEjbLocalRefBean/myBarEjb");
     }
-}
-</code></pre>
-<a name="ejb-local-ref-Viaxml"></a>
-<h1>Via xml</h1>
+}</code></pre>
+</div>
+</div>
+<h1 id="_via_xml" class="sect0">Via xml</h1>
+<div class="paragraph">
 <p>The above @EJB annotation usage is 100% equivalent to the following xml.</p>
-<pre><code>&lt;ejb-local-ref&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-local-ref&gt;
   &lt;ejb-ref-name&gt;myFooEjb&lt;/ejb-ref-name&gt;
   &lt;local&gt;org.superbiz.refs.FooLocal&lt;/local&gt;
 &lt;/ejb-local-ref&gt;
@@ -136,8 +143,9 @@ public class MyEjbLocalRefBean implements MyBeanInterface {
     &lt;injection-target-class&gt;org.superbiz.refs.MyEjbLocalRefBean&lt;/injection-target-class&gt;
     &lt;injection-target-name&gt;myBarEjb&lt;/injection-target-name&gt;
   &lt;/injection-target&gt;
-&lt;/ejb-local-ref&gt;
-</code></pre>
+&lt;/ejb-local-ref&gt;</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -166,7 +174,7 @@ public class MyEjbLocalRefBean implements MyBeanInterface {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

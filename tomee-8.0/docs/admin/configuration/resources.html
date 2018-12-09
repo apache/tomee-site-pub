@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -114,8 +114,9 @@ See <a href="server.html">Server Configuration</a> for more detail.</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_definition_a_resource_how_does_it_work">Definition a resource: how does it work?</h3>
+<div class="sect1">
+<h2 id="_definition_a_resource_how_does_it_work">Definition a resource: how does it work?</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Before all let see how properties syntax is equivalent to XML one (system.properties and tomee.xml typically).</p>
 </div>
@@ -129,7 +130,7 @@ Finally the id is an attribute in XML and the key of the resource definition in 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">myDataSource = new://Resource?type=DataSource
+<pre class="highlight"><code class="language-properties" data-lang="properties">myDataSource = new://Resource?type=DataSource
 myDataSource.JdbcUrl = jdbc:hsqldb:mem:site
 myDataSource.UserName = sa</code></pre>
 </div>
@@ -152,8 +153,10 @@ private DataSource dataSource;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_factory_syntax">Factory syntax</h3>
+</div>
+<div class="sect1">
+<h2 id="_factory_syntax">Factory syntax</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Here are the attributes of a resource:</p>
 </div>
@@ -254,18 +257,20 @@ will ignore implicit properties.</p>
 fallback all unset properties (no matching property found) to a <code>Properties</code> instance and set it if one matching property is found.
 In Oracle case for instance it matches the connection properties which can have side effects.</p>
 </div>
-<div class="sect4">
-<h5 id="_value_ciphering">Value ciphering</h5>
+<div class="sect2">
+<h3 id="_value_ciphering">Value ciphering</h3>
 <div class="paragraph">
 <p>The propertie values support ciphering using the syntax <code>cipher:{algorithm}:{cipheredValue}</code>, for instance <code>cipher:Static3DES:xMH5uM1V9vQzVUv5LG7YLA==</code> will
 be read as <code>Passw0rd</code>. Ciphers can be computed using <code>tomee.sh</code> script: <code>${tomee.home}/bin/tomee.sh cipher Passw0rd</code>.</p>
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_common_resources">Common Resources</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_common_resources">Common Resources</h3>
-<div class="sect3">
-<h4 id="_datasources">DataSources</h4>
+<h3 id="_datasources">DataSources</h3>
 <div class="paragraph">
 <p>DataSources have defaults for all values and a default datasource can be provided automatically but if you want to
 configure it here are the common properties:</p>
@@ -309,8 +314,8 @@ entries we try to keep in sync for both:</p>
 </tr>
 </tbody>
 </table>
-<div class="sect4">
-<h5 id="_password_and_ciphering">Password and ciphering</h5>
+<div class="sect3">
+<h4 id="_password_and_ciphering">Password and ciphering</h4>
 <div class="paragraph">
 <p>DataSource were the first resource to support password ciphering. Originally it was another property which is still supported.
 It is called <code>PasswordCipher</code>. Its value is the ciphering algorithm and it affects the password value. However <code>cipher:xxx</code>
@@ -321,15 +326,15 @@ is still supported on <code>Password</code> value. Default <code>PasswordCipher<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">ds = new://Resource?type=javax.sql.DataSource
+<pre class="highlight"><code class="language-properties" data-lang="properties">ds = new://Resource?type=javax.sql.DataSource
 # our password is "Passw0rd"
 ds.Password = xMH5uM1V9vQzVUv5LG7YLA==
 ds.PasswordCipher = Static3DES</code></pre>
 </div>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_advanced_datasource_configuration">Advanced DataSource configuration</h5>
+<div class="sect3">
+<h4 id="_advanced_datasource_configuration">Advanced DataSource configuration</h4>
 <div class="paragraph">
 <p>TomEE also provides few utilities you can add in DataSource properties:</p>
 </div>
@@ -376,8 +381,8 @@ ds.PasswordCipher = Static3DES</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sect4">
-<h5 id="_datasource_and_jta">DataSource and JTA</h5>
+<div class="sect3">
+<h4 id="_datasource_and_jta">DataSource and JTA</h4>
 <div class="paragraph">
 <p><code>JtaManaged</code> determines wether or not this data source should be JTA managed
 or user managed.  If set to 'true' it will automatically be enrolled
@@ -386,8 +391,8 @@ on the datasource or connection will not be allowed.  If you need to perform
 these functions yourself, set <code>JtaManaged</code> to <code>false</code></p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_datasource_and_jpa">DataSource and JPA</h5>
+<div class="sect3">
+<h4 id="_datasource_and_jpa">DataSource and JPA</h4>
 <div class="paragraph">
 <p>In terms of JPA persistence.xml:</p>
 </div>
@@ -404,8 +409,10 @@ these functions yourself, set <code>JtaManaged</code> to <code>false</code></p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_activemqresourceadapter">ActiveMQResourceAdapter</h3>
+</div>
+<div class="sect1">
+<h2 id="_activemqresourceadapter">ActiveMQResourceAdapter</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Declarable in tomee.xml via</p>
 </div>
@@ -424,45 +431,47 @@ these functions yourself, set <code>JtaManaged</code> to <code>false</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ActiveMQResourceAdapter
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ActiveMQResourceAdapter
 Foo.BrokerXmlConfig = broker:(tcp://localhost:61616)?useJmx=false
 Foo.ServerUrl = vm://localhost?waitForStart=20000&amp;async=true
 Foo.DataSource = Default Unmanaged JDBC Database
 Foo.StartupTimeout = 10 seconds</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration">Configuration</h4>
-<div class="sect4">
-<h5 id="_brokerxmlconfig">BrokerXmlConfig</h5>
+<h4 id="_brokerxmlconfig">BrokerXmlConfig</h4>
 <div class="paragraph">
 <p>Broker configuration URI as defined by ActiveMQ
 see <a href="http://activemq.apache.org/broker-configuration-uri.html" class="bare">http://activemq.apache.org/broker-configuration-uri.html</a>
 BrokerXmlConfig xbean:file:conf/activemq.xml - Requires xbean-spring.jar and dependencies</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_serverurl">ServerUrl</h5>
+<div class="sect3">
+<h4 id="_serverurl">ServerUrl</h4>
 <div class="paragraph">
 <p>Broker address</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_datasource">DataSource</h5>
+<div class="sect3">
+<h4 id="_datasource">DataSource</h4>
 <div class="paragraph">
 <p>DataSource for persistence messages</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_startuptimeout">StartupTimeout</h5>
+<div class="sect3">
+<h4 id="_startuptimeout">StartupTimeout</h4>
 <div class="paragraph">
 <p>How long to wait for broker startup</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_javax_jms_connectionfactory">javax.jms.ConnectionFactory</h3>
+</div>
+<div class="sect1">
+<h2 id="_javax_jms_connectionfactory">javax.jms.ConnectionFactory</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>An ActiveMQ (JMS) connection factory.</p>
 </div>
@@ -486,7 +495,7 @@ BrokerXmlConfig xbean:file:conf/activemq.xml - Requires xbean-spring.jar and dep
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.ConnectionFactory
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=javax.jms.ConnectionFactory
 Foo.ResourceAdapter = Default JMS Resource Adapter
 Foo.TransactionSupport = xa
 Foo.PoolMaxSize = 10
@@ -495,49 +504,51 @@ Foo.ConnectionMaxWaitTime = 5 seconds
 Foo.ConnectionMaxIdleTime = 15 Minutes</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_2">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_2">Configuration</h4>
-<div class="sect4">
-<h5 id="_resourceadapter">ResourceAdapter</h5>
+<h4 id="_resourceadapter">ResourceAdapter</h4>
 <div class="paragraph">
 <p>An ActiveMQ (JMS) resource adapter.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_transactionsupport">TransactionSupport</h5>
+<div class="sect3">
+<h4 id="_transactionsupport">TransactionSupport</h4>
 <div class="paragraph">
 <p>Specifies if the connection is enrolled in global transaction
 allowed values: <code>xa</code>, <code>local</code> or <code>none</code>. Default to <code>xa</code>.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_poolmaxsize">PoolMaxSize</h5>
+<div class="sect3">
+<h4 id="_poolmaxsize">PoolMaxSize</h4>
 <div class="paragraph">
 <p>Maximum number of physical connection to the ActiveMQ broker.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_poolminsize">PoolMinSize</h5>
+<div class="sect3">
+<h4 id="_poolminsize">PoolMinSize</h4>
 <div class="paragraph">
 <p>Minimum number of physical connection to the ActiveMQ broker.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_connectionmaxwaittime">ConnectionMaxWaitTime</h5>
+<div class="sect3">
+<h4 id="_connectionmaxwaittime">ConnectionMaxWaitTime</h4>
 <div class="paragraph">
 <p>Maximum amount of time to wait for a connection.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_connectionmaxidletime">ConnectionMaxIdleTime</h5>
+<div class="sect3">
+<h4 id="_connectionmaxidletime">ConnectionMaxIdleTime</h4>
 <div class="paragraph">
 <p>Maximum amount of time a connection can be idle before being reclaimed.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_javax_jms_queue">javax.jms.Queue</h3>
+</div>
+<div class="sect1">
+<h2 id="_javax_jms_queue">javax.jms.Queue</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>An ActiveMQ (JMS) queue.</p>
 </div>
@@ -557,23 +568,25 @@ allowed values: <code>xa</code>, <code>local</code> or <code>none</code>. Defaul
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.Queue
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=javax.jms.Queue
 # not set means id
 Foo.destination =</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_3">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_3">Configuration</h4>
-<div class="sect4">
-<h5 id="_destination">destination</h5>
+<h4 id="_destination">destination</h4>
 <div class="paragraph">
 <p>Specifies the name of the queue</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_javax_jms_topic">javax.jms.Topic</h3>
+</div>
+<div class="sect1">
+<h2 id="_javax_jms_topic">javax.jms.Topic</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>An ActiveMQ (JMS) topic.</p>
 </div>
@@ -593,23 +606,25 @@ Foo.destination =</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=javax.jms.Topic
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=javax.jms.Topic
 # not set means id
 Foo.destination =</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_4">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_4">Configuration</h4>
-<div class="sect4">
-<h5 id="_destination_2">destination</h5>
+<h4 id="_destination_2">destination</h4>
 <div class="paragraph">
 <p>Specifies the name of the topic</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_org_omg_corba_orb">org.omg.CORBA.ORB</h3>
+</div>
+<div class="sect1">
+<h2 id="_org_omg_corba_orb">org.omg.CORBA.ORB</h2>
+<div class="sectionbody">
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -635,12 +650,14 @@ to use it you need to add an implementation of corba.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=org.omg.CORBA.ORB</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=org.omg.CORBA.ORB</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_javax_mail_session">javax.mail.Session</h3>
+</div>
+<div class="sect1">
+<h2 id="_javax_mail_session">javax.mail.Session</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A mail session.</p>
 </div>
@@ -665,7 +682,7 @@ to use it you need to add an implementation of corba.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mail/mysession = new://Resource?type=javax.mail.Session
+<pre class="highlight"><code class="language-properties" data-lang="properties">mail/mysession = new://Resource?type=javax.mail.Session
 mail/mysession.mail.transport.protocol = smtp
 mail/mysession.mail.smtp.host = smtp.provider.com
 mail/mysession.mail.smtp.auth = true
@@ -682,8 +699,10 @@ same configuration and return the same instance. For tomee it is likely better t
 and use <code>aliases</code> option of the resource to define an alias if you need to share the same instance accross multiple names.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_managedexecutorservice">ManagedExecutorService</h3>
+</div>
+<div class="sect1">
+<h2 id="_managedexecutorservice">ManagedExecutorService</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A concurrency utility for EE executor service.</p>
 </div>
@@ -707,7 +726,7 @@ and use <code>aliases</code> option of the resource to define an alias if you ne
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedExecutorService
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ManagedExecutorService
 Foo.Core = 5
 Foo.Max = 25
 Foo.KeepAlive = 5 s
@@ -716,48 +735,50 @@ Foo.ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
 Foo.Lazy = true</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_5">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_5">Configuration</h4>
-<div class="sect4">
-<h5 id="_core">Core</h5>
+<h4 id="_core">Core</h4>
 <div class="paragraph">
 <p>The pool core size.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_max">Max</h5>
+<div class="sect3">
+<h4 id="_max">Max</h4>
 <div class="paragraph">
 <p>The pool max size.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_keepalive">KeepAlive</h5>
+<div class="sect3">
+<h4 id="_keepalive">KeepAlive</h4>
 <div class="paragraph">
 <p>The thread keep alive time (in duration format)</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_queue">Queue</h5>
+<div class="sect3">
+<h4 id="_queue">Queue</h4>
 <div class="paragraph">
 <p>The queue type size.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_threadfactory">ThreadFactory</h5>
+<div class="sect3">
+<h4 id="_threadfactory">ThreadFactory</h4>
 <div class="paragraph">
 <p>The thread factory implementation class.</p>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_lazy">Lazy</h5>
+<div class="sect3">
+<h4 id="_lazy">Lazy</h4>
 <div class="paragraph">
 <p>If set to true the pool is created when first accessed otherwise it is created at startup.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_managedscheduledexecutorservice">ManagedScheduledExecutorService</h3>
+</div>
+<div class="sect1">
+<h2 id="_managedscheduledexecutorservice">ManagedScheduledExecutorService</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Inherit from <code>ManagedExecutorService</code> and adds scheduling abilities.</p>
 </div>
@@ -778,21 +799,23 @@ Foo.Lazy = true</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedScheduledExecutorService
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ManagedScheduledExecutorService
 Foo.Core = 5
 Foo.ThreadFactory = org.apache.openejb.threads.impl.ManagedThreadFactoryImpl
 Foo.Lazy = true</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_configuration_6">Configuration</h4>
+<div class="sect2">
+<h3 id="_configuration_6">Configuration</h3>
 <div class="paragraph">
 <p>See <code>ManagedExecutorService</code>.</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_managedthreadfactory">ManagedThreadFactory</h3>
+</div>
+<div class="sect1">
+<h2 id="_managedthreadfactory">ManagedThreadFactory</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A thread factory for a <code>ManagedExecutorService</code>.</p>
 </div>
@@ -812,23 +835,25 @@ Foo.Lazy = true</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedThreadFactory
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ManagedThreadFactory
 Foo.Prefix = openejb-managed-thread-
 Foo.Lazy = true</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_7">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_7">Configuration</h4>
-<div class="sect4">
-<h5 id="_prefix">Prefix</h5>
+<h4 id="_prefix">Prefix</h4>
 <div class="paragraph">
 <p>The thread prefix (suffixed with thread id).</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_contextservice">ContextService</h3>
+</div>
+<div class="sect1">
+<h2 id="_contextservice">ContextService</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A concurrency utilities for JavaEE context service. It allows to create
 contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts).</p>
@@ -846,12 +871,14 @@ contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ContextService</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ContextService</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_jndiprovider_inject_remote_clients">JndiProvider: inject remote clients</h3>
+</div>
+<div class="sect1">
+<h2 id="_jndiprovider_inject_remote_clients">JndiProvider: inject remote clients</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A thread factory for a <code>ManagedExecutorService</code>.
 Default implementation is <code>org.apache.openejb.threads.impl.ManagedThreadFactoryImpl</code>.</p>
@@ -872,23 +899,25 @@ Default implementation is <code>org.apache.openejb.threads.impl.ManagedThreadFac
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ManagedThreadFactory
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ManagedThreadFactory
 Foo.Prefix = openejb-managed-thread-
 Foo.Lazy = true</code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_configuration_8">Configuration</h3>
 <div class="sect3">
-<h4 id="_configuration_8">Configuration</h4>
-<div class="sect4">
-<h5 id="_prefix_2">Prefix</h5>
+<h4 id="_prefix_2">Prefix</h4>
 <div class="paragraph">
 <p>The thread prefix (suffixed with thread id).</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_contextservice_2">ContextService</h3>
+</div>
+<div class="sect1">
+<h2 id="_contextservice_2">ContextService</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>A concurrency utilities for JavaEE context service. It allows to create
 contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts).</p>
@@ -906,7 +935,8 @@ contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">Foo = new://Resource?type=ContextService</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ContextService</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -938,7 +968,7 @@ contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts)
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

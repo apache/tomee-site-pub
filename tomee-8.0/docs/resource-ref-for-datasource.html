@@ -83,20 +83,23 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>null</h1>
+              <h1>Via annotation</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Via annotation</h1>
-<pre><code>package org.superbiz.refs;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.refs;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -104,25 +107,35 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 @Stateless
-@Resource(name = &quot;myFooDataSource&quot;, type = DataSource.class)
+@Resource(name = "myFooDataSource", type = DataSource.class)
 public class MyDataSourceRefBean implements MyBeanInterface {
 
     @Resource
     private DataSource myBarDataSource;
 
     public void someBusinessMethod() throws Exception {
-        if (myBarDataSource == null) throw new NullPointerException(&quot;myBarDataSource not injected&quot;);
+        if (myBarDataSource == null) throw new NullPointerException("myBarDataSource not injected");
 
         // Both can be looked up from JNDI as well
         InitialContext context = new InitialContext();
-        DataSource fooDataSource = (DataSource) context.lookup(&quot;java:comp/env/myFooDataSource&quot;);
-        DataSource barDataSource = (DataSource) context.lookup(&quot;java:comp/env/org.superbiz.refs.MyDataSourceRefBean/myBarDataSource&quot;);
+        DataSource fooDataSource = (DataSource) context.lookup("java:comp/env/myFooDataSource");
+        DataSource barDataSource = (DataSource) context.lookup("java:comp/env/org.superbiz.refs.MyDataSourceRefBean/myBarDataSource");
     }
-}
-</code></pre>
-<h1>Via xml</h1>
-<p>The above @Resource annotation usage is 100% equivalent to the following xml.</p>
-<pre><code>&lt;resource-ref&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_via_xml">Via xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The above @Resource annotation usage is 100% equivalent to the following
+xml.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;resource-ref&gt;
     &lt;res-ref-name&gt;myFooDataSource&lt;/res-ref-name&gt;
     &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
 &lt;/resource-ref&gt;
@@ -133,8 +146,11 @@ public class MyDataSourceRefBean implements MyBeanInterface {
         &lt;injection-target-class&gt;org.superbiz.refs.MyDataSourceRefBean&lt;/injection-target-class&gt;
         &lt;injection-target-name&gt;myBarDataSource&lt;/injection-target-name&gt;
     &lt;/injection-target&gt;
-&lt;/resource-ref&gt;
-</code></pre>
+&lt;/resource-ref&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -163,7 +179,7 @@ public class MyDataSourceRefBean implements MyBeanInterface {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

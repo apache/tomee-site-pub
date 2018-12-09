@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,55 +95,181 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="Basics-GettingThings-GettingStufffromtheContainer"></a>
-<h1>Getting Stuff from the Container</h1>
-<p>Generally speaking the only way to get a <a href="container-managed-resource.html">Container-Managed Resource</a><br/> is via <em>dependency injection</em> or <em>lookup</em> from within a [Container-Managed Component]<br/>.</p>
-<p>The <em>unbreakable rules</em>. Read these over and over again when things don't work.</p>
-<ol>
-  <li>java:comp/env is the spec defined namespace for lookup of any <a href="container-managed-resource.html">Container-Managed Resource</a></li>
-  <li>java:comp/env is <em>empty</em> by default</li>
-  <li>java:comp/env is <em>read-only</em> at runtime</li>
-  <li>java:comp/env is populated by <a href="declaring-references.html">Declaring References</a><br/> to [Container-Managed Resource]<br/> via xml or annotation</li>
-  <li>only <a href="container-managed-component.html">Container-Managed Component</a><br/>s, <em>not</em> their libraries, can [Declare References|Declaring References]<br/> via xml or annotation</li>
-  <li>only <a href="container-managed-component.html">Container-Managed Component</a><br/>s, <em>not</em> their libraries, can get dependency injection of [Container-Managed Resource] s</li>
-  <li>only <a href="container-managed-component.html">Container-Managed Component</a><br/>s, <em>and</em> their libraries, may lookup from java:comp/env</li>
-  <li>you <em>must</em> use the <em>no-arg</em> 'new InitialContext()' constructor to<br/>lookup something from java:comp/env</li>
-  <li>the annotations and xml for <a href="declaring-references.html">Declaring References</a><br/> are <em>identical</em> in functionality, both <em>always</em> configure lookup with<br/><em>optional</em> dependency injection</li>
+                <h1 id="_getting_stuff_from_the_container" class="sect0">Getting Stuff from the Container</h1>
+<div class="paragraph">
+<p>Generally speaking the only way to get a
+<a href="container-managed-resource.html">Container-Managed Resource</a> is via
+<em>dependency injection</em> or <em>lookup</em> from within a [Container-Managed
+Component] .</p>
+</div>
+<div class="paragraph">
+<p>The <em>unbreakable rules</em>. Read these over and over again when things
+don&#8217;t work.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>java:comp/env is the spec defined namespace for lookup of any
+<a href="container-managed-resource.html">Container-Managed Resource</a></p>
+</li>
+<li>
+<p>java:comp/env is <em>empty</em> by default</p>
+</li>
+<li>
+<p>java:comp/env is <em>read-only</em> at runtime</p>
+</li>
+<li>
+<p>java:comp/env is populated by <a href="declaring-references.html">Declaring
+References</a> to [Container-Managed Resource] via xml or annotation</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>not</em> their libraries, can [Declare References|Declaring
+References] via xml or annotation</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>not</em> their libraries, can get dependency injection of
+[Container-Managed Resource] s</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>and</em> their libraries, may lookup from java:comp/env</p>
+</li>
+<li>
+<p>you <em>must</em> use the <em>no-arg</em> 'new InitialContext()' constructor to
+lookup something from java:comp/env</p>
+</li>
+<li>
+<p>the annotations and xml for <a href="declaring-references.html">Declaring
+References</a> are <em>identical</em> in functionality, both <em>always</em> configure
+lookup with <em>optional</em> dependency injection</p>
+</li>
 </ol>
-<a name="Basics-GettingThings-Commonmistakes,misunderstandings,andmyths"></a>
-<h2>Common mistakes, misunderstandings, and myths</h2>
+</div>
+<div class="sect1">
+<h2 id="_common_mistakes_misunderstandings_and_myths">Common mistakes, misunderstandings, and myths</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li><em><em>"I tried it via annotation and it didn't work, so I used xml and then<br/>it did work"</em></em></li>
+<li>
+<p><em>"I tried it via annotation and it didn&#8217;t work, so I used xml and
+then it did work"</em></p>
+</li>
 </ul>
-<p>See rule 9. If one form worked and the other didn't, it means you simply made a mistake in using one versus the other. Use what works for you, but understand both annotations or xml will work for either lookup or injection if used correctly.</p>
+</div>
+<div class="paragraph">
+<p>See rule 9. If one form worked and the other didn&#8217;t, it means you simply
+made a mistake in using one versus the other. Use what works for you,
+but understand both annotations or xml will work for either lookup or
+injection if used correctly.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"I need to use lookups, so I can't use the annotation"</em></em></li>
+<li>
+<p><em>"I need to use lookups, so I can&#8217;t use the annotation"</em></p>
+</li>
 </ul>
-<p>See rule 9. Annotations are not just for injection, that is just how they are typically used. Know that when you use an annotation for injection, it will <em>always</em> create an entry in java:comp/env. As well you can use the annotation at the <em>class level</em> and it will cause no dependency injection and only the entry creation in java:comp/env.</p>
+</div>
+<div class="paragraph">
+<p>See rule 9. Annotations are not just for injection, that is just how
+they are typically used. Know that when you use an annotation for
+injection, it will <em>always</em> create an entry in java:comp/env. As well
+you can use the annotation at the <em>class level</em> and it will cause no
+dependency injection and only the entry creation in java:comp/env.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"I don't want injection, so I can't use the annotation"</em></em></li>
+<li>
+<p><em>"I don&#8217;t want injection, so I can&#8217;t use the annotation"</em></p>
+</li>
 </ul>
-<p>See rule 9 and the above. You can use the annotation at the <em>class level</em> and it will cause no dependency injection and only the entry creation in java:comp/env.</p>
+</div>
+<div class="paragraph">
+<p>See rule 9 and the above. You can use the annotation at the <em>class
+level</em> and it will cause no dependency injection and only the entry
+creation in java:comp/env.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"I tried to list java:comp/env but it's empty?!"</em></em></li>
+<li>
+<p><em>"I tried to list java:comp/env but it&#8217;s empty?!"</em></p>
+</li>
 </ul>
-<p>See rule 2 and rule 4. There will be nothing in java:comp/env unless you <a href="declaring-references.html">Declare a Reference</a><br/> to it. It does not matter if is a DataSource configured at the server<br/>level, etc. Nothing is bound into java:comp/env unless you explicitly declare a reference to it. The Java EE 5 TCK (Technology Compatibility Kit) tests for this extensively and is a rule we cannot break. Java EE 6 does finally offer some new namesaces (java:global, java:app, and java:module) which will offer some great new options for more global-style lookups.</p>
+</div>
+<div class="paragraph">
+<p>See rule 2 and rule 4. There will be nothing in java:comp/env unless you
+<a href="declaring-references.html">Declare a Reference</a> to it. It does not
+matter if is a DataSource configured at the server level, etc. Nothing
+is bound into java:comp/env unless you explicitly declare a reference to
+it. The Java EE 5 TCK (Technology Compatibility Kit) tests for this
+extensively and is a rule we cannot break. Java EE 6 does finally offer
+some new namesaces (java:global, java:app, and java:module) which will
+offer some great new options for more global-style lookups.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"I deployed the EJB but can't look it up, it's name is Foo"</em></em></li>
+<li>
+<p><em>"I deployed the EJB but can&#8217;t look it up, it&#8217;s name is Foo"</em></p>
+</li>
 </ul>
-<p>See rule 2 and the above. Just creating an EJB doesn't cause it to be added to java:comp/env. If a <a href="container-managed-component.html">Container-Managed Component</a><br/> wants to lookup the EJB they must [Declare a Reference|Declaring References]<br/> to it via the @EJB annotionation or &lt;ejb-local-ref&gt; or &lt;ejb-ref&gt; in xml.<br/>In Java EE 6, however, EJBs will be automatically bound to<br/>"java:global[/&lt;app-name&gt;]/&lt;module-name&gt;/&lt;bean-name&gt;[!&lt;fully-qualified-interface-name&gt;]"<br/>and can be looked up without declaring a reference first.</p>
+</div>
+<div class="paragraph">
+<p>See rule 2 and the above. Just creating an EJB doesn&#8217;t cause it to be
+added to java:comp/env. If a
+<a href="container-managed-component.html">Container-Managed Component</a> wants
+to lookup the EJB they must [Declare a Reference|Declaring References]
+to it via the @EJB annotionation or &lt;ejb-local-ref&gt; or &lt;ejb-ref&gt; in xml.
+In Java EE 6, however, EJBs will be automatically bound to
+"java:global[/&lt;app-name&gt;]/&lt;module-name&gt;/&lt;bean-name&gt;[!&lt;fully-qualified-interface-name&gt;]"
+and can be looked up without declaring a reference first.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"Which InitialContextFactory do I use for java:comp/env?"</em></em></li>
+<li>
+<p><em>"Which InitialContextFactory do I use for java:comp/env?"</em></p>
+</li>
 </ul>
-<p>See rule 8. You are not allowed to use an InitialContextFactory for java:comp/env lookups. Setting an InitialContextFactory via<br/>'java.naming.factory.initial' in either System properties, InitialContext<br/>properties, or a jndi.properties file is illegal and will cause java:comp/env lookups to fail.</p>
+</div>
+<div class="paragraph">
+<p>See rule 8. You are not allowed to use an InitialContextFactory for
+java:comp/env lookups. Setting an InitialContextFactory via
+'java.naming.factory.initial' in either System properties,
+InitialContext properties, or a jndi.properties file is illegal and will
+cause java:comp/env lookups to fail.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"My Client can't lookup the EJB from java:comp/env"</em></em></li>
+<li>
+<p><em>"My Client can&#8217;t lookup the EJB from java:comp/env"</em></p>
+</li>
 </ul>
-<p>See rule 7. A plain, standalone, Java application cannot use java:comp/env. There is the official concept of a Java EE Application Client which can be packaged in an ear and deployed into the Container. In practice, most people find them restrictive, cumbersome, and hard to use and are therefore rarely employed in "real world" projects. Most people opt to use the non-standard, vendor-specific, approach to looking up EJBs from their plain java clients. In OpenEJB this can be done via either the RemoteInitialContextFactory (for remote clients) or the LocalInitialContextFactory (for local clients of an embedded container). The JNDI names can be configured as <a href="jndi-names.html">shown here</a><br/>.</p>
+</div>
+<div class="paragraph">
+<p>See rule 7. A plain, standalone, Java application cannot use
+java:comp/env. There is the official concept of a Java EE Application
+Client which can be packaged in an ear and deployed into the Container.
+In practice, most people find them restrictive, cumbersome, and hard to
+use and are therefore rarely employed in "real world" projects. Most
+people opt to use the non-standard, vendor-specific, approach to looking
+up EJBs from their plain java clients. In OpenEJB this can be done via
+either the RemoteInitialContextFactory (for remote clients) or the
+LocalInitialContextFactory (for local clients of an embedded container).
+The JNDI names can be configured as <a href="jndi-names.html">shown here</a> .</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><em><em>"I declared the reference, but still can't look it up"</em></em></li>
+<li>
+<p><em>"I declared the reference, but still can&#8217;t look it up"</em></p>
+</li>
 </ul>
-<p>See all of the above and reread the rules a few times. Always check the log output as well.</p>
+</div>
+<div class="paragraph">
+<p>See all of the above and reread the rules a few times. Always check the
+log output as well.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -172,7 +298,7 @@
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

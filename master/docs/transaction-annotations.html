@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,51 +95,175 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Also see <a href="testing-transactions-example.html">Testing Transactions</a><br/> for an example of how to use and test EJB transaction attributes</em></p>
-<p>The <em>javax.ejb.TransactionAttribute</em> annotation (@TransactionAttribute) can be applied to a bean class or it's methods.</p>
-<p>Usage of the @TransactionAttribute requires you to specify one of six different transaction attribute types defined via the javax.ejb.TransactionAttributeType enum.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Also see <a href="testing-transactions-example.html">Testing Transactions</a>
+for an example of how to use and test EJB transaction attributes</em></p>
+</div>
+<div class="paragraph">
+<p>The <em>javax.ejb.TransactionAttribute</em> annotation (@TransactionAttribute)
+can be applied to a bean class or it&#8217;s methods.</p>
+</div>
+<div class="paragraph">
+<p>Usage of the @TransactionAttribute requires you to specify one of six
+different transaction attribute types defined via the
+javax.ejb.TransactionAttributeType enum.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>TransactionAttributeType.*MANDATORY*</li>
-  <li>TransactionAttributeType.*REQUIRED*</li>
-  <li>TransactionAttributeType.*REQUIRES_NEW*</li>
-  <li>TransactionAttributeType.*SUPPORTS*</li>
-  <li>TransactionAttributeType.*NOT_SUPPORTED*</li>
-  <li>TransactionAttributeType.*NEVER*</li>
+<li>
+<p>TransactionAttributeType.<em>MANDATORY</em></p>
+</li>
+<li>
+<p>TransactionAttributeType.<em>REQUIRED</em></p>
+</li>
+<li>
+<p>TransactionAttributeType.<em>REQUIRES_NEW</em></p>
+</li>
+<li>
+<p>TransactionAttributeType.<em>SUPPORTS</em></p>
+</li>
+<li>
+<p>TransactionAttributeType.<em>NOT_SUPPORTED</em></p>
+</li>
+<li>
+<p>TransactionAttributeType.<em>NEVER</em></p>
+</li>
 </ul>
-<p>Per EJB 3.0 the default transaction attribute for all EJB 3.0 applications is <em>REQUIRED</em>. The default transaction attribute for EJB 2.1, 2.0 and 1.1 applications is vendor specific. In OpenEJB EJB 2.1, 2.0 and 1.1 applications also use <em>REQUIRED</em> as the default.</p>
-<a name="TransactionAnnotations-AttributeTypessummary"></a>
-<h2>Attribute Types summary</h2>
+</div>
+<div class="paragraph">
+<p>Per EJB 3.0 the default transaction attribute for all EJB 3.0
+applications is <em>REQUIRED</em>. The default transaction attribute for EJB
+2.1, 2.0 and 1.1 applications is vendor specific. In OpenEJB EJB 2.1,
+2.0 and 1.1 applications also use <em>REQUIRED</em> as the default.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attribute_types_summary">Attribute Types summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>A simplistic way to visualize the transaction attributes is as follows.</p>
-<table class="mdtable">
-<tr><td> </th><th> Failing </th><th> Correcting </th><th> No Change </th></tr>
-<tr><th> Transacted </td><td> MANDATORY </td><td> REQUIRED, REQUIRES_NEW </td><td> SUPPORTS </td></tr>
-<tr><th> Not Transacted </td><td> NEVER </td><td> NOT_SUPPORTED </td><td> SUPPORTS </td></tr>
-</table>
-<p>The "*Transacted*" and "*Not Transacted*" categories represent the container guarantee, i.e. if the bean method will or will not be invoked in a transaction. The "*Failing*", "*Correcting*", and "*No Change*" categories represent the action take by the container to achieve that guarantee.</p>
-<p>For example, <em>Never</em> and <em>Mandatory</em> are categorized as "*Failing*" and will cause the container to throw an exception to the caller if there is<br/>(Tx Never) or is not (Tx Mandatory) a transaction in progress when the<br/>method is called. The attributes <em>Required</em>, <em>RequiresNew</em>, and<br/><em>NotSupported</em> are categorized as "*Correcting*" as they will cause the<br/>container to adjust the transactional state automatically as needed to match the desired state, rather than blocking the invocation by throwing an exception.</p>
-<a name="TransactionAnnotations-DetaileddescriptionofeachAttribute"></a>
-<h3>Detailed description of each Attribute</h3>
-<a name="TransactionAnnotations-MANDATORY"></a>
-<h4>MANDATORY</h4>
-<p>A <em>MANDATORY</em> method is guaranteed to always be executed in a transaction. However, it's the caller's job to take care of suppling the transaction. If the caller attempts to invoke the method <em>outside</em> of a transaction, then the container will block the call and throw them an <em>exception</em>.</p>
-<a name="TransactionAnnotations-REQUIRED"></a>
-<h4>REQUIRED</h4>
-<p>A <em>REQUIRED</em> method is guaranteed to always be executed in a transaction. If the caller attempts to invoke the method <em>outside</em> of a transaction, the container will <em>start</em> a transaction, execute the method, then <em>commit</em> the transaction.</p>
-<a name="TransactionAnnotations-REQUIRES_NEW"></a>
-<h4>REQUIRES_NEW</h4>
-<p>A <em>REQUIRES_NEW</em> method is guaranteed to always be executed in a transaction. If the caller attempts to invoke the method <em>inside or outside</em> of a transaction, the container will still <em>start</em> a transaction, execute the method, then <em>commit</em> the transaction. Any transaction the caller may have in progress will be <em>suspended</em> before the method execution then <em>resumed</em> afterward.</p>
-<a name="TransactionAnnotations-NEVER"></a>
-<h4>NEVER</h4>
-<p>A <em>NEVER</em> method is guaranteed to never be executed in a transaction. However, it's the caller's job to ensure there is no transaction. If the caller attempts to invoke the method <em>inside</em> of a transaction, then the container will block the call and throw them an <em>exception</em>.</p>
-<a name="TransactionAnnotations-NOT_SUPPORTED"></a>
-<h4>NOT_SUPPORTED</h4>
-<p>A <em>NOT_SUPPORTED</em> method is guaranteed to never be executed in a transaction. If the caller attempts to invoke the method <em>inside</em> of a transaction, the container will <em>suspend</em> the caller's transaction, execute the method, then <em>resume</em> the caller's transaction.</p>
-<a name="TransactionAnnotations-SUPPORTS"></a>
-<h4>SUPPORTS</h4>
-<p>A <em>SUPPORTS</em> method is guaranteed to adopt the exact transactional state of the caller. These methods can be invoked by caller's <em>inside or outside</em> of a transaction. The container will do nothing to change that state.</p>
-<a name="TransactionAnnotations-OnMethods"></a>
-<h2>On Methods</h2>
-<pre><code>@Stateless
+</div>
+<div class="paragraph">
+<p>Failing</p>
+</div>
+<div class="paragraph">
+<p>Correcting</p>
+</div>
+<div class="paragraph">
+<p>No Change</p>
+</div>
+<div class="paragraph">
+<p>Transacted</p>
+</div>
+<div class="paragraph">
+<p>MANDATORY</p>
+</div>
+<div class="paragraph">
+<p>REQUIRED, REQUIRES_NEW</p>
+</div>
+<div class="paragraph">
+<p>SUPPORTS</p>
+</div>
+<div class="paragraph">
+<p>Not Transacted</p>
+</div>
+<div class="paragraph">
+<p>NEVER</p>
+</div>
+<div class="paragraph">
+<p>NOT_SUPPORTED</p>
+</div>
+<div class="paragraph">
+<p>SUPPORTS</p>
+</div>
+<div class="paragraph">
+<p>The "<em>Transacted</em>" and "<em>Not Transacted</em>" categories represent the
+container guarantee, i.e. if the bean method will or will not be invoked
+in a transaction. The "<em>Failing</em>", "<em>Correcting</em>", and "<em>No Change</em>"
+categories represent the action take by the container to achieve that
+guarantee.</p>
+</div>
+<div class="paragraph">
+<p>For example, <em>Never</em> and <em>Mandatory</em> are categorized as "<em>Failing</em>" and
+will cause the container to throw an exception to the caller if there is
+(Tx Never) or is not (Tx Mandatory) a transaction in progress when the
+method is called. The attributes <em>Required</em>, <em>RequiresNew</em>, and
+<em>NotSupported</em> are categorized as "<em>Correcting</em>" as they will cause the
+container to adjust the transactional state automatically as needed to
+match the desired state, rather than blocking the invocation by throwing
+an exception.</p>
+</div>
+<div class="sect2">
+<h3 id="_detailed_description_of_each_attribute">Detailed description of each Attribute</h3>
+<div class="sect3">
+<h4 id="_mandatory">MANDATORY</h4>
+<div class="paragraph">
+<p>A <em>MANDATORY</em> method is guaranteed to always be executed in a
+transaction. However, it&#8217;s the caller&#8217;s job to take care of suppling the
+transaction. If the caller attempts to invoke the method <em>outside</em> of a
+transaction, then the container will block the call and throw them an
+<em>exception</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_required">REQUIRED</h4>
+<div class="paragraph">
+<p>A <em>REQUIRED</em> method is guaranteed to always be executed in a
+transaction. If the caller attempts to invoke the method <em>outside</em> of a
+transaction, the container will <em>start</em> a transaction, execute the
+method, then <em>commit</em> the transaction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_requires_new">REQUIRES_NEW</h4>
+<div class="paragraph">
+<p>A <em>REQUIRES_NEW</em> method is guaranteed to always be executed in a
+transaction. If the caller attempts to invoke the method <em>inside or
+outside</em> of a transaction, the container will still <em>start</em> a
+transaction, execute the method, then <em>commit</em> the transaction. Any
+transaction the caller may have in progress will be <em>suspended</em> before
+the method execution then <em>resumed</em> afterward.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_never">NEVER</h4>
+<div class="paragraph">
+<p>A <em>NEVER</em> method is guaranteed to never be executed in a transaction.
+However, it&#8217;s the caller&#8217;s job to ensure there is no transaction. If the
+caller attempts to invoke the method <em>inside</em> of a transaction, then the
+container will block the call and throw them an <em>exception</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_not_supported">NOT_SUPPORTED</h4>
+<div class="paragraph">
+<p>A <em>NOT_SUPPORTED</em> method is guaranteed to never be executed in a
+transaction. If the caller attempts to invoke the method <em>inside</em> of a
+transaction, the container will <em>suspend</em> the caller&#8217;s transaction,
+execute the method, then <em>resume</em> the caller&#8217;s transaction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_supports">SUPPORTS</h4>
+<div class="paragraph">
+<p>A <em>SUPPORTS</em> method is guaranteed to adopt the exact transactional state
+of the caller. These methods can be invoked by caller&#8217;s <em>inside or
+outside</em> of a transaction. The container will do nothing to change that
+state.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_on_methods">On Methods</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 public static class MyBean implements MyBusinessInterface {
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -150,15 +274,27 @@ public static class MyBean implements MyBusinessInterface {
     public String codeBlue(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li><em>codeRed</em> will be invoked with the attribute of <em>MANDATORY</em></li>
-  <li><em>codeBlue</em> will be invoked with the default attribute of <em>REQUIRED</em></li>
+<li>
+<p><em>codeRed</em> will be invoked with the attribute of <em>MANDATORY</em></p>
+</li>
+<li>
+<p><em>codeBlue</em> will be invoked with the default attribute of <em>REQUIRED</em></p>
+</li>
 </ul>
-<a name="TransactionAnnotations-OnClasses"></a>
-<h2>On Classes</h2>
-<pre><code>@Stateless
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_on_classes">On Classes</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public static class MyBean implements MyBusinessInterface {
 
@@ -169,14 +305,25 @@ public static class MyBean implements MyBusinessInterface {
     public String codeBlue(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li><em>codeRed</em> and <em>codeBlue</em> will be invoked with the attribute of<br/><em>MANDATORY</em></li>
+<li>
+<p><em>codeRed</em> and <em>codeBlue</em> will be invoked with the attribute of
+<em>MANDATORY</em></p>
+</li>
 </ul>
-<a name="TransactionAnnotations-Mixedonclassesandmethods"></a>
-<h2>Mixed on classes and methods</h2>
-<pre><code>@Stateless
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mixed_on_classes_and_methods">Mixed on classes and methods</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public static class MyBean implements MyBusinessInterface {
 
@@ -193,18 +340,35 @@ public static class MyBean implements MyBusinessInterface {
     public String codeGreen(String s) {
     return s;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
 <ul>
-  <li><em>codeRed</em> will be invoked with the attribute of <em>NEVER</em></li>
-  <li><em>codeBlue</em> will be invoked with the attribute of <em>SUPPORTS</em></li>
-  <li><em>codeGreen</em> will be invoked with the attribute of <em>REQUIRED</em></li>
+<li>
+<p><em>codeRed</em> will be invoked with the attribute of <em>NEVER</em></p>
+</li>
+<li>
+<p><em>codeBlue</em> will be invoked with the attribute of <em>SUPPORTS</em></p>
+</li>
+<li>
+<p><em>codeGreen</em> will be invoked with the attribute of <em>REQUIRED</em></p>
+</li>
 </ul>
-<a name="TransactionAnnotations-IllegalUsage"></a>
-<h1>Illegal Usage</h1>
-<p>Generally, transaction annotationss cannot be made on AroundInvoke methods and most callbacks.</p>
+</div>
+</div>
+</div>
+<h1 id="_illegal_usage" class="sect0">Illegal Usage</h1>
+<div class="paragraph">
+<p>Generally, transaction annotationss cannot be made on AroundInvoke
+methods and most callbacks.</p>
+</div>
+<div class="paragraph">
 <p>The following usages of @TransactionAttribute have no effect.</p>
-<pre><code>@Stateful
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateful
 public class MyStatefulBean implements  MyBusinessInterface  {
 
     @PostConstruct
@@ -236,8 +400,9 @@ public class MyStatefulBean implements  MyBusinessInterface  {
     public void passivate(){
 
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -266,7 +431,7 @@ public class MyStatefulBean implements  MyBusinessInterface  {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

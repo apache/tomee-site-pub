@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,14 +95,24 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>For those of you who would like to use final fields, wish to avoid numerous setters, or dislike private field injection and would like nothing more than to just use plan old java constructors, your wish has come true. This is a feature we intended to add to OpenEJB 3.0 but didn't have time for. We're happy to bring it to the OpenEJB 3.1 release and with a bit of luck and support from people like yourself, we'll see this as an EJB 3.1 feature as well.</p>
-<pre><code>@Stateless
+                <div class="paragraph">
+<p>For those of you who would like to use final fields,
+wish to avoid numerous setters, or dislike private field injection and
+would like nothing more than to just use plan old java constructors,
+your wish has come true. This is a feature we intended to add to OpenEJB
+3.0 but didn&#8217;t have time for. We&#8217;re happy to bring it to the OpenEJB 3.1
+release and with a bit of luck and support from people like yourself,
+we&#8217;ll see this as an EJB 3.1 feature as well.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 public class WidgetBean implements Widget {
 
-    @EJB(beanName = &quot;FooBean&quot;)
+    @EJB(beanName = "FooBean")
     private final Foo foo;
 
-    @Resource(name = &quot;count&quot;)
+    @Resource(name = "count")
     private final int count;
 
     @Resource
@@ -121,13 +131,19 @@ public class WidgetBean implements Widget {
     public Foo getFoo() {
     return foo;
     }
-}
-</code></pre>
-<p>The @EJB, @Resource, @PersistenceUnit, and @PersistenceContext annotations can be placed at the class-level instead such as:</p>
-<pre><code>@Stateless
-@EJB(name = &quot;foo&quot;, beanInterface = Foo.class, beanName = &quot;FooBean&quot;)
-@Resource(name = &quot;count&quot;, type = int.class)
-@Resource(name = &quot;ds&quot;, type = DataSource.class)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The @EJB, @Resource, @PersistenceUnit, and @PersistenceContext
+annotations can be placed at the class-level instead such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@EJB(name = "foo", beanInterface = Foo.class, beanName = "FooBean")
+@Resource(name = "count", type = int.class)
+@Resource(name = "ds", type = DataSource.class)
 public class WidgetBean implements Widget {
 
     public WidgetBean(Integer count, Foo foo, DataSource ds) {
@@ -141,16 +157,34 @@ public class WidgetBean implements Widget {
     public Foo getFoo() {
     return foo;
     }
-}
-</code></pre>
-<p>Currently this functionality relies on classes being compiled with debug symbols (the default compile setting for javac) as we use the debug table in the byte code to discover the constructor arg names. Additionally, you must not have a no-arg constructor. If a no-arg constructor is present, that constructor will be used instead.</p>
-<p>Ideally, we would like the annotations to be used on the parameters directly as shown below. Unfortunately, this does not work as the Java EE annotation classes do not permit usage on parameters. If you'd like to see that change as much as we do, definitely voice your support by sending note to <a href="mailto:jsr-316-comments@jcp.org.html">jsr-316-comments@jcp.org</a></p>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Currently this functionality relies on classes being compiled with debug
+symbols (the default compile setting for javac) as we use the debug
+table in the byte code to discover the constructor arg names.
+Additionally, you must not have a no-arg constructor. If a no-arg
+constructor is present, that constructor will be used instead.</p>
+</div>
+<div class="paragraph">
+<p>Ideally, we would like the annotations to be used on the parameters
+directly as shown below. Unfortunately, this does not work as the Java
+EE annotation classes do not permit usage on parameters. If you&#8217;d like
+to see that change as much as we do, definitely voice your support by
+sending note to
+<a href="mailto:jsr-316-comments@jcp.org.html">jsr-316-comments@jcp.org</a></p>
+</div>
+<div class="paragraph">
 <p>Not yet possible</p>
-<pre><code>@Stateless
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 
 public class WidgetBean implements Widget {
 
-    public WidgetBean(@Resource(name = &quot;count&quot;) Integer count, @EJB Foo foo, @Resource DataSource ds) {
+    public WidgetBean(@Resource(name = "count") Integer count, @EJB Foo foo, @Resource DataSource ds) {
        // do something
     }
 
@@ -161,8 +195,9 @@ public class WidgetBean implements Widget {
     public Foo getFoo() {
         return foo;
     }
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -191,7 +226,7 @@ public class WidgetBean implements Widget {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

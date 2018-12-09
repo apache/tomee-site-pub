@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,10 +95,14 @@
         <div class="row">
             
             <div class="col-md-12">
-                <a name="persistence-context-Viaannotation"></a>
-<h1>Via annotation</h1>
-<p>Both lookup and injection of an EntityManager can be configured via the<br/><code>@PersistenceContext</code> annotation.</p>
-<pre><code>package org.superbiz;
+                <h1 id="_via_annotation" class="sect0">Via annotation</h1>
+<div class="paragraph">
+<p>Both lookup and injection of an EntityManager can be configured via the
+<code>@PersistenceContext</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz;
 
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
@@ -106,26 +110,31 @@ import javax.ejb.Stateless;
 import javax.naming.InitialContext;
 
 @Stateless
-@PersistenceContext(name = &quot;myFooEntityManager&quot;, unitName = &quot;foo-unit&quot;)
+@PersistenceContext(name = "myFooEntityManager", unitName = "foo-unit")
 public class MyBean implements MyInterface {
 
-    @PersistenceContext(unitName = &quot;bar-unit&quot;)
+    @PersistenceContext(unitName = "bar-unit")
     private EntityManager myBarEntityManager;
 
     public void someBusinessMethod() throws Exception {
-        if (myBarEntityManager == null) throw new NullPointerException(&quot;myBarEntityManager not injected&quot;);
+        if (myBarEntityManager == null) throw new NullPointerException("myBarEntityManager not injected");
 
         // Both can be looked up from JNDI as well
         InitialContext context = new InitialContext();
-        EntityManager fooEntityManager = (EntityManager) context.lookup(&quot;java:comp/env/myFooEntityManager&quot;);
-        EntityManager barEntityManager = (EntityManager) context.lookup(&quot;java:comp/env/org.superbiz.MyBean/myBarEntityManager&quot;);
+        EntityManager fooEntityManager = (EntityManager) context.lookup("java:comp/env/myFooEntityManager");
+        EntityManager barEntityManager = (EntityManager) context.lookup("java:comp/env/org.superbiz.MyBean/myBarEntityManager");
     }
-}
-</code></pre>
-<a name="persistence-context-Viaxml"></a>
-<h1>Via xml</h1>
-<p>The above @PersistenceContext annotation usage is 100% equivalent to the following xml.</p>
-<pre><code>&lt;persistence-context-ref&gt;
+}</code></pre>
+</div>
+</div>
+<h1 id="_via_xml" class="sect0">Via xml</h1>
+<div class="paragraph">
+<p>The above @PersistenceContext annotation usage is 100% equivalent to the
+following xml.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence-context-ref&gt;
     &lt;persistence-context-ref-name&gt;myFooEntityManager&lt;/persistence-context-ref-name&gt;
     &lt;persistence-unit-name&gt;foo-unit&lt;/persistence-unit-name&gt;
     &lt;persistence-context-type&gt;Transaction&lt;/persistence-context-type&gt;
@@ -139,8 +148,9 @@ public class MyBean implements MyInterface {
         &lt;injection-target-class&gt;org.superbiz.calculator.MyBean&lt;/injection-target-class&gt;
         &lt;injection-target-name&gt;myBarEntityManager&lt;/injection-target-name&gt;
     &lt;/injection-target&gt;
-&lt;/persistence-context-ref&gt;
-</code></pre>
+&lt;/persistence-context-ref&gt;</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -169,7 +179,7 @@ public class MyBean implements MyInterface {
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

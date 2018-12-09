@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,36 +95,116 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Multicast is the preferred way to broadcast the heartbeat on the network. The simple technique of broadcasting a non-changing service URI on the network has specific advantages to multicast. The URI itself is essentially stateless and there is no "i'm alive" URI or an "i'm dead" URI.</p>
-<p>In this way the issues with UDP being unordered and unreliable melt away as state is no longer a concern and packet sizes are always small. Complicated libraries that ride atop UDP and attempt to offer reliability<br/>(retransmission) and ordering on UDP can be avoided. As well the<br/>advantages UDP has over TCP are retained as there are no java layers attempting to force UDP communication to be more TCP-like. The simple design means UDP/Multicast is only used for discovery and from there on out critical information is transmitted over TCP/IP which is obviously going to do a better job at ensuring reliability and ordering.</p>
-<h1>Server Configuration</h1>
-<p>When you boot the server there should be a <code>conf/multicast.properties</code> file containing:</p>
-<pre><code>server      = org.apache.openejb.server.discovery.MulticastDiscoveryAgent
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Multicast is the preferred way to broadcast the heartbeat on the
+network. The simple technique of broadcasting a non-changing service URI
+on the network has specific advantages to multicast. The URI itself is
+essentially stateless and there is no "i&#8217;m alive" URI or an "i&#8217;m dead"
+URI.</p>
+</div>
+<div class="paragraph">
+<p>In this way the issues with UDP being unordered and unreliable melt away
+as state is no longer a concern and packet sizes are always small.
+Complicated libraries that ride atop UDP and attempt to offer
+reliability (retransmission) and ordering on UDP can be avoided. As well
+the advantages UDP has over TCP are retained as there are no java layers
+attempting to force UDP communication to be more TCP-like. The simple
+design means UDP/Multicast is only used for discovery and from there on
+out critical information is transmitted over TCP/IP which is obviously
+going to do a better job at ensuring reliability and ordering.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_server_configuration">Server Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you boot the server there should be a <code>conf/multicast.properties</code>
+file containing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">server      = org.apache.openejb.server.discovery.MulticastDiscoveryAgent
 bind        = 239.255.2.3
 port        = 6142
 disabled    = true
-group       = default
-</code></pre>
-<p>Just need to enable that by setting <code>disabled=false</code>. All of the above settings except <code>server</code> can be changed. The <code>port</code> and <code>bind</code> must be valid for general multicast/udp network communication.</p>
-<p>The <code>group</code> setting can be changed to further group servers that may use the same multicast channel. As shown below the client also has a <code>group</code> setting which can be used to select an appropriate server from the multicast channel.</p>
-<h1>Multicast Client</h1>
-<p>The multicast functionality is not just for servers to find each other in a cluster, it can also be used for EJB clients to discover a server. A special <code>multicast://</code> URL can be used in the <code>InitialContext</code> properties to signify that multicast should be used to seed the connection process. Such as:</p>
-<pre><code>Properties p = new Properties();
+group       = default</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just need to enable that by setting <code>disabled=false</code>. All of the above
+settings except <code>server</code> can be changed. The <code>port</code> and <code>bind</code> must be
+valid for general multicast/udp network communication.</p>
+</div>
+<div class="paragraph">
+<p>The <code>group</code> setting can be changed to further group servers that may use
+the same multicast channel. As shown below the client also has a <code>group</code>
+setting which can be used to select an appropriate server from the
+multicast channel.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multicast_client">Multicast Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The multicast functionality is not just for servers to find each other
+in a cluster, it can also be used for EJB clients to discover a server.
+A special <code>multicast://</code> URL can be used in the <code>InitialContext</code>
+properties to signify that multicast should be used to seed the
+connection process. Such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
 p.put(Context.INITIAL_CONTEXT_FACTORY,
-&quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(Context.PROVIDER_URL, &quot;multicast://239.255.2.3:6142?group=default&quot;);
-InitialContext remoteContext = new InitialContext(p);
-</code></pre>
-<p>The URL has optional query parameters such as <code>schemes</code> and <code>group</code> and<br/><code>timeout</code> which allow you to zero in on a particular type of service of a<br/>particular cluster group as well as set how long you are willing to wait in the discovery process till finally giving up. The first matching service that it sees "flowing" around on the UDP stream is the one it picks and sticks to for that and subsequent requests, ensuring UDP is only used when there are no other servers to talk to.</p>
-<p>Note that EJB clients do not need to use multicast to find a server. If the client knows the URL of a server in the cluster, it may use it and connect directly to that server, at which point that server will share the full list of its peers.</p>
-<h1>Multicast Servers with TCP Clients</h1>
-<p>Note that clients do not need to use multicast to communicate with servers. Servers can use multicast to discover each other, but clients are still free to connect to servers in the network using the server's TCP address.</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY,  &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-p.put(Context.PROVIDER_URL, &quot;ejbd://192.168.1.30:4201&quot;);
-InitialContext remoteContext = new InitialContext(p);
-</code></pre>
-<p>When the client connects, the server will send the URLs of all the servers in the group and failover will take place normally.</p>
+"org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "multicast://239.255.2.3:6142?group=default");
+InitialContext remoteContext = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URL has optional query parameters such as <code>schemes</code> and <code>group</code> and
+<code>timeout</code> which allow you to zero in on a particular type of service of
+a particular cluster group as well as set how long you are willing to
+wait in the discovery process till finally giving up. The first matching
+service that it sees "flowing" around on the UDP stream is the one it
+picks and sticks to for that and subsequent requests, ensuring UDP is
+only used when there are no other servers to talk to.</p>
+</div>
+<div class="paragraph">
+<p>Note that EJB clients do not need to use multicast to find a server. If
+the client knows the URL of a server in the cluster, it may use it and
+connect directly to that server, at which point that server will share
+the full list of its peers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multicast_servers_with_tcp_clients">Multicast Servers with TCP Clients</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that clients do not need to use multicast to communicate with
+servers. Servers can use multicast to discover each other, but clients
+are still free to connect to servers in the network using the server&#8217;s
+TCP address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,  "org.apache.openejb.client.RemoteInitialContextFactory");
+p.put(Context.PROVIDER_URL, "ejbd://192.168.1.30:4201");
+InitialContext remoteContext = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the client connects, the server will send the URLs of all the
+servers in the group and failover will take place normally.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -153,7 +233,7 @@ InitialContext remoteContext = new InitialContext(p);
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>

@@ -83,7 +83,7 @@
 	</nav>
 
 
-    <div id="main-block" class="container section-padded">
+    <div id="main-block" class="container main-block">
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
@@ -95,63 +95,120 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>A ActiveMQResourceAdapter can be declared via xml in the <code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file using a declaration like the following. All properties in the element body are optional.</p>
-<pre><code>&lt;Resource id=&quot;myActiveMQResourceAdapter&quot; type=&quot;ActiveMQResourceAdapter&quot;&gt;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A ActiveMQResourceAdapter can be declared via xml in the
+<code>&lt;tomee-home&gt;/conf/tomee.xml</code> file or in a <code>WEB-INF/resources.xml</code> file
+using a declaration like the following. All properties in the element
+body are optional.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="myActiveMQResourceAdapter" type="ActiveMQResourceAdapter"&gt;
     brokerXmlConfig = broker:(tcp://localhost:61616)?useJmx=false
     dataSource = Default Unmanaged JDBC Database
     serverUrl = vm://localhost?waitForStart=20000&amp;async=true
     startupTimeout = 10 seconds
-&lt;/Resource&gt;
-</code></pre>
-<p>Alternatively, a ActiveMQResourceAdapter can be declared via properties in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java VirtualMachine <code>-D</code> properties. The properties can also be used when embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or <code>InitialContext</code></p>
-<pre><code>myActiveMQResourceAdapter = new://Resource?type=ActiveMQResourceAdapter
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, a ActiveMQResourceAdapter can be declared via properties
+in the <code>&lt;tomee-home&gt;/conf/system.properties</code> file or via Java
+VirtualMachine <code>-D</code> properties. The properties can also be used when
+embedding TomEE via the <code>javax.ejb.embeddable.EJBContainer</code> API or
+<code>InitialContext</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">myActiveMQResourceAdapter = new://Resource?type=ActiveMQResourceAdapter
 myActiveMQResourceAdapter.brokerXmlConfig = broker:(tcp://localhost:61616)?useJmx=false
 myActiveMQResourceAdapter.dataSource = Default Unmanaged JDBC Database
 myActiveMQResourceAdapter.serverUrl = vm://localhost?waitForStart=20000&amp;async=true
-myActiveMQResourceAdapter.startupTimeout = 10 seconds
-</code></pre>
-<p>Properties and xml can be mixed. Properties will override the xml allowing for easy configuration change without the need for ${} style variable substitution. Properties are not case sensitive. If a property is specified that is not supported by the declared ActiveMQResourceAdapter a warning will be logged. If a ActiveMQResourceAdapter is needed by the application and one is not declared, TomEE will create one dynamically using default settings. Multiple ActiveMQResourceAdapter declarations are allowed.</p>
-<h2>Supported Properties</h2>
-<table class="mdtable">
-<tr>
-<th>Property</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-<tr>
-  <td>brokerXmlConfig</td>
-  <td>String</td>
-  <td>broker:(tcp://localhost:61616)?useJmx=false</td>
-  <td>
-Broker configuration URI as defined by ActiveMQ see http://activemq.apache.org/broker-configuration-uri.html BrokerXmlConfig xbean:file:conf/activemq.xml - Requires xbean-spring.jar and dependencies
-</td>
-</tr>
-<tr>
-  <td>dataSource</td>
-  <td>String</td>
-  <td>Default&nbsp;Unmanaged&nbsp;JDBC&nbsp;Database</td>
-  <td>
-DataSource for persistence messages
-</td>
-</tr>
-<tr>
-  <td>serverUrl</td>
-  <td>java.net.URI</td>
-  <td>vm://localhost?waitForStart=20000&async=true</td>
-  <td>
-Broker address
-</td>
-</tr>
-<tr>
-  <td>startupTimeout</td>
-  <td><a href="configuring-durations.html">time</a></td>
-  <td>10&nbsp;seconds</td>
-  <td>
-How long to wait for broker startup
-</td>
-</tr>
-</table>
+myActiveMQResourceAdapter.startupTimeout = 10 seconds</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Properties and xml can be mixed. Properties will override the xml
+allowing for easy configuration change without the need for $\{} style
+variable substitution. Properties are not case sensitive. If a property
+is specified that is not supported by the declared
+ActiveMQResourceAdapter a warning will be logged. If a
+ActiveMQResourceAdapter is needed by the application and one is not
+declared, TomEE will create one dynamically using default settings.
+Multiple ActiveMQResourceAdapter declarations are allowed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supported_properties">Supported Properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Property</p>
+</div>
+<div class="paragraph">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p>Default</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>brokerXmlConfig</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>broker:(tcp://localhost:61616)?useJmx=false</p>
+</div>
+<div class="paragraph">
+<p>Broker configuration URI as defined by ActiveMQ see
+<a href="http://activemq.apache.org/broker-configuration-uri.html" class="bare">http://activemq.apache.org/broker-configuration-uri.html</a> BrokerXmlConfig
+xbean:file:conf/activemq.xml - Requires xbean-spring.jar and
+dependencies</p>
+</div>
+<div class="paragraph">
+<p>dataSource</p>
+</div>
+<div class="paragraph">
+<p>String</p>
+</div>
+<div class="paragraph">
+<p>Default Unmanaged JDBC Database</p>
+</div>
+<div class="paragraph">
+<p>DataSource for persistence messages</p>
+</div>
+<div class="paragraph">
+<p>serverUrl</p>
+</div>
+<div class="paragraph">
+<p>java.net.URI</p>
+</div>
+<div class="paragraph">
+<p>vm://localhost?waitForStart=20000&amp;async=true</p>
+</div>
+<div class="paragraph">
+<p>Broker address</p>
+</div>
+<div class="paragraph">
+<p>startupTimeout</p>
+</div>
+<div class="paragraph">
+<p>time</p>
+</div>
+<div class="paragraph">
+<p>10 seconds</p>
+</div>
+<div class="paragraph">
+<p>How long to wait for broker startup</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -180,7 +237,7 @@ How long to wait for broker startup
 							</ul>
 						</div>
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../examples.html" class="white">Examples</a></h5>
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
 								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
