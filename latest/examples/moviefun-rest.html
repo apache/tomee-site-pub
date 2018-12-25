@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>MovieFun REST</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>This example shows the CRUD of a movie funny application. The web client is built using backbone and the backend is built with JAX-RS, JPA for the persistence in a H2 database.</p>
+<h1>The Code</h1>
+<h2>ApplicationConfig</h2>
+<p>Here use JAX-RS annotations to create resources. @ApplicationPath identifies the application path that serves as the base URI for all resources. The implementation of method getClasses will be called by the JAX-RS framework to get information about this application. In the following example, it defines two resources: LoadRest and MoviesRest.</p>
+<pre><code>package org.superbiz.moviefun.rest;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+@ApplicationPath(&quot;/rest&quot;)
+public class ApplicationConfig extends Application {
+
+    @Override
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public Set&lt;Class&lt;?&gt;&gt; getClasses() {
+        return new HashSet&lt;Class&lt;?&gt;&gt;(Arrays.asList(LoadRest.class, MoviesRest.class));
+    }
+}
+</code></pre>
+<h2>LoadRest</h2>
+<p>It is a POJO which is mapped to a root URL ("load") with the annotation @Path and has Java methods for serving requests to this root URL and its sub-URLs. In this case, only have a POST request where use an EJB (MoviesBean) injected to it class<br/> for do an initial load of data in the database. </p>
+<pre><code>package org.superbiz.moviefun.rest;
+
+import org.superbiz.moviefun.Movie;
+import org.superbiz.moviefun.MoviesBean;
+
+import javax.ejb.EJB;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
+@Path(&quot;load&quot;)
+public class LoadRest {
+    @EJB
+    private MoviesBean moviesBean;
+
+    @POST
+    public void load() {
+        moviesBean.addMovie(new Movie(&quot;Wedding Crashers&quot;, &quot;David Dobkin&quot;, &quot;Comedy&quot;, 7, 2005));
+        moviesBean.addMovie(new Movie(&quot;Starsky &amp; Hutch&quot;, &quot;Todd Phillips&quot;, &quot;Action&quot;, 6, 2004));
+        moviesBean.addMovie(new Movie(&quot;Shanghai Knights&quot;, &quot;David Dobkin&quot;, &quot;Action&quot;, 6, 2003));
+        moviesBean.addMovie(new Movie(&quot;I-Spy&quot;, &quot;Betty Thomas&quot;, &quot;Adventure&quot;, 5, 2002));
+        moviesBean.addMovie(new Movie(&quot;The Royal Tenenbaums&quot;, &quot;Wes Anderson&quot;, &quot;Comedy&quot;, 8, 2001));
+        moviesBean.addMovie(new Movie(&quot;Zoolander&quot;, &quot;Ben Stiller&quot;, &quot;Comedy&quot;, 6, 2001));
+        moviesBean.addMovie(new Movie(&quot;Shanghai Noon&quot;, &quot;Tom Dey&quot;, &quot;Comedy&quot;, 7, 2000));
+    }
+
+}
+</code></pre>
+<h2>MovieRest</h2>
+<p>It is a POJO which is mapped to a root URL ("movies") with the annotation @Path and has Java methods for serving requests of entities movies in JSON format according to the @Produces annotation. Here has a method for each HTTP method (GET, POST, PUT, DELETE).</p>
+<pre><code>package org.superbiz.moviefun.rest;
+
+import org.superbiz.moviefun.Movie;
+import org.superbiz.moviefun.MoviesBean;
+
+import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
+
+@Path(&quot;movies&quot;)
+@Produces({&quot;application/json&quot;})
+public class MoviesRest {
+
+    @EJB
+    private MoviesBean service;
+
+    @GET
+    @Path(&quot;{id}&quot;)
+    public Movie find(@PathParam(&quot;id&quot;) Long id) {
+        return service.find(id);
+    }
+
+    @GET
+    public List&lt;Movie&gt; getMovies(@QueryParam(&quot;first&quot;) Integer first, @QueryParam(&quot;max&quot;) Integer max,
+                                 @QueryParam(&quot;field&quot;) String field, @QueryParam(&quot;searchTerm&quot;) String searchTerm) {
+        return service.getMovies(first, max, field, searchTerm);
+    }
+
+    @POST
+    @Consumes(&quot;application/json&quot;)
+    public Movie addMovie(Movie movie) {
+        service.addMovie(movie);
+        return movie;
+    }
+
+    @PUT
+    @Path(&quot;{id}&quot;)
+    @Consumes(&quot;application/json&quot;)
+    public Movie editMovie(Movie movie) {
+        service.editMovie(movie);
+        return movie;
+    }
+
+    @DELETE
+    @Path(&quot;{id}&quot;)
+    public void deleteMovie(@PathParam(&quot;id&quot;) long id) {
+        service.deleteMovie(id);
+    }
+
+    @GET
+    @Path(&quot;count&quot;)
+    @Produces(MediaType.TEXT_PLAIN)
+    public int count(@QueryParam(&quot;field&quot;) String field, @QueryParam(&quot;searchTerm&quot;) String searchTerm) {
+        return service.count(field, searchTerm);
+    }
+
+}
+</code></pre>
+<h2>Movie</h2>
+<p>This is the entity Movie that will be persisted by JPA. </p>
+<pre><code>package org.superbiz.moviefun;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@Entity
+@XmlRootElement(name = &quot;movie&quot;)
+public class Movie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String director;
+    private String title;
+    private int year;
+    private String genre;
+    private int rating;
+
+    public Movie() {
+    }
+
+    public Movie(String title, String director, String genre, int rating, int year) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+        this.genre = genre;
+        this.rating = rating;
+    }
+
+    public Movie(String director, String title, int year) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+}
+</code></pre>
+<h2>MoviesBean</h2>
+<pre><code>This is the EJB according to the @Stateless annotation. It uses the unit persistence &quot;movie-unit&quot; for persist 
+entities movie.
+
+package org.superbiz.moviefun;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import java.util.List;
+
+@Stateless
+public class MoviesBean {
+
+    @PersistenceContext(unitName = &quot;movie-unit&quot;)
+    private EntityManager entityManager;
+
+    public Movie find(Long id) {
+        return entityManager.find(Movie.class, id);
+    }
+
+    public void addMovie(Movie movie) {
+        entityManager.persist(movie);
+    }
+
+    public void editMovie(Movie movie) {
+        entityManager.merge(movie);
+    }
+
+    public void deleteMovie(long id) {
+        Movie movie = entityManager.find(Movie.class, id);
+        entityManager.remove(movie);
+    }
+
+    public List&lt;Movie&gt; getMovies(Integer firstResult, Integer maxResults, String field, String searchTerm) {
+        CriteriaBuilder qb = entityManager.getCriteriaBuilder();
+        CriteriaQuery&lt;Movie&gt; cq = qb.createQuery(Movie.class);
+        Root&lt;Movie&gt; root = cq.from(Movie.class);
+        EntityType&lt;Movie&gt; type = entityManager.getMetamodel().entity(Movie.class);
+        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !&quot;&quot;.equals(field.trim()) &amp;&amp; !&quot;&quot;.equals(searchTerm.trim())) {
+            Path&lt;String&gt; path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
+            Predicate condition = qb.like(path, &quot;%&quot; + searchTerm.trim() + &quot;%&quot;);
+            cq.where(condition);
+        }
+        TypedQuery&lt;Movie&gt; q = entityManager.createQuery(cq);
+        if (maxResults != null) {
+            q.setMaxResults(maxResults);
+        }
+        if (firstResult != null) {
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
+    }
+
+    public int count(String field, String searchTerm) {
+        CriteriaBuilder qb = entityManager.getCriteriaBuilder();
+        CriteriaQuery&lt;Long&gt; cq = qb.createQuery(Long.class);
+        Root&lt;Movie&gt; root = cq.from(Movie.class);
+        EntityType&lt;Movie&gt; type = entityManager.getMetamodel().entity(Movie.class);
+        cq.select(qb.count(root));
+        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !&quot;&quot;.equals(field.trim()) &amp;&amp; !&quot;&quot;.equals(searchTerm.trim())) {
+            Path&lt;String&gt; path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
+            Predicate condition = qb.like(path, &quot;%&quot; + searchTerm.trim() + &quot;%&quot;);
+            cq.where(condition);
+        }
+        return entityManager.createQuery(cq).getSingleResult().intValue();
+    }
+
+    public void clean() {
+        entityManager.createQuery(&quot;delete from Movie&quot;).executeUpdate();
+    }
+}
+</code></pre>
+<h1>Running</h1>
+<p>Running the example is fairly simple. In the "moviefun-rest" directory run:</p>
+<p>$ mvn clean install</p>
+<p>Which should create output like the following.</p>
+<pre><code>INFO: OpenJPA dynamically loaded a validation provider.
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.ReloadableEntityManagerFactory createDelegate
+INFO: PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 36ms
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=MoviesBeanLocalBean) --&gt; Ejb(deployment-id=MoviesBean)
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/test/MoviesBean!org.superbiz.moviefun.MoviesBean) --&gt; Ejb(deployment-id=MoviesBean)
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.JndiBuilder bind
+INFO: Jndi(name=global/test/MoviesBean) --&gt; Ejb(deployment-id=MoviesBean)
+Dec 18, 2018 1:31:44 PM org.apache.openejb.util.LogStreamAsync run
+INFO: Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@94f6bfb
+Dec 18, 2018 1:31:44 PM org.apache.openejb.cdi.ManagedSecurityService &lt;init&gt;
+INFO: Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+Dec 18, 2018 1:31:44 PM org.apache.openejb.util.LogStreamAsync run
+INFO: OpenWebBeans Container is starting...
+Dec 18, 2018 1:31:44 PM org.apache.webbeans.plugins.PluginLoader startUp
+INFO: Adding OpenWebBeansPlugin : [CdiPlugin]
+Dec 18, 2018 1:31:44 PM org.apache.openejb.cdi.CdiScanner handleBda
+INFO: Using annotated mode for file:/Users/josediaz/Projects/tomitribe/tomee/examples/moviefun-rest/target/arquillian-test-working-dir/0/test/WEB-INF/classes/ looking all classes to find CDI beans, maybe think to add a beans.xml if not there or add the jar to exclusions.list
+Dec 18, 2018 1:31:44 PM org.apache.webbeans.config.BeansDeployer validateInjectionPoints
+INFO: All injection points were validated successfully.
+Dec 18, 2018 1:31:44 PM org.apache.openejb.util.LogStreamAsync run
+INFO: OpenWebBeans Container has started, it took 466 ms.
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Created Ejb(deployment-id=MoviesBean, ejb-name=MoviesBean, container=Default Stateless Container)
+Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.Assembler startEjbs
+INFO: Started Ejb(deployment-id=MoviesBean, ejb-name=MoviesBean, container=Default Stateless Container)
+Dec 18, 2018 1:31:45 PM org.apache.openejb.assembler.classic.Assembler createApplication
+INFO: Deployed Application(path=/Users/josediaz/Projects/tomitribe/tomee/examples/moviefun-rest/target/arquillian-test-working-dir/0/test)
+Dec 18, 2018 1:31:45 PM org.apache.myfaces.ee.MyFacesContainerInitializer onStartup
+INFO: Using org.apache.myfaces.ee.MyFacesContainerInitializer
+Dec 18, 2018 1:31:45 PM org.apache.myfaces.ee.MyFacesContainerInitializer onStartup
+INFO: Added FacesServlet with mappings=[/faces/*, *.jsf, *.faces, *.xhtml]
+Dec 18, 2018 1:31:45 PM org.apache.jasper.servlet.TldScanner scanJars
+INFO: At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+Dec 18, 2018 1:31:45 PM org.apache.tomee.myfaces.TomEEMyFacesContainerInitializer addListener
+INFO: Installing &lt;listener&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener&gt;
+Dec 18, 2018 1:31:45 PM org.apache.myfaces.config.DefaultFacesConfigurationProvider getStandardFacesConfig
+INFO: Reading standard config META-INF/standard-faces-config.xml
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.DefaultFacesConfigurationProvider getClassloaderFacesConfig
+INFO: Reading config : jar:file:/Users/josediaz/.m2/repository/org/apache/openwebbeans/openwebbeans-el22/2.0.8/openwebbeans-el22-2.0.8.jar!/META-INF/faces-config.xml
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.DefaultFacesConfigurationProvider getClassloaderFacesConfig
+INFO: Reading config : jar:file:/Users/josediaz/.m2/repository/org/apache/openwebbeans/openwebbeans-jsf/2.0.8/openwebbeans-jsf-2.0.8.jar!/META-INF/faces-config.xml
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.LogMetaInfUtils logArtifact
+INFO: Artifact &#39;myfaces-api&#39; was found in version &#39;2.3.2&#39; from path &#39;file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-api/2.3.2/myfaces-api-2.3.2.jar&#39;
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.LogMetaInfUtils logArtifact
+INFO: Artifact &#39;myfaces-impl&#39; was found in version &#39;2.3.2&#39; from path &#39;file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-impl/2.3.2/myfaces-impl-2.3.2.jar&#39;
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.util.ExternalSpecifications isCDIAvailable
+INFO: MyFaces CDI support enabled
+Dec 18, 2018 1:31:46 PM org.apache.myfaces.spi.impl.DefaultInjectionProviderFactory getInjectionProvider
+INFO: Using InjectionProvider org.apache.myfaces.spi.impl.CDIAnnotationDelegateInjectionProvider
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.util.ExternalSpecifications isBeanValidationAvailable
+INFO: MyFaces Bean Validation support enabled
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.application.ApplicationImpl getProjectStage
+INFO: Couldn&#39;t discover the current project stage, using Production
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.config.FacesConfigurator handleSerialFactory
+INFO: Serialization provider : class org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.config.annotation.DefaultLifecycleProviderFactory getLifecycleProvider
+INFO: Using LifecycleProvider org.apache.myfaces.config.annotation.Tomcat7AnnotationLifecycleProvider
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.webapp.AbstractFacesInitializer initFaces
+INFO: ServletContext initialized.
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.view.facelets.ViewPoolProcessor initialize
+INFO: org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to &quot;noCache&quot;. To enable view pooling this param must be set to &quot;alwaysRecompile&quot;. View Pooling disabled.
+Dec 18, 2018 1:31:47 PM org.apache.myfaces.webapp.StartupServletContextListener contextInitialized
+INFO: MyFaces Core has started, it took [1867] ms.
+Dec 18, 2018 1:31:47 PM null
+INFO: Starting OpenJPA 3.0.0
+Dec 18, 2018 1:31:47 PM null
+INFO: Using dictionary class &quot;org.apache.openjpa.jdbc.sql.HSQLDictionary&quot; (HSQL Database Engine 2.3.2 ,HSQL Database Engine Driver 2.3.2).
+Dec 18, 2018 1:31:47 PM null
+INFO: Connected to HSQL Database Engine version 2.2 using JDBC driver HSQL Database Engine Driver version 2.3.2. 
+Dec 18, 2018 1:31:53 PM null
+INFO: Creating subclass and redefining methods for &quot;[class org.superbiz.moviefun.Movie]&quot;. This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
+Dec 18, 2018 1:31:54 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
+INFO: Undeploying app: /Users/josediaz/Projects/tomitribe/tomee/examples/moviefun-rest/target/arquillian-test-working-dir/0/test
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.77 sec - in org.superbiz.moviefun.MoviesEJBTest
+
+Results :
+
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+</code></pre>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

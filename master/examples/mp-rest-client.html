@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>null</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1>Microprofile Rest client</h1>
+<p>This is a basic example on how to configure and use MicroProfile Rest Client in TomEE.</p>
+<h2>Run the tests for different scenarios related with JWT validation</h2>
+<pre><code>mvn clean test 
+</code></pre>
+<h2>Requirementes and configuration</h2>
+<p>To use MicroProfile Rest Client you need 3 changes in your project:</p>
+<p>1) Add the to the <code>pom.xml</code> the dependency:</p>
+<pre><code>    &lt;dependency&gt;
+        &lt;groupId&gt;org.eclipse.microprofile.rest.client&lt;/groupId&gt;
+        &lt;artifactId&gt;microprofile-rest-client-api&lt;/artifactId&gt;
+        &lt;version&gt;${microprofile.rest-client.version}&lt;/version&gt;
+        &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+</code></pre>
+<p>2) Provide configuration files: <code>microprofile-config.properties</code></p>
+<pre><code>    org.superbiz.rest.BookResourceClient/mp-rest/url=http://localhost:4444
+</code></pre>
+<p>3) Provide an interface that you can build from the JAX-RS resource you want to consume: <code>BookResourceClient.java</code></p>
+<pre><code>    package org.superbiz.rest;
+
+    import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+    import javax.enterprise.context.Dependent;
+    import javax.ws.rs.*;
+    import javax.ws.rs.core.MediaType;
+    import java.util.List;
+
+    @Dependent
+    @RegisterRestClient
+    @Path(&quot;/test/api/library&quot;)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public interface BookResourceClient {
+
+        @GET
+        String status();
+
+        @POST
+        @Path(&quot;/books&quot;)
+        void addBook(Book newBook);
+
+        @DELETE
+        @Path(&quot;/books/{id}&quot;)
+        void deleteBook(@PathParam(&quot;id&quot;) int id);
+
+        @PUT
+        @Path(&quot;/books&quot;)
+        void updateBook(Book updatedBook);
+
+        @GET
+        @Path(&quot;/books/{id}&quot;)
+        Book getBook(@PathParam(&quot;id&quot;) int id);
+
+        @GET
+        @Path(&quot;/books&quot;)
+        List&lt;Book&gt; getListOfBooks();
+
+    }
+</code></pre>
+<h2>Use of MicroProfile Rest Client in TomEE</h2>
+<p>The class <code>BookResourceTest.java</code> shows how easy is to use the type-safe approach provided by MicroProfile Rest Client to consume an existing JAX-RS resource. </p>
+<pre><code>package org.superbiz.rest;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertTrue;
+
+@RunWith(Arquillian.class)
+public class BookResourceTest {
+
+    @Deployment()
+    public static WebArchive createDeployment() {
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, &quot;test.war&quot;)
+                .addClass(BookResource.class)
+                .addClass(Book.class)
+                .addClass(BookBean.class)
+                .addClass(BookResourceClient.class)
+                .addClass(ApplicationConfig.class)
+                .addAsWebInfResource(new StringAsset(&quot;&lt;beans/&gt;&quot;), &quot;beans.xml&quot;)
+                .addAsResource(&quot;META-INF/microprofile-config.properties&quot;);
+        return webArchive;
+    }
+
+
+    @Inject
+    @RestClient
+    private BookResourceClient bookResourceClient;
+
+    @Test()
+    public void testServerStatus(){
+        bookResourceClient.addBook(new Book(1,&quot;TomEE Book&quot;));
+    }
+
+    @Test
+    public void testBookResource(){
+        bookResourceClient.addBook(new Book(1, &quot;TomEE and MicroProfile Adventures&quot;));
+        bookResourceClient.addBook(new Book(2, &quot;Top 10 Tomee Configuraiton Tips&quot;));
+
+
+        assertTrue(bookResourceClient.getListOfBooks().size() == 2);
+        assertTrue(bookResourceClient.getBook(1).getName().equalsIgnoreCase(&quot;TomEE and MicroProfile Adventures&quot;));
+
+        bookResourceClient.deleteBook(1);
+        assertTrue(bookResourceClient.getListOfBooks().size() == 1);
+        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase(&quot;Top 10 Tomee Configuraiton Tips&quot;));
+
+        bookResourceClient.updateBook(new Book(2, &quot;Top 3 Tomee Configuraiton Tips&quot;));
+        assertTrue(bookResourceClient.getListOfBooks().size() == 1);
+        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase(&quot;Top 3 Tomee Configuraiton Tips&quot;));
+    }
+
+}
+</code></pre>
+<h2>About the Test architecture</h2>
+<p>The test cases from this project are built using Arquillian and TomEE Remote. The arquillian configuration can be found in<br/><code>src/test/resources/arquillian.xml</code></p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

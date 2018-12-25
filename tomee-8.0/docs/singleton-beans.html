@@ -97,8 +97,8 @@
             <div class="col-md-12">
                 <h1 id="_singleton_overview_for_the_first_time_in_years_ejb_has_a_new" class="sect0">Singleton Overview For the first time in years EJB has a new</h1>
 <div class="paragraph">
-<p>bean type, the <em>@Singleton</em>. In my opinion, the javax.ejb.Singleton will
-replace a lot of what people are using @Stateless for today.</p>
+<p>bean type, the <em>`@Singleton</em>`. In my opinion, the javax.ejb.Singleton will
+replace a lot of what people are using <code>@Stateless</code> for today.</p>
 </div>
 <div class="paragraph">
 <p>The Singleton is essentially what you get if you take a Stateless bean
@@ -107,13 +107,13 @@ exactly one instance of the Singleton bean in the application which can
 be invoked concurrently by multiple threads, like a servlet. It can do
 everything a Stateless can do such as support local and remote business
 interfaces, web services, security, transactions, and more.
-Additionally, the Singleton can have its @PostConstruct method called
-with the application starts up and its @PreDestroy method called when
+Additionally, the Singleton can have its <code>@PostConstruct</code> method called
+with the application starts up and its <code>@PreDestroy</code> method called when
 the application shuts down. This allows it to serve as an application
 lifecycle listener which is something only Servlets could do before. It
-has an <em>@Startup</em> annotation which is similar in concept to the servlet
+has an <em>`@Startup</em>` annotation which is similar in concept to the servlet
 , but unlike servlets it doesn&#8217;t take a number as an argument. Instead,
-you can use an <em>@DependsOn</em> annotation to say which other Singletons you
+you can use an <em>`@DependsOn</em>` annotation to say which other Singletons you
 need and the container will ensure they start before you.</p>
 </div>
 <div class="paragraph">
@@ -155,15 +155,15 @@ exclusive lock on the bean for the duration of the method call and all
 other threads for that or any other method must wait.</p>
 </div>
 <div class="paragraph">
-<p>The second option is a "read" lock, annotated as <em>@Lock(READ)</em>. The read
+<p>The second option is a "read" lock, annotated as <em>`@Lock`(READ)</em>. The read
 lock allows full concurrent access to the methods (assuming no write
 locks are held). The default mode of "write" essentially makes your bean
 a single-threaded bean, which is very slow. The more conservative
 @Lock(WRITE) was chosen as the default as this is how all the other bean
 types work (only a single thread may access a bean instance at any given
 time). Those that are aware of how to handle concurrent access can
-easily put @Lock(READ) on their bean class, thus changing the default,
-and then @Lock(WRITE) on specific methods if needed.</p>
+easily put <code>@Lock</code>(READ) on their bean class, thus changing the default,
+and then <code>@Lock</code>(WRITE) on specific methods if needed.</p>
 </div>
 <div class="paragraph">
 <p>The locking modes of Container-Managed Concurrency map directly to the
@@ -221,7 +221,7 @@ downgrading, and</p>
 <div class="sect3">
 <h4 id="_acquiring_the_lock">Acquiring the Lock</h4>
 <div class="paragraph">
-<p>The <em>@AccessTimetout</em> annotation can configure how long a thread will
+<p>The <em>`@AccessTimetout</em>` annotation can configure how long a thread will
 wait to acquire the read or write lock. This annotation can be used on
 the bean class or individual methods. The annotation maps directly to
 the
@@ -265,7 +265,7 @@ interface.</p>
 <div class="sect3">
 <h4 id="_default_timeout">Default Timeout</h4>
 <div class="paragraph">
-<p>The default value of <em>@AccessTimeout</em> annotation is vendor specific. In
+<p>The default value of <em>`@AccessTimeout</em>` annotation is vendor specific. In
 OpenEJB it defaults to the value of the <em>AccessTimeout</em> property which
 can be configured in many different scopes. Here is the order of
 preference:</p>
@@ -303,17 +303,17 @@ hour and 23 minutes and 17 seconds" see
 <h2 id="_startup_and_startup_ordering">Startup and Startup Ordering</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Singletons have an <em>@Startup</em> annotation which can be applied to the
+<p>Singletons have an <em>`@Startup</em>` annotation which can be applied to the
 bean class. When used, the Container will instantiate the Singleton
 instance <em>eagerly</em> when the application starts up, otherwise the
 Container will instantiate the Singleton instance <em>lazily</em> when the bean
 is first accessed.</p>
 </div>
 <div class="paragraph">
-<p>If one Singleton refers to another Singleton in the @PostConstruct or
+<p>If one Singleton refers to another Singleton in the <code>@PostConstruct</code> or
 @PreDestroy method, there must be some measure taken to ensure the other
 Singleton exists and is started. This sort of ordering is achieved with
-the <em>@DependsOn</em> annotation which can be used to list the names of
+the <em>`@DependsOn</em>` annotation which can be used to list the names of
 Singleton beans that must be started before the Singleton bean using the
 annotation.</p>
 </div>
@@ -327,23 +327,23 @@ public class SingletonA {
 </div>
 </div>
 <div class="paragraph">
-<p>Circular references are not supported. If BeanA uses @DependsOn to point
-to BeanB and BeanB also uses @DependsOn to point at BeanA, the result is
+<p>Circular references are not supported. If BeanA uses <code>@DependsOn</code> to point
+to BeanB and BeanB also uses <code>@DependsOn</code> to point at BeanA, the result is
 a deployment exception. Be aware that circular references can happen in
 less trivial ways such as A referring to B which refers to C which
 refers to D which refers back to A. We will detect and print all
 circular dependencies (called circuits) at deploy time.</p>
 </div>
 <div class="paragraph">
-<p>Note that @DependsOn is only required (and should only be used) if a
-Singleton <em>uses</em> another Singleton in its @PostConstruct method or
+<p>Note that <code>@DependsOn</code> is only required (and should only be used) if a
+Singleton <em>uses</em> another Singleton in its <code>@PostConstruct</code> method or
 @PreDestroy method. Simply having a reference to another Singleton and
-using it in other business methods does not require an @DependsOn
-declaration. The @DependsOn allows the Container to calculate the
+using it in other business methods does not require an <code>@DependsOn</code>
+declaration. The <code>@DependsOn</code> allows the Container to calculate the
 correct startup order and shutdown order so that it can guarantee the
-Singletons you need are available in your @PostConstruct or @PreDestroy
+Singletons you need are available in your <code>@PostConstruct</code> or <code>@PreDestroy</code>
 methods. All Singletons will automatically be available to your business
-methods regardless if @DependsOn is used. Because of the greater chance
+methods regardless if <code>@DependsOn</code> is used. Because of the greater chance
 of creating circular dependencies, it is better not to use the
 @DependsOn annotation "just in case" and should only be used when truly
 needed.</p>

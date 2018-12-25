@@ -95,16 +95,55 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Any annotation that takes parameters can benefit from meta-annotations. Here we see how <code>@AccessTimeout</code> can be far more understandable and manageable through meta-annotations. We'll use the <a href="../access-timeout/README.html">access-timeout</a> example as our use-case.</p>
-<p>The value of the parameters supplied to <code>@AccessTimeout</code> have a dramatic affect on what that annotation actually does. Moreover, <code>@AccessTimeout</code> has one of those designs where <code>-1</code> and <code>0</code> have signifcantly different meanings. One means "wait forever", the other means "never wait". Only a lucky few can remember which is which on a daily basis. For the rest of us it is a constant source of bugs.</p>
-<p>Meta-Annotations to the rescue!</p>
-<h1>Creating the Meta-Annotations</h1>
-<p>As a matter of best-practices, we will put our meta-annotations in a package called <code>api</code>, for this example that gives us <code>org.superbiz.accesstimeout.api</code>. The package <code>org.superbiz.api</code> would work just as well.</p>
-<p>The basic idea is to have a package where "approved' annotations are used and to prohibit usage of the non-meta versions of the annotations. All the real configuration will then be centralized in the <code>api</code> package and changes to timeout values will be localized to that package and automatically be reflected throuhout the application.</p>
-<p>An interesting side-effect of this approach is that if the <code>api</code> package where the meta-annotation definitions exist is kept in a separate jar as well, then one can effectively change the configuration of an entire application by simply replacing the <code>api</code> jar.</p>
-<h2>@Metatype <small>The "root" Meta-Annotation</small></h2>
-<p>As with all meta-annotation usage, you first need to create your own "root" meta-annotation. This is as easy as creating an annotation named <code>Metatype</code> that is annotated with itself and has <code>ElementType.ANNOTATION_TYPE</code> as its target.</p>
-<pre><code>package org.superbiz.accesstimeout.api;
+                <div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Any annotation that takes parameters can benefit from meta-annotations.  Here we see how <code>@AccessTimeout</code> can be far more understandable and manageable through meta-annotations.
+We&#8217;ll use the [access-timeout](../access-timeout/README.html) example as our use-case.</p>
+</div>
+<div class="paragraph">
+<p>The value of the parameters supplied to <code>@AccessTimeout</code> have a dramatic affect on what that annotation actually does.  Moreover, <code>@AccessTimeout</code> has one of those designs
+where <code>-1</code> and <code>0</code> have signifcantly different meanings.  One means "wait forever", the other means "never wait".  Only a lucky few can remember which is which on a daily basis.
+For the rest of us it is a constant source of bugs.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Meta-Annotations to the rescue!
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__strong_em_creating_the_meta_annotations_em_strong"><strong><em>Creating the Meta-Annotations</em></strong></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a matter of best-practices, we will put our meta-annotations in a package called <code>api</code>, for this example that gives us <code>org.superbiz.accesstimeout.api</code>.  The package <code>org.superbiz.api</code> would work just as well.</p>
+</div>
+<div class="paragraph">
+<p>The basic idea is to have a package where "approved' annotations are used and to prohibit usage of the non-meta versions of the annotations.  All the real configuration will
+then be centralized in the <code>api</code> package and changes to timeout values will be localized to that package and automatically be reflected throuhout the application.</p>
+</div>
+<div class="paragraph">
+<p>An interesting side-effect of this approach is that if the <code>api</code> package where the meta-annotation definitions exist is kept in a separate jar as well, then one can effectively
+change the configuration of an entire application by simply replacing the <code>api</code> jar.</p>
+</div>
+<div class="sect2">
+<h3 id="__metatype_span_class_small_the_root_meta_annotation_span">@Metatype <span class="small">The "root" Meta-Annotation</span></h3>
+<div class="paragraph">
+<p>As with all meta-annotation usage, you first need to create your own "root" meta-annotation.  This is as easy as creating an annotation
+named <code>Metatype</code> that is annotated with itself and has <code>ElementType.ANNOTATION_TYPE</code> as its target.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -115,12 +154,23 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface Metatype {
-}
-</code></pre>
-<h2>@AwaitNever</h2>
-<p>When the <code>@AccessTimeout</code> annotation has the value of <code>0</code> that has the implication that one should never wait to access the bean. If the bean is busy, the caller will immediately receive an <code>ConcurrentAccessException</code>. This is hard to remember and definitely not self-documenting for those that never knew the details.</p>
-<p>To create a meta-annotation version of <code>@AccessTimeout(0)</code> we simply need to think of a good annotation name, create that annotation, and annotate it with both <code>@AccessTimeout</code> and <code>@Metatype</code></p>
-<pre><code>package org.superbiz.accesstimeout.api;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitnever">@AwaitNever</h3>
+<div class="paragraph">
+<p>When the <code>@AccessTimeout</code> annotation has the value of <code>0</code> that has the implication that one should never wait to access the bean.  If the bean is busy, the caller will immediately
+receive an <code>ConcurrentAccessException</code>.  This is hard to remember and definitely not self-documenting for those that never knew the details.</p>
+</div>
+<div class="paragraph">
+<p>To create a meta-annotation version of <code>@AccessTimeout(0)</code> we simply need to think of a good annotation name, create that annotation, and annotate it with both <code>@AccessTimeout</code>
+and <code>@Metatype</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
 
 import javax.ejb.AccessTimeout;
 import java.lang.annotation.ElementType;
@@ -134,13 +184,26 @@ import java.lang.annotation.Target;
 
 @AccessTimeout(0)
 public @interface AwaitNever {
-}
-</code></pre>
-<h2>@AwaitForever</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitforever">@AwaitForever</h3>
+<div class="paragraph">
 <p>Just as <code>0</code> carries the special meaning of "never wait", a value of <code>-1</code> means "wait forever."</p>
-<p>As long as we're being picky, which we can be with meta-annotations, Technically "wait forever" is not the best description. The actual methods of the <code>javax.util.concurrent</code> APIs use "await" rather than "wait". One (wait) perphaps implies a command to wait, which this is not, and the other (await) perhaps better implies that waiting is possible but not a certainty. So we will use "await" in our annotation names.</p>
+</div>
+<div class="paragraph">
+<p>As long as we&#8217;re being picky, which we can be with meta-annotations,
+Technically "wait forever" is not the best description.  The actual methods of the <code>javax.util.concurrent</code> APIs use "await" rather than "wait".  One (wait) perphaps implies a
+command to wait, which this is not, and the other (await) perhaps better implies that waiting is possible but not a certainty.  So we will use "await" in our annotation names.</p>
+</div>
+<div class="paragraph">
 <p>We make our own <code>@AwaitForever</code> and annotate it with <code>@AccessTimeout(0)</code> and <code>@Metatype</code></p>
-<pre><code>package org.superbiz.accesstimeout.api;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
 
 import javax.ejb.AccessTimeout;
 import java.lang.annotation.ElementType;
@@ -154,42 +217,101 @@ import java.lang.annotation.Target;
 
 @AccessTimeout(-1)
 public @interface AwaitForever {
-}
-</code></pre>
-<h2>@AwaitBriefly</h2>
-<p>Non <code>-1</code> and <code>0</code> values to <code>@AccessTimeout</code> actually involve the full breadth of the annotation. Here is where you get to specify the maximum number minutes, seconds, milliseconds, etc. where one might await access to the bean instance.</p>
-<pre><code>@Metatype
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitbriefly">@AwaitBriefly</h3>
+<div class="paragraph">
+<p>Non <code>-1</code> and <code>0</code> values to <code>@AccessTimeout</code> actually involve the full breadth of the annotation.  Here is where you get to specify the maximum number minutes, seconds,
+milliseconds, etc. where one might await access to the bean instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Metatype
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 
 @AccessTimeout(value = 5, unit = TimeUnit.SECONDS)
 public @interface AwaitBriefly {
-}
-</code></pre>
-<h1>Configuration vs Operation</h1>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_vs_operation">Configuration vs Operation</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Once you create a few meta-annotations and the fun becomes common-place, questoins start to raise in your mind on how to best get the benefits of meta-annotations.</p>
-<p>You have to really start thinking about how you want to approach your usage of meta-annotation and really put your designer hat on. The fundamental question is<br/><strong>configuration vs operation</strong> and the answer is subjective; how much flexibility do you want to design into your applications and where?</p>
-<h2>Configuration names <small>describing the configuration</small></h2>
-<p>The simplest approach is to name your meta-annotations after the <strong>configuration</strong> they encapsulate. We've been following that format so far with <code>@AwaitNever</code> and <code>@AwaitForever</code> to clearly reflect the contents of each meta-annotation (<code>@AccessTimeout(-1)</code> and <code>@AccessTimeout(0)</code> respectively).</p>
-<p>The <strong>cons</strong> of this approach is that should you want to change the configuration of the application by only changing the meta-annotations -- this is one of the potential benefits of meta-annotations -- but this may change the meaning of the annotation. Certainly, the <code>@AwaitNever</code> meta-annotation can have no other value than <code>0</code> if it is to live up to its name.</p>
-<h2>Operation names <small>describing the code</small></h2>
-<p>The alternate approach is to name your meta-annotations after the <strong>operations</strong> they apply to. In short, to describe the code itself and not the configuration. So, names like<br/><code>@OrderCheckTimeout</code> or <code>@TwitterUpdateTimeout</code>. These names are configuration-change-proof. They would not change if the configuration changes and in fact they can facilitate<br/>finder-grained control over the configuration of an application.</p>
-<p>The <strong>cons</strong> of this approach is that requires far more deliberation and consideration, not to mention more annotations. Your skills as an architect, designer and ability to think as a administrator will be challenged. You must be good at wearing your dev-opts hat.</p>
-<h2>Pragmatism <small>best of both worlds</small></h2>
-<p>Fortunately, meta-annotations are recursive. You can do a little of both.</p>
-<pre><code>@Metatype
+</div>
+<div class="paragraph">
+<p>You have to really start thinking about how you want to approach your usage of meta-annotation and really put your designer hat on.  The fundamental question is
+<strong>configuration vs operation</strong> and the answer is subjective; how much flexibility do you want to design into your applications and where?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_names_span_class_small_describing_the_configuration_span">Configuration names <span class="small">describing the configuration</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simplest approach is to name your meta-annotations after the <strong>configuration</strong> they encapsulate. We&#8217;ve been following that format so far with <code>@AwaitNever</code> and <code>@AwaitForever</code>
+to clearly reflect the contents of each meta-annotation (<code>@AccessTimeout(-1)</code> and <code>@AccessTimeout(0)</code> respectively).</p>
+</div>
+<div class="paragraph">
+<p>The <strong>cons</strong> of this approach is that should you want to change the configuration of the application by only changing the meta-annotations&#8201;&#8212;&#8201;this is one of the potential benefits
+of meta-annotations&#8201;&#8212;&#8201;but this may change the meaning of the annotation.  Certainly, the <code>@AwaitNever</code> meta-annotation can have no other value than <code>0</code> if it is to live up to its name.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_operation_names_span_class_small_describing_the_code_span">Operation names <span class="small">describing the code</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The alternate approach is to name your meta-annotations after the <strong>operations</strong> they apply to.  In short, to describe the code itself and not the configuration.  So, names like
+<code>@OrderCheckTimeout</code> or <code>@TwitterUpdateTimeout</code>.  These names are configuration-change-proof.  They would not change if the configuration changes and in fact they can facilitate
+finder-grained control over the configuration of an application.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>cons</strong> of this approach is that requires far more deliberation and consideration, not to mention more annotations.  Your skills as an architect, designer and ability to think as
+a administrator will be challenged.  You must be good at wearing your dev-opts hat.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pragmatism_span_class_small_best_of_both_worlds_span">Pragmatism  <span class="small">best of both worlds</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fortunately, meta-annotations are recursive.  You can do a little of both.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Metatype
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 
 @AwaitBriefly
 public @interface TwitterUpdateTimeout {
-}
-</code></pre>
-<p>Of course you still need to be very deliberate on how your annotations are used. When using a "configuration" named meta-annotation in code it can help to say to yourself,<br/>"I do not want to reconfigure this later." If that doesn't feel quite right, put the extra effort into creating an operation named annotation and use in that code.</p>
-<h1>Applying the Meta-Annotations</h1>
-<p>Putting it all together, here's how we might apply our meta-annotations to the <a href="../access-timeout/README.html">access-timeout</a> example.</p>
-<h2>Before</h2>
-<pre><code>package org.superbiz.accesstimeout;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course you still need to be very deliberate on how your annotations are used.  When using a "configuration" named meta-annotation in code it can help to say to yourself,
+"I do not want to reconfigure this later."  If that doesn&#8217;t feel quite right, put the extra effort into creating an operation named annotation and use in that code.</p>
+</div>
+</div>
+</div>
+<h1 id="_applying_the_meta_annotations" class="sect0">Applying the Meta-Annotations</h1>
+<div class="paragraph">
+<p>Putting it all together, here&#8217;s how we might apply our meta-annotations to the [access-timeout](../access-timeout/README.html) example.</p>
+</div>
+<div class="sect2">
+<h3 id="_before">Before</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout;
 
 import javax.ejb.AccessTimeout;
 import javax.ejb.Asynchronous;
@@ -202,8 +324,8 @@ import java.util.concurrent.TimeUnit;
 import static javax.ejb.LockType.WRITE;
 
 /**
- * @version $Revision$ $Date$
- */
+    * @version $Revision$ $Date$
+    */
 @Singleton
 @Lock(WRITE)
 public class BusyBee {
@@ -236,10 +358,15 @@ public class BusyBee {
         // do something
     }
 
-}
-</code></pre>
-<h2>After</h2>
-<pre><code>package org.superbiz.accesstimeout;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_after">After</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout;
 
 import org.superbiz.accesstimeout.api.AwaitBriefly;
 import org.superbiz.accesstimeout.api.AwaitForever;
@@ -254,8 +381,8 @@ import java.util.concurrent.Future;
 import static javax.ejb.LockType.WRITE;
 
 /**
- * @version $Revision$ $Date$
- */
+    * @version $Revision$ $Date$
+    */
 @Singleton
 @Lock(WRITE)
 public class BusyBee {
@@ -288,8 +415,10 @@ public class BusyBee {
         // do something
     }
 
-}
-</code></pre>
+}</code></pre>
+</div>
+</div>
+</div>
             </div>
             
         </div>

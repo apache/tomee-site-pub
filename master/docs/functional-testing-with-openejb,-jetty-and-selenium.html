@@ -127,98 +127,98 @@ configure them to see the EJB and WAR modules of my application:</p>
     private Server server;
 
     private EmbeddedServer() {
-    try {
-        // initialize OpenEJB &amp; add some test data
-        Properties properties = new Properties();
-        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
-        InitialContext ic = new InitialContext(properties);
-        PeopleFacade facade = (PeopleFacade) ic.lookup("PeopleFacadeEJBRemote");
-        new TestFixture(facade).addTestData();
+        try {
+            // initialize OpenEJB &amp; add some test data
+            Properties properties = new Properties();
+            properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
+            InitialContext ic = new InitialContext(properties);
+            PeopleFacade facade = (PeopleFacade) ic.lookup("PeopleFacadeEJBRemote");
+            new TestFixture(facade).addTestData();
 
-        // setup web app
-        WebAppContext context = new WebAppContext();
-        context.setWar(computeWarPath());
-        InitialContext initialContext = setupJndi(context);
+            // setup web app
+            WebAppContext context = new WebAppContext();
+            context.setWar(computeWarPath());
+            InitialContext initialContext = setupJndi(context);
 
-        // start the server
-        context.setServletHandler(new EmbeddedServerServletHandler(initialContext));
-        context.setContextPath("/");
-        server = new Server(9091);
-        server.addHandler(context);
+            // start the server
+            context.setServletHandler(new EmbeddedServerServletHandler(initialContext));
+            context.setContextPath("/");
+            server = new Server(9091);
+            server.addHandler(context);
 
-        server.start();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+            server.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private InitialContext setupJndi(WebAppContext context) throws NamingException {
-    // setup local JNDI
-    InitialContext initialContext = new InitialContext();
-    WebApp webApp = getWebApp(context);
-    Collection&lt;EjbRef&gt; refs = webApp.getEjbRef();
-    for (EjbRef ref : refs) {
-        String ejbLink = ref.getEjbLink();
+        // setup local JNDI
+        InitialContext initialContext = new InitialContext();
+        WebApp webApp = getWebApp(context);
+        Collection&lt;EjbRef&gt; refs = webApp.getEjbRef();
+        for (EjbRef ref : refs) {
+            String ejbLink = ref.getEjbLink();
 
-        // get enterprise bean info
-        EnterpriseBeanInfo beanInfo = new EJBHelper().getEJBInfo(ejbLink);
-        if (beanInfo.jndiNames != null &amp;&amp; beanInfo.jndiNames.size() &gt; 0) {
-        String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
-        initialContext.bind("java:comp/env/" + ref.getEjbRefName(), new LinkRef(jndiName));
+            // get enterprise bean info
+            EnterpriseBeanInfo beanInfo = new EJBHelper().getEJBInfo(ejbLink);
+            if (beanInfo.jndiNames != null &amp;&amp; beanInfo.jndiNames.size() &gt; 0) {
+            String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+            initialContext.bind("java:comp/env/" + ref.getEjbRefName(), new LinkRef(jndiName));
+            }
         }
-    }
-    return initialContext;
+        return initialContext;
     }
 
     private String computeWarPath() {
-    String currentPath = new File(".").getAbsolutePath();
-    String warPath;
+        String currentPath = new File(".").getAbsolutePath();
+        String warPath;
 
-        String[]  pathParts = currentPath.split("(\\\\|/)+");
+            String[]  pathParts = currentPath.split("(\\\\|/)+");
 
-    int webPart = Arrays.asList(pathParts).indexOf("PersonWEB");
-    if (webPart == -1) {
-        warPath = "PersonWEB/src/main/webapp";
-    } else {
-        StringBuffer buffer = new StringBuffer();
+        int webPart = Arrays.asList(pathParts).indexOf("PersonWEB");
+        if (webPart == -1) {
+            warPath = "PersonWEB/src/main/webapp";
+        } else {
+            StringBuffer buffer = new StringBuffer();
 
-        for (int i = 0; i &lt; webPart; i++) {
-                buffer.append(pathParts[i]);
-        buffer.append(File.separator);
+            for (int i = 0; i &lt; webPart; i++) {
+                    buffer.append(pathParts[i]);
+            buffer.append(File.separator);
+            }
+
+            buffer.append("PersonWEB/src/main/webapp");
+            warPath = buffer.toString();
         }
-
-        buffer.append("PersonWEB/src/main/webapp");
-        warPath = buffer.toString();
-    }
-    return warPath;
+        return warPath;
     }
 
     public static EmbeddedServer getInstance() {
-    return instance;
+        return instance;
     }
 
     public Server getServer() {
-    return server;
+        return server;
     }
 
     public static void main(String[]  args) {
-    try {
-        EmbeddedServer.getInstance().getServer().join();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+        try {
+            EmbeddedServer.getInstance().getServer().join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private WebApp getWebApp(WebAppContext context) {
-    WebApp webApp = null;
+        WebApp webApp = null;
 
-    try {
-        FileInputStream is = new FileInputStream(new File(context.getWar() + "/WEB-INF/web.xml").getAbsolutePath());
-        webApp = (WebApp) JaxbJavaee.unmarshal(WebApp.class, is);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return webApp;
+        try {
+            FileInputStream is = new FileInputStream(new File(context.getWar() + "/WEB-INF/web.xml").getAbsolutePath());
+            webApp = (WebApp) JaxbJavaee.unmarshal(WebApp.class, is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return webApp;
     }
 }</code></pre>
 </div>
@@ -248,51 +248,39 @@ looks like this:</p>
     private InitialContext initialContext;
 
     public EmbeddedServerServletHandler(InitialContext initialContext) {
-    this.initialContext = initialContext;
+        this.initialContext = initialContext;
     }
 
     public Servlet customizeServlet(Servlet servlet) throws Exception {
-    Class&lt;? extends Servlet&gt; servletClass = servlet.getClass();
-        Field[]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>declaredFields = servletClass.getDeclaredFields();</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">    for (Field declaredField : declaredFields) {
-            Annotation[]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>annotations = declaredField.getAnnotations();</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">        for (Annotation annotation : annotations) {
-        if (EJB.class.equals(annotation.annotationType())) {
-            // inject into this field
-            Class&lt;?&gt; fieldType = declaredField.getType();
-            EnterpriseBeanInfo beanInfo = getBeanFor(fieldType);
-            if (beanInfo == null) {
-            continue;
+        Class&lt;? extends Servlet&gt; servletClass = servlet.getClass();
+        Field[] declaredFields = servletClass.getDeclaredFields();
+
+        for (Field declaredField : declaredFields) {
+            Annotation[] annotations = declaredField.getAnnotations();
+
+            for (Annotation annotation : annotations) {
+                if (EJB.class.equals(annotation.annotationType())) {
+                    // inject into this field
+                    Class&lt;?&gt; fieldType = declaredField.getType();
+                    EnterpriseBeanInfo beanInfo = getBeanFor(fieldType);
+                    if (beanInfo == null) {
+                    continue;
+                    }
+
+                    String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+                    Object o = initialContext.lookup(jndiName);
+
+                    declaredField.setAccessible(true);
+                    declaredField.set(servlet, o);
+                }
             }
-
-            String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
-            Object o = initialContext.lookup(jndiName);
-
-            declaredField.setAccessible(true);
-            declaredField.set(servlet, o);
         }
-        }
-    }
 
-    return super.customizeServlet(servlet);
+        return super.customizeServlet(servlet);
     }
 
     private EnterpriseBeanInfo getBeanFor(Class&lt;?&gt; fieldType) {
-    return new EJBHelper().getBeanInfo(fieldType);
+        return new EJBHelper().getBeanInfo(fieldType);
     }
 }</code></pre>
 </div>
@@ -316,14 +304,14 @@ sure the Embedded server is running, and start Selenium:</p>
     protected DefaultSelenium selenium;
 
     protected void setUp() throws Exception {
-    super.setUp();
-    EmbeddedServer.getInstance();
-    selenium = new DefaultSelenium("localhost", 4444, "*iexplore", "http://localhost:9091/");
-    selenium.start();
+        super.setUp();
+        EmbeddedServer.getInstance();
+        selenium = new DefaultSelenium("localhost", 4444, "*iexplore", "http://localhost:9091/");
+        selenium.start();
     }
 
     protected void tearDown() throws Exception {
-    selenium.stop();
+        selenium.stop();
     }
 }</code></pre>
 </div>
@@ -335,17 +323,16 @@ sure the Embedded server is running, and start Selenium:</p>
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public class AddPersonTest extends FunctionalTestCase {
     public void testShouldAddAPerson() throws Exception {
-    selenium.open("/People");
-    selenium.type("firstname", "Jonathan");
-    selenium.type("lastname", "Gallimore");
+        selenium.open("/People");
+        selenium.type("firstname", "Jonathan");
+        selenium.type("lastname", "Gallimore");
         selenium.click("//input[@name='add' and @value='Add']");
-    selenium.waitForPageToLoad("30000");
-    selenium.type("filter", "gallimore");
-    selenium.click("submit");
-    selenium.waitForPageToLoad("30000");
+        selenium.waitForPageToLoad("30000");
+        selenium.type("filter", "gallimore");
+        selenium.click("submit");
+        selenium.waitForPageToLoad("30000");
         assertEquals(1, selenium.getXpathCount("//div[@id='people']/ul/li").intValue());
         assertEquals("Jonathan Gallimore", selenium.getText("//div[@id='people']/ul/li[1]"));
-
     }
 }</code></pre>
 </div>
