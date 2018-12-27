@@ -88,91 +88,105 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <div class='btn-toolbar pull-right' style="z-index: 2000;">
-                <div class='btn-group'>
-                    <a class="btn" href="../../tomee-8.0/docs/docs.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
-                </div>
-              </div>
-              
-              <h1>TomEE Documentation</h1>
+              <h1>null</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <div class="sect1">
-<h2 id="_administration">Administration</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="admin/configuration/index.html">Server Configuration</a></p>
-</li>
-<li>
-<p><a href="admin/file-layout.html">Directory Structure</a></p>
-</li>
-<li>
-<p><a href="admin/cluster/index.html">Clustering and High Availability (HA)</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_developers">Developers</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="developer/ide/index.html">IDEs - Eclipse, Intellij Idea and Netbeans</a></p>
-</li>
-<li>
-<p><a href="developer/testing/index.html">Unit Testing - Arquillian, OpenEJB JUnit, TomEE Embedded and ApplicationComposer</a></p>
-</li>
-<li>
-<p><a href="developer/tools/index.html">Build Tools and Plugins</a></p>
-</li>
-<li>
-<p><a href="developer/migration/tomee-1-to-7.html">Migrating From TomEE 1.x to 7.x</a></p>
-</li>
-<li>
-<p><a href="developer/json/index.html">TomEE and Apache Johnzon - JAX-RS JSON Provider</a></p>
-</li>
-<li>
-<p><a href="developer/configuration/cxf.html">Apache CXF Configuration - JAX-RS (RESTful Services) and JAX-WS (Web Services)</a></p>
-</li>
-<li>
-<p><a href="developer/classloading/index.html">Understanding the TomEE ClassLoader</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_advanced">Advanced</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="advanced/applicationcomposer/index.html"><code>ApplicationComposer</code> with JBatch</a></p>
-</li>
-<li>
-<p><a href="advanced/setup/index.html">How to Setup TomEE in Production</a></p>
-</li>
-<li>
-<p><a href="advanced/shading/index.html">Fat / Uber Jar Deployment using the Maven Shade Plugin</a></p>
-</li>
-<li>
-<p><a href="advanced/client/jndi.html">Java Naming and Directory Interface (JNDI)</a></p>
-</li>
-<li>
-<p><a href="advanced/jms/jms-configuration.html">Why is my ActiveMQ/JMS MDB not scaling as expected?</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
+                <h1>Microprofile Metrics</h1>
+<p>This is an example on how to use microprofile metrics in TomEE.</p>
+<h5>Run the application:</h5>
+<pre><code>mvn clean install tomee:run 
+</code></pre>
+<p>Within the application, there is an enpoint that will give you a weather weather status for the day and week.</p>
+<h5>For the day status call:</h5>
+<pre><code>GET http://localhost:8080/mp-metrics-metered/weather/day/status
+</code></pre>
+<h5>Response:</h5>
+<pre><code>Hi, today is a sunny day!
+</code></pre>
+<h4>Metered Feature</h4>
+<p>MicroProfile metrics has a feature that can be used to find the rate of requests to a service.</p>
+<p>To use this feature you need to annotate the JAX-RS resource method with @Metered.</p>
+<pre><code>@Path(&quot;/weather&quot;)
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@ApplicationScoped
+public class WeatherService {
+
+    @Path(&quot;/day/status&quot;)
+    @Metered(name = &quot;dailyStatus&quot;, unit = MetricUnits.MINUTES, description = &quot;Metrics to daily weather status method&quot;, absolute = true)
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String dayStatus() {
+        return &quot;Hi, today is a sunny day!&quot;;
+    }
+...
+}
+</code></pre>
+<p>There are some configurations, as part of @Metered, that you need to know:</p>
+<p><strong>String name</strong><br/>Optional. Sets the name of the metric. If not explicitly given the name of the annotated object is used.</p>
+<p><strong>boolean absolute</strong><br/>If true, uses the given name as the absolute name of the metric. If false, prepends the package name and class name before the given name. Default value is false.</p>
+<p><strong>String displayName</strong><br/>Optional. A human-readable display name for metadata.</p>
+<p><strong>String description</strong><br/>Optional. A description of the metric.</p>
+<p><strong>String[] tags</strong><br/>Optional. Array of Strings in the <key>=<value> format to supply special tags to a metric.</p>
+<p><strong>boolean reusable</strong><br/>Denotes if a metric with a certain name can be registered in more than one place. Does not apply to gauges.</p>
+<p><strong>String unit</strong><br/>Unit of the metric. Default for @Metered is nanoseconds.</p>
+<h4>Metric data</h4>
+<p>Check the Metered metric doing a <em>GET</em> request:</p>
+<h5>Prometheus format:</h5>
+<pre><code>GET http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus
+</code></pre>
+<h5>Response:</h5>
+<pre><code># TYPE application:daily_status_seconds_count meter
+application:daily_status_seconds_count 1.2E-7
+# TYPE application:daily_status_rate_per_second meter
+application:daily_status_rate_per_second 0.0
+# TYPE application:daily_status_one_min_rate_per_second meter
+application:daily_status_one_min_rate_per_second 1.3376002644204984E-19
+# TYPE application:daily_status_five_min_rate_per_second meter
+application:daily_status_five_min_rate_per_second 3.5942838529305413E-20
+# TYPE application:daily_status_fifteen_min_rate_per_second meter
+application:daily_status_fifteen_min_rate_per_second 3.4665766454142955E-21
+</code></pre>
+<h5>JSON Format:</h5>
+<p>For json format add the header <em>Accept=application/json</em> to the request. </p>
+<pre><code>{
+    &quot;dailyStatus&quot;: {
+       &quot;count&quot;: 2,
+       &quot;fifteenMinRate&quot;: 5.77762774235716e-14,
+       &quot;fiveMinRate&quot;: 5.990473088217569e-13,
+       &quot;meanRate&quot;: 0,
+       &quot;oneMinRate&quot;: 2.229333774034164e-12,
+       &quot;unit&quot;: &quot;minutes&quot;
+    }
+}
+</code></pre>
+<h4>Metric metadata</h4>
+<p>A metric will have a metadata so you can know more information about it, like displayName, description, tags etc.</p>
+<p>Check the metric metadata doing a <em>OPTIONS</em> request:</p>
+<h5>Request</h5>
+<pre><code>OPTIONS http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus
+</code></pre>
+<h5>Response:</h5>
+<pre><code>{
+    &quot;dailyStatus&quot;: {
+       &quot;description&quot;: &quot;Metrics to daily weather status method&quot;,
+       &quot;displayName&quot;: &quot;&quot;,
+       &quot;name&quot;: &quot;dailyStatus&quot;,
+       &quot;reusable&quot;: false,
+       &quot;tags&quot;: &quot;&quot;,
+       &quot;type&quot;: &quot;meter&quot;,
+       &quot;typeRaw&quot;: &quot;METERED&quot;,
+       &quot;unit&quot;: &quot;minutes&quot;
+    }
+}
+</code></pre>
+<h5>Test the application:</h5>
+<pre><code>mvn test
+</code></pre>
             </div>
             
         </div>

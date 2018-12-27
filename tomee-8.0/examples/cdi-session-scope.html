@@ -88,91 +88,95 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <div class='btn-toolbar pull-right' style="z-index: 2000;">
-                <div class='btn-group'>
-                    <a class="btn" href="../../tomee-8.0/docs/docs.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
-                </div>
-              </div>
-              
-              <h1>TomEE Documentation</h1>
+              <h1>CDI @SessionScoped</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <div class="sect1">
-<h2 id="_administration">Administration</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="admin/configuration/index.html">Server Configuration</a></p>
-</li>
-<li>
-<p><a href="admin/file-layout.html">Directory Structure</a></p>
-</li>
-<li>
-<p><a href="admin/cluster/index.html">Clustering and High Availability (HA)</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_developers">Developers</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="developer/ide/index.html">IDEs - Eclipse, Intellij Idea and Netbeans</a></p>
-</li>
-<li>
-<p><a href="developer/testing/index.html">Unit Testing - Arquillian, OpenEJB JUnit, TomEE Embedded and ApplicationComposer</a></p>
-</li>
-<li>
-<p><a href="developer/tools/index.html">Build Tools and Plugins</a></p>
-</li>
-<li>
-<p><a href="developer/migration/tomee-1-to-7.html">Migrating From TomEE 1.x to 7.x</a></p>
-</li>
-<li>
-<p><a href="developer/json/index.html">TomEE and Apache Johnzon - JAX-RS JSON Provider</a></p>
-</li>
-<li>
-<p><a href="developer/configuration/cxf.html">Apache CXF Configuration - JAX-RS (RESTful Services) and JAX-WS (Web Services)</a></p>
-</li>
-<li>
-<p><a href="developer/classloading/index.html">Understanding the TomEE ClassLoader</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_advanced">Advanced</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="advanced/applicationcomposer/index.html"><code>ApplicationComposer</code> with JBatch</a></p>
-</li>
-<li>
-<p><a href="advanced/setup/index.html">How to Setup TomEE in Production</a></p>
-</li>
-<li>
-<p><a href="advanced/shading/index.html">Fat / Uber Jar Deployment using the Maven Shade Plugin</a></p>
-</li>
-<li>
-<p><a href="advanced/client/jndi.html">Java Naming and Directory Interface (JNDI)</a></p>
-</li>
-<li>
-<p><a href="advanced/jms/jms-configuration.html">Why is my ActiveMQ/JMS MDB not scaling as expected?</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
+                <p>This example show the use of <code>@SessionScoped</code> annotation for injected objects. An object which is defined as <code>@SessionScoped</code> is created once for every HTTPSession and is shared by all the beans that inject it throughout the same HTTPSession.</p>
+<h5>Run the application:</h5>
+<pre><code>mvn clean install tomee:run 
+</code></pre>
+<h1>Example</h1>
+<p>This example has an end point wherein a user provides a request parameter 'name' which is persisted as a feild in a session scoped bean SessionBean and then retrieved through another endpoint.</p>
+<h1>Request</h1>
+<p>GET <a href="http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/set-name?name=Puneeth">http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/set-name?name=Puneeth</a></p>
+<h1>Response</h1>
+<p>done, go to /name servlet </p>
+<h1>Request</h1>
+<p>GET <a href="http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/name">http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/name</a></p>
+<h1>Response</h1>
+<p>name = {Puneeth} </p>
+<h2>SessionBean</h2>
+<p>The annotation @SessionScoped specifies that a bean is session scoped ie there will be only one instance of the class associated with a particular HTTPSession. </p>
+<p>@SessionScoped<br/>public class SessionBean implements Serializable {</p>
+<pre><code>private String name;
+
+public String getName() {
+    return name;
+}
+
+public void setName(String name) {
+    this.name = name;
+}
+</code></pre>
+<p>} </p>
+<h2>InputServlet</h2>
+<p>InputServlet is a generic servlet which is mapped to the url pattern '/set-name'. The session scoped bean 'SessionBean' has been injected into this servlet, and the incoming request parameter is set to the feild name of the bean. </p>
+<p>@WebServlet(name = "input-servlet", urlPatterns = {"/set-name"})<br/>public class InputServlet extends HttpServlet {</p>
+<pre><code>@Inject
+private SessionBean bean;
+
+@Override
+protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    final String name = req.getParameter(&quot;name&quot;);
+    if (name == null || name.isEmpty()) {
+        resp.getWriter().write(&quot;please add a parameter name=xxx&quot;);
+    } else {
+        bean.setName(name);
+        resp.getWriter().write(&quot;done, go to /name servlet&quot;);
+    }
+
+}
+</code></pre>
+<p>}</p>
+<h2>AnswerBean</h2>
+<p>AnswerBean is a request scoped bean with an injected 'SessionBean'. It has an postconstruct method wherein the value from the sessionBean is retrieved and set to a feild.</p>
+<p>public class AnswerBean {</p>
+<pre><code>@Inject
+private SessionBean bean;
+
+private String value;
+
+@PostConstruct
+public void init() {
+    value = &#39;{&#39; + bean.getName() + &#39;}&#39;;
+}
+
+public String value() {
+    return value;
+}
+</code></pre>
+<p>}</p>
+<h2>OutputServlet</h2>
+<p>OutputServlet is another servlet with 'AnswerBean' as an injected feild. When '/name' is called the value from 'Answerbean' is read and written to the response.</p>
+<p>@WebServlet(name = "output-servlet", urlPatterns = {"/name"})<br/>public class OutputServlet extends HttpServlet {</p>
+<pre><code>@Inject
+private AnswerBean bean;
+
+@Override
+protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    final String name = bean.value();
+    if (name == null || name.isEmpty()) {
+        resp.getWriter().write(&quot;please go to servlet /set-name please&quot;);
+    } else {
+        resp.getWriter().write(&quot;name = &quot; + name);
+    }
+}
+</code></pre>
+<p>}</p>
             </div>
             
         </div>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>JAX-WS @WebService example</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <p>Creating Web Services with JAX-WS is quite easy. Little has to be done aside from annotating a class with <code>@WebService</code>. Thie example shows the use of CDI with webservice annotation. The web.xml expose the webservice servlet at the address <a href="http://${host}:${port}/pojo-webservice?wsdl">http://${host}:${port}/pojo-webservice?wsdl</a>. To run the sample you can use the tomee maven plugin, mvn tomee:run. </p>
+<h2>web.xml</h2>
+<p>Expose a servlet for the webservice</p>
+<pre><code>&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;
+        version=&quot;3.0&quot;&gt;
+&lt;servlet&gt;
+    &lt;servlet-name&gt;ws&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.superbiz.ws.pojo.PojoWS&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;ws&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<h2>@PojoWS</h2>
+<p>This is the only concrete class annotated as @WebService that expose one operation ws(), also WebServiceContext and UserTransaction are injected in the class and used in the operation.</p>
+<pre><code>import javax.annotation.Resource;
+import javax.jws.WebService;
+import javax.transaction.UserTransaction;
+import javax.xml.ws.WebServiceContext;
+
+@WebService
+public class PojoWS implements WS {
+
+    @Resource
+    private WebServiceContext webServiceContext;
+
+    @Resource
+    private UserTransaction userTransaction;
+
+    @Override
+    public String ws() {
+        return webServiceContext + &quot; &amp; &quot; + userTransaction;
+    }
+
+    public void setWebServiceContext(WebServiceContext webServiceContext) {
+        this.webServiceContext = webServiceContext;
+    }
+
+    public void setUserTransaction(UserTransaction userTransaction) {
+        this.userTransaction = userTransaction;
+    }
+}
+</code></pre>
+<h2>@WebService Endpoint Interface</h2>
+<p>Having an endpoint interface is not required, but it can make testing and using the web service from other Java clients far easier.</p>
+<pre><code>import javax.jws.WebService;
+
+@WebService
+public interface WS {
+
+    String ws();
+}
+</code></pre>
+<h2>PojoWS WSDL</h2>
+<p>The wsdl for our service is autmatically created for us and available at <code>http://127.0.0.1:8080/pojo-webservice?wsdl</code>.</p>
+<pre><code>&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;&lt;wsdl:definitions xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot; xmlns:tns=&quot;http://pojo.ws.superbiz.org/&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot; xmlns:ns1=&quot;http://schemas.xmlsoap.org/soap/http&quot; name=&quot;PojoWSService&quot; targetNamespace=&quot;http://pojo.ws.superbiz.org/&quot;&gt;
+&lt;wsdl:types&gt;
+&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:tns=&quot;http://pojo.ws.superbiz.org/&quot; elementFormDefault=&quot;unqualified&quot; targetNamespace=&quot;http://pojo.ws.superbiz.org/&quot; version=&quot;1.0&quot;&gt;
+
+&lt;xs:element name=&quot;ws&quot; type=&quot;tns:ws&quot;/&gt;
+
+&lt;xs:element name=&quot;wsResponse&quot; type=&quot;tns:wsResponse&quot;/&gt;
+
+&lt;xs:complexType name=&quot;ws&quot;&gt;
+    &lt;xs:sequence/&gt;
+&lt;/xs:complexType&gt;
+
+&lt;xs:complexType name=&quot;wsResponse&quot;&gt;
+    &lt;xs:sequence&gt;
+    &lt;xs:element minOccurs=&quot;0&quot; name=&quot;return&quot; type=&quot;xs:string&quot;/&gt;
+    &lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+
+&lt;/xs:schema&gt;
+&lt;/wsdl:types&gt;
+&lt;wsdl:message name=&quot;ws&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:ws&quot; name=&quot;parameters&quot;&gt;
+    &lt;/wsdl:part&gt;
+&lt;/wsdl:message&gt;
+&lt;wsdl:message name=&quot;wsResponse&quot;&gt;
+    &lt;wsdl:part element=&quot;tns:wsResponse&quot; name=&quot;parameters&quot;&gt;
+    &lt;/wsdl:part&gt;
+&lt;/wsdl:message&gt;
+&lt;wsdl:portType name=&quot;WS&quot;&gt;
+    &lt;wsdl:operation name=&quot;ws&quot;&gt;
+    &lt;wsdl:input message=&quot;tns:ws&quot; name=&quot;ws&quot;&gt;
+    &lt;/wsdl:input&gt;
+    &lt;wsdl:output message=&quot;tns:wsResponse&quot; name=&quot;wsResponse&quot;&gt;
+    &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+&lt;/wsdl:portType&gt;
+&lt;wsdl:binding name=&quot;PojoWSServiceSoapBinding&quot; type=&quot;tns:WS&quot;&gt;
+    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
+    &lt;wsdl:operation name=&quot;ws&quot;&gt;
+    &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
+    &lt;wsdl:input name=&quot;ws&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+    &lt;/wsdl:input&gt;
+    &lt;wsdl:output name=&quot;wsResponse&quot;&gt;
+        &lt;soap:body use=&quot;literal&quot;/&gt;
+    &lt;/wsdl:output&gt;
+    &lt;/wsdl:operation&gt;
+&lt;/wsdl:binding&gt;
+&lt;wsdl:service name=&quot;PojoWSService&quot;&gt;
+    &lt;wsdl:port binding=&quot;tns:PojoWSServiceSoapBinding&quot; name=&quot;PojoWSPort&quot;&gt;
+    &lt;soap:address location=&quot;http://localhost:8080/pojo-webservice&quot;/&gt;
+    &lt;/wsdl:port&gt;
+&lt;/wsdl:service&gt;
+</code></pre>
+<h2>Invoke ws operation</h2>
+<p>The operation can be tested with a client like SoapUI that will generate the following request for the ws operation</p>
+<h3>ws()</h3>
+<p>Request SOAP message:</p>
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:pojo=&quot;http://pojo.ws.superbiz.org/&quot;&gt;
+    &lt;soapenv:Header/&gt;
+    &lt;soapenv:Body&gt;
+        &lt;pojo:ws/&gt;
+    &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</code></pre>
+<p>Response SOAP message:</p>
+<pre><code>&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+    &lt;soap:Body&gt;
+        &lt;ns2:wsResponse xmlns:ns2=&quot;http://pojo.ws.superbiz.org/&quot;&gt;
+            &lt;return&gt;org.apache.cxf.jaxws.context.WebServiceContextImpl@94b724d &amp;amp; org.apache.openejb.resource.GeronimoTransactionManagerFactory$DestroyableTransactionManager@5fe405bf&lt;/return&gt;
+        &lt;/ns2:wsResponse&gt;
+    &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre>
+<p>This shows that WebServiceContext and UserTransaction are successfully injected.</p>
+<h1>Running</h1>
+<p>Running the example can be done from maven with a simple 'mvn tomee:run' command run from the 'pojo-webservice' directory.</p>
+<p>When run you should see output similar to the following.</p>
+<pre><code>26-Dec-2018 21:20:55.667 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server version:        Apache Tomcat (TomEE)/9.0.12 (8.0.0-SNAPSHOT)
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server built:          Sep 4 2018 22:13:41 UTC
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server number:         9.0.12.0
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke OS Name:               Linux
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke OS Version:            4.15.0-43-generic
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Architecture:          amd64
+26-Dec-2018 21:20:55.668 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Java Home:             /usr/lib/jvm/java-8-oracle/jre
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke JVM Version:           1.8.0_144-b01
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke JVM Vendor:            Oracle Corporation
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke CATALINA_BASE:         /tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke CATALINA_HOME:         /tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -XX:+HeapDumpOnOutOfMemoryError
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=false
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Dopenejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager
+26-Dec-2018 21:20:55.669 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Dtomee.remote.support=true
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Dopenejb.system.apps=false
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dtomee.jsp-development=true
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.util.logging.config.file=/tomee/examples/pojo-webservice/target/apache-tomee/conf/logging.properties
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -javaagent:/tomee/examples/pojo-webservice/target/apache-tomee/lib/openejb-javaagent.jar
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.io.tmpdir=/tomee/examples/pojo-webservice/target/apache-tomee/temp
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.base=/tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.home=/tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.ext.dirs=/tomee/examples/pojo-webservice/target/apache-tomee/lib
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dorg.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0=true
+26-Dec-2018 21:20:55.670 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -ea
+26-Dec-2018 21:20:55.671 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib]
+26-Dec-2018 21:20:55.855 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initializing ProtocolHandler [&quot;http-nio-8080&quot;]
+26-Dec-2018 21:20:55.873 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Using a shared selector for servlet write/read
+26-Dec-2018 21:20:55.893 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initializing ProtocolHandler [&quot;ajp-nio-8009&quot;]
+26-Dec-2018 21:20:55.896 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Using a shared selector for servlet write/read
+26-Dec-2018 21:20:56.206 INFO [main] org.apache.openejb.util.OptionsLog.info Using &#39;tomee.remote.support=true&#39;
+26-Dec-2018 21:20:56.217 INFO [main] org.apache.openejb.util.OptionsLog.info Using &#39;openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator&#39;
+26-Dec-2018 21:20:56.302 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+26-Dec-2018 21:20:56.302 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; OpenEJB http://tomee.apache.org/
+26-Dec-2018 21:20:56.302 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Startup: Wed Dec 26 21:20:56 CET 2018
+26-Dec-2018 21:20:56.302 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Copyright 1999-2018 (C) Apache OpenEJB Project, All Rights Reserved.
+26-Dec-2018 21:20:56.302 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Version: 8.0.0-SNAPSHOT
+26-Dec-2018 21:20:56.303 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build date: 20181226
+26-Dec-2018 21:20:56.303 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build time: 02:24
+26-Dec-2018 21:20:56.303 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+26-Dec-2018 21:20:56.303 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.home = /tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:56.303 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.base = /tomee/examples/pojo-webservice/target/apache-tomee
+26-Dec-2018 21:20:56.305 INFO [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@159f197
+26-Dec-2018 21:20:56.305 INFO [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Succeeded in installing singleton service
+26-Dec-2018 21:20:56.344 INFO [main] org.apache.openejb.config.ConfigurationFactory.init TomEE configuration file is &#39;/tomee/examples/pojo-webservice/target/apache-tomee/conf/tomee.xml&#39;
+26-Dec-2018 21:20:56.431 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
+26-Dec-2018 21:20:56.433 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+26-Dec-2018 21:20:56.435 INFO [main] org.apache.openejb.util.OptionsLog.info Using &#39;openejb.system.apps=false&#39;
+26-Dec-2018 21:20:56.436 INFO [main] org.apache.openejb.util.OptionsLog.info Using &#39;openejb.deployments.classpath=false&#39;
+26-Dec-2018 21:20:56.454 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating TransactionManager(id=Default Transaction Manager)
+26-Dec-2018 21:20:56.504 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating SecurityService(id=Tomcat Security Service)
+26-Dec-2018 21:20:56.564 INFO [main] org.apache.openejb.server.ServiceManager.initServer Creating ServerService(id=cxf)
+26-Dec-2018 21:20:56.724 INFO [main] org.apache.openejb.server.ServiceManager.initServer Creating ServerService(id=cxf-rs)
+26-Dec-2018 21:20:56.778 INFO [main] org.apache.openejb.server.SimpleServiceManager.start   ** Bound Services **
+26-Dec-2018 21:20:56.778 INFO [main] org.apache.openejb.server.SimpleServiceManager.printRow   NAME                 IP              PORT  
+26-Dec-2018 21:20:56.778 INFO [main] org.apache.openejb.server.SimpleServiceManager.start -------
+26-Dec-2018 21:20:56.779 INFO [main] org.apache.openejb.server.SimpleServiceManager.start Ready!
+26-Dec-2018 21:20:56.779 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initialization processed in 1609 ms
+26-Dec-2018 21:20:56.806 INFO [main] org.apache.tomee.catalina.OpenEJBNamingContextListener.bindResource Importing a Tomcat Resource with id &#39;UserDatabase&#39; of type &#39;org.apache.catalina.UserDatabase&#39;.
+26-Dec-2018 21:20:56.807 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Resource(id=UserDatabase)
+26-Dec-2018 21:20:56.822 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting service [Catalina]
+26-Dec-2018 21:20:56.822 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting Servlet Engine: Apache Tomcat (TomEE)/9.0.12 (8.0.0-SNAPSHOT)
+26-Dec-2018 21:20:56.839 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Deploying web application archive [/tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice.war]
+26-Dec-2018 21:20:56.846 INFO [main] org.apache.tomee.catalina.TomcatWebAppBuilder.init ------------------------- localhost -&gt; /pojo-webservice
+26-Dec-2018 21:20:56.847 INFO [main] org.apache.openejb.util.JarExtractor.extract Extracting jar: /tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice.war
+26-Dec-2018 21:20:56.850 INFO [main] org.apache.openejb.util.JarExtractor.extract Extracted path: /tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice
+26-Dec-2018 21:20:56.852 INFO [main] org.apache.openejb.util.OptionsLog.info Using &#39;openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager&#39;
+26-Dec-2018 21:20:57.121 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureApplication Configuring enterprise application: /tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice
+26-Dec-2018 21:20:57.227 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+26-Dec-2018 21:20:57.227 INFO [main] org.apache.openejb.config.AutoConfig.createContainer Auto-creating a container for bean pojo-webservice.Comp1279740095: Container(type=MANAGED, id=Default Managed Container)
+26-Dec-2018 21:20:57.228 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Managed Container)
+26-Dec-2018 21:20:57.238 INFO [main] org.apache.openejb.core.managed.SimplePassivater.init Using directory /tomee/examples/pojo-webservice/target/apache-tomee/temp for stateful session passivation
+26-Dec-2018 21:20:57.278 INFO [main] org.apache.openejb.config.AppInfoBuilder.build Enterprise application &quot;/tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice&quot; loaded.
+26-Dec-2018 21:20:57.283 INFO [main] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: /tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice
+26-Dec-2018 21:20:57.538 INFO [main] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=/tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice)
+26-Dec-2018 21:20:57.643 INFO [main] org.apache.myfaces.ee.MyFacesContainerInitializer.onStartup Using org.apache.myfaces.ee.MyFacesContainerInitializer
+26-Dec-2018 21:20:57.717 INFO [main] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+26-Dec-2018 21:20:58.086 INFO [main] org.apache.cxf.common.injection.ResourceInjector.visitField failed to resolve resource org.superbiz.ws.pojo.PojoWS/userTransaction
+26-Dec-2018 21:20:58.370 INFO [main] org.apache.openejb.server.webservices.WsService.afterApplicationCreated Webservice(wsdl=http://localhost:8080/pojo-webservice/*, qname={http://pojo.ws.superbiz.org/}PojoWSService) --&gt; Pojo(id=localhost.pojo-webservice.ws)
+26-Dec-2018 21:20:58.411 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Deployment of web application archive [/tomee/examples/pojo-webservice/target/apache-tomee/webapps/pojo-webservice.war] has finished in [1,571] ms
+26-Dec-2018 21:20:58.422 INFO [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesRmiTargets] to [true] as the property does not exist.
+26-Dec-2018 21:20:58.423 INFO [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesObjectStreamClassCaches] to [true] as the property does not exist.
+26-Dec-2018 21:20:58.423 INFO [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [skipMemoryLeakChecksOnJvmShutdown] to [false] as the property does not exist.
+26-Dec-2018 21:20:58.438 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler [&quot;http-nio-8080&quot;]
+26-Dec-2018 21:20:58.456 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler [&quot;ajp-nio-8009&quot;]
+26-Dec-2018 21:20:58.463 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Server startup in 1681 ms
+</code></pre>
+<h2>Inside the jar</h2>
+<p>With so much going on it can make things look more complex than they are. It can be hard to believe that so much can happen with such little code. That's the benefit of having an app server.</p>
+<p>If we look at the jar built by maven, we'll see the application itself is quite small:</p>
+<pre><code>$ jar tvf target/pojo-webservice.war 
+    99 Wed Dec 26 21:08:26 CET 2018 META-INF/MANIFEST.MF
+    0 Wed Dec 26 21:08:26 CET 2018 META-INF/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/classes/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/classes/org/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/classes/org/superbiz/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/classes/org/superbiz/ws/
+    0 Wed Dec 26 21:08:26 CET 2018 WEB-INF/classes/org/superbiz/ws/pojo/
+1160 Wed Dec 26 21:08:24 CET 2018 WEB-INF/classes/org/superbiz/ws/pojo/PojoWS.class
+207 Wed Dec 26 21:08:24 CET 2018 WEB-INF/classes/org/superbiz/ws/pojo/WS.class
+1349 Wed Dec 26 17:41:54 CET 2018 WEB-INF/web.xml
+3661 Wed Dec 26 17:41:54 CET 2018 META-INF/maven/org.superbiz/pojo-webservice/pom.xml
+102 Wed Dec 26 21:08:26 CET 2018 META-INF/maven/org.superbiz/pojo-webservice/pom.properties
+</code></pre>
+<p>This single jar could be deployed any any compliant Java EE implementation.</p>
+<p>The server already contains the right libraries to run the code, such as Apache CXF, so no need to include anything extra beyond your own application code.</p>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
