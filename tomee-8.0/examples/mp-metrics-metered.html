@@ -88,59 +88,138 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>null</h1>
+              <h1>MicroProfile Metrics Metered</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Microprofile Metrics</h1>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>This is an example on how to use microprofile metrics in TomEE.</p>
-<h5>Run the application:</h5>
-<pre><code>mvn clean install tomee:run 
-</code></pre>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_the_application">Run the application:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Within the application, there is an enpoint that will give you a weather weather status for the day and week.</p>
-<h5>For the day status call:</h5>
-<pre><code>GET http://localhost:8080/mp-metrics-metered/weather/day/status
-</code></pre>
-<h5>Response:</h5>
-<pre><code>Hi, today is a sunny day!
-</code></pre>
-<h4>Metered Feature</h4>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_for_the_day_status_call">For the day status call:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-metrics-metered/weather/day/status</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response">Response:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>Hi, today is a sunny day!</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metered_feature">Metered Feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>MicroProfile metrics has a feature that can be used to find the rate of requests to a service.</p>
+</div>
+<div class="paragraph">
 <p>To use this feature you need to annotate the JAX-RS resource method with @Metered.</p>
-<pre><code>@Path(&quot;/weather&quot;)
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-@ApplicationScoped
-public class WeatherService {
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @Path("/weather")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApplicationScoped
+    public class WeatherService {
 
-    @Path(&quot;/day/status&quot;)
-    @Metered(name = &quot;dailyStatus&quot;, unit = MetricUnits.MINUTES, description = &quot;Metrics to daily weather status method&quot;, absolute = true)
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String dayStatus() {
-        return &quot;Hi, today is a sunny day!&quot;;
-    }
-...
-}
-</code></pre>
+        @Path("/day/status")
+        @Metered(name = "dailyStatus", unit = MetricUnits.MINUTES, description = "Metrics to daily weather status method", absolute = true)
+        @GET
+        @Produces(MediaType.TEXT_PLAIN)
+        public String dayStatus() {
+            return "Hi, today is a sunny day!";
+        }
+    ...
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>There are some configurations, as part of @Metered, that you need to know:</p>
-<p><strong>String name</strong><br/>Optional. Sets the name of the metric. If not explicitly given the name of the annotated object is used.</p>
-<p><strong>boolean absolute</strong><br/>If true, uses the given name as the absolute name of the metric. If false, prepends the package name and class name before the given name. Default value is false.</p>
-<p><strong>String displayName</strong><br/>Optional. A human-readable display name for metadata.</p>
-<p><strong>String description</strong><br/>Optional. A description of the metric.</p>
-<p><strong>String[] tags</strong><br/>Optional. Array of Strings in the <key>=<value> format to supply special tags to a metric.</p>
-<p><strong>boolean reusable</strong><br/>Denotes if a metric with a certain name can be registered in more than one place. Does not apply to gauges.</p>
-<p><strong>String unit</strong><br/>Unit of the metric. Default for @Metered is nanoseconds.</p>
-<h4>Metric data</h4>
+</div>
+<div class="paragraph">
+<p><strong>String name</strong>
+Optional. Sets the name of the metric. If not explicitly given the name of the annotated object is used.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean absolute</strong>
+If true, uses the given name as the absolute name of the metric. If false, prepends the package name and class name before the given name. Default value is false.</p>
+</div>
+<div class="paragraph">
+<p><strong>String displayName</strong>
+Optional. A human-readable display name for metadata.</p>
+</div>
+<div class="paragraph">
+<p><strong>String description</strong>
+Optional. A description of the metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>String[] tags</strong>
+Optional. Array of Strings in the &lt;key&gt;=&lt;value&gt; format to supply special tags to a metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean reusable</strong>
+Denotes if a metric with a certain name can be registered in more than one place. Does not apply to gauges.</p>
+</div>
+<div class="paragraph">
+<p><strong>String unit</strong>
+Unit of the metric. Default for @Metered is nanoseconds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metric_data">Metric data</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Check the Metered metric doing a <em>GET</em> request:</p>
-<h5>Prometheus format:</h5>
-<pre><code>GET http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus
-</code></pre>
-<h5>Response:</h5>
-<pre><code># TYPE application:daily_status_seconds_count meter
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prometheus_format">Prometheus format:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response_2">Response:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre># TYPE application:daily_status_seconds_count meter
 application:daily_status_seconds_count 1.2E-7
 # TYPE application:daily_status_rate_per_second meter
 application:daily_status_rate_per_second 0.0
@@ -149,44 +228,85 @@ application:daily_status_one_min_rate_per_second 1.3376002644204984E-19
 # TYPE application:daily_status_five_min_rate_per_second meter
 application:daily_status_five_min_rate_per_second 3.5942838529305413E-20
 # TYPE application:daily_status_fifteen_min_rate_per_second meter
-application:daily_status_fifteen_min_rate_per_second 3.4665766454142955E-21
-</code></pre>
-<h5>JSON Format:</h5>
-<p>For json format add the header <em>Accept=application/json</em> to the request. </p>
-<pre><code>{
-    &quot;dailyStatus&quot;: {
-       &quot;count&quot;: 2,
-       &quot;fifteenMinRate&quot;: 5.77762774235716e-14,
-       &quot;fiveMinRate&quot;: 5.990473088217569e-13,
-       &quot;meanRate&quot;: 0,
-       &quot;oneMinRate&quot;: 2.229333774034164e-12,
-       &quot;unit&quot;: &quot;minutes&quot;
-    }
-}
-</code></pre>
-<h4>Metric metadata</h4>
-<p>A metric will have a metadata so you can know more information about it, like displayName, description, tags etc.</p>
+application:daily_status_fifteen_min_rate_per_second 3.4665766454142955E-21</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_json_format">JSON Format:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For json format add the header <em>Accept=application/json</em> to the request.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>{
+	"dailyStatus": {
+		"count": 2,
+		"fifteenMinRate": 5.77762774235716e-14,
+		"fiveMinRate": 5.990473088217569e-13,
+		"meanRate": 0,
+		"oneMinRate": 2.229333774034164e-12,
+		"unit": "minutes"
+	}
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metric_metadata">Metric metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A metric will have a metadata so you can know more information about it, like displayName, description, tags  etc.</p>
+</div>
+<div class="paragraph">
 <p>Check the metric metadata doing a <em>OPTIONS</em> request:</p>
-<h5>Request</h5>
-<pre><code>OPTIONS http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus
-</code></pre>
-<h5>Response:</h5>
-<pre><code>{
-    &quot;dailyStatus&quot;: {
-       &quot;description&quot;: &quot;Metrics to daily weather status method&quot;,
-       &quot;displayName&quot;: &quot;&quot;,
-       &quot;name&quot;: &quot;dailyStatus&quot;,
-       &quot;reusable&quot;: false,
-       &quot;tags&quot;: &quot;&quot;,
-       &quot;type&quot;: &quot;meter&quot;,
-       &quot;typeRaw&quot;: &quot;METERED&quot;,
-       &quot;unit&quot;: &quot;minutes&quot;
-    }
-}
-</code></pre>
-<h5>Test the application:</h5>
-<pre><code>mvn test
-</code></pre>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_request">Request</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>OPTIONS http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response_3">Response:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>{
+	"dailyStatus": {
+		"description": "Metrics to daily weather status method",
+		"displayName": "",
+		"name": "dailyStatus",
+		"reusable": false,
+		"tags": "",
+		"type": "meter",
+		"typeRaw": "METERED",
+		"unit": "minutes"
+	}
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_the_application">Test the application:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn test</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

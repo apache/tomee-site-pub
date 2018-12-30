@@ -88,23 +88,52 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>CDI field producer</h1>
+              <h1>CDI Field Producer</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows the usage of the @Produces annotation. @Produces is a CDI mechanism which allows defining a source<br/> for injection. This example shows one of two ways of declaring a producer. Instead of a producer method (see CDI-produces-disposes example)<br/>a producer field can be used. A producer field can be used instead of a simple getter method. It could be used to inject resources, such as persistence contexts. One caveat to using producer fields over producer<br/> methods is that a @Disposes method cannot be used in conjunction with @Produces field.</p>
-<p>For the purposes of this example, the type is hard-coded to a specific value. A Logger implementation shall contain a list of LogHandlers. We shall have three implementations of the LogHandler interface.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows the usage of the @Produces annotation. @Produces is a CDI mechanism which allows defining a source
+ for injection. This example shows one of two ways of declaring a producer. Instead of a producer method (see CDI-produces-disposes example)
+a producer field can be used. A producer field can be used instead of a simple getter method. It could be used to
+inject resources, such as persistence contexts. One caveat to using producer fields over producer
+ methods is that a @Disposes method cannot be used in conjunction with @Produces field.</p>
+</div>
+<div class="paragraph">
+<p>For the purposes of this example, the type is hard-coded to a specific value.
+A Logger implementation shall contain a list of LogHandlers. We shall have three implementations of the LogHandler interface.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>A DatabaseHandler</li>
-  <li>A FileHandler</li>
-  <li>A ConsoleHandler</li>
+<li>
+<p>A DatabaseHandler</p>
+</li>
+<li>
+<p>A FileHandler</p>
+</li>
+<li>
+<p>A ConsoleHandler</p>
+</li>
 </ul>
-<p>The DatabaseHandler would seemingly write the logs to a database. The FileHandler would write the same logs to a file. The ConsoleHandler would just print the logs to a console (Standard out). This example is just an illustration of how the concepts within CDI work and is not intended to provide a logging framework design/implementation.</p>
-<h2>ConsoleHandler</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+</div>
+<div class="paragraph">
+<p>The DatabaseHandler would seemingly write the logs to a database. The FileHandler would write the same logs to a file.
+The ConsoleHandler would just print the logs to a console (Standard out). This example is just an illustration of how
+the concepts within CDI work and is not intended to provide a logging framework design/implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_consolehandler">ConsoleHandler</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 public class ConsoleHandler implements LogHandler {
 
@@ -121,12 +150,19 @@ public class ConsoleHandler implements LogHandler {
 
     @Override
     public void writeLog(String s) {
-        System.out.printf(&quot;##### Handler: %s, Writing to the console!\n&quot;, getName());
+        System.out.printf("##### Handler: %s, Writing to the console!\n", getName());
     }
-}
-</code></pre>
-<h2>DatabaseHandler</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_databasehandler">DatabaseHandler</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 public class DatabaseHandler implements LogHandler {
 
@@ -143,13 +179,20 @@ public class DatabaseHandler implements LogHandler {
 
     @Override
     public void writeLog(String s) {
-        System.out.printf(&quot;##### Handler: %s, Writing to the database!\n&quot;, getName());
+        System.out.printf("##### Handler: %s, Writing to the database!\n", getName());
         // Use connection to write log to database
     }
-}
-</code></pre>
-<h2>FileHandler</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_filehandler">FileHandler</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 public class FileHandler implements LogHandler {
 
@@ -166,13 +209,20 @@ public class FileHandler implements LogHandler {
 
     @Override
     public void writeLog(String s) {
-        System.out.printf(&quot;##### Handler: %s, Writing to the file!\n&quot;, getName());
+        System.out.printf("##### Handler: %s, Writing to the file!\n", getName());
         // Write to log file
     }
-}
-</code></pre>
-<h2>LogFactory</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logfactory">LogFactory</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 import javax.enterprise.inject.Produces;
 
@@ -184,40 +234,54 @@ public class LogFactory {
     LogHandler handler;
 
     public LogFactory(){
-        handler = getLogHandler();
+    	handler = getLogHandler();
     }
 
     public LogHandler getLogHandler() {
         switch (type) {
             case 1:
-                return new FileHandler(&quot;@Produces created FileHandler!&quot;);
+                return new FileHandler("@Produces created FileHandler!");
             case 2:
-                return new DatabaseHandler(&quot;@Produces created DatabaseHandler!&quot;);
+                return new DatabaseHandler("@Produces created DatabaseHandler!");
             case 3:
             default:
-                return new ConsoleHandler(&quot;@Produces created ConsoleHandler!&quot;);
+                return new ConsoleHandler("@Produces created ConsoleHandler!");
         }
 
     }
-}
-</code></pre>
-<h2>Logger</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logger">Logger</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 public interface Logger {
 
     public void log(String s);
 
     public LogHandler getHandler();
-}
-</code></pre>
-<h2>LoggerImpl</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loggerimpl">LoggerImpl</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-@Named(&quot;logger&quot;)
+@Named("logger")
 public class LoggerImpl implements Logger {
 
     @Inject
@@ -231,27 +295,48 @@ public class LoggerImpl implements Logger {
     public LogHandler getHandler() {
         return handler;
     }
-}
-</code></pre>
-<h2>LogHandler</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loghandler">LogHandler</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 public interface LogHandler {
 
     public String getName();
 
     public void writeLog(String s);
-}
-</code></pre>
-<h2>beans.xml</h2>
-<pre><code>&lt;beans xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee
-                            http://java.sun.com/xml/ns/javaee/beans_1_0.xsd&quot;&gt;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_beans_xml">beans.xml</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>&lt;beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                            http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"&gt;
 
-&lt;/beans&gt;
-</code></pre>
-<h2>LoggerTest</h2>
-<pre><code>package org.superbiz.cdi.produces.field;
+&lt;/beans&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loggertest">LoggerTest</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.produces.field;
 
 import org.junit.After;
 import org.junit.Before;
@@ -276,7 +361,7 @@ public class LoggerTest {
     public void setUp() {
         try {
             ctxt = EJBContainer.createEJBContainer().getContext();
-            ctxt.bind(&quot;inject&quot;, this);
+            ctxt.bind("inject", this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -285,7 +370,7 @@ public class LoggerTest {
     @After
     public void cleanUp() {
         try {
-            ctxt.unbind(&quot;inject&quot;);
+            ctxt.unbind("inject");
             ctxt.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -295,17 +380,22 @@ public class LoggerTest {
     @Test
     public void testLogHandler() {
         assertNotNull(logger);
-        assertFalse(&quot;Handler should not be a ConsoleHandler&quot;, logger.getHandler() instanceof ConsoleHandler);
-        assertFalse(&quot;Handler should not be a FileHandler&quot;, logger.getHandler() instanceof FileHandler);
-        assertTrue(&quot;Handler should be a DatabaseHandler&quot;, logger.getHandler() instanceof DatabaseHandler);
-        logger.log(&quot;##### Testing write\n&quot;);
+        assertFalse("Handler should not be a ConsoleHandler", logger.getHandler() instanceof ConsoleHandler);
+        assertFalse("Handler should not be a FileHandler", logger.getHandler() instanceof FileHandler);
+        assertTrue("Handler should be a DatabaseHandler", logger.getHandler() instanceof DatabaseHandler);
+        logger.log("##### Testing write\n");
         logger = null;
     }
 
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cdi.produces.field.LoggerTest
@@ -321,13 +411,13 @@ INFO - openejb.home = /home/daniel/projects/openejb/source/openejb/examples/cdi-
 INFO - openejb.base = /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@a81b1fb
 INFO - succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Creating TransactionManager(id=Default Transaction Manager)
 INFO - Creating SecurityService(id=Default Security Service)
-INFO - Inspecting classpath for applications: 26 urls. Consider adjusting your exclude/include.  Current settings: openejb.deployments.classpath.exclude=&#39;&#39;, openejb.deployments.classpath.include=&#39;.*&#39;
+INFO - Inspecting classpath for applications: 26 urls. Consider adjusting your exclude/include.  Current settings: openejb.deployments.classpath.exclude='', openejb.deployments.classpath.include='.*'
 INFO - Searched 26 classpath urls in 2015 milliseconds.  Average 77 milliseconds per url.
 INFO - Beginning load: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field/target/classes
 INFO - Configuring enterprise application: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
@@ -336,7 +426,7 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean cdi-produces-field.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
-INFO - Enterprise application &quot;/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field&quot; loaded.
+INFO - Enterprise application "/home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field" loaded.
 INFO - Assembling app: /home/daniel/projects/openejb/source/openejb/examples/cdi-produces-field
 INFO - ignoreXmlConfiguration == true
 INFO - ignoreXmlConfiguration == true
@@ -352,8 +442,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.79 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
             </div>
             
         </div>

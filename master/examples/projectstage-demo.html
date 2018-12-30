@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>DeltaSpike Project Stage</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to use <a href="https://deltaspike.apache.org/documentation/projectstage.html" target="_blank">DeltaSpike project stage</a> within Arquillian tests running on Tomee.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+public final class ManagerFactory {
+
+    @Inject
+    private ProjectStage projectStage; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @Produces
+    public Manager currentManager() {
+        if (ProjectStage.UnitTest.equals(projectStage)) {
+            return new Manager("test");
+        } else if (ProjectStage.Development.equals(projectStage)) {
+            return new Manager("dev");
+        }
+        return new Manager(projectStage.toString());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Current project stage injected via CDI.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>On the example above a <code>Manager</code> instance is created based on current ProjectStage.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_the_project_stage">Setting the Project stage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There is a few ways to set current project stage, on this example we will use a <a href="https://deltaspike.apache.org/documentation/configuration.html#ProvidingconfigurationusingConfigSources" target="_blank">DeltaSpike config source</a> which reads the project stage from a file named <code>project-stage.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">src/main/resources/project-stage.properties</div>
+<div class="content">
+<pre>org.apache.deltaspike.ProjectStage=Development</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Full source of our project stage producer can be <a href="https://github.com/apache/tomee/blob/master/examples/projectstage-demo/src/test/java/org/superbiz/projectstage/util/ProjectStageProducer.java" target="_blank">found here</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_configuring_project_stage_on_tests">Configuring project stage on tests</h3>
+<div class="paragraph">
+<p>On our <code>Arquillian</code> test we have an utility which will create the <code>project-stage.properties</code> file and add on the test war:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
+public abstract class BaseTestForProjectStage {
+
+    @Inject
+    protected Manager manager;
+
+    protected static WebArchive war(final String projectStageName) {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClasses(ProjectStageProducer.class, BaseTestForProjectStage.class, Manager.class, ManagerFactory.class)
+                .addAsResource(new StringAsset("org.apache.deltaspike.ProjectStage = " + projectStageName), ArchivePaths.create(ProjectStageProducer.CONFIG_PATH))
+                .addAsServiceProvider(ConfigSourceProvider.class, ProjectStageProducer.class)
+                .addAsLibraries(JarLocation.jarLocation(ProjectStage.class))
+                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+    }
+
+    @Test
+    public void checkManagerValue() {
+        assertEquals(ProjectStageProducer.value("org.apache.deltaspike.ProjectStage"), manager.name());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can test our project with different ProjectStages, see for example how a test using <code>dev stage</code> look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class DevProjectStageTest extends BaseTestForProjectStage {
+
+    @Deployment
+    public static WebArchive war() {
+        return BaseTestForProjectStage.war(ProjectStage.Development.toString());
+    }
+
+    @Test
+    @Override
+    public void checkManagerValue() {
+        assertEquals("dev", manager.name());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean test</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_output">Output</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.projectstage.ProductionProjectStageTest
+dez 30, 2018 11:59:39 AM org.apache.openejb.arquillian.common.Setup findHome
+INFO: Unable to find home in: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote
+dez 30, 2018 11:59:39 AM org.apache.openejb.arquillian.common.MavenCache getArtifact
+INFO: Downloading org.apache.tomee:apache-tomee:8.0.0-SNAPSHOT:zip:webprofile please wait...
+dez 30, 2018 11:59:39 AM org.apache.openejb.arquillian.common.Zips unzip
+INFO: Extracting '/home/rmpestano/.m2/repository/org/apache/tomee/apache-tomee/8.0.0-SNAPSHOT/apache-tomee-8.0.0-SNAPSHOT-webprofile.zip' to '/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote'
+dez 30, 2018 11:59:39 AM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
+INFO: Downloaded container to: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:40.779 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server version:        Apache Tomcat (TomEE)/9.0.12 (8.0.0-SNAPSHOT)
+30-Dec-2018 11:59:40.779 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server built:          Sep 4 2018 22:13:41 UTC
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Server number:         9.0.12.0
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke OS Name:               Linux
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke OS Version:            4.15.0-39-generic
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Architecture:          amd64
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Java Home:             /usr/lib/jvm/java-8-oracle/jre
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke JVM Version:           1.8.0_191-b12
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke JVM Vendor:            Oracle Corporation
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke CATALINA_BASE:         /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:40.780 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke CATALINA_HOME:         /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:40.781 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -XX:+HeapDumpOnOutOfMemoryError
+30-Dec-2018 11:59:40.781 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Xmx512m
+30-Dec-2018 11:59:40.781 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Xms256m
+30-Dec-2018 11:59:40.781 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -XX:ReservedCodeCacheSize=64m
+30-Dec-2018 11:59:40.784 INFO [main] sun.reflect.NativeMethodAccessorImpl.invoke Command line argument: -Dtomee.httpPort=20003
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=false
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dorg.apache.openejb.servlet.filters=org.apache.openejb.arquillian.common.ArquillianFilterRunner=/ArquillianServletRunner
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dopenejb.system.apps=true
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dtomee.remote.support=true
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.util.logging.config.file=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/conf/logging.properties
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -javaagent:/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib/openejb-javaagent.jar
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Djava.io.tmpdir=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/temp
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.base=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:40.785 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.home=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:40.786 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dcatalina.ext.dirs=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib
+30-Dec-2018 11:59:40.786 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -Dorg.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0=true
+30-Dec-2018 11:59:40.786 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Command line argument: -ea
+30-Dec-2018 11:59:40.786 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib]
+30-Dec-2018 11:59:40.989 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initializing ProtocolHandler ["http-nio-20003"]
+30-Dec-2018 11:59:41.007 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Using a shared selector for servlet write/read
+30-Dec-2018 11:59:41.019 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initializing ProtocolHandler ["ajp-nio-20002"]
+30-Dec-2018 11:59:41.021 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Using a shared selector for servlet write/read
+30-Dec-2018 11:59:41.284 INFO [main] org.apache.openejb.util.OptionsLog.info Using 'tomee.remote.support=true'
+30-Dec-2018 11:59:41.296 INFO [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator'
+30-Dec-2018 11:59:41.402 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+30-Dec-2018 11:59:41.402 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; OpenEJB http://tomee.apache.org/
+30-Dec-2018 11:59:41.402 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Startup: Sun Dec 30 11:59:41 BRST 2018
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Copyright 1999-2018 (C) Apache OpenEJB Project, All Rights Reserved.
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Version: 8.0.0-SNAPSHOT
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build date: 20181221
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build time: 07:57
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.home = /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:41.403 INFO [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.base = /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT
+30-Dec-2018 11:59:41.406 INFO [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@53ca01a2
+30-Dec-2018 11:59:41.407 INFO [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Succeeded in installing singleton service
+30-Dec-2018 11:59:41.453 INFO [main] org.apache.openejb.config.ConfigurationFactory.init TomEE configuration file is '/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/conf/tomee.xml'
+30-Dec-2018 11:59:41.557 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
+30-Dec-2018 11:59:41.559 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+30-Dec-2018 11:59:41.562 INFO [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.system.apps=true'
+30-Dec-2018 11:59:41.565 INFO [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+30-Dec-2018 11:59:41.572 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating TransactionManager(id=Default Transaction Manager)
+30-Dec-2018 11:59:41.622 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating SecurityService(id=Tomcat Security Service)
+30-Dec-2018 11:59:41.643 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Singleton Container)
+30-Dec-2018 11:59:41.659 INFO [main] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: openejb
+30-Dec-2018 11:59:41.714 INFO [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}'
+30-Dec-2018 11:59:41.724 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=openejb/DeployerBusinessRemote) --&gt; Ejb(deployment-id=openejb/Deployer)
+30-Dec-2018 11:59:41.724 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!org.apache.openejb.assembler.Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+30-Dec-2018 11:59:41.725 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+30-Dec-2018 11:59:41.726 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=openejb/ConfigurationInfoBusinessRemote) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+30-Dec-2018 11:59:41.726 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!org.apache.openejb.assembler.classic.cmd.ConfigurationInfo) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+30-Dec-2018 11:59:41.729 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=MEJB) --&gt; Ejb(deployment-id=MEJB)
+30-Dec-2018 11:59:41.729 INFO [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!javax.management.j2ee.ManagementHome) --&gt; Ejb(deployment-id=MEJB)
+30-Dec-2018 11:59:41.738 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=MEJB, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.740 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.741 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.742 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=MEJB, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.742 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.742 INFO [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Singleton Container)
+30-Dec-2018 11:59:41.747 INFO [main] org.apache.openejb.assembler.classic.Assembler.deployMBean Deployed MBean(openejb.user.mbeans:application=openejb,group=org.apache.openejb.assembler.monitoring,name=JMXDeployer)
+30-Dec-2018 11:59:41.748 INFO [main] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=openejb)
+30-Dec-2018 11:59:41.775 INFO [main] org.apache.openejb.server.ServiceManager.initServer Creating ServerService(id=cxf-rs)
+30-Dec-2018 11:59:41.935 INFO [main] org.apache.openejb.server.SimpleServiceManager.start   ** Bound Services **
+30-Dec-2018 11:59:41.935 INFO [main] org.apache.openejb.server.SimpleServiceManager.printRow   NAME                 IP              PORT
+30-Dec-2018 11:59:41.936 INFO [main] org.apache.openejb.server.SimpleServiceManager.start -------
+30-Dec-2018 11:59:41.936 INFO [main] org.apache.openejb.server.SimpleServiceManager.start Ready!
+30-Dec-2018 11:59:41.936 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Initialization processed in 1584 ms
+30-Dec-2018 11:59:41.961 INFO [main] org.apache.tomee.catalina.OpenEJBNamingContextListener.bindResource Importing a Tomcat Resource with id 'UserDatabase' of type 'org.apache.catalina.UserDatabase'.
+30-Dec-2018 11:59:41.961 INFO [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Resource(id=UserDatabase)
+30-Dec-2018 11:59:41.979 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting service [Catalina]
+30-Dec-2018 11:59:41.979 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting Servlet Engine: Apache Tomcat (TomEE)/9.0.12 (8.0.0-SNAPSHOT)
+30-Dec-2018 11:59:42.072 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Unable to set the web application class loader property [clearReferencesRmiTargets] to [true] as the property does not exist.
+30-Dec-2018 11:59:42.073 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Unable to set the web application class loader property [clearReferencesObjectStreamClassCaches] to [true] as the property does not exist.
+30-Dec-2018 11:59:42.073 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Unable to set the web application class loader property [skipMemoryLeakChecksOnJvmShutdown] to [false] as the property does not exist.
+30-Dec-2018 11:59:42.111 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler ["http-nio-20003"]
+30-Dec-2018 11:59:42.156 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler ["ajp-nio-20002"]
+30-Dec-2018 11:59:42.176 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Server startup in 239 ms
+dez 30, 2018 11:59:43 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:43.247 INFO [http-nio-20003-exec-3] org.apache.openejb.util.JarExtractor.extract Extracting jar: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153.war
+30-Dec-2018 11:59:43.285 INFO [http-nio-20003-exec-3] org.apache.openejb.util.JarExtractor.extract Extracted path: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153
+30-Dec-2018 11:59:43.286 INFO [http-nio-20003-exec-3] org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps using default host: localhost
+30-Dec-2018 11:59:43.286 INFO [http-nio-20003-exec-3] org.apache.tomee.catalina.TomcatWebAppBuilder.init ------------------------- localhost -&gt; /2525c909-8c3e-4486-a9b1-6d7d654ff153
+30-Dec-2018 11:59:43.288 INFO [http-nio-20003-exec-3] org.apache.openejb.util.OptionsLog.info Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+30-Dec-2018 11:59:43.764 INFO [http-nio-20003-exec-3] org.apache.openejb.config.ConfigurationFactory.configureApplication Configuring enterprise application: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153
+30-Dec-2018 11:59:43.885 INFO [http-nio-20003-exec-3] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+30-Dec-2018 11:59:43.885 INFO [http-nio-20003-exec-3] org.apache.openejb.config.AutoConfig.createContainer Auto-creating a container for bean 2525c909-8c3e-4486-a9b1-6d7d654ff153.Comp1117946264: Container(type=MANAGED, id=Default Managed Container)
+30-Dec-2018 11:59:43.885 INFO [http-nio-20003-exec-3] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Managed Container)
+30-Dec-2018 11:59:43.895 INFO [http-nio-20003-exec-3] org.apache.openejb.core.managed.SimplePassivater.init Using directory /home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/temp for stateful session passivation
+30-Dec-2018 11:59:43.925 INFO [http-nio-20003-exec-3] org.apache.openejb.config.AppInfoBuilder.build Enterprise application "/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153" loaded.
+30-Dec-2018 11:59:43.926 INFO [http-nio-20003-exec-3] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153
+30-Dec-2018 11:59:43.984 INFO [http-nio-20003-exec-3] org.apache.openejb.cdi.CdiBuilder.initSingleton Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@53ca01a2
+30-Dec-2018 11:59:44.051 INFO [http-nio-20003-exec-3] org.apache.openejb.cdi.ManagedSecurityService.&lt;init&gt; Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+30-Dec-2018 11:59:44.087 INFO [http-nio-20003-exec-3] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container is starting...
+30-Dec-2018 11:59:44.093 INFO [http-nio-20003-exec-3] org.apache.webbeans.plugins.PluginLoader.startUp Adding OpenWebBeansPlugin : [CdiPlugin]
+30-Dec-2018 11:59:45.598 INFO [http-nio-20003-exec-3] org.apache.webbeans.config.BeansDeployer.validateInjectionPoints All injection points were validated successfully.
+30-Dec-2018 11:59:45.611 INFO [http-nio-20003-exec-3] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container has started, it took 1524 ms.
+30-Dec-2018 11:59:45.625 INFO [http-nio-20003-exec-3] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153)
+30-Dec-2018 11:59:45.727 INFO [http-nio-20003-exec-3] org.apache.myfaces.ee.MyFacesContainerInitializer.onStartup Using org.apache.myfaces.ee.MyFacesContainerInitializer
+30-Dec-2018 11:59:45.750 INFO [http-nio-20003-exec-3] org.apache.myfaces.ee.MyFacesContainerInitializer.onStartup Added FacesServlet with mappings=[/faces/*, *.jsf, *.faces, *.xhtml]
+30-Dec-2018 11:59:45.784 INFO [http-nio-20003-exec-3] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+30-Dec-2018 11:59:45.790 INFO [http-nio-20003-exec-3] org.apache.tomee.myfaces.TomEEMyFacesContainerInitializer.addListener Installing &lt;listener&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener&gt;
+30-Dec-2018 11:59:45.858 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getStandardFacesConfig Reading standard config META-INF/standard-faces-config.xml
+30-Dec-2018 11:59:46.139 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getClassloaderFacesConfig Reading config : jar:file:/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib/openwebbeans-jsf-2.0.8.jar!/META-INF/faces-config.xml
+30-Dec-2018 11:59:46.142 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getClassloaderFacesConfig Reading config : jar:file:/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib/openwebbeans-el22-2.0.8.jar!/META-INF/faces-config.xml
+30-Dec-2018 11:59:46.243 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.LogMetaInfUtils.logArtifact Artifact 'myfaces-api' was found in version '2.3.2' from path 'file:/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib/myfaces-api-2.3.2.jar'
+30-Dec-2018 11:59:46.243 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.LogMetaInfUtils.logArtifact Artifact 'myfaces-impl' was found in version '2.3.2' from path 'file:/home/rmpestano/projects/tomee/examples/projectstage-demo/target/tomee-remote/apache-tomee-webprofile-8.0.0-SNAPSHOT/lib/myfaces-impl-2.3.2.jar'
+30-Dec-2018 11:59:46.252 INFO [http-nio-20003-exec-3] org.apache.myfaces.util.ExternalSpecifications.isCDIAvailable MyFaces CDI support enabled
+30-Dec-2018 11:59:46.253 INFO [http-nio-20003-exec-3] org.apache.myfaces.spi.impl.DefaultInjectionProviderFactory.getInjectionProvider Using InjectionProvider org.apache.myfaces.spi.impl.CDIAnnotationDelegateInjectionProvider
+30-Dec-2018 11:59:46.298 INFO [http-nio-20003-exec-3] org.apache.myfaces.util.ExternalSpecifications.isBeanValidationAvailable MyFaces Bean Validation support enabled
+30-Dec-2018 11:59:46.324 INFO [http-nio-20003-exec-3] org.apache.myfaces.application.ApplicationImpl.getProjectStage Couldn't discover the current project stage, using Production
+30-Dec-2018 11:59:46.325 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.FacesConfigurator.handleSerialFactory Serialization provider : class org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory
+30-Dec-2018 11:59:46.328 INFO [http-nio-20003-exec-3] org.apache.myfaces.config.annotation.DefaultLifecycleProviderFactory.getLifecycleProvider Using LifecycleProvider org.apache.myfaces.config.annotation.Tomcat7AnnotationLifecycleProvider
+30-Dec-2018 11:59:46.485 INFO [http-nio-20003-exec-3] org.apache.myfaces.webapp.AbstractFacesInitializer.initFaces ServletContext initialized.
+30-Dec-2018 11:59:46.490 INFO [http-nio-20003-exec-3] org.apache.myfaces.view.facelets.ViewPoolProcessor.initialize org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to "noCache". To enable view pooling this param must be set to "alwaysRecompile". View Pooling disabled.
+30-Dec-2018 11:59:46.501 INFO [http-nio-20003-exec-3] org.apache.myfaces.webapp.StartupServletContextListener.contextInitialized MyFaces Core has started, it took [707] ms.
+30-Dec-2018 11:59:46.807 INFO [http-nio-20003-exec-4] org.apache.deltaspike.core.util.ProjectStageProducer.initProjectStage Computed the following DeltaSpike ProjectStage: Production
+dez 30, 2018 11:59:46 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:46.843 INFO [http-nio-20003-exec-9] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153
+dez 30, 2018 11:59:47 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153.war
+dez 30, 2018 11:59:47 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/2525c909-8c3e-4486-a9b1-6d7d654ff153
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.219 sec - in org.superbiz.projectstage.ProductionProjectStageTest
+Running org.superbiz.projectstage.TestingProjectStageTest
+dez 30, 2018 11:59:47 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:47.886 INFO [http-nio-20003-exec-5] org.apache.openejb.util.JarExtractor.extract Extracting jar: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc.war
+30-Dec-2018 11:59:47.916 INFO [http-nio-20003-exec-5] org.apache.openejb.util.JarExtractor.extract Extracted path: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+30-Dec-2018 11:59:47.916 INFO [http-nio-20003-exec-5] org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps using default host: localhost
+30-Dec-2018 11:59:47.917 INFO [http-nio-20003-exec-5] org.apache.tomee.catalina.TomcatWebAppBuilder.init ------------------------- localhost -&gt; /fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+30-Dec-2018 11:59:47.917 INFO [http-nio-20003-exec-5] org.apache.openejb.util.OptionsLog.info Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+30-Dec-2018 11:59:48.008 INFO [http-nio-20003-exec-5] org.apache.openejb.config.ConfigurationFactory.configureApplication Configuring enterprise application: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+30-Dec-2018 11:59:48.046 INFO [http-nio-20003-exec-5] org.apache.openejb.config.AppInfoBuilder.build Enterprise application "/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc" loaded.
+30-Dec-2018 11:59:48.047 INFO [http-nio-20003-exec-5] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+30-Dec-2018 11:59:48.065 INFO [http-nio-20003-exec-5] org.apache.openejb.cdi.CdiBuilder.initSingleton Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@53ca01a2
+30-Dec-2018 11:59:48.069 INFO [http-nio-20003-exec-5] org.apache.openejb.cdi.ManagedSecurityService.&lt;init&gt; Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+30-Dec-2018 11:59:48.071 INFO [http-nio-20003-exec-5] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container is starting...
+30-Dec-2018 11:59:48.766 INFO [http-nio-20003-exec-5] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container has started, it took 695 ms.
+30-Dec-2018 11:59:48.771 INFO [http-nio-20003-exec-5] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc)
+30-Dec-2018 11:59:48.819 INFO [http-nio-20003-exec-5] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+30-Dec-2018 11:59:48.823 INFO [http-nio-20003-exec-5] org.apache.tomee.myfaces.TomEEMyFacesContainerInitializer.addListener Installing &lt;listener&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener&gt;
+30-Dec-2018 11:59:49.123 INFO [http-nio-20003-exec-5] org.apache.myfaces.view.facelets.ViewPoolProcessor.initialize org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to "noCache". To enable view pooling this param must be set to "alwaysRecompile". View Pooling disabled.
+30-Dec-2018 11:59:49.314 INFO [http-nio-20003-exec-6] org.apache.deltaspike.core.util.ProjectStageProducer.initProjectStage Computed the following DeltaSpike ProjectStage: UnitTest
+dez 30, 2018 11:59:49 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:49.336 INFO [http-nio-20003-exec-7] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+dez 30, 2018 11:59:49 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc.war
+dez 30, 2018 11:59:49 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/fb5b37d9-2aa0-408c-8ed7-a2ddc14057dc
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.431 sec - in org.superbiz.projectstage.TestingProjectStageTest
+Running org.superbiz.projectstage.DevProjectStageTest
+dez 30, 2018 11:59:50 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:50.187 INFO [http-nio-20003-exec-4] org.apache.openejb.util.JarExtractor.extract Extracting jar: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b.war
+30-Dec-2018 11:59:50.213 INFO [http-nio-20003-exec-4] org.apache.openejb.util.JarExtractor.extract Extracted path: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+30-Dec-2018 11:59:50.213 INFO [http-nio-20003-exec-4] org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps using default host: localhost
+30-Dec-2018 11:59:50.213 INFO [http-nio-20003-exec-4] org.apache.tomee.catalina.TomcatWebAppBuilder.init ------------------------- localhost -&gt; /4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+30-Dec-2018 11:59:50.214 INFO [http-nio-20003-exec-4] org.apache.openejb.util.OptionsLog.info Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+30-Dec-2018 11:59:50.300 INFO [http-nio-20003-exec-4] org.apache.openejb.config.ConfigurationFactory.configureApplication Configuring enterprise application: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+30-Dec-2018 11:59:50.335 INFO [http-nio-20003-exec-4] org.apache.openejb.config.AppInfoBuilder.build Enterprise application "/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b" loaded.
+30-Dec-2018 11:59:50.336 INFO [http-nio-20003-exec-4] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+30-Dec-2018 11:59:50.350 INFO [http-nio-20003-exec-4] org.apache.openejb.cdi.CdiBuilder.initSingleton Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@53ca01a2
+30-Dec-2018 11:59:50.353 INFO [http-nio-20003-exec-4] org.apache.openejb.cdi.ManagedSecurityService.&lt;init&gt; Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+30-Dec-2018 11:59:50.355 INFO [http-nio-20003-exec-4] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container is starting...
+30-Dec-2018 11:59:50.984 INFO [http-nio-20003-exec-4] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container has started, it took 629 ms.
+30-Dec-2018 11:59:50.990 INFO [http-nio-20003-exec-4] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=/home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b)
+30-Dec-2018 11:59:51.037 INFO [http-nio-20003-exec-4] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+30-Dec-2018 11:59:51.040 INFO [http-nio-20003-exec-4] org.apache.tomee.myfaces.TomEEMyFacesContainerInitializer.addListener Installing &lt;listener&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener&gt;
+30-Dec-2018 11:59:51.219 INFO [http-nio-20003-exec-4] org.apache.myfaces.view.facelets.ViewPoolProcessor.initialize org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to "noCache". To enable view pooling this param must be set to "alwaysRecompile". View Pooling disabled.
+30-Dec-2018 11:59:51.416 INFO [http-nio-20003-exec-11] org.apache.deltaspike.core.util.ProjectStageProducer.initProjectStage Computed the following DeltaSpike ProjectStage: Development
+dez 30, 2018 11:59:51 AM org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:20003/tomee/ejb}
+30-Dec-2018 11:59:51.441 INFO [http-nio-20003-exec-2] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+dez 30, 2018 11:59:51 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b.war
+dez 30, 2018 11:59:51 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /home/rmpestano/projects/tomee/examples/projectstage-demo/target/arquillian-remote-working-dir/0/4977aad1-2e0a-45e9-bef0-c6f5fcb6d68b
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.048 sec - in org.superbiz.projectstage.DevProjectStageTest
+30-Dec-2018 11:59:51.610 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+30-Dec-2018 11:59:51.611 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Pausing ProtocolHandler ["http-nio-20003"]
+30-Dec-2018 11:59:51.665 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Pausing ProtocolHandler ["ajp-nio-20002"]
+30-Dec-2018 11:59:51.716 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping service [Catalina]
+30-Dec-2018 11:59:51.717 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping ProtocolHandler ["http-nio-20003"]
+30-Dec-2018 11:59:51.719 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping ProtocolHandler ["ajp-nio-20002"]
+30-Dec-2018 11:59:51.721 INFO [main] org.apache.openejb.server.SimpleServiceManager.stop Stopping server services
+30-Dec-2018 11:59:51.731 INFO [main] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: openejb
+30-Dec-2018 11:59:51.732 SEVERE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+30-Dec-2018 11:59:51.733 SEVERE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+30-Dec-2018 11:59:51.742 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Destroying ProtocolHandler ["http-nio-20003"]
+30-Dec-2018 11:59:51.743 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Destroying ProtocolHandler ["ajp-nio-20002"]
+
+Results :
+
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

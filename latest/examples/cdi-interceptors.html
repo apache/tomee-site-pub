@@ -95,102 +95,186 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Let's write a simple application that would allow us to book tickets for a movie show. As with all applications, logging is one cross-cutting concern that we have. Apart from that, there are some methods in our application, that can be accessed only in the working hours. If accessed at non-working-hours we'll throw out an AccessDeniedException.</p>
-<p>How do we mark which methods are to be intercepted? Wouldn't it be handy to annotate a method like</p>
-<pre><code>@Log
-public void aMethod(){...}
-</code></pre>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s write a simple application that would allow us to book tickets for a movie show. As with all applications, logging is one cross-cutting concern that we have. Apart from that, there are some methods in our application, that can be accessed only in the working hours. If accessed at non-working-hours we&#8217;ll throw out an AccessDeniedException.</p>
+</div>
+<div class="paragraph">
+<p>How do we mark which methods are to be intercepted? Wouldn&#8217;t it be handy to annotate a method like</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Log
+public void aMethod(){...}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>or</p>
-<pre><code>@TimeRestricted
-public void bMethod(){...}
-</code></pre>
-<p>Let's create these annotations that would "mark" a method for interception.</p>
-<pre><code>@InterceptorBinding
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@TimeRestricted
+public void bMethod(){...}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s create these annotations that would "mark" a method for interception.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface Log {
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>And</p>
-<pre><code>@InterceptorBinding
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface TimeRestricted {
-}
-</code></pre>
-<p>Sure, you haven't missed the <code>@InterceptorBinding</code> annotation above! Now that our custom annotations are created, lets attach them (or to use a better term for it, "bind them") to interceptors.</p>
-<p>So here's our logging interceptor. An <code>@AroundInvoke</code> method and we are almost done.</p>
-<pre><code>@Interceptor
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sure, you haven&#8217;t missed the <code>@InterceptorBinding</code> annotation above! Now that our custom annotations are created, lets attach them (or to use a better term for it, "bind them") to interceptors.</p>
+</div>
+<div class="paragraph">
+<p>So here&#8217;s our logging interceptor. An <code>@AroundInvoke</code> method and we are almost done.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Interceptor
 @Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
 public class BookForAShowLoggingInterceptor implements Serializable {
     private static final long serialVersionUID = 8139854519874743530L;
-    private Logger logger = Logger.getLogger(&quot;BookForAShowApplicationLogger&quot;);
+    private Logger logger = Logger.getLogger("BookForAShowApplicationLogger");
     @AroundInvoke
     public Object logMethodEntry(InvocationContext ctx) throws Exception {
-        logger.info(&quot;Before entering method:&quot; + ctx.getMethod().getName());
+        logger.info("Before entering method:" + ctx.getMethod().getName());
         InterceptionOrderTracker.getMethodsInterceptedList().add(ctx.getMethod().getName());
         InterceptionOrderTracker.getInterceptedByList().add(this.getClass().getSimpleName());
         return ctx.proceed();
     }
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Now the <code>@Log</code> annotation we created is bound to this interceptor. (Likewise we bind <code>@TimeRestrict</code> for <code>TimeBasedRestrictingInterceptor</code>. See links below for source)</p>
-<p>That done, let's annotate at class-level or method-level and have fun intercepting!</p>
-<pre><code>@Log
+</div>
+<div class="paragraph">
+<p>That done, let&#8217;s annotate at class-level or method-level and have fun intercepting!</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Log
 @Stateful
 public class BookForAShowOneInterceptorApplied implements Serializable {
     private static final long serialVersionUID = 6350400892234496909L;
     public List&lt;String&gt; getMoviesList() {
         List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
-        moviesAvailable.add(&quot;12 Angry Men&quot;);
-        moviesAvailable.add(&quot;Kings speech&quot;);
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
         return moviesAvailable;
     }
     public Integer getDiscountedPrice(int ticketPrice) {
         return ticketPrice - 50;
     }
     // assume more methods are present
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The <code>@Log</code> annotation applied at class level denotes that all the methods should be intercepted with <code>BookForAShowLoggingInterceptor</code>.</p>
-<p>Before we say "all done" there's one last thing we are left with! To enable the interceptors!</p>
+</div>
+<div class="paragraph">
+<p>Before we say "all done" there&#8217;s one last thing we are left with! To enable the interceptors!</p>
+</div>
+<div class="paragraph">
 <p>Lets quickly put up a <code>beans.xml</code> file like the following in <code>src/main/resources/META-INF/beans.xml</code>:</p>
-<pre><code>&lt;beans&gt;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;beans&gt;
   &lt;interceptors&gt;
     &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.BookForAShowLoggingInterceptor
     &lt;/class&gt;
     &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.TimeBasedRestrictingInterceptor
     &lt;/class&gt;
   &lt;/interceptors&gt;
-&lt;/beans&gt;
-</code></pre>
-<p>By default, a bean archive has no enabled interceptors; an interceptor must be explicitly enabled by listing its class in the <code>beans.xml</code>.</p>
-<p>The order of the interceptor annotations has no real significance. Eg:</p>
-<pre><code>@TimeRestrict
+&lt;/beans&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, a bean archive has no enabled interceptors; an interceptor must be explicitly enabled by listing its class
+in the <code>beans.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>The order of the interceptor annotations has no real significance.
+Eg:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@TimeRestrict
 @Log
-void cMethod(){}
-</code></pre>
+void cMethod(){}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>It is the <code>interceptor</code> elements in <code>beans.xml</code> that not only "enable" the interceptors, but also define the "order of execution" of the interceptors. In this case the <code>BookForAShowLoggingInterceptor</code> would be applied first and then <code>TimeBasedRestrictingInterceptor</code></p>
+</div>
+<div class="paragraph">
 <p>So now you know that the order is only determined by the order within the <code>interceptors</code> element within the <code>beans.xml</code>. The rule is simple, interceptors which occur earlier in the list are called first.</p>
+</div>
+<div class="paragraph">
 <p>Also note that a method can be marked for interception using multiple interceptors by applying multiple annotations as above.</p>
-<p>This brings us to another question. In the above case there were two interceptors applied together. What if I would require about 4 such interceptors that would go along.... Having to annotate so much makes the code a little clumsy?</p>
+</div>
+<div class="paragraph">
+<p>This brings us to another question. In the above case there were two interceptors applied together. What if I would require about 4 such interceptors that would go along&#8230;&#8203;. Having to annotate so much makes the code a little clumsy?</p>
+</div>
+<div class="paragraph">
 <p>No worries! Just create a custom annotation which inherits from others</p>
-<pre><code>@Inherited
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Inherited
 @InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 @Log
 @TimeRestricted
 public @interface TimeRestrictAndLog {
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This is interceptor binding inheritance.</p>
+</div>
+<div class="paragraph">
 <p>The code below demonstrates the many cases that we have discussed.</p>
+</div>
+<div class="paragraph">
 <p>Not to forget, the old style binding with <code>@Interceptors(WhicheverInterceptor.class)</code> is also supported. Have a look at <code>BookForAShowOldStyleInterceptorBinding</code> where the comments explain how the newer way discussed above is better.</p>
-<h1>The Code</h1>
-<h2>BookForAShowOneInterceptorApplied</h2>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_code">The Code</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_bookforashowoneinterceptorapplied">BookForAShowOneInterceptorApplied</h3>
+<div class="paragraph">
 <p><code>BookForAShowOneInterceptorApplied</code> shows a simple <code>@Log</code> interceptor applied.</p>
-<pre><code>package org.superbiz.cdi.bookshow.beans;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.bookshow.beans;
 
 import org.superbiz.cdi.bookshow.interceptorbinding.Log;
 
@@ -206,19 +290,26 @@ public class BookForAShowOneInterceptorApplied implements Serializable {
 
     public List&lt;String&gt; getMoviesList() {
         List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
-        moviesAvailable.add(&quot;12 Angry Men&quot;);
-        moviesAvailable.add(&quot;Kings speech&quot;);
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
         return moviesAvailable;
     }
 
     public Integer getDiscountedPrice(int ticketPrice) {
         return ticketPrice - 50;
     }
-}
-</code></pre>
-<h2>BookForAShowTwoInterceptorsApplied</h2>
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bookforashowtwointerceptorsapplied">BookForAShowTwoInterceptorsApplied</h3>
+<div class="paragraph">
 <p><code>BookForAShowTwoInterceptorsApplied</code> shows both <code>@Log</code> and <code>@TimeRestricted</code> being applied.</p>
-<pre><code>package org.superbiz.cdi.bookshow.beans;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.bookshow.beans;
 
 import org.superbiz.cdi.bookshow.interceptorbinding.Log;
 import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestricted;
@@ -235,8 +326,8 @@ public class BookForAShowTwoInterceptorsApplied implements Serializable {
 
     public List&lt;String&gt; getMoviesList() {
         List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
-        moviesAvailable.add(&quot;12 Angry Men&quot;);
-        moviesAvailable.add(&quot;Kings speech&quot;);
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
         return moviesAvailable;
     }
 
@@ -244,11 +335,18 @@ public class BookForAShowTwoInterceptorsApplied implements Serializable {
     public Integer getDiscountedPrice(int ticketPrice) {
         return ticketPrice - 50;
     }
-}
-</code></pre>
-<h2>BookShowInterceptorBindingInheritanceExplored</h2>
-<p><code>BookShowInterceptorBindingInheritanceExplored</code> shows how <code>@TimeRestrictAndLog</code> (interceptor-binding-inheritance) can be used as an alternative for annotating a method with multiple annotations explicitly.</p>
-<pre><code>package org.superbiz.cdi.bookshow.beans;
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bookshowinterceptorbindinginheritanceexplored">BookShowInterceptorBindingInheritanceExplored</h3>
+<div class="paragraph">
+<p><code>BookShowInterceptorBindingInheritanceExplored</code> shows how <code>@TimeRestrictAndLog</code> (interceptor-binding-inheritance) can  be used as an alternative for annotating a method with multiple annotations explicitly.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.cdi.bookshow.beans;
 
 import org.superbiz.cdi.bookshow.interceptorbinding.TimeRestrictAndLog;
 
@@ -263,8 +361,8 @@ public class BookShowInterceptorBindingInheritanceExplored implements Serializab
 
     public List&lt;String&gt; getMoviesList() {
         List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
-        moviesAvailable.add(&quot;12 Angry Men&quot;);
-        moviesAvailable.add(&quot;Kings speech&quot;);
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
         return moviesAvailable;
     }
 
@@ -272,8 +370,12 @@ public class BookShowInterceptorBindingInheritanceExplored implements Serializab
     public Integer getDiscountedPrice(int ticketPrice) {
         return ticketPrice - 50;
     }
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

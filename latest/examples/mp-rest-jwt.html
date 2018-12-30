@@ -88,21 +88,41 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Microprofile Rest JWT</h1>
+              <h1>MicroProfile JWT</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>MP REST JWT</h1>
-<p>This is a basic example on how to configure and use MicroProfile JWT in TomEE.</p>
-<h2>Run the tests for different scenarios related with JWT validation</h2>
-<pre><code>mvn clean test 
-</code></pre>
-<h2>Configuration in TomEE</h2>
-<p>The class <code>MoviesMPJWTConfigurationProvider.java</code> provides to TomEE the figuration need it for JWT validation.</p>
-<pre><code>package org.superbiz.moviefun.rest;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is a basic example on how to configure and use MicroProfile JWT in
+TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_the_tests_for_different_scenarios_related_with_jwt_validation">Run the tests for different scenarios related with JWT validation</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean test</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_in_tomee">Configuration in TomEE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The class <code>MoviesMPJWTConfigurationProvider.java</code> provides to TomEE the
+figuration need it for JWT validation.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.moviefun.rest;
 
 import org.apache.tomee.microprofile.jwt.config.JWTAuthContextInfo;
 
@@ -124,19 +144,19 @@ public class MoviesMPJWTConfigurationProvider {
         JWTAuthContextInfo contextInfo = new JWTAuthContextInfo();
 
         // todo use MP Config to load the configuration
-        contextInfo.setIssuedBy(&quot;https://server.example.com&quot;);
+        contextInfo.setIssuedBy("https://server.example.com");
 
-        final String pemEncoded = &quot;MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEq&quot; +
-                &quot;Fyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwR&quot; +
-                &quot;TYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5e&quot; +
-                &quot;UF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9&quot; +
-                &quot;AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYn&quot; +
-                &quot;sIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9x&quot; +
-                &quot;nQIDAQAB&quot;;
+        final String pemEncoded = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEq" +
+                "Fyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwR" +
+                "TYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5e" +
+                "UF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9" +
+                "AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYn" +
+                "sIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9x" +
+                "nQIDAQAB";
         byte[] encodedBytes = Base64.getDecoder().decode(pemEncoded);
 
         final X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedBytes);
-        final KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);
+        final KeyFactory kf = KeyFactory.getInstance("RSA");
         final RSAPublicKey pk = (RSAPublicKey) kf.generatePublic(spec);
 
         contextInfo.setSignerKey(pk);
@@ -148,11 +168,23 @@ public class MoviesMPJWTConfigurationProvider {
     JWTAuthContextInfo getContextInfo() throws InvalidKeySpecException, NoSuchAlgorithmException {
         return getOptionalContextInfo().get();
     }
-}
-</code></pre>
-<h2>Use MicroProfile JWT in TomEE</h2>
-<p>The JAX-RS resource <code>MoviesRest.java</code> contains several endpoint that are secured using the standard annotation <code>@RolesAllowed</code>. MicroProfile JWT takes care of performing the validation for incoming requests with <code>Authorization</code> header providing a signed <code>Access Token</code></p>
-<pre><code>   package org.superbiz.moviefun.rest;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_use_microprofile_jwt_in_tomee">Use MicroProfile JWT in TomEE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JAX-RS resource <code>MoviesRest.java</code> contains several endpoint that are
+secured using the standard annotation <code>@RolesAllowed</code>. MicroProfile JWT
+takes care of performing the validation for incoming requests with
+<code>Authorization</code> header providing a signed <code>Access Token</code></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>   package org.superbiz.moviefun.rest;
 
    import org.superbiz.moviefun.Movie;
    import org.superbiz.moviefun.MoviesBean;
@@ -163,7 +195,7 @@ public class MoviesMPJWTConfigurationProvider {
    import javax.ws.rs.core.MediaType;
    import java.util.List;
 
-   @Path(&quot;cinema&quot;)
+   @Path("cinema")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
    public class MoviesRest {
@@ -174,40 +206,40 @@ public class MoviesMPJWTConfigurationProvider {
        @GET
        @Produces(MediaType.TEXT_PLAIN)
        public String status() {
-           return &quot;ok&quot;;
+           return "ok";
        }
 
        @GET
-       @Path(&quot;/movies&quot;)
-       @RolesAllowed({&quot;crud&quot;, &quot;read-only&quot;})
+       @Path("/movies")
+       @RolesAllowed({"crud", "read-only"})
        public List&lt;Movie&gt; getListOfMovies() {
            return moviesBean.getMovies();
        }
 
        @GET
-       @Path(&quot;/movies/{id}&quot;)
-       @RolesAllowed({&quot;crud&quot;, &quot;read-only&quot;})
-       public Movie getMovie(@PathParam(&quot;id&quot;) int id) {
+       @Path("/movies/{id}")
+       @RolesAllowed({"crud", "read-only"})
+       public Movie getMovie(@PathParam("id") int id) {
            return moviesBean.getMovie(id);
        }
 
        @POST
-       @Path(&quot;/movies&quot;)
-       @RolesAllowed(&quot;crud&quot;)
+       @Path("/movies")
+       @RolesAllowed("crud")
        public void addMovie(Movie newMovie) {
            moviesBean.addMovie(newMovie);
        }
 
        @DELETE
-       @Path(&quot;/movies/{id}&quot;)
-       @RolesAllowed(&quot;crud&quot;)
-       public void deleteMovie(@PathParam(&quot;id&quot;) int id) {
+       @Path("/movies/{id}")
+       @RolesAllowed("crud")
+       public void deleteMovie(@PathParam("id") int id) {
            moviesBean.deleteMovie(id);
        }
 
        @PUT
-       @Path(&quot;/movies&quot;)
-       @RolesAllowed(&quot;crud&quot;)
+       @Path("/movies")
+       @RolesAllowed("crud")
        public void updateMovie(Movie updatedMovie) {
            moviesBean.updateMovie(updatedMovie);
        }
@@ -215,50 +247,85 @@ public class MoviesMPJWTConfigurationProvider {
    }
 
  @Inject
- @ConfigProperty(name = &quot;java.runtime.version&quot;)
- private String javaVersion;
-</code></pre>
-<h2>About the Test architecture</h2>
-<p>The test cases from this project are builded using Arquillian. The arquillian configuration can be found in<br/><code>src/test/resources/arquillian.xml</code></p>
-<p>The class <code>TokenUtils.java</code> is used during the test to act as an Authorization server who generates <code>Access Tokens</code> based on the configuration files <code>privateKey.pem</code>,<code>publicKey.pem</code>,<code>Token1.json</code>, and <code>Token2.json</code>.<br/><code>nimbus-jose-jwt</code> is the library used for JWT generation during the tests.</p>
+ @ConfigProperty(name = "java.runtime.version")
+ private String javaVersion;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_about_the_test_architecture">About the Test architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The test cases from this project are builded using Arquillian. The
+arquillian configuration can be found in
+<code>src/test/resources/arquillian.xml</code></p>
+</div>
+<div class="paragraph">
+<p>The class <code>TokenUtils.java</code> is used during the test to act as an
+Authorization server who generates <code>Access Tokens</code> based on the
+configuration files <code>privateKey.pem</code>,<code>publicKey.pem</code>,<code>Token1.json</code>, and
+<code>Token2.json</code>.<br>
+<code>nimbus-jose-jwt</code> is the library used for JWT generation during the
+tests.</p>
+</div>
+<div class="paragraph">
 <p><code>Token1.json</code></p>
-<pre><code>{
-    &quot;iss&quot;: &quot;https://server.example.com&quot;,
-    &quot;jti&quot;: &quot;a-123&quot;,
-    &quot;sub&quot;: &quot;24400320&quot;,
-    &quot;upn&quot;: &quot;jdoe@example.com&quot;,
-    &quot;preferred_username&quot;: &quot;jdoe&quot;,
-    &quot;aud&quot;: &quot;s6BhdRkqt3&quot;,
-    &quot;exp&quot;: 1311281970,
-    &quot;iat&quot;: 1311280970,
-    &quot;auth_time&quot;: 1311280969,
-    &quot;groups&quot;: [
-        &quot;group1&quot;,
-        &quot;group2&quot;,
-        &quot;crud&quot;,
-        &quot;read-only&quot;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "iss": "https://server.example.com",
+    "jti": "a-123",
+    "sub": "24400320",
+    "upn": "jdoe@example.com",
+    "preferred_username": "jdoe",
+    "aud": "s6BhdRkqt3",
+    "exp": 1311281970,
+    "iat": 1311280970,
+    "auth_time": 1311280969,
+    "groups": [
+        "group1",
+        "group2",
+        "crud",
+        "read-only"
     ]
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><code>Token2.json</code></p>
-<pre><code>{
-  &quot;iss&quot;: &quot;https://server.example.com&quot;,
-  &quot;jti&quot;: &quot;a-123&quot;,
-  &quot;sub&quot;: &quot;24400320&quot;,
-  &quot;upn&quot;: &quot;alice@example.com&quot;,
-  &quot;preferred_username&quot;: &quot;alice&quot;,
-  &quot;aud&quot;: &quot;s6BhdRkqt3&quot;,
-  &quot;exp&quot;: 1311281970,
-  &quot;iat&quot;: 1311280970,
-  &quot;auth_time&quot;: 1311280969,
-  &quot;groups&quot;: [
-    &quot;read-only&quot;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>{
+  "iss": "https://server.example.com",
+  "jti": "a-123",
+  "sub": "24400320",
+  "upn": "alice@example.com",
+  "preferred_username": "alice",
+  "aud": "s6BhdRkqt3",
+  "exp": 1311281970,
+  "iat": 1311280970,
+  "auth_time": 1311280969,
+  "groups": [
+    "read-only"
   ]
-}
-</code></pre>
-<h2>Test Scenarios</h2>
-<p><code>MovieTest.java</code> contains 4 OAuth2 scenarios for different JWT combinations.</p>
-<pre><code>package org.superbiz.moviefun;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_scenarios">Test Scenarios</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>MovieTest.java</code> contains 4 OAuth2 scenarios for different JWT
+combinations.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.moviefun;
 
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -289,11 +356,11 @@ public class MoviesTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, &quot;test.war&quot;)
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, "test.war")
                                                 .addClasses(Movie.class, MoviesBean.class, MoviesTest.class)
                                                 .addClasses(MoviesRest.class, ApplicationConfig.class)
                                                 .addClass(MoviesMPJWTConfigurationProvider.class)
-                                                .addAsWebInfResource(new StringAsset(&quot;&lt;beans/&gt;&quot;), &quot;beans.xml&quot;);
+                                                .addAsWebInfResource(new StringAsset("&lt;beans/&gt;"), "beans.xml");
 
         System.out.println(webArchive.toString(true));
 
@@ -315,19 +382,19 @@ public class MoviesTest {
 
 
         //Testing rest endpoint deployment (GET  without security header)
-        String responsePayload = webClient.reset().path(&quot;/rest/cinema/&quot;).get(String.class);
-        LOGGER.info(&quot;responsePayload = &quot; + responsePayload);
-        assertTrue(responsePayload.equalsIgnoreCase(&quot;ok&quot;));
+        String responsePayload = webClient.reset().path("/rest/cinema/").get(String.class);
+        LOGGER.info("responsePayload = " + responsePayload);
+        assertTrue(responsePayload.equalsIgnoreCase("ok"));
 
 
         //POST (Using token1.json with group of claims: [CRUD])
-        Movie newMovie = new Movie(1, &quot;David Dobkin&quot;, &quot;Wedding Crashers&quot;);
+        Movie newMovie = new Movie(1, "David Dobkin", "Wedding Crashers");
         Response response = webClient.reset()
-                                     .path(&quot;/rest/cinema/movies&quot;)
-                                     .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
-                                     .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token(1))
+                                     .path("/rest/cinema/movies")
+                                     .header("Content-Type", "application/json")
+                                     .header("Authorization", "Bearer " + token(1))
                                      .post(newMovie);
-        LOGGER.info(&quot;responseCode = &quot; + response.getStatus());
+        LOGGER.info("responseCode = " + response.getStatus());
         assertTrue(response.getStatus() == 204);
 
 
@@ -335,31 +402,31 @@ public class MoviesTest {
         //This test should be updated to use token2.json once TOMEE- gets resolved.
         Collection&lt;? extends Movie&gt; movies = webClient
                 .reset()
-                .path(&quot;/rest/cinema/movies&quot;)
-                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
-                .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token(1))
+                .path("/rest/cinema/movies")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token(1))
                 .getCollection(Movie.class);
         LOGGER.info(movies.toString());
         assertTrue(movies.size() == 1);
 
 
         //Should return a 403 since POST require group of claims: [crud] but Token 2 has only [read-only].
-        Movie secondNewMovie = new Movie(2, &quot;Todd Phillips&quot;, &quot;Starsky &amp; Hutch&quot;);
+        Movie secondNewMovie = new Movie(2, "Todd Phillips", "Starsky &amp; Hutch");
         Response responseWithError = webClient.reset()
-                                              .path(&quot;/rest/cinema/movies&quot;)
-                                              .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
-                                              .header(&quot;Authorization&quot;, &quot;Bearer &quot; + token(2))
+                                              .path("/rest/cinema/movies")
+                                              .header("Content-Type", "application/json")
+                                              .header("Authorization", "Bearer " + token(2))
                                               .post(secondNewMovie);
-        LOGGER.info(&quot;responseCode = &quot; + responseWithError.getStatus());
+        LOGGER.info("responseCode = " + responseWithError.getStatus());
         assertTrue(responseWithError.getStatus() == 403);
 
 
         //Should return a 401 since the header Authorization is not part of the POST request.
         Response responseWith401Error = webClient.reset()
-                                                 .path(&quot;/rest/cinema/movies&quot;)
-                                                 .header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+                                                 .path("/rest/cinema/movies")
+                                                 .header("Content-Type", "application/json")
                                                  .post(new Movie());
-        LOGGER.info(&quot;responseCode = &quot; + responseWith401Error.getStatus());
+        LOGGER.info("responseCode = " + responseWith401Error.getStatus());
         assertTrue(responseWith401Error.getStatus() == 401);
 
     }
@@ -368,14 +435,17 @@ public class MoviesTest {
     private String token(int token_type) throws Exception {
         HashMap&lt;String, Long&gt; timeClaims = new HashMap&lt;&gt;();
         if (token_type == 1) {
-            return TokenUtils.generateTokenString(&quot;/Token1.json&quot;, null, timeClaims);
+            return TokenUtils.generateTokenString("/Token1.json", null, timeClaims);
         } else {
-            return TokenUtils.generateTokenString(&quot;/Token2.json&quot;, null, timeClaims);
+            return TokenUtils.generateTokenString("/Token2.json", null, timeClaims);
         }
     }
 
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

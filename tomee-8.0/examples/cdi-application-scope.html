@@ -95,12 +95,33 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example show the use of <code>@ApplicationScoped</code> annotation for injected objects. An object which is defined as <code>@ApplicationScoped</code> is created once for the duration of the application.</p>
-<h1>Example</h1>
-<p>This example depicts a similar scenario to cdi-request-scope. A restaurant guest orders a soup from the waiter. The waiter then delivers the soup back to the guest. Another guest can order the same soup that was ordered by the previous client - this is where the application scope is used. </p>
-<h2>Waiter</h2>
-<p>The <code>Waiter</code> session bean receives a request from the test class via the <code>orderSoup()</code> method and sets the name for the <code>soup</code> field. The <code>orderWhatTheOtherGuyHad()</code> method returns the name of the <code>soup</code> field.</p>
-<pre><code>@Stateless
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example show the use of <code>@ApplicationScoped</code> annotation for injected objects. An object
+which is defined as <code>@ApplicationScoped</code> is created once for the duration of the application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example depicts a similar scenario to cdi-request-scope. A restaurant guest orders
+a soup from the waiter. The waiter then delivers the soup back to the guest. Another
+guest can order the same soup that was ordered by the previous client - this is where
+the application scope is used.</p>
+</div>
+<div class="sect2">
+<h3 id="_waiter">Waiter</h3>
+<div class="paragraph">
+<p>The <code>Waiter</code> session bean receives a request from the test class via the <code>orderSoup()</code> method
+and sets the name for the <code>soup</code> field. The <code>orderWhatTheOtherGuyHad()</code> method returns
+the name of the <code>soup</code> field.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateless
 public class Waiter {
 
     @Inject
@@ -115,18 +136,27 @@ public class Waiter {
         String name = soup.getName();
         return name;
     }
-}
-</code></pre>
-<h2>Soup</h2>
-<p>The <code>Soup</code> class is an injectable POJO, defined as <code>@ApplicationScoped</code>. This means that an instance will be created only once for the duration of the whole application. Try changing the <code>@ApplicationScoped</code> annotation to <code>@RequestScoped</code> and see what happens.</p>
-<pre><code>@ApplicationScoped
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soup">Soup</h3>
+<div class="paragraph">
+<p>The <code>Soup</code> class is an injectable POJO, defined as <code>@ApplicationScoped</code>. This means that an instance
+will be created only once for the duration of the whole application. Try changing the <code>@ApplicationScoped</code>
+annotation to <code>@RequestScoped</code> and see what happens.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@ApplicationScoped
 public class Soup {
 
-    private String name = &quot;Soup of the day&quot;;
+    private String name = "Soup of the day";
 
     @PostConstruct
     public void afterCreate() {
-        System.out.println(&quot;Soup created&quot;);
+        System.out.println("Soup created");
     }
 
     public String getName() {
@@ -136,13 +166,25 @@ public class Soup {
     public void setName(String name){
         this.name = name;
     }
-}
-</code></pre>
-<h1>Test Case</h1>
-<p>This is the entry class for this example. First a soup is ordered via <code>orderSoup()</code> method. This initiates the <code>soup</code> field. Next, <code>orderWhatTheOtherGuyHad()</code> method returns the soup from the application context.</p>
-<pre><code>public class RestaurantTest {
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_case">Test Case</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is the entry class for this example. First a soup is ordered via <code>orderSoup()</code> method.
+This initiates the <code>soup</code> field. Next, <code>orderWhatTheOtherGuyHad()</code> method returns the soup
+from the application context.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public class RestaurantTest {
 
-    private static String TOMATO_SOUP = &quot;Tomato Soup&quot;;
+    private static String TOMATO_SOUP = "Tomato Soup";
     private EJBContainer container;
 
     @EJB
@@ -151,7 +193,7 @@ public class Soup {
     @Before
     public void startContainer() throws Exception {
         container = EJBContainer.createEJBContainer();
-        container.getContext().bind(&quot;inject&quot;, this);
+        container.getContext().bind("inject", this);
     }
 
     @Test
@@ -167,11 +209,21 @@ public class Soup {
     public void closeContainer() throws Exception {
         container.close();
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>In the output you can see that there is just one <code>Soup</code> instance created - one for the whole application.</p>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the output you can see that there is just one <code>Soup</code> instance created - one for
+the whole application.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cdi.applicationscope.RestaurantTest
@@ -179,7 +231,7 @@ Apache OpenEJB 7.0.0-SNAPSHOT    build: 20111224-11:09
 http://tomee.apache.org/
 INFO - openejb.home = C:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope
 INFO - openejb.base = C:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope\target\classes
@@ -189,10 +241,10 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean cdi-application-scope.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean Waiter: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope&quot; loaded.
+INFO - Enterprise application "c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope" loaded.
 INFO - Assembling app: c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope
-INFO - Jndi(name=&quot;java:global/cdi-application-scope/Waiter!org.superbiz.cdi.applicationscope.Waiter&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-application-scope/Waiter&quot;)
+INFO - Jndi(name="java:global/cdi-application-scope/Waiter!org.superbiz.cdi.applicationscope.Waiter")
+INFO - Jndi(name="java:global/cdi-application-scope/Waiter")
 INFO - Created Ejb(deployment-id=Waiter, ejb-name=Waiter, container=Default Stateless Container)
 INFO - Started Ejb(deployment-id=Waiter, ejb-name=Waiter, container=Default Stateless Container)
 INFO - Deployed Application(path=c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-application-scope)
@@ -202,8 +254,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.42 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

@@ -88,77 +88,147 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Microprofile Metrics Histogram</h1>
+              <h1>MicroProfile Metrics Histogram</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Microprofile Metrics</h1>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>This is an example on how to use microprofile metrics in TomEE.</p>
-<h5>Run the application:</h5>
-<pre><code>mvn clean install tomee:run 
-</code></pre>
-<p>Within the application, there is an enpoint that will give you a weather histogram of the most recent New York City temperatures.</p>
-<h5>Request:</h5>
-<pre><code>curl -X GET http://localhost:8080/mp-metrics-histogram/weather/histogram
-</code></pre>
-<h5>Response:</h5>
-<pre><code>{
-    &quot;count&quot;:15,
-    &quot;max&quot;:55,
-    &quot;mean&quot;:44.4,
-    &quot;min&quot;:27,
-    &quot;p50&quot;:45.0,
-    &quot;p75&quot;:46.0,
-    &quot;p95&quot;:54.0,
-    &quot;p98&quot;:54.0,
-    &quot;p99&quot;:54.0,
-    &quot;p999&quot;:54.0,
-    &quot;stddev&quot;:7.0710678118654755,
-    &quot;unit&quot;:&quot;degrees F&quot;
-} 
-</code></pre>
-<h4>Histogram Feature</h4>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_the_application">Run the application:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Within the application, there is an enpoint that will give you a weather
+histogram of the most recent New York City temperatures.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_request">Request:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>curl -X GET http://localhost:8080/mp-metrics-histogram/weather/histogram</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response">Response:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "count":15,
+    "max":55,
+    "mean":44.4,
+    "min":27,
+    "p50":45.0,
+    "p75":46.0,
+    "p95":54.0,
+    "p98":54.0,
+    "p99":54.0,
+    "p999":54.0,
+    "stddev":7.0710678118654755,
+    "unit":"degrees F"
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_histogram_feature">Histogram Feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Microprofile metrics has a feature create a histogram of data.</p>
-<p>To use this feature, inject a MetricRegistry, register the Histogram, and add data to the histogram as shown below.</p>
-<pre><code>@Inject
+</div>
+<div class="paragraph">
+<p>To use this feature, inject a MetricRegistry, register the Histogram,
+and add data to the histogram as shown below.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Inject
 private MetricRegistry registry;
 
 @Inject
-@Metric(name = &quot;temperatures&quot;, description = &quot;A histogram metrics example.&quot;,
-    displayName = &quot;Histogram of Recent New York Temperatures&quot;)
+@Metric(name = "temperatures", description = "A histogram metrics example.",
+    displayName = "Histogram of Recent New York Temperatures")
 private Histogram histogram;
 
-@Path(&quot;/histogram&quot;)
+@Path("/histogram")
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 public Histogram getTemperatures() {
-    Metadata metadata = new Metadata(&quot;temperatures&quot;, MetricType.HISTOGRAM, &quot;degrees F&quot;);
-    metadata.setDescription(&quot;A histogram of recent New York temperatures.&quot;);
+    Metadata metadata = new Metadata("temperatures", MetricType.HISTOGRAM, "degrees F");
+    metadata.setDescription("A histogram of recent New York temperatures.");
     final int[] RECENT_NEW_YORK_TEMPS = { 46, 45, 50, 46, 45, 27, 30, 48, 55, 54, 45, 41, 45, 43, 46 };
     histogram = registry.histogram(metadata);
     for(int temp : RECENT_NEW_YORK_TEMPS) {
         histogram.update(temp);
     }
     return histogram;
-}
-</code></pre>
-<p>There are some Histogram configurations defined in the @Metric annotation:</p>
-<p><strong>String name</strong><br/>Optional. The name of the metric. If not explicitly given the name of the annotated object is used.</p>
-<p><strong>String displayName</strong><br/>Optional. A human readable display name for metadata.</p>
-<p><strong>String description</strong><br/>Optional. A description of the metric.</p>
-<p><strong>String[] tags</strong><br/>Optional. An array of Strings in the <key>=<value> format to supply special tags to a metric.</p>
-<p><strong>boolean reusable</strong><br/>Denotes if a metric with a certain name can be registered in more than one place. Does not apply to gauges or histograms.</p>
-<h5>For the histogram status:</h5>
-<pre><code>GET http://localhost:8080/mp-metrics-histogram/weather/histogram/status
-</code></pre>
-<h5>Reponse:</h5>
-<pre><code> Here are the most recent New York City temperatures.
-</code></pre>
-<h5>Expected Prometheus format:</h5>
-<pre><code>    # TYPE application:temperatures_degrees F summary histogram
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are some Histogram configurations defined in the @Metric
+annotation:</p>
+</div>
+<div class="paragraph">
+<p><strong>String name</strong> Optional. The name of the metric. If not explicitly given
+the name of the annotated object is used.</p>
+</div>
+<div class="paragraph">
+<p><strong>String displayName</strong> Optional. A human readable display name for
+metadata.</p>
+</div>
+<div class="paragraph">
+<p><strong>String description</strong> Optional. A description of the metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>String[] tags</strong> Optional. An array of Strings in the = format to supply
+special tags to a metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be
+registered in more than one place. Does not apply to gauges or
+histograms.</p>
+</div>
+<div class="sect2">
+<h3 id="_for_the_histogram_status">For the histogram status:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-metrics-histogram/weather/histogram/status</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reponse">Reponse:</h3>
+<div class="literalblock">
+<div class="content">
+<pre> Here are the most recent New York City temperatures.</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expected_prometheus_format">Expected Prometheus format:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>    # TYPE application:temperatures_degrees F summary histogram
     # TYPE application:temperatures_degrees F_count histogram
     application:temperatures_degrees F_count 15.0
     # TYPE application:temperatures_min_degrees F histogram
@@ -170,17 +240,17 @@ public Histogram getTemperatures() {
     # TYPE application:temperatures_stddev_degrees F histogram
     application:temperatures_stddev_degrees F 7.0710678118654755
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.5&quot;} 45.0
+    application:temperatures_degrees F{quantile="0.5"} 45.0
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.75&quot;} 46.0
+    application:temperatures_degrees F{quantile="0.75"} 46.0
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.95&quot;} 54.0
+    application:temperatures_degrees F{quantile="0.95"} 54.0
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.98&quot;} 54.0
+    application:temperatures_degrees F{quantile="0.98"} 54.0
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.99&quot;} 54.0
+    application:temperatures_degrees F{quantile="0.99"} 54.0
     # TYPE application:temperatures_degrees F histogram
-    application:temperatures_degrees F{quantile=&quot;0.999&quot;} 54.0
+    application:temperatures_degrees F{quantile="0.999"} 54.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures summary histogram
     # TYPE application:org_superbiz_histogram_weather_service_temperatures_count histogram
     application:org_superbiz_histogram_weather_service_temperatures_count 0.0
@@ -193,60 +263,96 @@ public Histogram getTemperatures() {
     # TYPE application:org_superbiz_histogram_weather_service_temperatures_stddev histogram
     application:org_superbiz_histogram_weather_service_temperatures_stddev 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.5&quot;} 0.0
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.5"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.75&quot;} 0.0
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.75"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.95&quot;} 0.0
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.95"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.98&quot;} 0.0
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.98"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.99&quot;} 0.0
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.99"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile=&quot;0.999&quot;} 0.0
-</code></pre>
-<h5>Request:</h5>
-<pre><code>curl -X GET http://localhost:8080/mp-metrics-histogram/metrics/application
-</code></pre>
-<h5>Response:</h5>
-<pre><code>{
-    &quot;org.superbiz.histogram.WeatherService.temperatures&quot;: {
-        &quot;count&quot;:0,
-        &quot;max&quot;:0,
-        &quot;min&quot;:0,
-        &quot;p50&quot;:0.0,
-        &quot;p75&quot;:0.0,
-        &quot;p95&quot;:0.0,
-        &quot;p98&quot;:0.0,
-        &quot;p99&quot;:0.0,
-        &quot;p999&quot;:0.0,
-        &quot;stddev&quot;:0.0,
-        &quot;unit&quot;:&quot;none&quot;
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.999"} 0.0</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_request_2">Request:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>curl -X GET http://localhost:8080/mp-metrics-histogram/metrics/application</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_2">Response:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "org.superbiz.histogram.WeatherService.temperatures": {
+        "count":0,
+        "max":0,
+        "min":0,
+        "p50":0.0,
+        "p75":0.0,
+        "p95":0.0,
+        "p98":0.0,
+        "p99":0.0,
+        "p999":0.0,
+        "stddev":0.0,
+        "unit":"none"
     }
-}  
-</code></pre>
-<h4>Metric Metadata:</h4>
-<p>A metric will have a metadata to provide information about it such as displayName, description, tags, etc.</p>
-<h5>Request:</h5>
-<pre><code>curl -X OPTIONS http://localhost:8080/mp-metrics-histogram/metrics/application
-</code></pre>
-<h5>Response:</h5>
-<pre><code>{
-    &quot;org.superbiz.histogram.WeatherService.temperatures&quot;: {
-        &quot;description&quot;: &quot;A histogram metrics example.&quot;,
-        &quot;displayName&quot;:&quot;Histogram of Recent New York Temperatures&quot;,
-        &quot;name&quot;:&quot;org.superbiz.histogram.WeatherService.temperatures&quot;,
-        &quot;reusable&quot;:false,
-        &quot;tags&quot;:&quot;&quot;,
-        &quot;type&quot;:&quot;histogram&quot;,
-        &quot;typeRaw&quot;:&quot;HISTOGRAM&quot;,
-        &quot;unit&quot;:&quot;none&quot;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metric_metadata">Metric Metadata:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A metric will have a metadata to provide information about it such as
+displayName, description, tags, etc.</p>
+</div>
+<div class="sect2">
+<h3 id="_request_3">Request:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>curl -X OPTIONS http://localhost:8080/mp-metrics-histogram/metrics/application</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_3">Response:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "org.superbiz.histogram.WeatherService.temperatures": {
+        "description": "A histogram metrics example.",
+        "displayName":"Histogram of Recent New York Temperatures",
+        "name":"org.superbiz.histogram.WeatherService.temperatures",
+        "reusable":false,
+        "tags":"",
+        "type":"histogram",
+        "typeRaw":"HISTOGRAM",
+        "unit":"none"
     }
-}
-</code></pre>
-<h5>Test the application:</h5>
-<pre><code>mvn test
-</code></pre>
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_the_application">Test the application:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>mvn test</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

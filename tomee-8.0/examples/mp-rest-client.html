@@ -88,75 +88,117 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Microprofile Rest Client</h1>
+              <h1>MicroProfile Rest Client</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Microprofile Rest client</h1>
-<p>This is a basic example on how to configure and use MicroProfile Rest Client in TomEE.</p>
-<h2>Run the tests for different scenarios related with JWT validation</h2>
-<pre><code>mvn clean test 
-</code></pre>
-<h2>Requirementes and configuration</h2>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is a basic example on how to configure and use MicroProfile Rest
+Client in TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_the_tests_for_different_scenarios_related_with_jwt_validation">Run the tests for different scenarios related with JWT validation</h3>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean test</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirementes_and_configuration">Requirementes and configuration</h3>
+<div class="paragraph">
 <p>To use MicroProfile Rest Client you need 3 changes in your project:</p>
-<p>1) Add the to the <code>pom.xml</code> the dependency:</p>
-<pre><code>    &lt;dependency&gt;
-        &lt;groupId&gt;org.eclipse.microprofile.rest.client&lt;/groupId&gt;
-        &lt;artifactId&gt;microprofile-rest-client-api&lt;/artifactId&gt;
-        &lt;version&gt;${microprofile.rest-client.version}&lt;/version&gt;
-        &lt;scope&gt;provided&lt;/scope&gt;
-    &lt;/dependency&gt;
-</code></pre>
-<p>2) Provide configuration files: <code>microprofile-config.properties</code></p>
-<pre><code>    org.superbiz.rest.BookResourceClient/mp-rest/url=http://localhost:4444
-</code></pre>
-<p>3) Provide an interface that you can build from the JAX-RS resource you want to consume: <code>BookResourceClient.java</code></p>
-<pre><code>    package org.superbiz.rest;
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the to the <code>pom.xml</code> the dependency:</p>
+<div class="literalblock">
+<div class="content">
+<pre> &lt;dependency&gt;
+     &lt;groupId&gt;org.eclipse.microprofile.rest.client&lt;/groupId&gt;
+     &lt;artifactId&gt;microprofile-rest-client-api&lt;/artifactId&gt;
+     &lt;version&gt;${microprofile.rest-client.version}&lt;/version&gt;
+     &lt;scope&gt;provided&lt;/scope&gt;
+ &lt;/dependency&gt;</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Provide configuration files: <code>microprofile-config.properties</code></p>
+<div class="literalblock">
+<div class="content">
+<pre> org.superbiz.rest.BookResourceClient/mp-rest/url=http://localhost:4444</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Provide an interface that you can build from the JAX-RS resource you
+want to consume: <code>BookResourceClient.java</code></p>
+<div class="literalblock">
+<div class="content">
+<pre> package org.superbiz.rest;
 
-    import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-    import javax.enterprise.context.Dependent;
-    import javax.ws.rs.*;
-    import javax.ws.rs.core.MediaType;
-    import java.util.List;
+ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+ import javax.enterprise.context.Dependent;
+ import javax.ws.rs.*;
+ import javax.ws.rs.core.MediaType;
+ import java.util.List;
 
-    @Dependent
-    @RegisterRestClient
-    @Path(&quot;/test/api/library&quot;)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public interface BookResourceClient {
+ @Dependent
+ @RegisterRestClient
+ @Path("/test/api/library")
+ @Produces(MediaType.APPLICATION_JSON)
+ @Consumes(MediaType.APPLICATION_JSON)
+ public interface BookResourceClient {
 
-        @GET
-        String status();
+     @GET
+     String status();
 
-        @POST
-        @Path(&quot;/books&quot;)
-        void addBook(Book newBook);
+     @POST
+     @Path("/books")
+     void addBook(Book newBook);
 
-        @DELETE
-        @Path(&quot;/books/{id}&quot;)
-        void deleteBook(@PathParam(&quot;id&quot;) int id);
+     @DELETE
+     @Path("/books/{id}")
+     void deleteBook(@PathParam("id") int id);
 
-        @PUT
-        @Path(&quot;/books&quot;)
-        void updateBook(Book updatedBook);
+     @PUT
+     @Path("/books")
+     void updateBook(Book updatedBook);
 
-        @GET
-        @Path(&quot;/books/{id}&quot;)
-        Book getBook(@PathParam(&quot;id&quot;) int id);
+     @GET
+     @Path("/books/{id}")
+     Book getBook(@PathParam("id") int id);
 
-        @GET
-        @Path(&quot;/books&quot;)
-        List&lt;Book&gt; getListOfBooks();
+     @GET
+     @Path("/books")
+     List&lt;Book&gt; getListOfBooks();
 
-    }
-</code></pre>
-<h2>Use of MicroProfile Rest Client in TomEE</h2>
-<p>The class <code>BookResourceTest.java</code> shows how easy is to use the type-safe approach provided by MicroProfile Rest Client to consume an existing JAX-RS resource. </p>
-<pre><code>package org.superbiz.rest;
+ }</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_of_microprofile_rest_client_in_tomee">Use of MicroProfile Rest Client in TomEE</h3>
+<div class="paragraph">
+<p>The class <code>BookResourceTest.java</code> shows how easy is to use the type-safe
+approach provided by MicroProfile Rest Client to consume an existing
+JAX-RS resource.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.rest;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -176,14 +218,14 @@ public class BookResourceTest {
 
     @Deployment()
     public static WebArchive createDeployment() {
-        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, &quot;test.war&quot;)
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, "test.war")
                 .addClass(BookResource.class)
                 .addClass(Book.class)
                 .addClass(BookBean.class)
                 .addClass(BookResourceClient.class)
                 .addClass(ApplicationConfig.class)
-                .addAsWebInfResource(new StringAsset(&quot;&lt;beans/&gt;&quot;), &quot;beans.xml&quot;)
-                .addAsResource(&quot;META-INF/microprofile-config.properties&quot;);
+                .addAsWebInfResource(new StringAsset("&lt;beans/&gt;"), "beans.xml")
+                .addAsResource("META-INF/microprofile-config.properties");
         return webArchive;
     }
 
@@ -194,31 +236,39 @@ public class BookResourceTest {
 
     @Test()
     public void testServerStatus(){
-        bookResourceClient.addBook(new Book(1,&quot;TomEE Book&quot;));
+        bookResourceClient.addBook(new Book(1,"TomEE Book"));
     }
 
     @Test
     public void testBookResource(){
-        bookResourceClient.addBook(new Book(1, &quot;TomEE and MicroProfile Adventures&quot;));
-        bookResourceClient.addBook(new Book(2, &quot;Top 10 Tomee Configuraiton Tips&quot;));
+        bookResourceClient.addBook(new Book(1, "TomEE and MicroProfile Adventures"));
+        bookResourceClient.addBook(new Book(2, "Top 10 Tomee Configuraiton Tips"));
 
 
         assertTrue(bookResourceClient.getListOfBooks().size() == 2);
-        assertTrue(bookResourceClient.getBook(1).getName().equalsIgnoreCase(&quot;TomEE and MicroProfile Adventures&quot;));
+        assertTrue(bookResourceClient.getBook(1).getName().equalsIgnoreCase("TomEE and MicroProfile Adventures"));
 
         bookResourceClient.deleteBook(1);
         assertTrue(bookResourceClient.getListOfBooks().size() == 1);
-        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase(&quot;Top 10 Tomee Configuraiton Tips&quot;));
+        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase("Top 10 Tomee Configuraiton Tips"));
 
-        bookResourceClient.updateBook(new Book(2, &quot;Top 3 Tomee Configuraiton Tips&quot;));
+        bookResourceClient.updateBook(new Book(2, "Top 3 Tomee Configuraiton Tips"));
         assertTrue(bookResourceClient.getListOfBooks().size() == 1);
-        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase(&quot;Top 3 Tomee Configuraiton Tips&quot;));
+        assertTrue(bookResourceClient.getBook(2).getName().equalsIgnoreCase("Top 3 Tomee Configuraiton Tips"));
     }
 
-}
-</code></pre>
-<h2>About the Test architecture</h2>
-<p>The test cases from this project are built using Arquillian and TomEE Remote. The arquillian configuration can be found in<br/><code>src/test/resources/arquillian.xml</code></p>
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_about_the_test_architecture">About the Test architecture</h3>
+<div class="paragraph">
+<p>The test cases from this project are built using Arquillian and TomEE
+Remote. The arquillian configuration can be found in
+<code>src/test/resources/arquillian.xml</code></p>
+</div>
+</div>
             </div>
             
         </div>

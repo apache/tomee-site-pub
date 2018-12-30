@@ -88,102 +88,210 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Microprofile Metrics Counted</h1>
+              <h1>MicroProfile Metrics Counted</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Microprofile Metrics</h1>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>This is an example on how to use microprofile metrics in TomEE.</p>
-<h5>Run the application:</h5>
-<pre><code>mvn clean install tomee:run 
-</code></pre>
-<p>Within the application there is an endpoint that will give you weather status for the day and week.</p>
-<h5>For the day status call:</h5>
-<pre><code>GET http://localhost:8080/rest-mp-metrics/weather/day/status
-</code></pre>
-<h5>Response:</h5>
-<pre><code>Hi, today is a sunny day!
-</code></pre>
-<h4>Counted Feature</h4>
-<p>MicroProfile metrics has a feature that can be used to count requests to a service.</p>
-<p>To use this feature you need to annotate the JAX-RS resource method with @Counted.</p>
-<pre><code>@Path(&quot;/weather&quot;)
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_the_application">Run the application:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Within the application there is an endpoint that will give you weather
+status for the day and week.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_for_the_day_status_call">For the day status call:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/rest-mp-metrics/weather/day/status</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response">Response:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>Hi, today is a sunny day!</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_counted_feature">Counted Feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MicroProfile metrics has a feature that can be used to count requests to
+a service.</p>
+</div>
+<div class="paragraph">
+<p>To use this feature you need to annotate the JAX-RS resource method with
+@Counted.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Path("/weather")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class WeatherService {
 
-    @Path(&quot;/day/status&quot;)
-    @Counted(monotonic = true, name = &quot;weather_day_status&quot;, absolute = true)
+    @Path("/day/status")
+    @Counted(monotonic = true, name = "weather_day_status", absolute = true)
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String dayStatus() {
-        return &quot;Hi, today is a sunny day!&quot;;
+        return "Hi, today is a sunny day!";
     }
 ...
-}
-</code></pre>
-<p>There are some configurations, as part of @Counted, that you need to know:</p>
-<p><strong>String name</strong><br/>Optional. Sets the name of the metric. If not explicitly given the name of the annotated object is used.</p>
-<p><strong>boolean absolute</strong><br/>If true, uses the given name as the absolute name of the metric. If false, prepends the package name and class name before the given name. Default value is false.</p>
-<p><strong>String displayName</strong><br/>Optional. A human-readable display name for metadata.</p>
-<p><strong>String description</strong><br/>Optional. A description of the metric.</p>
-<p><strong>String[] tags</strong><br/>Optional. Array of Strings in the <key>=<value> format to supply special tags to a metric.</p>
-<p><strong>boolean reusable</strong><br/>Denotes if a metric with a certain name can be registered in more than one place. Does not apply to gauges.</p>
-<h4>Metric data</h4>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are some configurations, as part of @Counted, that you need to
+know:</p>
+</div>
+<div class="paragraph">
+<p><strong>String name</strong> Optional. Sets the name of the metric. If not explicitly
+given the name of the annotated object is used.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean absolute</strong> If true, uses the given name as the absolute name of
+the metric. If false, prepends the package name and class name before
+the given name. Default value is false.</p>
+</div>
+<div class="paragraph">
+<p><strong>String displayName</strong> Optional. A human-readable display name for
+metadata.</p>
+</div>
+<div class="paragraph">
+<p><strong>String description</strong> Optional. A description of the metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>String[] tags</strong> Optional. Array of Strings in the = format to supply
+special tags to a metric.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be
+registered in more than one place. Does not apply to gauges.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metric_data">Metric data</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Check the counter metric doing a <em>GET</em> request:</p>
-<h5>Prometheus format:</h5>
-<pre><code>GET http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status
-</code></pre>
-<h5>Response:</h5>
-<pre><code># TYPE application:weather_day_status counter
-application:weather_day_status 1.0
-</code></pre>
-<h5>JSON Format:</h5>
-<p>For json format add the header <em>Accept=application/json</em> to the request. </p>
-<pre><code>{
-    &quot;weather_day_status&quot;: {
-        &quot;delegate&quot;: {},
-        &quot;unit&quot;: &quot;none&quot;,
-        &quot;count&quot;: 1
+</div>
+<div class="sect2">
+<h3 id="_prometheus_format">Prometheus format:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_2">Response:</h3>
+<div class="literalblock">
+<div class="content">
+<pre># TYPE application:weather_day_status counter
+application:weather_day_status 1.0</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_json_format">JSON Format:</h3>
+<div class="paragraph">
+<p>For json format add the header <em>Accept=application/json</em> to the request.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "weather_day_status": {
+        "delegate": {},
+        "unit": "none",
+        "count": 1
     }
-}
-</code></pre>
-<h4>Metric metadata</h4>
-<p>A metric will have a metadata so you can know more information about it, like displayName, description, tags e etc.</p>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metric_metadata">Metric metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A metric will have a metadata so you can know more information about it,
+like displayName, description, tags e etc.</p>
+</div>
+<div class="paragraph">
 <p>Check the metric metadata doing a <em>OPTIONS</em> request:</p>
-<h5>Request</h5>
-<pre><code>OPTIONS http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status
-</code></pre>
-<h5>Response:</h5>
-<pre><code>{
-    &quot;weather_day_status&quot;: {
-        &quot;unit&quot;: &quot;none&quot;,
-        &quot;displayName&quot;: &quot;Weather Day Status&quot;,
-        &quot;name&quot;: &quot;weather_day_status&quot;,
-        &quot;typeRaw&quot;: &quot;COUNTER&quot;,
-        &quot;description&quot;: &quot;This metric shows the weather status of the day.&quot;,
-        &quot;type&quot;: &quot;counter&quot;,
-        &quot;value&quot;: {
-            &quot;unit&quot;: &quot;none&quot;,
-            &quot;displayName&quot;: &quot;Weather Day Status&quot;,
-            &quot;name&quot;: &quot;weather_day_status&quot;,
-            &quot;tagsAsString&quot;: &quot;&quot;,
-            &quot;typeRaw&quot;: &quot;COUNTER&quot;,
-            &quot;description&quot;: &quot;This metric shows the weather status of the day.&quot;,
-            &quot;type&quot;: &quot;counter&quot;,
-            &quot;reusable&quot;: false,
-            &quot;tags&quot;: {}
+</div>
+<div class="sect2">
+<h3 id="_request">Request</h3>
+<div class="literalblock">
+<div class="content">
+<pre>OPTIONS http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_response_3">Response:</h3>
+<div class="literalblock">
+<div class="content">
+<pre>{
+    "weather_day_status": {
+        "unit": "none",
+        "displayName": "Weather Day Status",
+        "name": "weather_day_status",
+        "typeRaw": "COUNTER",
+        "description": "This metric shows the weather status of the day.",
+        "type": "counter",
+        "value": {
+            "unit": "none",
+            "displayName": "Weather Day Status",
+            "name": "weather_day_status",
+            "tagsAsString": "",
+            "typeRaw": "COUNTER",
+            "description": "This metric shows the weather status of the day.",
+            "type": "counter",
+            "reusable": false,
+            "tags": {}
         },
-        &quot;reusable&quot;: false,
-        &quot;tags&quot;: &quot;&quot;
+        "reusable": false,
+        "tags": ""
     }
-}
-</code></pre>
-<p>You can also try it out using the WeatherServiceTest.java available in the project.</p>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also try it out using the WeatherServiceTest.java available in
+the project.</p>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

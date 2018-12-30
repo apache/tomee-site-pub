@@ -95,13 +95,48 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>To use <code>@Inject</code>, the first thing you need is a <code>META-INF/beans.xml</code> file in the module or jar. This effectively turns on CDI and allows the <code>@Inject</code> references to work. No <code>META-INF/beans.xml</code> no injection, period. This may seem overly strict, but it is not without reason. The CDI API is a bit greedy and does consume a fair amount of resources by design.</p>
-<p>When the container constructs a bean with an <code>@Inject</code> reference, it will first find or create the object that will be injected. For the sake of simplicity, the is example has a basic <code>Faculty</code> pojo with a no-arg constructor. Anyone referencing <code>@Inject Faculty</code> will get their own instance of <code>Faculty</code>. If the desire is to share the same instance of <code>Faculty</code>, see the concept of <code>scopes</code> -- this is exactly what scopes are for.</p>
-<h1>Example</h1>
-<p>In this example, we have an <code>@Stateless</code> bean <code>Course</code> with an <code>@Inject</code> reference to an object of type <code>Faculty</code>. When <code>Course</code> is created, the container will also create an instance of <code>Faculty</code>. The <code>@PostConstruct</code> will be called on the <code>Faculty</code>, then the <code>Faculty</code> instance will be injected into the <code>Course</code> bean. Finally, the<br/><code>@PostConstruct</code> will be invoked on <code>Course</code> and then we're done. All instances will<br/>have been created.</p>
-<p>The <code>CourseTest</code> test case drives this creation process by having <code>Course</code> injected in its <code>@Setup</code> method. By the time our <code>@Test</code> method is invoked, all the real work should be done and we should be ready to go. In the test case we do some basic asserts to ensure everything was constructed, all <code>@PostConstruct</code> methods called and everything injected.</p>
-<h2>Faculty <small>a basic injectable pojo</small></h2>
-<pre><code>public class Faculty {
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use <code>@Inject</code>, the first thing you need is a <code>META-INF/beans.xml</code> file in the module
+or jar.  This effectively turns on CDI and allows the <code>@Inject</code> references to work.
+No <code>META-INF/beans.xml</code> no injection, period.  This may seem overly strict,
+but it is not without reason.  The CDI API is a bit greedy and does consume a fair
+amount of resources by design.</p>
+</div>
+<div class="paragraph">
+<p>When the container constructs a bean with an <code>@Inject</code> reference,
+it will first find or create the object that will be injected.  For the sake of
+simplicity, the is example has a basic <code>Faculty</code> pojo with a no-arg constructor.  Anyone
+referencing <code>@Inject Faculty</code> will get their own instance of <code>Faculty</code>.  If the desire
+is to share the same instance of <code>Faculty</code>, see the concept of <code>scopes</code>&#8201;&#8212;&#8201;this is
+exactly what scopes are for.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this example, we have an <code>@Stateless</code> bean <code>Course</code> with an <code>@Inject</code> reference to an
+object of type <code>Faculty</code>.  When <code>Course</code> is created, the container will also create an
+instance of <code>Faculty</code>.  The <code>@PostConstruct</code> will be called on the <code>Faculty</code>,
+then the <code>Faculty</code> instance will be injected into the <code>Course</code> bean.  Finally, the
+<code>@PostConstruct</code> will be invoked on <code>Course</code> and then we&#8217;re done.  All instances will
+have been created.</p>
+</div>
+<div class="paragraph">
+<p>The <code>CourseTest</code> test case drives this creation process by having <code>Course</code> injected
+in its <code>@Setup</code> method.  By the time our <code>@Test</code> method is invoked,
+all the real work should be done and we should be ready to go.  In the test case we do
+some basic asserts to ensure everything was constructed, all <code>@PostConstruct</code> methods
+called and everything injected.</p>
+</div>
+<div class="sect2">
+<h3 id="_faculty_small_a_basic_injectable_pojo_small">Faculty <small>a basic injectable pojo</small></h3>
+<div class="literalblock">
+<div class="content">
+<pre>public class Faculty {
 
     private List&lt;String&gt; facultyMembers;
 
@@ -110,9 +145,9 @@
     @PostConstruct
     public void initialize() {
         this.facultyMembers = new ArrayList&lt;String&gt;();
-        facultyMembers.add(&quot;Ian Schultz&quot;);
-        facultyMembers.add(&quot;Diane Reyes&quot;);
-        facultyName = &quot;Computer Science&quot;;
+        facultyMembers.add("Ian Schultz");
+        facultyMembers.add("Diane Reyes");
+        facultyName = "Computer Science";
     }
 
     public List&lt;String&gt; getFacultyMembers() {
@@ -123,10 +158,15 @@
         return facultyName;
     }
 
-}
-</code></pre>
-<h2>Course <small>a simple session bean</small></h2>
-<pre><code>@Stateless
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_course_small_a_simple_session_bean_small">Course <small>a simple session bean</small></h3>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateless
 public class Course {
 
     @Inject
@@ -141,8 +181,8 @@ public class Course {
         assert faculty != null;
 
         // These strings can be externalized
-        // We&#39;ll see how to do that later
-        this.courseName = &quot;CDI 101 - Introduction to CDI&quot;;
+        // We'll see how to do that later
+        this.courseName = "CDI 101 - Introduction to CDI";
         this.capacity = 100;
     }
 
@@ -157,17 +197,25 @@ public class Course {
     public Faculty getFaculty() {
         return faculty;
     }
-}
-</code></pre>
-<h1>Test Case</h1>
-<pre><code>public class CourseTest extends TestCase {
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_case">Test Case</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>public class CourseTest extends TestCase {
 
     @EJB
     private Course course;
 
     @Before
     public void setUp() throws Exception {
-        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
     }
 
     @Test
@@ -185,13 +233,20 @@ public class Course {
         assertTrue(faculty != null);
 
         // Was the @PostConstruct called on Faculty?
-        assertEquals(faculty.getFacultyName(), &quot;Computer Science&quot;);
+        assertEquals(faculty.getFacultyName(), "Computer Science");
         assertEquals(faculty.getFacultyMembers().size(), 2);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cdi.basic.CourseTest
@@ -199,7 +254,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/cdi-basic
 INFO - openejb.base = /Users/dblevins/examples/cdi-basic
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/cdi-basic/target/classes
@@ -209,14 +264,14 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean cdi-basic.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean Course: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/cdi-basic&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/cdi-basic" loaded.
 INFO - Assembling app: /Users/dblevins/examples/cdi-basic
-INFO - Jndi(name=&quot;java:global/cdi-basic/cdi-basic.Comp!org.apache.openejb.BeanContext$Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-basic/cdi-basic.Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-basic/Course!org.superbiz.cdi.basic.Course&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-basic/Course&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest!org.superbiz.cdi.basic.CourseTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest&quot;)
+INFO - Jndi(name="java:global/cdi-basic/cdi-basic.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/cdi-basic/cdi-basic.Comp")
+INFO - Jndi(name="java:global/cdi-basic/Course!org.superbiz.cdi.basic.Course")
+INFO - Jndi(name="java:global/cdi-basic/Course")
+INFO - Jndi(name="java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest!org.superbiz.cdi.basic.CourseTest")
+INFO - Jndi(name="java:global/EjbModule1833350875/org.superbiz.cdi.basic.CourseTest")
 INFO - Created Ejb(deployment-id=Course, ejb-name=Course, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=cdi-basic.Comp, ejb-name=cdi-basic.Comp, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=org.superbiz.cdi.basic.CourseTest, ejb-name=org.superbiz.cdi.basic.CourseTest, container=Default Managed Container)
@@ -228,8 +283,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.126 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

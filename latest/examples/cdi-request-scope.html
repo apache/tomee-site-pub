@@ -95,12 +95,34 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example show the use of <code>@RequestScoped</code> annotation for injected objects. An object which is defined as <code>@RequestScoped</code> is created once for every request and is shared by all the beans that inject it throughout a same request.</p>
-<h1>Example</h1>
-<p>This example depicts a similar scenario to cdi-application-scope. A restaurant guest orders a soup from the waiter. The order is passed to the chef who prepares it and passes it back the waiter who in turn delivers it to the guest.</p>
-<h2>Waiter</h2>
-<p>The <code>Waiter</code> session bean receives a request from the test class via the <code>orderSoup()</code> method. A <code>Soup</code> insance will be created in this method and will be shared throughout the request with the <code>Chef</code> bean. The method passes the request to the <code>Chef</code> bean. It then returns the name of the soup to the test class. </p>
-<pre><code>@Stateless
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example show the use of <code>@RequestScoped</code> annotation for injected objects. An object
+which is defined as <code>@RequestScoped</code> is created once for every request and is shared by all the
+beans that inject it throughout a same request.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example depicts a similar scenario to cdi-application-scope. A restaurant guest orders
+a soup from the waiter. The order is passed to the chef who prepares it and passes it back
+the waiter who in turn delivers it to the guest.</p>
+</div>
+<div class="sect2">
+<h3 id="_waiter">Waiter</h3>
+<div class="paragraph">
+<p>The <code>Waiter</code> session bean receives a request from the test class via the <code>orderSoup()</code> method.
+A <code>Soup</code> insance will be created in this method and will be shared throughout the request with
+the <code>Chef</code> bean. The method passes the request to the <code>Chef</code> bean. It then returns the name of
+the soup to the test class.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateless
 public class Waiter {
 
     @Inject
@@ -113,18 +135,26 @@ public class Waiter {
         soup.setName(name);
         return chef.prepareSoup().getName();
     }
-}
-</code></pre>
-<h2>Soup</h2>
-<p>The <code>Soup</code> class is an injectable POJO, defined as <code>@RequestScoped</code>. This means that an instance will be created only once for every request and will be shared by all the beans injecting it.</p>
-<pre><code>@RequestScoped
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soup">Soup</h3>
+<div class="paragraph">
+<p>The <code>Soup</code> class is an injectable POJO, defined as <code>@RequestScoped</code>. This means that an instance
+will be created only once for every request and will be shared by all the beans injecting it.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RequestScoped
 public class Soup {
 
-    private String name = &quot;Soup of the day&quot;;
+    private String name = "Soup of the day";
 
     @PostConstruct
     public void afterCreate() {
-        System.out.println(&quot;Soup created&quot;);
+        System.out.println("Soup created");
     }
 
     public String getName() {
@@ -134,11 +164,20 @@ public class Soup {
     public void setName(String name){
         this.name = name;
     }
-}
-</code></pre>
-<h2>Chef</h2>
-<p>The <code>Chef</code> class is a simple session bean with an injected <code>Soup</code> field. Normally, the soup parameter would be passed as a <code>prepareSoup()</code> argument, but for the need of this example it's passed by the request context. </p>
-<pre><code>@Stateless
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_chef">Chef</h3>
+<div class="paragraph">
+<p>The <code>Chef</code> class is a simple session bean with an injected <code>Soup</code> field. Normally, the soup
+parameter would be passed as a <code>prepareSoup()</code> argument, but for the need of this example
+it&#8217;s passed by the request context.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateless
 public class Chef {
 
     @Inject
@@ -147,13 +186,23 @@ public class Chef {
     public Soup prepareSoup() {
         return soup;
     }
-}
-</code></pre>
-<h1>Test Case</h1>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_case">Test Case</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>This is the entry class for this example.</p>
-<pre><code>public class RestaurantTest {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public class RestaurantTest {
 
-    private static String TOMATO_SOUP = &quot;Tomato Soup&quot;;
+    private static String TOMATO_SOUP = "Tomato Soup";
     private EJBContainer container;
 
     @EJB
@@ -162,7 +211,7 @@ public class Chef {
     @Before
     public void startContainer() throws Exception {
         container = EJBContainer.createEJBContainer();
-        container.getContext().bind(&quot;inject&quot;, this);
+        container.getContext().bind("inject", this);
     }
 
     @Test
@@ -177,11 +226,21 @@ public class Chef {
     public void closeContainer() throws Exception {
         container.close();
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>In the output you can see that there were two <code>Soup</code> instances created - one for each request.</p>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the output you can see that there were two <code>Soup</code> instances created - one for
+each request.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cdi.requestscope.RestaurantTest
@@ -189,7 +248,7 @@ Apache OpenEJB 7.0.0-SNAPSHOT    build: 20111224-11:09
 http://tomee.apache.org/
 INFO - openejb.home = C:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope
 INFO - openejb.base = C:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope\target\classes
@@ -199,12 +258,12 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean cdi-request-scope.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean Chef: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope&quot; loaded.
+INFO - Enterprise application "c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope" loaded.
 INFO - Assembling app: c:\Users\Daniel\workspaces\openejb\openejb\examples\cdi-request-scope
-INFO - Jndi(name=&quot;java:global/cdi-request-scope/Chef!org.superbiz.cdi.requestscope.Chef&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-request-scope/Chef&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-request-scope/Waiter!org.superbiz.cdi.requestscope.Waiter&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-request-scope/Waiter&quot;)
+INFO - Jndi(name="java:global/cdi-request-scope/Chef!org.superbiz.cdi.requestscope.Chef")
+INFO - Jndi(name="java:global/cdi-request-scope/Chef")
+INFO - Jndi(name="java:global/cdi-request-scope/Waiter!org.superbiz.cdi.requestscope.Waiter")
+INFO - Jndi(name="java:global/cdi-request-scope/Waiter")
 INFO - Created Ejb(deployment-id=Chef, ejb-name=Chef, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=Waiter, ejb-name=Waiter, container=Default Stateless Container)
 INFO - Started Ejb(deployment-id=Chef, ejb-name=Chef, container=Default Stateless Container)
@@ -217,8 +276,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.412 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

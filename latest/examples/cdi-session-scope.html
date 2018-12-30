@@ -88,95 +88,189 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>CDI @SessionScoped</h1>
+              <h1>null</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example show the use of <code>@SessionScoped</code> annotation for injected objects. An object which is defined as <code>@SessionScoped</code> is created once for every HTTPSession and is shared by all the beans that inject it throughout the same HTTPSession.</p>
-<h5>Run the application:</h5>
-<pre><code>mvn clean install tomee:run 
-</code></pre>
-<h1>Example</h1>
-<p>This example has an end point wherein a user provides a request parameter 'name' which is persisted as a feild in a session scoped bean SessionBean and then retrieved through another endpoint.</p>
-<h1>Request</h1>
-<p>GET <a href="http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/set-name?name=Puneeth">http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/set-name?name=Puneeth</a></p>
-<h1>Response</h1>
-<p>done, go to /name servlet </p>
-<h1>Request</h1>
-<p>GET <a href="http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/name">http://localhost:8080/cdi-session-scope-8.0.0-SNAPSHOT/name</a></p>
-<h1>Response</h1>
-<p>name = {Puneeth} </p>
-<h2>SessionBean</h2>
-<p>The annotation @SessionScoped specifies that a bean is session scoped ie there will be only one instance of the class associated with a particular HTTPSession. </p>
-<p>@SessionScoped<br/>public class SessionBean implements Serializable {</p>
-<pre><code>private String name;
+                <div class="paragraph">
+<p>index-group=Unrevised
+type=page
+status=unpublished</p>
+</div>
+<h1 id="_cdi_sessionscoped" class="sect0">CDI @SessionScoped</h1>
+<div class="paragraph">
+<p>This example show the use of <code>@SessionScoped</code> annotation for injected objects. An object
+which is defined as <code>@SessionScoped</code> is created once for every HTTPSession and is shared by all the
+beans that inject it throughout the same HTTPSession.</p>
+</div>
+<div class="sect1">
+<h2 id="_run_the_application">Run the application:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example has an end point wherein a user provides a request parameter 'name' which is persisted as a feild in a session scoped bean SessionBean and
+then retrieved through another endpoint.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_request">Request</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GET <a href="http://localhost:8080/cdi-session-scope/set-name?name=Puneeth" class="bare">http://localhost:8080/cdi-session-scope/set-name?name=Puneeth</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response">Response</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>done, go to /name servlet</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_request_2">Request</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GET <a href="http://localhost:8080/cdi-session-scope/name" class="bare">http://localhost:8080/cdi-session-scope/name</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_response_2">Response</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>name = {Puneeth}</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sessionbean">SessionBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The annotation @SessionScoped specifies that a bean is session scoped ie there will be only one instance of the class associated with a particular HTTPSession.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@SessionScoped
+public class SessionBean implements Serializable {
 
-public String getName() {
-    return name;
-}
+    private String name;
 
-public void setName(String name) {
-    this.name = name;
-}
-</code></pre>
-<p>} </p>
-<h2>InputServlet</h2>
-<p>InputServlet is a generic servlet which is mapped to the url pattern '/set-name'. The session scoped bean 'SessionBean' has been injected into this servlet, and the incoming request parameter is set to the feild name of the bean. </p>
-<p>@WebServlet(name = "input-servlet", urlPatterns = {"/set-name"})<br/>public class InputServlet extends HttpServlet {</p>
-<pre><code>@Inject
-private SessionBean bean;
-
-@Override
-protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    final String name = req.getParameter(&quot;name&quot;);
-    if (name == null || name.isEmpty()) {
-        resp.getWriter().write(&quot;please add a parameter name=xxx&quot;);
-    } else {
-        bean.setName(name);
-        resp.getWriter().write(&quot;done, go to /name servlet&quot;);
+    public String getName() {
+        return name;
     }
 
-}
-</code></pre>
-<p>}</p>
-<h2>AnswerBean</h2>
+    public void setName(String name) {
+        this.name = name;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inputservlet">InputServlet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>InputServlet is a generic servlet which is mapped to the url pattern '/set-name'.
+The session scoped bean 'SessionBean' has been injected into this servlet, and the incoming request parameter is set to the feild name of the bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet(name = "input-servlet", urlPatterns = {"/set-name"})
+public class InputServlet extends HttpServlet {
+
+    @Inject
+    private SessionBean bean;
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp
+    throws ServletException, IOException {
+        final String name = req.getParameter("name");
+        if (name == null || name.isEmpty()) {
+            resp.getWriter().write("please add a parameter name=xxx");
+        } else {
+            bean.setName(name);
+            resp.getWriter().write("done, go to /name servlet");
+        }
+
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_answerbean">AnswerBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>AnswerBean is a request scoped bean with an injected 'SessionBean'. It has an postconstruct method wherein the value from the sessionBean is retrieved and set to a feild.</p>
-<p>public class AnswerBean {</p>
-<pre><code>@Inject
-private SessionBean bean;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class AnswerBean {
 
-private String value;
+    @Inject
+    private SessionBean bean;
 
-@PostConstruct
-public void init() {
-    value = &#39;{&#39; + bean.getName() + &#39;}&#39;;
-}
+    private String value;
 
-public String value() {
-    return value;
-}
-</code></pre>
-<p>}</p>
-<h2>OutputServlet</h2>
-<p>OutputServlet is another servlet with 'AnswerBean' as an injected feild. When '/name' is called the value from 'Answerbean' is read and written to the response.</p>
-<p>@WebServlet(name = "output-servlet", urlPatterns = {"/name"})<br/>public class OutputServlet extends HttpServlet {</p>
-<pre><code>@Inject
-private AnswerBean bean;
-
-@Override
-protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    final String name = bean.value();
-    if (name == null || name.isEmpty()) {
-        resp.getWriter().write(&quot;please go to servlet /set-name please&quot;);
-    } else {
-        resp.getWriter().write(&quot;name = &quot; + name);
+    @PostConstruct
+    public void init() {
+        value = '{' + bean.getName() + '}';
     }
-}
-</code></pre>
-<p>}</p>
+
+    public String value() {
+        return value;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_outputservlet">OutputServlet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OutputServlet is another servlet with  'AnswerBean' as an injected feild. When '/name' is called the value from 'Answerbean' is read and written to the response.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet(name = "output-servlet", urlPatterns = {"/name"})
+public class OutputServlet extends HttpServlet {
+
+    @Inject
+    private AnswerBean bean;
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+     throws ServletException, IOException {
+        final String name = bean.value();
+        if (name == null || name.isEmpty()) {
+            resp.getWriter().write("please go to servlet /set-name please");
+        } else {
+            resp.getWriter().write("name = " + name);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
