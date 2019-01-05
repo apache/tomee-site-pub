@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,22 +95,45 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>It can sometimes be desirable to have a Java <code>enum</code> type to represent a particular column in a database. JPA supports converting database data to and from Java <code>enum</code> types via the <code>@javax.persistence.Enumerated</code> annotation.</p>
-<p>This example will show basic <code>@Enumerated</code> usage in a field of an <code>@Entity</code> as well as <code>enum</code>s as the parameter of a <code>Query</code>. We'll also see that the actual database representation can be effectively <code>String</code> or <code>int</code>.</p>
-<h2>Enum</h2>
-<p>For our example we will leverage the familiar <code>Movie</code> entity and add a new field to represent the MPAA.org rating of the movie. This is defined via a simple <code>enum</code> that requires no JPA specific annotations.</p>
-<pre><code>public enum Rating {
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>It can sometimes be desirable to have a Java <code>enum</code> type to represent a particular column in a database. JPA supports converting database data to and from Java <code>enum</code> types via the <code>@javax.persistence.Enumerated</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>This example will show basic <code>@Enumerated</code> usage in a field of an <code>@Entity</code> as well as <code>enum</code>s as the parameter of a <code>Query</code>.  We&#8217;ll also see that the actual database representation can be effectively <code>String</code> or <code>int</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enum">Enum</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For our example we will leverage the familiar <code>Movie</code> entity and add a new field to represent the MPAA.org rating of the movie.  This is defined via a simple <code>enum</code> that requires no JPA specific annotations.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
     UNRATED,
     G,
     PG,
     PG13,
     R,
     NC17
-}
-</code></pre>
-<h2>@Enumerated</h2>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__enumerated">@Enumerated</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>In our <code>Movie</code> entity, we add a <code>rating</code> field of the enum type <code>Rating</code> and annotate it with <code>@Enumerated(EnumType.STRING)</code> to declare that its value should be converted from what is effectively a <code>String</code> in the database to the <code>Rating</code> type.</p>
-<pre><code>@Entity
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Entity
 public class Movie {
 
     @Id
@@ -164,16 +187,30 @@ public class Movie {
     public void setRating(Rating rating) {
         this.rating = rating;
     }
-}
-</code></pre>
-<p>The above is enough and we are effectively done. For the sake of completeness we'll show a sample <code>Query</code></p>
-<h2>Enum in JPQL Query</h2>
-<p>Note the <code>findByRating</code> method which creates a <code>Query</code> with a <code>rating</code> named parameter. The key thing to notice is that the <code>rating</code> enum instance itself is passed into the<br/> <code>query.setParameter</code> method, <strong>not</strong> <code>rating.name()</code> or <code>rating.ordinal()</code>.</p>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above is enough and we are effectively done.  For the sake of completeness we&#8217;ll show a sample <code>Query</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enum_in_jpql_query">Enum in JPQL Query</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note the <code>findByRating</code> method which creates a <code>Query</code> with a <code>rating</code> named parameter.  The key thing to notice is that the <code>rating</code> enum instance itself is passed into the
+ <code>query.setParameter</code> method, <strong>not</strong> <code>rating.name()</code> or <code>rating.ordinal()</code>.</p>
+</div>
+<div class="paragraph">
 <p>Regardless if you use <code>EnumType.STRING</code> or <code>EnumType.ORDINAL</code>, you still always pass the enum itself in calls to <code>query.setParameter</code>.</p>
-<pre><code>@Stateful
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateful
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.EXTENDED)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
     private EntityManager entityManager;
 
     public void addMovie(Movie movie) {
@@ -185,97 +222,158 @@ public class Movies {
     }
 
     public List&lt;Movie&gt; findByRating(Rating rating) {
-        final Query query = entityManager.createQuery(&quot;SELECT m FROM Movie as m WHERE m.rating = :rating&quot;);
-        query.setParameter(&quot;rating&quot;, rating);
+        final Query query = entityManager.createQuery("SELECT m FROM Movie as m WHERE m.rating = :rating");
+        query.setParameter("rating", rating);
         return query.getResultList();
     }
 
     public List&lt;Movie&gt; getMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
 
-}
-</code></pre>
-<h2>EnumType.STRING vs EnumType.ORDINAL</h2>
-<p>It is a matter of style how you would like your <code>enum</code> data represented in the database. Either <code>name()</code> or <code>ordinal()</code> are supported:</p>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enumtype_string_vs_enumtype_ordinal">EnumType.STRING vs EnumType.ORDINAL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is a matter of style how you would like your <code>enum</code> data represented in the database.  Either <code>name()</code> or <code>ordinal()</code> are supported:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>@Enumerated(EnumType.STRING) Rating rating</code> the value of <code>rating.name()</code> is written and read from the corresponding database column; e.g. <code>G</code>, <code>PG</code>, <code>PG13</code></li>
-  <li><code>@Enumerated(EnumType.ORDINAL) Rating rating</code> the value of <code>rating.ordinal()</code> is written and read from the corresponding database column; e.g. <code>0</code>, <code>1</code>, <code>2</code></li>
+<li>
+<p><code>@Enumerated(EnumType.STRING) Rating rating</code> the value of <code>rating.name()</code> is written and read from the corresponding database column; e.g. <code>G</code>, <code>PG</code>, <code>PG13</code></p>
+</li>
+<li>
+<p><code>@Enumerated(EnumType.ORDINAL) Rating rating</code> the value of <code>rating.ordinal()</code> is written and read from the corresponding database column; e.g. <code>0</code>, <code>1</code>, <code>2</code></p>
+</li>
 </ul>
+</div>
+<div class="paragraph">
 <p>The default is <code>EnumType.ORDINAL</code></p>
+</div>
+<div class="paragraph">
 <p>There are advantages and disadvantages to each.</p>
-<h3>Disadvantage of EnumType.ORDINAL</h3>
-<p>A disadvantage of <code>EnumType.ORDINAL</code> is the effect of time and the desire to keep <code>enums</code> in a logical order. With <code>EnumType.ORDINAL</code> any new enum elements must be added to the<br/><strong>end</strong> of the list or you will accidentally change the meaning of all your records.</p>
-<p>Let's use our <code>Rating</code> enum and see how it would have had to evolve over time to keep up with changes in the MPAA.org ratings system.</p>
+</div>
+<div class="sect2">
+<h3 id="_disadvantage_of_enumtype_ordinal">Disadvantage of EnumType.ORDINAL</h3>
+<div class="paragraph">
+<p>A disadvantage of <code>EnumType.ORDINAL</code> is the effect of time and the desire to keep <code>enums</code> in a logical order.  With <code>EnumType.ORDINAL</code> any new enum elements must be added to the
+<strong>end</strong> of the list or you will accidentally change the meaning of all your records.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s use our <code>Rating</code> enum and see how it would have had to evolve over time to keep up with changes in the MPAA.org ratings system.</p>
+</div>
+<div class="paragraph">
 <p><strong>1980</strong></p>
-<pre><code>public enum Rating {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
     G,
     PG,
     R,
     UNRATED
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>1984</strong> PG-13 is added</p>
-<pre><code>public enum Rating {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
     G,
     PG,
     R,
     UNRATED,
     PG13
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p><strong>1990</strong> NC-17 is added</p>
-<pre><code>public enum Rating {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
     G,
     PG,
     R,
     UNRATED,
     PG13,
     NC17
-}
-</code></pre>
-<p>If <code>EnumType.STRING</code> was used, then the enum could be reordered at anytime and would instead look as we have defined it originally with ratings starting at <code>G</code> and increasing in severity to <code>NC17</code> and eventually <code>UNRATED</code>. With <code>EnumType.ORDINAL</code> the logical ordering would not have withstood the test of time as new values were added.</p>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>EnumType.STRING</code> was used, then the enum could be reordered at anytime and would instead look as we have defined it originally with ratings starting at <code>G</code> and increasing in severity to <code>NC17</code> and eventually <code>UNRATED</code>.  With <code>EnumType.ORDINAL</code> the logical ordering would not have withstood the test of time as new values were added.</p>
+</div>
+<div class="paragraph">
 <p>If the order of the enum values is significant to your code, avoid <code>EnumType.ORDINAL</code></p>
-<h2>Unit Testing the JPA @Enumerated</h2>
-<pre><code>public class MoviesTest extends TestCase {
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_unit_testing_the_jpa_enumerated">Unit Testing the JPA @Enumerated</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>public class MoviesTest extends TestCase {
 
     public void test() throws Exception {
 
         final Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
         EJBContainer container = EJBContainer.createEJBContainer(p);
         final Context context = container.getContext();
 
-        final Movies movies = (Movies) context.lookup(&quot;java:global/jpa-scratch/Movies&quot;);
+        final Movies movies = (Movies) context.lookup("java:global/jpa-scratch/Movies");
 
-        movies.addMovie(new Movie(&quot;James Frawley&quot;, &quot;The Muppet Movie&quot;, 1979, Rating.G));
-        movies.addMovie(new Movie(&quot;Jim Henson&quot;, &quot;The Great Muppet Caper&quot;, 1981, Rating.G));
-        movies.addMovie(new Movie(&quot;Frank Oz&quot;, &quot;The Muppets Take Manhattan&quot;, 1984, Rating.G));
-        movies.addMovie(new Movie(&quot;James Bobin&quot;, &quot;The Muppets&quot;, 2011, Rating.PG));
+        movies.addMovie(new Movie("James Frawley", "The Muppet Movie", 1979, Rating.G));
+        movies.addMovie(new Movie("Jim Henson", "The Great Muppet Caper", 1981, Rating.G));
+        movies.addMovie(new Movie("Frank Oz", "The Muppets Take Manhattan", 1984, Rating.G));
+        movies.addMovie(new Movie("James Bobin", "The Muppets", 2011, Rating.PG));
 
-        assertEquals(&quot;List.size()&quot;, 4, movies.getMovies().size());
+        assertEquals("List.size()", 4, movies.getMovies().size());
 
-        assertEquals(&quot;List.size()&quot;, 3, movies.findByRating(Rating.G).size());
+        assertEquals("List.size()", 3, movies.findByRating(Rating.G).size());
 
-        assertEquals(&quot;List.size()&quot;, 1, movies.findByRating(Rating.PG).size());
+        assertEquals("List.size()", 1, movies.findByRating(Rating.PG).size());
 
-        assertEquals(&quot;List.size()&quot;, 0, movies.findByRating(Rating.R).size());
+        assertEquals("List.size()", 0, movies.findByRating(Rating.R).size());
 
         container.close();
     }
-}
-</code></pre>
-<h1>Running</h1>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
 <p>To run the example via maven:</p>
-<pre><code>cd jpa-enumerated
-mvn clean install
-</code></pre>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd jpa-enumerated
+mvn clean install</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Which will generate output similar to the following:</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.jpa.enums.MoviesTest
@@ -283,7 +381,7 @@ Apache OpenEJB 4.0.0-beta-2    build: 20120115-08:26
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/openejb/examples/jpa-enumerated
 INFO - openejb.base = /Users/dblevins/openejb/examples/jpa-enumerated
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
@@ -295,14 +393,14 @@ INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=De
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.jpa.enums.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/Users/dblevins/openejb/examples/jpa-enumerated&quot; loaded.
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/openejb/examples/jpa-enumerated" loaded.
 INFO - Assembling app: /Users/dblevins/openejb/examples/jpa-enumerated
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 406ms
-INFO - Jndi(name=&quot;java:global/jpa-enumerated/Movies!org.superbiz.jpa.enums.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/jpa-enumerated/Movies&quot;)
+INFO - Jndi(name="java:global/jpa-enumerated/Movies!org.superbiz.jpa.enums.Movies")
+INFO - Jndi(name="java:global/jpa-enumerated/Movies")
 INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
 INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
 INFO - Deployed Application(path=/Users/dblevins/openejb/examples/jpa-enumerated)
@@ -313,8 +411,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.831 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
             </div>
             
         </div>

@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,9 +95,12 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>AccessDeniedException</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+                <div class="sect1">
+<h2 id="_accessdeniedexception">AccessDeniedException</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 import javax.ejb.ApplicationException;
 
@@ -109,10 +112,17 @@ public class AccessDeniedException extends RuntimeException {
     public AccessDeniedException(String s) {
         super(s);
     }
-}
-</code></pre>
-<h2>Calculator</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculator">Calculator</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 /**
  * @version $Revision$ $Date$
@@ -128,10 +138,17 @@ public interface Calculator {
     public int divide(int a, int b);
 
     public int remainder(int a, int b);
-}
-</code></pre>
-<h2>CalculatorBean</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorbean">CalculatorBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -164,10 +181,17 @@ public class CalculatorBean implements Calculator {
     public int remainder(int a, int b) {
         return a % b;
     }
-}
-</code></pre>
-<h2>CalculatorLogging</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorlogging">CalculatorLogging</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
@@ -177,7 +201,7 @@ import java.util.logging.Logger;
 @Decorator
 public class CalculatorLogging implements Calculator {
 
-    private Logger logger = Logger.getLogger(&quot;Calculator&quot;);
+    private Logger logger = Logger.getLogger("Calculator");
 
     @Inject
     @Delegate
@@ -185,7 +209,7 @@ public class CalculatorLogging implements Calculator {
 
     @Override
     public int add(int a, int b) {
-        logger.fine(String.format(&quot;add(%s, %s)&quot;, a, b));
+        logger.fine(String.format("add(%s, %s)", a, b));
         return calculator.add(a, b);
     }
 
@@ -196,7 +220,7 @@ public class CalculatorLogging implements Calculator {
 
     @Override
     public int multiply(int a, int b) {
-        logger.finest(String.format(&quot;multiply(%s, %s)&quot;, a, b));
+        logger.finest(String.format("multiply(%s, %s)", a, b));
         return calculator.multiply(a, b);
     }
 
@@ -207,13 +231,20 @@ public class CalculatorLogging implements Calculator {
 
     @Override
     public int remainder(int a, int b) {
-        logger.info(String.format(&quot;remainder(%s, %s)&quot;, a, b));
+        logger.info(String.format("remainder(%s, %s)", a, b));
         return calculator.remainder(a, b);
     }
-}
-</code></pre>
-<h2>CalculatorSecurity</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorsecurity">CalculatorSecurity</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
@@ -238,7 +269,7 @@ public class CalculatorSecurity implements Calculator {
     @Override
     public int subtract(int a, int b) {
         // Caller must pass a security check to call subtract
-        if (!sessionContext.isCallerInRole(&quot;Manager&quot;)) throw new AccessDeniedException(sessionContext.getCallerPrincipal().getName());
+        if (!sessionContext.isCallerInRole("Manager")) throw new AccessDeniedException(sessionContext.getCallerPrincipal().getName());
 
         return calculator.subtract(a, b);
     }
@@ -257,10 +288,17 @@ public class CalculatorSecurity implements Calculator {
     public int remainder(int a, int b) {
         return calculator.remainder(a, b);
     }
-}
-</code></pre>
-<h2>beans.xml</h2>
-<pre><code>&lt;beans&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_beans_xml">beans.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">&lt;beans&gt;
   &lt;!--
   Explicitly declaring decorators is required by the CDI specification.
   The order decorators are listed in the xml is the order in which they are invoked.
@@ -269,10 +307,17 @@ public class CalculatorSecurity implements Calculator {
     &lt;class&gt;org.superbiz.cdi.decorators.CalculatorSecurity&lt;/class&gt;
     &lt;class&gt;org.superbiz.cdi.decorators.CalculatorLogging&lt;/class&gt;
   &lt;/decorators&gt;
-&lt;/beans&gt;
-</code></pre>
-<h2>CalculatorTest</h2>
-<pre><code>package org.superbiz.cdi.decorators;
+&lt;/beans&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cdi.decorators;
 
 import junit.framework.TestCase;
 
@@ -296,7 +341,7 @@ public class CalculatorTest extends TestCase {
      * @throws Exception
      */
     protected void setUp() throws Exception {
-        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
     }
 
     /**
@@ -315,7 +360,7 @@ public class CalculatorTest extends TestCase {
         try {
             calculator.subtract(4, 6);
 
-            fail(&quot;AccessDeniedException should have been thrown for unauthenticated access&quot;);
+            fail("AccessDeniedException should have been thrown for unauthenticated access");
         } catch (AccessDeniedException expected) {
             // pass
         }
@@ -354,7 +399,7 @@ public class CalculatorTest extends TestCase {
     }
 
     @Stateless
-    @RunAs(&quot;Manager&quot;)
+    @RunAs("Manager")
     public static class ManagerBean {
 
         public &lt;V&gt; V call(Callable&lt;V&gt; callable) {
@@ -365,10 +410,17 @@ public class CalculatorTest extends TestCase {
             }
         }
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cdi.decorators.CalculatorTest
@@ -376,7 +428,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/decorators
 INFO - openejb.base = /Users/dblevins/examples/decorators
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/decorators/target/classes
@@ -384,21 +436,21 @@ INFO - Found EjbModule in classpath: /Users/dblevins/examples/decorators/target/
 INFO - Beginning load: /Users/dblevins/examples/decorators/target/classes
 INFO - Beginning load: /Users/dblevins/examples/decorators/target/test-classes
 INFO - Configuring enterprise application: /Users/dblevins/examples/decorators
-WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean decorators.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean CalculatorBean: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/decorators&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/decorators" loaded.
 INFO - Assembling app: /Users/dblevins/examples/decorators
-INFO - Jndi(name=&quot;java:global/decorators/decorators.Comp!org.apache.openejb.BeanContext$Comp&quot;)
-INFO - Jndi(name=&quot;java:global/decorators/decorators.Comp&quot;)
-INFO - Jndi(name=&quot;java:global/decorators/CalculatorBean!org.superbiz.cdi.decorators.Calculator&quot;)
-INFO - Jndi(name=&quot;java:global/decorators/CalculatorBean&quot;)
-INFO - Jndi(name=&quot;java:global/decorators/ManagerBean!org.superbiz.cdi.decorators.CalculatorTest$ManagerBean&quot;)
-INFO - Jndi(name=&quot;java:global/decorators/ManagerBean&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest!org.superbiz.cdi.decorators.CalculatorTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest&quot;)
+INFO - Jndi(name="java:global/decorators/decorators.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/decorators/decorators.Comp")
+INFO - Jndi(name="java:global/decorators/CalculatorBean!org.superbiz.cdi.decorators.Calculator")
+INFO - Jndi(name="java:global/decorators/CalculatorBean")
+INFO - Jndi(name="java:global/decorators/ManagerBean!org.superbiz.cdi.decorators.CalculatorTest$ManagerBean")
+INFO - Jndi(name="java:global/decorators/ManagerBean")
+INFO - Jndi(name="java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest!org.superbiz.cdi.decorators.CalculatorTest")
+INFO - Jndi(name="java:global/EjbModule628834558/org.superbiz.cdi.decorators.CalculatorTest")
 INFO - Created Ejb(deployment-id=CalculatorBean, ejb-name=CalculatorBean, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=decorators.Comp, ejb-name=decorators.Comp, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=ManagerBean, ejb-name=ManagerBean, container=Default Stateless Container)
@@ -470,7 +522,11 @@ Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.338 sec
 Results :
 
 Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+....</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

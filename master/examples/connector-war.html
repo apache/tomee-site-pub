@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -88,17 +88,19 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Movies Complete</h1>
+              <h1>Connectors in WAR Files</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<p><a href="https://codenvy.com/f?id=9er0fn1kh832sa35"><img src="https://tomitribe.github.io/codenvy/tryitout.svg" alt="Try it out in Codenvy" /></a></p>
-<h2>AddInterceptor</h2>
-<pre><code>package org.superbiz.injection.tx;
+                <div class="sect1">
+<h2 id="_addinterceptor">AddInterceptor</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
@@ -113,10 +115,17 @@ public class AddInterceptor {
         // Log Add
         return context.proceed();
     }
-}
-</code></pre>
-<h2>DeleteInterceptor</h2>
-<pre><code>package org.superbiz.injection.tx;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deleteinterceptor">DeleteInterceptor</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
@@ -131,10 +140,17 @@ public class DeleteInterceptor {
         // Log Delete
         return context.proceed();
     }
-}
-</code></pre>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.injection.tx;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.persistence.Entity;
 
@@ -178,10 +194,17 @@ public class Movie {
         this.year = year;
     }
 
-}
-</code></pre>
-<h2>Movies</h2>
-<pre><code>package org.superbiz.injection.tx;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -199,17 +222,17 @@ import java.util.List;
 @Stateful
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.TRANSACTION)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.TRANSACTION)
     private EntityManager entityManager;
 
-    @RolesAllowed({&quot;Employee&quot;, &quot;Manager&quot;})
+    @RolesAllowed({"Employee", "Manager"})
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @Interceptors(AddInterceptor.class)
     public void addMovie(Movie movie) throws Exception {
         entityManager.persist(movie);
     }
 
-    @RolesAllowed({&quot;Manager&quot;})
+    @RolesAllowed({"Manager"})
     @TransactionAttribute(TransactionAttributeType.MANDATORY)
     @Interceptors(DeleteInterceptor.class)
     public void deleteMovie(Movie movie) throws Exception {
@@ -219,13 +242,20 @@ public class Movies {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List&lt;Movie&gt; getMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}
-</code></pre>
-<h2>ReadInterceptor</h2>
-<pre><code>package org.superbiz.injection.tx;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_readinterceptor">ReadInterceptor</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
@@ -241,27 +271,48 @@ public class ReadInterceptor {
         return context.proceed();
     }
 }
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+....
 
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
-    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
-    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
-    &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;
+== persistence.xml
 
-    &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+[source,xml]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence-unit name="movie-unit"&gt;
+  &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+  &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+  &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.injection.tx;
+&lt;/persistence&gt;</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>== MoviesTest
 
-import junit.framework.TestCase;
-
-import javax.annotation.security.RunAs;
+[source,java]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>package org.superbiz.injection.tx;</p>
+</div>
+<div class="paragraph">
+<p>import junit.framework.TestCase;</p>
+</div>
+<div class="paragraph">
+<p>import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -269,114 +320,172 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.embeddable.EJBContainer;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-
-/**
+import java.util.concurrent.Callable;</p>
+</div>
+<div class="paragraph">
+<p>import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;</p>
+</div>
+<div class="paragraph">
+<p>/**
  * See the transaction-rollback example as it does the same thing
- * via UserTransaction and shows more techniques for rollback 
+ * via UserTransaction and shows more techniques for rollback
  */
-//START SNIPPET: code
-public class MoviesTest extends TestCase {
-
-    @EJB
-    private Movies movies;
-
-    @EJB(beanName = &quot;TransactionBean&quot;)
-    private Caller transactionalCaller;
-
-    @EJB(beanName = &quot;NoTransactionBean&quot;)
-    private Caller nonTransactionalCaller;
-
-    protected void setUp() throws Exception {
-        final Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
-
-        EJBContainer.createEJBContainer(p).getContext().bind(&quot;inject&quot;, this);
-    }
-
-    private void doWork() throws Exception {
-
-        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
-
-        List&lt;Movie&gt; list = movies.getMovies();
-        assertEquals(&quot;List.size()&quot;, 3, list.size());
-
-        for (Movie movie : list) {
-            movies.deleteMovie(movie);
+public class MoviesTest extends TestCase {</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@EJB
+private Movies movies;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@EJB(beanName = "TransactionBean")
+private Caller transactionalCaller;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@EJB(beanName = "NoTransactionBean")
+private Caller nonTransactionalCaller;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>protected void setUp() throws Exception {
+    final Properties p = new Properties();
+    p.put("movieDatabase", "new://Resource?type=DataSource");
+    p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+    p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>private void doWork() throws Exception {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>List&lt;Movie&gt; list = movies.getMovies();
+assertEquals("List.size()", 3, list.size());</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>for (Movie movie : list) {
+    movies.deleteMovie(movie);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void testWithTransaction() throws Exception {
+    transactionalCaller.call(new Callable() {
+        public Object call() throws Exception {
+            doWork();
+            return null;
         }
-
-        assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
-    }
-
-    public void testWithTransaction() throws Exception {
-        transactionalCaller.call(new Callable() {
+    });
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void testWithoutTransaction() throws Exception {
+    try {
+        nonTransactionalCaller.call(new Callable() {
             public Object call() throws Exception {
                 doWork();
                 return null;
             }
         });
+        fail("The Movies bean should be using TransactionAttributeType.MANDATORY");
+    } catch (javax.ejb.EJBException e) {
+        // good, our Movies bean is using TransactionAttributeType.MANDATORY as we want
     }
-
-    public void testWithoutTransaction() throws Exception {
-        try {
-            nonTransactionalCaller.call(new Callable() {
-                public Object call() throws Exception {
-                    doWork();
-                    return null;
-                }
-            });
-            fail(&quot;The Movies bean should be using TransactionAttributeType.MANDATORY&quot;);
-        } catch (javax.ejb.EJBException e) {
-            // good, our Movies bean is using TransactionAttributeType.MANDATORY as we want
-        }
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public static interface Caller {
+    public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>/**
+ * This little bit of magic allows our test code to execute in
+ * the scope of a container controlled transaction.
+ */
+@Stateless
+@RunAs("Manager")
+@TransactionAttribute(REQUIRES_NEW)
+public static class TransactionBean implements Caller {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
+        return callable.call();
     }
-
-
-    public static interface Caller {
-        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception;
-    }
-
-    /**
-     * This little bit of magic allows our test code to execute in
-     * the scope of a container controlled transaction.
-     */
-    @Stateless
-    @RunAs(&quot;Manager&quot;)
-    @TransactionAttribute(REQUIRES_NEW)
-    public static class TransactionBean implements Caller {
-
-        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateless
+@RunAs("Manager")
+@TransactionAttribute(TransactionAttributeType.NEVER)
+public static class NoTransactionBean implements Caller {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
             return callable.call();
         }
     }
-
-    @Stateless
-    @RunAs(&quot;Manager&quot;)
-    @TransactionAttribute(TransactionAttributeType.NEVER)
-    public static class NoTransactionBean implements Caller {
-
-        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
-            return callable.call();
-        }
-    }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running org.superbiz.injection.tx.MoviesTest
+}</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>== Running</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> T E S T S</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running org.superbiz.injection.tx.MoviesTest
 Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
-http://tomee.apache.org/
+<a href="http://tomee.apache.org/" class="bare">http://tomee.apache.org/</a>
 INFO - openejb.home = /Users/dblevins/examples/movies-complete
 INFO - openejb.base = /Users/dblevins/examples/movies-complete
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
@@ -392,20 +501,20 @@ INFO - Auto-creating a container for bean TransactionBean: Container(type=STATEL
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.injection.tx.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/movies-complete&quot; loaded.
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/examples/movies-complete" loaded.
 INFO - Assembling app: /Users/dblevins/examples/movies-complete
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 402ms
-INFO - Jndi(name=&quot;java:global/movies-complete/Movies!org.superbiz.injection.tx.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/movies-complete/Movies&quot;)
-INFO - Jndi(name=&quot;java:global/movies-complete/TransactionBean!org.superbiz.injection.tx.MoviesTest$Caller&quot;)
-INFO - Jndi(name=&quot;java:global/movies-complete/TransactionBean&quot;)
-INFO - Jndi(name=&quot;java:global/movies-complete/NoTransactionBean!org.superbiz.injection.tx.MoviesTest$Caller&quot;)
-INFO - Jndi(name=&quot;java:global/movies-complete/NoTransactionBean&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1013462002/org.superbiz.injection.tx.MoviesTest!org.superbiz.injection.tx.MoviesTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1013462002/org.superbiz.injection.tx.MoviesTest&quot;)
+INFO - Jndi(name="java:global/movies-complete/Movies!org.superbiz.injection.tx.Movies")
+INFO - Jndi(name="java:global/movies-complete/Movies")
+INFO - Jndi(name="java:global/movies-complete/TransactionBean!org.superbiz.injection.tx.MoviesTest$Caller")
+INFO - Jndi(name="java:global/movies-complete/TransactionBean")
+INFO - Jndi(name="java:global/movies-complete/NoTransactionBean!org.superbiz.injection.tx.MoviesTest$Caller")
+INFO - Jndi(name="java:global/movies-complete/NoTransactionBean")
+INFO - Jndi(name="java:global/EjbModule1013462002/org.superbiz.injection.tx.MoviesTest!org.superbiz.injection.tx.MoviesTest")
+INFO - Jndi(name="java:global/EjbModule1013462002/org.superbiz.injection.tx.MoviesTest")
 INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
 INFO - Created Ejb(deployment-id=NoTransactionBean, ejb-name=NoTransactionBean, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=TransactionBean, ejb-name=TransactionBean, container=Default Stateless Container)
@@ -416,12 +525,21 @@ INFO - Started Ejb(deployment-id=TransactionBean, ejb-name=TransactionBean, cont
 INFO - Started Ejb(deployment-id=org.superbiz.injection.tx.MoviesTest, ejb-name=org.superbiz.injection.tx.MoviesTest, container=Default Managed Container)
 INFO - Deployed Application(path=/Users/dblevins/examples/movies-complete)
 INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.418 sec
-
-Results :
-
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.418 sec</p>
+</div>
+<div class="paragraph">
+<p>Results :</p>
+</div>
+<div class="paragraph">
+<p>Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

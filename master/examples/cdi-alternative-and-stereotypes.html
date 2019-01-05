@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,62 +95,188 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Introduction</h1>
+                <div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>CDI is a revolution for the Java EE world. This specification is the best one to avoid coupling between classes.</p>
+</div>
+<div class="paragraph">
 <p>This example simply aims to override bindings at runtime to simplify mocking work.</p>
-<p>It uses two kind of mocks:<br/>1) a mock with no implementation in the classloader<br/>2) a mock with an implementation in the classloader</p>
+</div>
+<div class="paragraph">
+<p>It uses two kind of mocks:
+1) a mock with no implementation in the classloader
+2) a mock with an implementation in the classloader</p>
+</div>
+<div class="paragraph">
 <p>The mock answer from CDI is called <em>alternative</em>.</p>
-<p>Annotating <code>@Alternative</code> a class will mean it will used as the implementation if there is no other implementation or if it is forced (through <code>META-INF/beans.xml</code>).</p>
-<h1>Code explanation</h1>
-<h2>main code</h2>
-<p>We use an EJB <code>Jouney</code> to modelize a journey where the vehicle and the society can change. Here an EJB is used because it simplifies the test. A jouney wraps the vehicle and society information.</p>
+</div>
+<div class="paragraph">
+<p>Annotating <code>@Alternative</code> a class will mean it will used as the implementation if there is no other implementation
+or if it is forced (through <code>META-INF/beans.xml</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_code_explanation">Code explanation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_main_code">Main Code</h3>
+<div class="paragraph">
+<p>We use an EJB <code>Jouney</code> to modelize a journey where the vehicle and the society can change. Here an EJB is used
+because it simplifies the test. A jouney wraps the vehicle and society information.</p>
+</div>
+<div class="paragraph">
 <p>We define two interfaces to inject into the <code>Journey</code> EJB: <code>Vehicle</code> and <code>Society</code>.</p>
+</div>
+<div class="paragraph">
 <p>Finally we add an implementation for <code>Scociety</code> interface: <code>LowCostCompanie</code>.</p>
+</div>
+<div class="paragraph">
 <p>If we stop here, the <code>Journey</code> object will not be able to be created because there is no <code>Vehicle</code> implementation is available.</p>
-<p>Note: if we do have a <code>Vehicle</code> implementation, the injected Society should be <code>LowCostCompanie</code>.</p>
-<h2>test code</h2>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if we do have a <code>Vehicle</code> implementation, the injected Society should be <code>LowCostCompanie</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_test_code">test code</h3>
+<div class="paragraph">
 <p>The goal here is to test our <code>Journey</code> EJB. So we have to provide a <code>Vehicle</code> implementation: <code>SuperCar</code>.</p>
+</div>
+<div class="paragraph">
 <p>We want to force the <code>Society</code> interface to be the <code>AirOpenEJB</code> implementation for our test.</p>
-<p>One solution could simply be to add <code>@Alternative</code> annotation on <code>AirOpenEJB</code> and activate it through the <code>META-INF/beans.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>One solution could simply be to add <code>@Alternative</code> annotation on <code>AirOpenEJB</code> and activate it through
+the <code>META-INF/beans.xml</code> file.</p>
+</div>
+<div class="paragraph">
 <p>Here we want to write more explicit code. So we want to replace the <code>@Alternative</code> annotation by <code>@Mock</code> one.</p>
-<p>So we define an <code>@Mock</code> annotation for classes, resolvable at runtime as a stereotype (<code>@Stereotype</code>) that replaces <code>@Alternative</code>.</p>
+</div>
+<div class="paragraph">
+<p>So we define an <code>@Mock</code> annotation for classes, resolvable at runtime as a stereotype (<code>@Stereotype</code>)
+that replaces <code>@Alternative</code>.</p>
+</div>
+<div class="paragraph">
 <p>Here is the annotation:</p>
-<pre><code>@Stereotype // we define a stereotype
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stereotype // we define a stereotype
 @Retention(RUNTIME) // resolvable at runtime
 @Target(TYPE) // this annotation is a class level one
 @Alternative // it replace @Alternative
-public @interface Mock {}
-</code></pre>
-<p>Note: you can add more CDI annotations after <code>@Alternative</code> and it will get the behavior expected (the scope for instance).</p>
-<p>So now we have our <code>@Mock</code> annotation which is a stereotype able to replace the <code>@Alternative</code> annotation when it added to our mocks.</p>
-<p>If you run it now you'll have this exception:</p>
-<pre><code>javax.enterprise.inject.UnsatisfiedResolutionException: Api type [org.superbiz.cdi.stereotype.Vehicle] is not found with the qualifiers
+public @interface Mock {}</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+you can add more CDI annotations after <code>@Alternative</code> and it will get the behavior expected (the scope for instance).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So now we have our <code>@Mock</code> annotation which is a stereotype able to replace the <code>@Alternative</code> annotation when it
+added to our mocks.</p>
+</div>
+<div class="paragraph">
+<p>If you run it now you&#8217;ll have this exception:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>javax.enterprise.inject.UnsatisfiedResolutionException: Api type [org.superbiz.cdi.stereotype.Vehicle] is not found with the qualifiers
 Qualifiers: [@javax.enterprise.inject.Default()]
-for injection into Field Injection Point, field name :  vehicle, Bean Owner : [Journey, Name:null, WebBeans Type:ENTERPRISE, API Types:[java.lang.Object,org.superbiz.cdi.stereotype.Journey], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]]
-</code></pre>
+for injection into Field Injection Point, field name :  vehicle, Bean Owner : [Journey, Name:null, WebBeans Type:ENTERPRISE, API Types:[java.lang.Object,org.superbiz.cdi.stereotype.Journey], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]]</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>It means the stereotype is not activated. To do it simply add it to your <code>META-INF/beans.xml</code>:</p>
-<pre><code>&lt;alternatives&gt;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;alternatives&gt;
   &lt;stereotype&gt;org.superbiz.cdi.stereotype.Mock&lt;/stereotype&gt;
-&lt;/alternatives&gt;
-</code></pre>
-<p>Note: if you don't specify <code>AirOpenEJB</code> as <code>@Alternative</code> (done through our mock annotation) you'll get this exception:</p>
-<pre><code>Caused by: javax.enterprise.inject.AmbiguousResolutionException: There is more than one api type with : org.superbiz.cdi.stereotype.Society with qualifiers : Qualifiers: [@javax.enterprise.inject.Default()]
+&lt;/alternatives&gt;</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if you don&#8217;t specify <code>AirOpenEJB</code> as <code>@Alternative</code> (done through our mock annotation) you&#8217;ll get this exception:
+</td>
+</tr>
+</table>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Caused by: javax.enterprise.inject.AmbiguousResolutionException: There is more than one api type with : org.superbiz.cdi.stereotype.Society with qualifiers : Qualifiers: [@javax.enterprise.inject.Default()]
 for injection into Field Injection Point, field name :  society, Bean Owner : [Journey, Name:null, WebBeans Type:ENTERPRISE, API Types:[org.superbiz.cdi.stereotype.Journey,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]]
 found beans:
 AirOpenEJB, Name:null, WebBeans Type:MANAGED, API Types:[org.superbiz.cdi.stereotype.Society,org.superbiz.cdi.stereotype.AirOpenEJB,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]
-LowCostCompanie, Name:null, WebBeans Type:MANAGED, API Types:[org.superbiz.cdi.stereotype.Society,org.superbiz.cdi.stereotype.LowCostCompanie,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]
-</code></pre>
+LowCostCompanie, Name:null, WebBeans Type:MANAGED, API Types:[org.superbiz.cdi.stereotype.Society,org.superbiz.cdi.stereotype.LowCostCompanie,java.lang.Object], Qualifiers:[javax.enterprise.inject.Any,javax.enterprise.inject.Default]</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>which simply means two implementations are available for the same injection point (<code>Journey.society</code>).</p>
-<h1>Conclusion</h1>
-<p>With CDI it is really easy to define annotations with a strong meaning. You can define business annotations or simply technical annotations to simplify your code (as we did with the mock annotation).</p>
-<p>Note: if you used qualifiers to inject <code>Scociety</code> objects you could have put all these qualifiers on the mock class or defined a <code>@SocietyMock</code> annotation to be able to inject the same implementation for all qualifiers in your tests.</p>
-<h1>Output</h1>
-<pre><code>Running org.superbiz.cdi.stereotype.StereotypeTest
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With CDI it is really easy to define annotations with a strong meaning. You can define business annotations
+or simply technical annotations to simplify your code (as we did with the mock annotation).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+if you used qualifiers to inject <code>Scociety</code> objects you could have put all these qualifiers on
+the mock class or defined a <code>@SocietyMock</code> annotation to be able to inject the same implementation for
+all qualifiers in your tests.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_output">Output</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>Running org.superbiz.cdi.stereotype.StereotypeTest
 Apache OpenEJB 7.0.0-SNAPSHOT    build: 20111030-07:54
 http://tomee.apache.org/
 INFO - openejb.home = /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
 INFO - openejb.base = /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes/target/test-classes
@@ -162,16 +288,16 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean cdi-alternative-and-stereotypes_test.Comp: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
 INFO - Auto-creating a container for bean Journey: Container(type=SINGLETON, id=Default Singleton Container)
-INFO - Enterprise application &quot;/opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes&quot; loaded.
+INFO - Enterprise application "/opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes" loaded.
 INFO - Assembling app: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp!org.apache.openejb.BeanContext$Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp!org.apache.openejb.BeanContext$Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/Journey!org.superbiz.cdi.stereotype.Journey&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-alternative-and-stereotypes/Journey&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest!org.superbiz.cdi.stereotype.StereotypeTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest&quot;)
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes_test.Comp")
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/cdi-alternative-and-stereotypes.Comp")
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/Journey!org.superbiz.cdi.stereotype.Journey")
+INFO - Jndi(name="java:global/cdi-alternative-and-stereotypes/Journey")
+INFO - Jndi(name="java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest!org.superbiz.cdi.stereotype.StereotypeTest")
+INFO - Jndi(name="java:global/EjbModule162291475/org.superbiz.cdi.stereotype.StereotypeTest")
 INFO - Created Ejb(deployment-id=cdi-alternative-and-stereotypes_test.Comp, ejb-name=cdi-alternative-and-stereotypes_test.Comp, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=cdi-alternative-and-stereotypes.Comp, ejb-name=cdi-alternative-and-stereotypes.Comp, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=org.superbiz.cdi.stereotype.StereotypeTest, ejb-name=org.superbiz.cdi.stereotype.StereotypeTest, container=Default Managed Container)
@@ -181,8 +307,11 @@ INFO - Started Ejb(deployment-id=cdi-alternative-and-stereotypes.Comp, ejb-name=
 INFO - Started Ejb(deployment-id=org.superbiz.cdi.stereotype.StereotypeTest, ejb-name=org.superbiz.cdi.stereotype.StereotypeTest, container=Default Managed Container)
 INFO - Started Ejb(deployment-id=Journey, ejb-name=Journey, container=Default Singleton Container)
 INFO - Deployed Application(path=/opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes)
-INFO - Undeploying app: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes
-</code></pre>
+INFO - Undeploying app: /opt/dev/openejb/openejb-trunk/examples/cdi-alternative-and-stereotypes</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

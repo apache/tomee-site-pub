@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,13 +95,31 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example uses a nice CDI/EJB combination to schedule CDI Events. This is useful if you want CDI Events that fire regularly or at a specific time or calendar date.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example uses a nice CDI/EJB combination to schedule CDI Events.  This is useful if you want CDI Events that fire regularly or at a specific time or calendar date.</p>
+</div>
+<div class="paragraph">
 <p>Effectively this is a simple wrapper around the <code>BeanManager.fireEvent(Object,Annotations...)</code> method that adds <code>ScheduleExpression</code> into the mix.</p>
-<h2>ScheduleExpression and @Timeout</h2>
-<p>The logic here is simple, we effecitvely expose a method identical to <code>BeanManager.fireEvent(Object, Annotations...)</code> and wrap it as <code>scheduleEvent(ScheduleExpression, Object, Annotation...)</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scheduleexpression_and_timeout">ScheduleExpression and @Timeout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The logic here is simple, we effecitvely expose a method identical to <code>BeanManager.fireEvent(Object, Annotations...)</code> and wrap it as  <code>scheduleEvent(ScheduleExpression, Object, Annotation...)</code></p>
+</div>
+<div class="paragraph">
 <p>To do that we use the EJB <code>TimerService</code> (under the covers this is Quartz) and create an <code>@Timeout</code> method which will be run when the <code>ScheduleExpression</code> activates.</p>
+</div>
+<div class="paragraph">
 <p>The <code>@Timeout</code> method, simply called <code>timeout</code>, takes the event and fires it.</p>
-<pre><code>@Singleton
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Singleton
 @Lock(LockType.READ)
 public class Scheduler {
 
@@ -123,7 +141,7 @@ public class Scheduler {
         beanManager.fireEvent(config.getEvent(), config.getQualifiers());
     }
 
-    // Doesn&#39;t actually need to be serializable, just has to implement it
+    // Doesn't actually need to be serializable, just has to implement it
     private final class EventConfig implements Serializable {
 
         private final Object event;
@@ -142,10 +160,15 @@ public class Scheduler {
             return qualifiers;
         }
     }
-}
-</code></pre>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Then to use it, have <code>Scheduler</code> injected as an EJB and enjoy.</p>
-<pre><code>public class SomeBean {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public class SomeBean {
 
     @EJB
     private Scheduler scheduler;
@@ -154,11 +177,11 @@ public class Scheduler {
 
         // every five minutes
         final ScheduleExpression schedule = new ScheduleExpression()
-                .hour(&quot;*&quot;)
-                .minute(&quot;*&quot;)
-                .second(&quot;*/5&quot;);
+                .hour("*")
+                .minute("*")
+                .second("*/5");
 
-        scheduler.scheduleEvent(schedule, new TestEvent(&quot;five&quot;));
+        scheduler.scheduleEvent(schedule, new TestEvent("five"));
     }
 
     /**
@@ -168,11 +191,20 @@ public class Scheduler {
         // process the event
     }
 
-}
-</code></pre>
-<h2>Test Case</h2>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_case">Test Case</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>A working test case for the above would be as follows:</p>
-<pre><code>import org.junit.Assert;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -198,11 +230,11 @@ public class SchedulerTest {
     public void test() throws Exception {
 
         final ScheduleExpression schedule = new ScheduleExpression()
-                .hour(&quot;*&quot;)
-                .minute(&quot;*&quot;)
-                .second(&quot;*/5&quot;);
+                .hour("*")
+                .minute("*")
+                .second("*/5");
 
-        scheduler.scheduleEvent(schedule, new TestEvent(&quot;five&quot;));
+        scheduler.scheduleEvent(schedule, new TestEvent("five"));
 
         Assert.assertTrue(events.await(1, TimeUnit.MINUTES));
     }
@@ -210,7 +242,7 @@ public class SchedulerTest {
 
     @AccessTimeout(value = 1, unit = TimeUnit.MINUTES)
     public void observe(@Observes TestEvent event) {
-        if (&quot;five&quot;.equals(event.getMessage())) {
+        if ("five".equals(event.getMessage())) {
             events.countDown();
         }
     }
@@ -229,21 +261,44 @@ public class SchedulerTest {
 
     @Before
     public void setup() throws Exception {
-        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
     }
-}
-</code></pre>
-<h2>You must know</h2>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_you_must_know">You must know</h2>
+<div class="sectionbody">
+<div class="ulist">
 <ul>
-  <li>CDI Events are not multi-treaded</li>
+<li>
+<p>CDI Events are not multi-treaded</p>
+</li>
 </ul>
-<p>If there are 10 observers and each of them take 7 minutes to execute, then the total execution time for the one event is 70 minutes. It would do you absolutely no good to schedule that event to fire more frequently than 70 minutes.</p>
-<p>What would happen if you did? Depends on the <code>@Singleton</code> <code>@Lock</code> policy</p>
+</div>
+<div class="paragraph">
+<p>If there are 10 observers and each of them take 7 minutes to execute, then the total execution time for the one event is 70 minutes.  It would do you absolutely no good to schedule that event to fire more frequently than 70 minutes.</p>
+</div>
+<div class="paragraph">
+<p>What would happen if you did?  Depends on the <code>@Singleton</code> <code>@Lock</code> policy</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>@Lock(WRITE)</code> is the default. In this mode the <code>timeout</code> method would essentially be locked until the previous invocation completes. Having it fire every 5 minutes even though you can only process one every 70 minutes would eventually cause all the pooled timer threads to be waiting on your Singleton.</li>
-  <li><code>@Lock(READ)</code> allows for parallel execution of the <code>timeout</code> method. Events will fire in parallel for a while. However since they actually are taking 70 minutes each, within an hour or so we'll run out of threads in the timer pool just like above.</li>
+<li>
+<p><code>@Lock(WRITE)</code> is the default.  In this mode the <code>timeout</code> method would essentially be locked until the previous invocation completes.  Having it fire every 5 minutes even though you can only process one every 70 minutes would eventually cause all the pooled timer threads to be waiting on your Singleton.</p>
+</li>
+<li>
+<p><code>@Lock(READ)</code> allows for parallel execution of the <code>timeout</code> method.  Events will fire in parallel for a while.  However since they actually are taking 70 minutes each, within an hour or so we&#8217;ll run out of threads in the timer pool just like above.</p>
+</li>
 </ul>
-<p>The elegant solution is to use <code>@Lock(WRITE)</code> then specify some short timeout like <code>@AccessTimeout(value = 1, unit = TimeUnit.MINUTES)</code> on the <code>timeout</code> method. When the next 5 minute invocation is triggered, it will wait up until 1 minute to get access to the Singleton before giving up. This will keep your timer pool from filling up with backed up jobs -- the "overflow" is simply discarded.</p>
+</div>
+<div class="paragraph">
+<p>The elegant solution is to use <code>@Lock(WRITE)</code> then specify some short timeout like <code>@AccessTimeout(value = 1, unit = TimeUnit.MINUTES)</code> on the <code>timeout</code> method.  When the next 5 minute invocation is triggered, it will wait up until 1 minute to get access to the Singleton before giving up.  This will keep your timer pool from filling up with backed up jobs&#8201;&#8212;&#8201;the "overflow" is simply discarded.</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>

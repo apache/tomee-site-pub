@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,10 +95,24 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>The JPA provides Java developers with an object/relational mapping facility for managing relational data in Java applications.</p>
-<p>@Entity define the entity class that you want to convert into a table in a database.<br/>@Id define the main key of the table.<br/>@GeneratedValue provides for the specification of generation strategies for the values of primary keys.</p>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.injection.jpa;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The JPA provides Java developers with an object/relational mapping facility for managing relational data in Java applications.</p>
+</div>
+<div class="paragraph">
+<p>@Entity define the entity class that you want to convert into a table in a database.
+@Id define the main key of the table.
+@GeneratedValue provides for the specification of generation strategies for the values of primary keys.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.jpa;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -150,18 +164,32 @@ public class Movie {
     public void setYear(int year) {
         this.year = year;
     }
-}
-</code></pre>
-<h2>persistence-fragment.xml</h2>
-<pre><code>&lt;persistence-fragment version=&quot;2.0&quot;&gt;
-  &lt;persistence-unit-fragment name=&quot;movie-unit&quot;&gt;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_fragment_xml">persistence-fragment.xml</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence-fragment version="2.0"&gt;
+  &lt;persistence-unit-fragment name="movie-unit"&gt;
     &lt;class&gt;org.superbiz.injection.jpa.Movie&lt;/class&gt;
     &lt;exclude-unlisted-classes&gt;true&lt;/exclude-unlisted-classes&gt;
   &lt;/persistence-unit-fragment&gt;
-&lt;/persistence-fragment&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.injection.jpa;
+&lt;/persistence-fragment&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.jpa;
 
 import org.apache.openejb.assembler.classic.ReloadableEntityManagerFactory;
 import org.junit.Test;
@@ -181,35 +209,45 @@ public class MoviesTest {
     @Test
     public void test() throws Exception {
         final Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
         final EJBContainer container = EJBContainer.createEJBContainer(p);
         final Context context = container.getContext();
-        context.bind(&quot;inject&quot;, this);
+        context.bind("inject", this);
 
         assertTrue(((ReloadableEntityManagerFactory) emf).getManagedClasses().contains(Movie.class.getName()));
 
         container.close();
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence version=&quot;2.0&quot;
-             xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence
-                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;&gt;
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
+&lt;/persistence&gt;</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

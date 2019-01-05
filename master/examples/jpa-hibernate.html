@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,10 +95,23 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows the persist, remove and creation a query in JPA Hibernate. The Java Persistence API (JPA) is a Java specification for accessing, persisting, and managing data between Java objects / classes and a relational database.</p>
-<h2>Movie</h2>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows the persist, remove and creation a query in JPA Hibernate.
+The Java Persistence API (JPA) is a Java specification for accessing, persisting, and managing data between Java objects / classes and a relational database.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Define the class Movie as an entity with de annotation @Entity</p>
-<pre><code>package org.superbiz.injection.h3jpa;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.h3jpa;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -149,11 +162,21 @@ public class Movie {
         this.year = year;
     }
 
-}
-</code></pre>
-<h2>Movies</h2>
-<p>@PersistenceContext A persistence context is a set of entities such that for any persistent identity there is a unique entity instance.<br/>@EntityManager is associated with a persistence context. Is at the core of JPA, supported by some methods: persist, remove,merge, find,</p>
-<pre><code>package org.superbiz.injection.h3jpa;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>@PersistenceContext A persistence context is a set of entities such that for any persistent identity there is a unique entity instance.
+@EntityManager is associated with a persistence context. Is at the core of JPA, supported by some methods: persist, remove,merge, find,</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.h3jpa;
 
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -165,7 +188,7 @@ import java.util.List;
 @Stateful
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.EXTENDED)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
     private EntityManager entityManager;
 
     public void addMovie(Movie movie) throws Exception {
@@ -177,29 +200,43 @@ public class Movies {
     }
 
     public List&lt;Movie&gt; getMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence version=&quot;1.0&quot;
-             xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd&quot;&gt;
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence version="1.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create-drop&quot;/&gt;
-      &lt;property name=&quot;hibernate.dialect&quot; value=&quot;org.hibernate.dialect.HSQLDialect&quot;/&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
+      &lt;property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.injection.h3jpa;
+&lt;/persistence&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.h3jpa;
 
 import junit.framework.TestCase;
 
@@ -215,33 +252,45 @@ public class MoviesTest extends TestCase {
 
     public void test() throws Exception {
         final Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
         final Context context = EJBContainer.createEJBContainer(p).getContext();
-        Movies movies = (Movies) context.lookup(&quot;java:global/jpa-hibernate/Movies&quot;);
+        Movies movies = (Movies) context.lookup("java:global/jpa-hibernate/Movies");
 
-        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
         List&lt;Movie&gt; list = movies.getMovies();
-        assertEquals(&quot;List.size()&quot;, 3, list.size());
+        assertEquals("List.size()", 3, list.size());
 
         for (Movie movie : list) {
             movies.deleteMovie(movie);
         }
 
-        assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
+        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
     }
-}
-</code></pre>
-<h1>Running</h1>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
 <p>To run the example via maven:</p>
-<p>cd jpa-hibernate mvn clean install</p>
+</div>
+<div class="paragraph">
+<p>cd jpa-hibernate
+mvn clean install</p>
+</div>
+<div class="paragraph">
 <p>Which will generate output similar to the following:</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.h3jpa.MoviesTest
@@ -249,7 +298,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/jpa-hibernate
 INFO - openejb.base = /Users/dblevins/examples/jpa-hibernate
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
@@ -261,16 +310,16 @@ INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=De
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.injection.h3jpa.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=movie-unit, provider=org.hibernate.ejb.HibernatePersistence)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/jpa-hibernate&quot; loaded.
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/examples/jpa-hibernate" loaded.
 INFO - Assembling app: /Users/dblevins/examples/jpa-hibernate
 INFO - PersistenceUnit(name=movie-unit, provider=org.hibernate.ejb.HibernatePersistence) - provider time 631ms
-INFO - Jndi(name=&quot;java:global/jpa-hibernate/Movies!org.superbiz.injection.h3jpa.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/jpa-hibernate/Movies&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1235930463/org.superbiz.injection.h3jpa.MoviesTest!org.superbiz.injection.h3jpa.MoviesTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1235930463/org.superbiz.injection.h3jpa.MoviesTest&quot;)
+INFO - Jndi(name="java:global/jpa-hibernate/Movies!org.superbiz.injection.h3jpa.Movies")
+INFO - Jndi(name="java:global/jpa-hibernate/Movies")
+INFO - Jndi(name="java:global/EjbModule1235930463/org.superbiz.injection.h3jpa.MoviesTest!org.superbiz.injection.h3jpa.MoviesTest")
+INFO - Jndi(name="java:global/EjbModule1235930463/org.superbiz.injection.h3jpa.MoviesTest")
 INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
 INFO - Created Ejb(deployment-id=org.superbiz.injection.h3jpa.MoviesTest, ejb-name=org.superbiz.injection.h3jpa.MoviesTest, container=Default Managed Container)
 INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
@@ -280,8 +329,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.22 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
             </div>
             
         </div>

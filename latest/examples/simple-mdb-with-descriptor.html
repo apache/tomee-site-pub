@@ -72,7 +72,7 @@
 				<ul class="nav navbar-nav navbar-right main-nav">
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
-					<li><a href="../../security/index.html">Security</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
 					<li><a href="../../download-ng.html">Downloads</a></li>
 				</ul>
 			</div>
@@ -95,9 +95,19 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>ChatBean</h2>
-<pre><code>package org.superbiz.mdbdesc;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_chatbean">ChatBean</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.mdbdesc;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -122,15 +132,15 @@ public class ChatBean implements MessageListener {
             final TextMessage textMessage = (TextMessage) message;
             final String question = textMessage.getText();
 
-            if (&quot;Hello World!&quot;.equals(question)) {
+            if ("Hello World!".equals(question)) {
 
-                respond(&quot;Hello, Test Case!&quot;);
-            } else if (&quot;How are you?&quot;.equals(question)) {
+                respond("Hello, Test Case!");
+            } else if ("How are you?".equals(question)) {
 
-                respond(&quot;I&#39;m doing well.&quot;);
-            } else if (&quot;Still spinning?&quot;.equals(question)) {
+                respond("I'm doing well.");
+            } else if ("Still spinning?".equals(question)) {
 
-                respond(&quot;Once every day, as usual.&quot;);
+                respond("Once every day, as usual.");
             }
         } catch (JMSException e) {
             throw new IllegalStateException(e);
@@ -164,10 +174,17 @@ public class ChatBean implements MessageListener {
             if (connection != null) connection.close();
         }
     }
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; metadata-complete=&quot;true&quot;&gt;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" metadata-complete="true"&gt;
   &lt;enterprise-beans&gt;
 
     &lt;message-driven&gt;
@@ -210,10 +227,17 @@ public class ChatBean implements MessageListener {
     &lt;/message-driven&gt;
 
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<h2>ChatBeanTest</h2>
-<pre><code>package org.superbiz.mdb;
+&lt;/ejb-jar&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_chatbeantest">ChatBeanTest</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.mdb;
 
 import junit.framework.TestCase;
 
@@ -233,15 +257,15 @@ public class ChatBeanTest extends TestCase {
     @Resource
     private ConnectionFactory connectionFactory;
 
-    @Resource(name = &quot;ChatBean&quot;)
+    @Resource(name = "ChatBean")
     private Queue questionQueue;
 
-    @Resource(name = &quot;AnswerQueue&quot;)
+    @Resource(name = "AnswerQueue")
     private Queue answerQueue;
 
     public void test() throws Exception {
 
-        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
 
         final Connection connection = connectionFactory.createConnection();
 
@@ -254,19 +278,19 @@ public class ChatBeanTest extends TestCase {
         final MessageConsumer answers = session.createConsumer(answerQueue);
 
 
-        sendText(&quot;Hello World!&quot;, questions, session);
+        sendText("Hello World!", questions, session);
 
-        assertEquals(&quot;Hello, Test Case!&quot;, receiveText(answers));
-
-
-        sendText(&quot;How are you?&quot;, questions, session);
-
-        assertEquals(&quot;I&#39;m doing well.&quot;, receiveText(answers));
+        assertEquals("Hello, Test Case!", receiveText(answers));
 
 
-        sendText(&quot;Still spinning?&quot;, questions, session);
+        sendText("How are you?", questions, session);
 
-        assertEquals(&quot;Once every day, as usual.&quot;, receiveText(answers));
+        assertEquals("I'm doing well.", receiveText(answers));
+
+
+        sendText("Still spinning?", questions, session);
+
+        assertEquals("Once every day, as usual.", receiveText(answers));
     }
 
     private void sendText(String text, MessageProducer questions, Session session) throws JMSException {
@@ -278,10 +302,15 @@ public class ChatBeanTest extends TestCase {
 
         return ((TextMessage) answers.receive(1000)).getText();
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.mdb.ChatBeanTest
@@ -289,33 +318,33 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/simple-mdb-with-descriptor
 INFO - openejb.base = /Users/dblevins/examples/simple-mdb-with-descriptor
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/simple-mdb-with-descriptor/target/classes
 INFO - Beginning load: /Users/dblevins/examples/simple-mdb-with-descriptor/target/classes
 INFO - Configuring enterprise application: /Users/dblevins/examples/simple-mdb-with-descriptor
-WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
 INFO - Configuring Service(id=Default MDB Container, type=Container, provider-id=Default MDB Container)
 INFO - Auto-creating a container for bean ChatBean: Container(type=MESSAGE, id=Default MDB Container)
 INFO - Configuring Service(id=Default JMS Resource Adapter, type=Resource, provider-id=Default JMS Resource Adapter)
 INFO - Configuring Service(id=Default JMS Connection Factory, type=Resource, provider-id=Default JMS Connection Factory)
-INFO - Auto-creating a Resource with id &#39;Default JMS Connection Factory&#39; of type &#39;javax.jms.ConnectionFactory for &#39;ChatBean&#39;.
-INFO - Auto-linking resource-ref &#39;java:comp/env/org.superbiz.mdbdesc.ChatBean/connectionFactory&#39; in bean ChatBean to Resource(id=Default JMS Connection Factory)
+INFO - Auto-creating a Resource with id 'Default JMS Connection Factory' of type 'javax.jms.ConnectionFactory for 'ChatBean'.
+INFO - Auto-linking resource-ref 'java:comp/env/org.superbiz.mdbdesc.ChatBean/connectionFactory' in bean ChatBean to Resource(id=Default JMS Connection Factory)
 INFO - Configuring Service(id=AnswerQueue, type=Resource, provider-id=Default Queue)
-INFO - Auto-creating a Resource with id &#39;AnswerQueue&#39; of type &#39;javax.jms.Queue for &#39;ChatBean&#39;.
-INFO - Auto-linking resource-env-ref &#39;java:comp/env/AnswerQueue&#39; in bean ChatBean to Resource(id=AnswerQueue)
+INFO - Auto-creating a Resource with id 'AnswerQueue' of type 'javax.jms.Queue for 'ChatBean'.
+INFO - Auto-linking resource-env-ref 'java:comp/env/AnswerQueue' in bean ChatBean to Resource(id=AnswerQueue)
 INFO - Configuring Service(id=ChatBean, type=Resource, provider-id=Default Queue)
-INFO - Auto-creating a Resource with id &#39;ChatBean&#39; of type &#39;javax.jms.Queue for &#39;ChatBean&#39;.
+INFO - Auto-creating a Resource with id 'ChatBean' of type 'javax.jms.Queue for 'ChatBean'.
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.mdb.ChatBeanTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Auto-linking resource-ref &#39;java:comp/env/org.superbiz.mdb.ChatBeanTest/connectionFactory&#39; in bean org.superbiz.mdb.ChatBeanTest to Resource(id=Default JMS Connection Factory)
-INFO - Auto-linking resource-env-ref &#39;java:comp/env/AnswerQueue&#39; in bean org.superbiz.mdb.ChatBeanTest to Resource(id=AnswerQueue)
-INFO - Auto-linking resource-env-ref &#39;java:comp/env/ChatBean&#39; in bean org.superbiz.mdb.ChatBeanTest to Resource(id=ChatBean)
-INFO - Enterprise application &quot;/Users/dblevins/examples/simple-mdb-with-descriptor&quot; loaded.
+INFO - Auto-linking resource-ref 'java:comp/env/org.superbiz.mdb.ChatBeanTest/connectionFactory' in bean org.superbiz.mdb.ChatBeanTest to Resource(id=Default JMS Connection Factory)
+INFO - Auto-linking resource-env-ref 'java:comp/env/AnswerQueue' in bean org.superbiz.mdb.ChatBeanTest to Resource(id=AnswerQueue)
+INFO - Auto-linking resource-env-ref 'java:comp/env/ChatBean' in bean org.superbiz.mdb.ChatBeanTest to Resource(id=ChatBean)
+INFO - Enterprise application "/Users/dblevins/examples/simple-mdb-with-descriptor" loaded.
 INFO - Assembling app: /Users/dblevins/examples/simple-mdb-with-descriptor
-INFO - Jndi(name=&quot;java:global/EjbModule1842275169/org.superbiz.mdb.ChatBeanTest!org.superbiz.mdb.ChatBeanTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1842275169/org.superbiz.mdb.ChatBeanTest&quot;)
+INFO - Jndi(name="java:global/EjbModule1842275169/org.superbiz.mdb.ChatBeanTest!org.superbiz.mdb.ChatBeanTest")
+INFO - Jndi(name="java:global/EjbModule1842275169/org.superbiz.mdb.ChatBeanTest")
 INFO - Created Ejb(deployment-id=org.superbiz.mdb.ChatBeanTest, ejb-name=org.superbiz.mdb.ChatBeanTest, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=ChatBean, ejb-name=ChatBean, container=Default MDB Container)
 INFO - Started Ejb(deployment-id=org.superbiz.mdb.ChatBeanTest, ejb-name=org.superbiz.mdb.ChatBeanTest, container=Default Managed Container)
@@ -325,8 +354,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.914 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
             </div>
             
         </div>
