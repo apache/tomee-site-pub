@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>@AccessTimeout la forma  Meta-Annotation</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="sect1">
+<h2 id="_introducción">Introducción</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Cualquier anotación que reciba parámetros se puede beneficiar de las meta-annotations. Aquí obsvervamos cómo <code>@AccessTimeout</code> puede ser más facíl de comprender y administrar mediante meta-annotatios.
+Usaremos [access-timeout](../access-timeout/README.html) como nuestro ejemplo de caso de uso.</p>
+</div>
+<div class="paragraph">
+<p>El valor de los parámetros suministrador a <code>@AccessTimeout</code> tienen un efecto dramático en lo que la anotación realmente hace. Además, <code>@AccessTimeout</code> tiene uno de esos diseños
+donde <code>-1</code> y <code>0</code> tienen un significado totalmente diferente. Uno quiere decir "espera por siempre", el otro "nunca esperes". Solo algunos con suerte pueden recordar cual es cual.
+Para el resto de nosotros es una fuente constante de bugs.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Meta-Annotations al rescate!
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__strong_em_creando_meta_annotations_em_strong"><strong><em>Creando Meta-Annotations</em></strong></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Con respecto a las mejores prácticas, pondremos nuestras meta-annotations en el paquete llamado <code>api</code>, para este ejempo que nos da <code>org.superbiz.accesstimeout.api</code>. El paquete <code>org.superbiz.api</code> también funcionará.</p>
+</div>
+<div class="paragraph">
+<p>La idea básica es tener un paquete donde anotaciones "aprovadas" sean usadas y prohibr uso de versiones non-meta de anotaciones. Toda la configuración
+estará centralizada en el paquete <code>api</code>  y cambios en los valores de tiempo de espera estarán localizados en ese paquete y automaticamente reflejados a través de toda la aplicación.</p>
+</div>
+<div class="paragraph">
+<p>Un efecto secundario interesante de este enfoque es que si el paquete <code>api</code> donde las definiciones de meta-annotation  existe ubicado en un jar separado, entonces efectivamente alguien
+puede cambiar toda la configuración de una aplicación simplemente remplazando el jar <code>api</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="__metatype_span_class_small_la_meta_annotation_root_span">@Metatype <span class="small">La Meta-Annotation"  root"</span></h3>
+<div class="paragraph">
+<p>Así como  con todo el uso meta-annotation, primero debes de crear tu propia meta-annotation "root". Esto es tan facil como crear una anotación
+llamada <code>Metatype</code> que esta anotada con esta misma anotación y tiene un <code>ElementType.ANNOTATION_TYPE</code> como su objetivo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface Metatype {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitnever">@AwaitNever</h3>
+<div class="paragraph">
+<p>Cuando la anotacion <code>@AccessTimeout</code> tiene el valor de <code>0</code> que tiene la implicación que nunca debe de esperar para acceder al bean. Si el bean esta ocupado, el que lo llama inmediatamente
+recibirá una <code>ConcurrentAccessException</code>. Esto es difícil de recordar y definitivamente no es auto-documentado para aquellos que nunca conocieron los detalles.</p>
+</div>
+<div class="paragraph">
+<p>Para crear una version de la meta-annotation <code>@AccessTimeout(0)</code> nosotros simplemente debemos pensar un buen nombre de anotación, crear esa anotación y anotarla con ambas <code>@AccessTimeout</code>
+y <code>@Metatype</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
+
+import javax.ejb.AccessTimeout;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AccessTimeout(0)
+public @interface AwaitNever {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitforever">@AwaitForever</h3>
+<div class="paragraph">
+<p>Así como <code>0</code> tiene su significado especial como "nunca esperes" , el valor de <code>-1</code> quiere decir "espera por siempre."</p>
+</div>
+<div class="paragraph">
+<p>Mientras seamos exigentes, lo que podemos hacer con las meta-anotaciones,
+técincamente "esperar por siempre" no es la mejor descripción. Actualmete los métodos de <code>javax.util.concurrent</code> APIs usan "await" en vez de "wait". Un (wait) probablemente implica
+un comando de espera, que en este caso no es , el otro (await) más bien quiere decir que la espera es posible pero no certera. Así que usaremos "await" en el nombre de nuestras anotaciones.</p>
+</div>
+<div class="paragraph">
+<p>Nosotros hacemos nuestra propia <code>@AwaitForever</code> y la anotamos con <code>@AccessTimeout(0)</code> y <code>@Metatype</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout.api;
+
+import javax.ejb.AccessTimeout;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AccessTimeout(-1)
+public @interface AwaitForever {
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__awaitbriefly">@AwaitBriefly</h3>
+<div class="paragraph">
+<p>Tanto los valores de <code>-1</code> y <code>0</code> a <code>@AccessTimeout</code> no incluyen todo el alcance de la anotación. Aqui es donde tú puedes especificar el máximo de minutos , segundos,
+milisegundos,etc. donde uno podrá esperar acceder a la instancia del bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+
+@AccessTimeout(value = 5, unit = TimeUnit.SECONDS)
+public @interface AwaitBriefly {
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuración_vs_operación">Configuración vs Operación</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Una vez que hayas creado un par de meta-annotations y la diversión se vuelva vulgar, empiezas a preguntarte cual será la mejor forma de beneficiarte de las meta-annotations.</p>
+</div>
+<div class="paragraph">
+<p>Realmente tienes que empezar a pensar como quieres hacer uso de la meta-annotation y ponerte el sombrero de diseñador. El dilema fundamental es
+<strong>configuración vs operación</strong> y la respuesta es subjetiva; cuanta flexibilidad quieres diseñar en tu aplicación y en donde?</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nombres_de_configuración_span_class_small_describiendo_la_configuración_span">Nombres de configuración <span class="small">describiendo la configuración</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>El enfoque más sencillo es llamar a tus meta-annotations después de la <strong>configuración</strong> que encapsulan. Hemos seguido este formato hasta ahora con <code>@AwaitNever</code> y <code>@AwaitForever</code>
+para que sea claro el contenido de cada meta-annotation (<code>@AccessTimeout(-1)</code> y <code>@AccessTimeout(0)</code> respectivamente).</p>
+</div>
+<div class="paragraph">
+<p>Los <strong>contras</strong> de este enfoque es que tu querrás cambiar la configuración de esta aplicación con tan solo cambiar las meta-annotations&#8201;&#8212;&#8201;este es uno de los grandes beneficios
+de meta-annotations&#8201;&#8212;&#8201;pero esto podría cambiar el significado de la anotación. Ciertamente , la anotación <code>@AwaitNever</code> no puede tener otro valor más que <code>0</code> si es que esta a la altura del nombre.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nombres_de_operación_span_class_small_describiendo_el_código_span">Nombres de operación  <span class="small">describiendo el código</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>El enfoque alterno es llamar las meta-annotations después de <strong>operaciones</strong> a las cuales aplica. En breve para describir , para describir el código en si y no la configuración. Así que,
+nombres como <code>@OrderCheckTimeout</code> ó <code>@TwitterUpdateTimeout</code>. Estos nombres son prueba de cambio de configuración. Estos no cambiarán si la configuración cambia y de hecho, pueden facilitar control de
+buscardor-de-grano sobre la configuación de la aplicación.</p>
+</div>
+<div class="paragraph">
+<p>Los <strong>contras</strong> de este enfoque es que requiere mucha más deliberación y consideración, sin mencionar más anotaciones. Tus habilidades como arquitecto, diseñador y hablilidad para pensar como
+administrador serán puestas a prueba. Tienes que ser bueno para ponerte el sombrero dev-opts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pragmatismo_span_class_small_lo_mejor_de_ambos_mundos_span">Pragmatismo  <span class="small">lo mejor de ambos mundos</span></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Afortunadamente, meta-annotations son recursivas.  Puedes hacer un poco de ambas.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Metatype
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+
+@AwaitBriefly
+public @interface TwitterUpdateTimeout {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Claro todavía tienes que ser muy deliberado en como usar las anotaciones. Cuando se use una "configuracion" llamada meta-annotation en código puede ser usada para decirte a tí mismo,
+"No quiere reconfigurarlo después". Si eso no se siente bien, haz un esfuerzo extra en crear una operación llamada anotación y úsala en el código.</p>
+</div>
+</div>
+</div>
+<h1 id="_aplicando_las_meta_annotations" class="sect0">Aplicando las Meta-Annotations</h1>
+<div class="paragraph">
+<p>Juntando todo , tal vez así es como deberíamos aplicar nuestras meta-annotations para el ejemplo  [access-timeout](../access-timeout/README.html).</p>
+</div>
+<div class="sect2">
+<h3 id="_antes">Antes</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout;
+
+import javax.ejb.AccessTimeout;
+import javax.ejb.Asynchronous;
+import javax.ejb.Lock;
+import javax.ejb.Singleton;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+import static javax.ejb.LockType.WRITE;
+
+/**
+    * @version $Revision$ $Date$
+    */
+@Singleton
+@Lock(WRITE)
+public class BusyBee {
+
+    @Asynchronous
+    public Future stayBusy(CountDownLatch ready) {
+        ready.countDown();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+
+        return null;
+    }
+
+    @AccessTimeout(0)
+    public void doItNow() {
+        // do something
+    }
+
+    @AccessTimeout(value = 5, unit = TimeUnit.SECONDS)
+    public void doItSoon() {
+        // do something
+    }
+
+    @AccessTimeout(-1)
+    public void justDoIt() {
+        // do something
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_después">Después</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.accesstimeout;
+
+import org.superbiz.accesstimeout.api.AwaitBriefly;
+import org.superbiz.accesstimeout.api.AwaitForever;
+import org.superbiz.accesstimeout.api.AwaitNever;
+
+import javax.ejb.Asynchronous;
+import javax.ejb.Lock;
+import javax.ejb.Singleton;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+
+import static javax.ejb.LockType.WRITE;
+
+/**
+    * @version $Revision$ $Date$
+    */
+@Singleton
+@Lock(WRITE)
+public class BusyBee {
+
+    @Asynchronous
+    public Future stayBusy(CountDownLatch ready) {
+        ready.countDown();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+
+        return null;
+    }
+
+    @AwaitNever
+    public void doItNow() {
+        // do something
+    }
+
+    @AwaitBriefly
+    public void doItSoon() {
+        // do something
+    }
+
+    @AwaitForever
+    public void justDoIt() {
+        // do something
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

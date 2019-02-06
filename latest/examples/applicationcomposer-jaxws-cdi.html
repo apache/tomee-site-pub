@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Application Composer with JAX-WS and CDI</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows the use of <code>@ApplicationComposer</code> annotation, in the context of a JAX-WS application.</p>
+</div>
+<div class="paragraph">
+<p>Application Composer is an API for creating an EE application programmatically. It is very useful in a text context, so it&#8217;s no wonder that it originated from here.
+For more information about Application Composer, please refer to <a href="http://tomee.apache.org/tomee-8.0/docs/application-composer/index.html">Application Composer section in the documentation</a>.
+In this example, we will use <code>@ApplicationComposer</code> in the context of a JAX-WS application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example is a meeting planner application. It is a JAX-WS application, and it accepts incoming booking meeting requests. The application first checks if the request can be booked, books it if possible,
+and returns to the caller if the request was booked (a boolean value). This is a simple, demo-purpose application, so it is greatly simplified. A book request is represented only by the meeting start date (a <code>java.util.Date</code> value).
+A book request is bookable if it starts after current date.</p>
+</div>
+<div class="paragraph">
+<p>The business logic is implemented using a <code>MeetingPlannerImpl</code> class (implementing <code>MeetingPlanner</code>). This class is a JAX-WS service, exposing the following method: <code>boolean book(final Date date)</code>.
+The client will send a request, containing a date; the service will return if the request can be booked, true or false. The exposed JAX-WS service uses in addition a different feature, CDI, injecting a
+business logic service class checking if the request is bookable. So, when the time will come to test the <code>@ApplicationComposer</code> annotation, we will both check that CDI worked in our programmatically
+started application and that the JAX-WS service is up and running.</p>
+</div>
+<div class="paragraph">
+<p>The business logic that checks if a request is bookable is defined by the following interface:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import java.util.Date;
+
+public interface Agenda {
+    boolean isBookable(Date d);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The implementation is a simple one, without distracting details:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import java.util.Date;
+
+public class LazyAgenda implements Agenda {
+    @Override
+    public boolean isBookable(final Date d) {
+        return d.after(new Date());
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JAX-WS service is defined by the following interface:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.jws.WebMethod;
+import javax.jws.WebService;
+import java.util.Date;
+
+@WebService
+public interface MeetingPlanner {
+
+    @WebMethod(operationName = "book", exclude = false)
+    boolean book(final Date date);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The class implementing this interface is:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.inject.Inject;
+import javax.jws.WebService;
+import java.util.Date;
+
+@WebService
+public class MeetingPlannerImpl implements MeetingPlanner {
+    @Inject
+    private Agenda agenda;
+
+    @Override
+    public boolean book(final Date date) {
+        return agenda.isBookable(date);
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_application_composer">Using Application Composer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, that the application is completed, it&#8217;s time to test it. For this, we will add a unit test that will use Application Composer to start and deploy our application in a full JEE environment.
+The full test:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import org.apache.openejb.jee.WebApp;
+import org.apache.openejb.junit.ApplicationComposer;
+import org.apache.openejb.testing.Classes;
+import org.apache.openejb.testing.Configuration;
+import org.apache.openejb.testing.EnableServices;
+import org.apache.openejb.testing.Module;
+import org.apache.openejb.testng.PropertiesBuilder;
+import org.apache.openejb.util.NetworkUtil;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Dispatch;
+import javax.xml.ws.Service;
+import java.net.URL;
+import java.util.Date;
+import java.util.Properties;
+
+import static org.junit.Assert.assertTrue;
+
+@EnableServices("jax-ws")
+@RunWith(ApplicationComposer.class)
+public class MeetingPlannerTest {
+    private static final int JAX_WS_PORT = NetworkUtil.getNextAvailablePort();
+
+    @Configuration
+    public Properties configuration() {
+        return new PropertiesBuilder().p("httpejbd.port", Integer.toString(JAX_WS_PORT)).build();
+    }
+
+    @Module
+    @Classes(cdi = true, value = {MeetingPlannerImpl.class, LazyAgenda.class})
+    public WebApp war() {
+        return new WebApp()
+                .contextRoot("/demo")
+                .addServlet("jaxws", MeetingPlannerImpl.class.getName(), "/meeting-planner");
+    }
+
+    @Test
+    public void bookPort() throws Exception {
+        final Service service = Service.create(
+                new URL("http://127.0.0.1:" + JAX_WS_PORT + "/demo/meeting-planner?wsdl"),
+                new QName("http://jaxws.example.superbiz.org/", "MeetingPlannerImplService"));
+        final MeetingPlanner planner = service.getPort(MeetingPlanner.class);
+        assertTrue(planner.book(new Date(System.currentTimeMillis() + 1000000)));
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First thing to see, we use Application Composer as a JUnit runner. So, our test integrates with current tools just like any other JUnit test. The test&#8217;s configuration is defined in the method annotated with <code>@Configuration</code>.</p>
+</div>
+<div class="paragraph">
+<p>The application is started in the method having the <code>@Module</code> annotation. In this example, we specify the classes we want to scan, and the fact that we want to use CDI.</p>
+</div>
+<div class="paragraph">
+<p>Our test makes a booking request, sending a date in the future, then it verifies that booking is done.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_test">Running the test</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running the test we can see that the application was successfully started, that the JAX-WS service is running and that it fulfills incoming requests correctly.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.example.jaxws.MeetingPlannerTest
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@49993335
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       39649
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.example.jaxws.MeetingPlannerTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest" loaded.
+INFO - Creating dedicated application classloader for MeetingPlannerTest
+INFO - Assembling app: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@49993335
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 406 ms.
+INFO - Webservice(wsdl=http://127.0.0.1:39649/demo/meeting-planner, qname={http://jaxws.example.superbiz.org/}MeetingPlannerImplService) --&gt; Pojo(id=null./demo.jaxws)
+INFO - Deployed Application(path=/home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest)
+INFO - Creating Service {http://jaxws.example.superbiz.org/}MeetingPlannerImplService from WSDL: http://127.0.0.1:39649/demo/meeting-planner?wsdl
+INFO - Creating Service {http://jaxws.example.superbiz.org/}MeetingPlannerImplService from WSDL: http://127.0.0.1:39649/demo/meeting-planner?wsdl
+INFO - Undeploying app: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Stopping network services
+INFO - Stopping server services
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@49993335
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf)
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       39649
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.example.jaxws.MeetingPlannerTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest" loaded.
+INFO - Creating dedicated application classloader for MeetingPlannerTest
+INFO - Assembling app: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@49993335
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 52 ms.
+INFO - Webservice(wsdl=http://127.0.0.1:39649/demo/meeting-planner, qname={http://jaxws.example.superbiz.org/}MeetingPlannerImplService) --&gt; Pojo(id=null./demo.jaxws)
+INFO - Deployed Application(path=/home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest)
+INFO - Undeploying app: /home/bogdan/open_source/tomee-master/examples/applicationcomposer-jaxws-cdi/MeetingPlannerTest
+INFO - Stopping network services
+INFO - Stopping server services
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.076 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Full example can be found <a href="https://github.com/apache/tomee/tree/master/examples/applicationcomposer-jaxws-cdi">here</a>.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

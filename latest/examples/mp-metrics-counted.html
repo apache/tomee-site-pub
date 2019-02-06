@@ -98,7 +98,7 @@
                 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is an example on how to use microprofile metrics in TomEE.</p>
+<p>This is an example on how to use microprofile metrics in TomEE.  The project includes a docker profile which can be used to create a Docker image.</p>
 </div>
 </div>
 </div>
@@ -108,6 +108,20 @@
 <div class="literalblock">
 <div class="content">
 <pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatively_build_and_run_the_application_via_docker_note_the_use_of_the_docker_profile">Alternatively build and run the application via Docker (note the use of the docker profile):</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn -Pdocker docker:build
+docker run -it --rm \
+       -p 8080:8080 \
+       --name=tomee-mp-metrics-counted \
+       tomee/mp-metrics-counted</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -121,7 +135,17 @@ status for the day and week.</p>
 <div class="sectionbody">
 <div class="literalblock">
 <div class="content">
-<pre>GET http://localhost:8080/rest-mp-metrics/weather/day/status</pre>
+<pre>GET http://localhost:8080/mp-metrics-counted/weather/week/status</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_if_running_via_docker_because_the_application_is_installed_as_the_root_application_remove_the_application_name_such_as">If running via Docker, because the application is installed as the ROOT application, remove the application name such as:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/weather/week/status</pre>
 </div>
 </div>
 </div>
