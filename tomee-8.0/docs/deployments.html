@@ -95,7 +95,7 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1 id="_the_deployments_element_in_openejb_xml" class="sect0">The 'Deployments' element in openejb.xml</h1>
+                <h1 id="_the_deployments_element_in_tomee_xml" class="sect0">The 'Deployments' element in tomee.xml</h1>
 <div class="sect1">
 <h2 id="_a_single_jar">A single jar</h2>
 <div class="sectionbody">
@@ -105,18 +105,18 @@ with a 'jar' attribute pointing to the jar file on the file system.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
 ...
 &lt;Deployments jar="c:\my\app\superEjbs.jar" /&gt;
 &lt;Deployments jar="c:\someplace\purchasing.jar" /&gt;
 &lt;Deployments jar="timeTrack.jar" /&gt;
-&lt;/openejb&gt;</code></pre>
+&lt;/tomee&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The last element in the example uses a relative path to point to the ejb
-jar. This path will be resolved relative to the openejb.base property.
-So, for example, of the value of openejb.base was 'c:' then OpenEJB
+jar. This path will be resolved relative to the catalina.base property.
+So, for example, of the value of catalina.base was 'c:' then TomEE
 would look for the jar 'c:.jar'. See the [OPENEJB:Configuration] guide
 for more details.</p>
 </div>
@@ -126,33 +126,33 @@ for more details.</p>
 <h2 id="_a_directory_of_jars">A directory of jars</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To point to a directory that contains several jar files that OpenEJB
+<p>To point to a directory that contains several jar files that TomEE
 should load, simply declare a 'Deployments' element with a 'dir'
 attribute pointing to the directory containing the jar files.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
 ...
 
 &lt;Deployments dir="c:\my\app\beans\" /&gt;
 &lt;Deployments dir="c:\crimestopper\lib" /&gt;
 &lt;Deployments dir="ejbs" /&gt;
 &lt;Deployments dir="beans" /&gt;
-&lt;/openejb&gt;</code></pre>
+&lt;/tomee&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The directories listed will be searched for jars containing
 'META-INF/ejb-jar.xml' files and will be added to the list of jars to
 load if they do. Better said, it&#8217;s completely safe to point to a
-directory containing a mix of ejbs and regular jar files. OpenEJB will
+directory containing a mix of ejbs and regular jar files. TomEE will
 simply skip over jars that do contain the required
 'META-INF/ejb-jar.xml' file.</p>
 </div>
 <div class="paragraph">
 <p>The last Deployments element declares a 'beans' directory relative to
-openejb.base for holding ejb jars. This declaration is simply convention
+catalina.base for holding ejb jars. This declaration is simply convention
 and not required.</p>
 </div>
 </div>
@@ -161,9 +161,9 @@ and not required.</p>
 <h2 id="_an_unpacked_jar">An unpacked jar</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As of 1.0 beta1, OpenEJB supports unpacked ejb jars. Simply meaning that
+<p>As of 1.0 beta1, TomEE supports unpacked ejb jars. Simply meaning that
 you don&#8217;t need to pack your ejb&#8217;s into a jar file in order to use them
-in OpenEJB. You still need to follow the ejb jar layout and include an
+in TomEE. You still need to follow the ejb jar layout and include an
 "META-INF/ejb-jar.xml" in the directory that contains your ejbs.</p>
 </div>
 <div class="paragraph">
@@ -188,18 +188,18 @@ set to 'C:' as shown below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
 ...
 
 &lt;Deployments dir="c:\myapp\acmeEjbs" /&gt;
-&lt;/openejb&gt;</code></pre>
+&lt;/tomee&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Note that this syntax is the same as the directory syntax above. If
-OpenEJB finds a META-INF directory with an 'ejb-jar.xml' fine inside,
-then OpenEJB will treat the directory as an unpacked ejb jar. Otherwise
-OpenEJB will look for ejb jar files to load as detailed in the above
+TomEE finds a META-INF directory with an 'ejb-jar.xml' fine inside,
+then TomEE will treat the directory as an unpacked ejb jar. Otherwise
+TomEE will look for ejb jar files to load as detailed in the above
 section.</p>
 </div>
 </div>
