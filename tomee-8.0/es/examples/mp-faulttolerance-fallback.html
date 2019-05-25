@@ -87,44 +87,194 @@
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
-              <h1>Examples</h1>
+              
+              <h1>MicroProfile Fault Tolerance - Fallback</h1>
             </div>
           </div>
         </div>
-                <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">MicroProfile</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-config-example.html">MicroProfile Config</a></li>
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-faulttolerance-fallback.html">MicroProfile Fault Tolerance - Fallback</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Testing Techniques</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="alternate-descriptors.html">Descriptores alternos</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Meta-Annotations</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout-meta.html">@AccessTimeout la forma  Meta-Annotation</a></li>
-            </ul>
-          </div>
-        </div>
         <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">EJB</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout.html">@AccessTimeout Annotation</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-          </div>
-          <div class="col-md-4">
-          </div>
-        </div>
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este es un ejemplo de como usar Microprofile @Fallback en TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fallback_feature">Fallback Feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fault Tolerance Fallback provee una alternativa en caso de fallo de una ejecución. Esta alternativa será llamada cuando
+un <code>Retry</code> o <code>CircuitBreaker</code> ha fallado.</p>
+</div>
+<div class="paragraph">
+<p>Para usar esta funcionalidad es necesario anotar el método con  <code>@Fallback</code>.</p>
+</div>
+<div class="paragraph">
+<p>Las politicas del Fallback permiten configurar :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>value</strong>: Una clase que implementa <code>FallbackHandler</code></p>
+</li>
+<li>
+<p><strong>fallbackMethod</strong>: El método que será ejecutado.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Los parámetros <code>value</code> and <code>fallbackMethod</code> no pueden ser especificados a la vez.</p>
+</div>
+<div class="paragraph">
+<p>Para más detalles revisar <a href="http://download.eclipse.org/microprofile/microprofile-fault-tolerance-1.1/microprofile-fault-tolerance-spec.html">Especificación</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejemplos">Ejemplos</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ejecutar_la_aplicación">Ejecutar la aplicación</h3>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_1">Ejemplo 1</h3>
+<div class="paragraph">
+<p>El método <code>statusOfDay</code> siempre fallará lanzando <code>WeatherException</code> y como la anotación
+<code>@CircuitBreaker</code> esta configurada con <code>failOn</code> en caso de una excepción, el fallback,
+<code>WeatherDayStatusFallbackHandler#handle</code> será invocado.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RequestScoped
+public class WeatherService {
+   ...
+   @GET
+   @Path("/day/status")
+   @CircuitBreaker(failOn = WeatherException.class)
+   @Fallback(WeatherDayStatusFallbackHandler.class)
+   public String dayStatus() {
+       throw new WeatherException();
+   }
+   ...
+ }
 
+public class WeatherDayStatusFallbackHandler implements FallbackHandler&lt;String&gt; {
+
+   @Override
+   public String handle(ExecutionContext executionContext) {
+       return "Hi, today is a sunny day!";
+   }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llama el estado del tiempo del dia</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-fallback/weather/day/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bitácora del servidor</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>SEVERE [http-nio-8080-exec-2] org.superbiz.rest.WeatherDayStatusFallbackHandler.handle WeatherDayStatusFallbackHandler was triggered due a fail</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Respuesta</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Hi, today is a sunny day!</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_2">Ejemplo 2</h3>
+<div class="paragraph">
+<p>El método <code>statusOfDay</code> siempre fallará lanzando <code>WeatherException</code> y como la anotación
+<code>@Retry</code> está configurada con <code>maxRetries = 1</code> en caso de fallo, el método fallback,
+<code>fallbackForWeekStatus</code> se invocará después de reintentar una vez.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RequestScoped
+public class WeatherService {
+  ...
+  @GET
+  @Path("/week/status")
+  @Retry(maxRetries = 1)
+  @Fallback(fallbackMethod = "fallbackForWeekStatus")
+  public String weekStatus() {
+      throw new WeatherException();
+  }
+
+  public String fallbackForWeekStatus() {
+      return "Hi, week will be mostly sunny!";
+  }
+  ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada del estado del tiempo de la semana</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-fallback/weather/week/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bitácora del servidor</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>SEVERE [http-nio-8080-exec-2] org.superbiz.rest.WeatherService.fallbackForWeekStatus Fallback was triggered due a fail</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Respuesta</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Hi, week will be mostly sunny!</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejecución_de_las_pruebas">Ejecución de las pruebas</h3>
+<div class="paragraph">
+<p>Puede además usar la prueba <a href="src/test/java/org/superbiz/rest/WeatherServiceTest.java">WeatherServiceTest.java</a> disponible en este proyecto.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean test</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
     </div>
 <footer>
 		<div class="container">

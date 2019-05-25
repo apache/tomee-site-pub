@@ -87,44 +87,107 @@
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
-              <h1>Examples</h1>
+              
+              <h1>MicroProfile Config</h1>
             </div>
           </div>
         </div>
-                <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">MicroProfile</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-config-example.html">MicroProfile Config</a></li>
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-faulttolerance-fallback.html">MicroProfile Fault Tolerance - Fallback</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Testing Techniques</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="alternate-descriptors.html">Descriptores alternos</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Meta-Annotations</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout-meta.html">@AccessTimeout la forma  Meta-Annotation</a></li>
-            </ul>
-          </div>
-        </div>
         <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">EJB</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout.html">@AccessTimeout Annotation</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-          </div>
-          <div class="col-md-4">
-          </div>
-        </div>
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este es un ejemplo de cómo usar la configuración de microprofile en TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejecutar_la_aplicación">Ejecutar la aplicación:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean install tomee:run</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_api">API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hay tres formas de inyectar valores en la aplicación usando configuración.</p>
+</div>
+<div class="paragraph">
+<p>1 . Para Valores por defecto con ConfigProperty ejecutar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-config-example/sample/defaultProperty</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>2 . Para obtener propiedades inyectadas con ConfigProperty ejecutar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-config-example/sample/injectedJavaVersion</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3 . Para obtener una propiedad desde Config con getValue ejecutar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-config-example/sample/javaVersion</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_características_de_config">Características de Config</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MicroProfile Config es una solución que permite externalizar la configuración de los microservicios. Cada propiedad
+puede ser inyectada directamente de forma individual.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+@ConfigProperty(name = "java.runtime.version")
+private String javaVersion;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Es posible establecer valores por defecto aún cuando la propiedad no está definida en el contexto, por tanto se usará la configuración por defecto.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+@ConfigProperty(name = "defaultProperty", defaultValue = "ALOHA")
+private String defaultProperty;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>El objeto Config puede también ser inyectado, de manera que se puede invocar el método getValue() para obtener una propiedad particular.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Inject
+private Config config;
 
+@GET
+@Path("javaVersion")
+public String getJavaVersionPropertyFromSystemProperties() {
+    return config.getValue("java.runtime.version", String.class);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
     </div>
 <footer>
 		<div class="container">

@@ -87,44 +87,140 @@
         <div class="row title">
           <div class="col-md-12">
             <div class='page-header'>
-              <h1>Examples</h1>
+              
+              <h1>Usuários remotos do Tomcat simples</h1>
             </div>
           </div>
         </div>
-                <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">MicroProfile</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-config-example.html">MicroProfile Config</a></li>
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="mp-faulttolerance-fallback.html">MicroProfile Fault Tolerance - Fallback</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Testing Techniques</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="alternate-descriptors.html">Descriptores alternos</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <div class="group-title">Meta-Annotations</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout-meta.html">@AccessTimeout la forma  Meta-Annotation</a></li>
-            </ul>
-          </div>
-        </div>
         <div class="row">
-          <div class="col-md-4">
-            <div class="group-title">EJB</div>
-            <ul class="group">
-              <li class="group-item"><span class="group-item-i" ><i class="fa fa-angle-right"></i></span><a href="access-timeout.html">@AccessTimeout Annotation</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-          </div>
-          <div class="col-md-4">
-          </div>
-        </div>
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este é um simples exemplo sobre como utilizar JNDI com restrições de segurança para o TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_contrato">Contrato</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No nosso exemplo, <code>Contract</code> é uma interface anotada com <code>@Remote</code> a qual indica que todos os métodos desta interface podem ser acessados por um código em um cliente.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">	@Remote
+	public interface Contract {
+	    String hi();
+	}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementação_de_contrato">Implementação de contrato</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>ContractImpl</code> é uma implementação da interface <code>Contract</code> restringindo o acesso ao método <code>hi</code> para usuários com a permissão <code>test</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class ContractImpl implements Contract {
+    @Override
+    @RolesAllowed("test")
+    public String hi() {
+        return "hi";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_teste_de_contrato">Teste de contrato</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nesta classe, nós testamos nossa aplicação com Arquillian criando um war, com as classes do contrato e sua implementação, e fazendo o deploy para um servidor TomEE embutido com o nome <code>test.war</code>. No arquivo arquillian.xml especificamos que o arquillian utiliza o arquivo <code>tomcat-users.xml</code> na pasta <code>src/test/conf</code>. No arquivo <code>tomcat-users.xml</code> existe um único usuário com o nome de usuário "tomcat", senha "users" and permissão "test".</p>
+</div>
+<div class="paragraph">
+<p>Para testar, nós procuramos pela <code>ContractImpl</code> e chamamos o método <code>hi</code> usando diferentes nomes de usuários e senhas.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
+public class ContractTest {
+    @Deployment(testable = false)
+    public static Archive&lt;?&gt; app() {
+        return ShrinkWrap.create(WebArchive.class, "test.war")
+                .addClasses(Contract.class, ContractImpl.class);
+    }
 
+    @ArquillianResource
+    private URL base;
+
+    @Test
+    public void valid() throws NamingException {
+        assertEquals("hi", hi(new Properties() {{
+            setProperty(Context.INITIAL_CONTEXT_FACTORY, RemoteInitialContextFactory.class.getName());
+            setProperty(Context.PROVIDER_URL, String.format("http://localhost:%s/tomee/ejb", base.getPort()));
+            setProperty(Context.SECURITY_PRINCIPAL, "tomcat");
+            setProperty(Context.SECURITY_CREDENTIALS, "users");
+        }}));
+    }
+
+    @Test
+    public void invalid() throws NamingException {
+        try {
+            hi(new Properties() {{
+                setProperty(Context.INITIAL_CONTEXT_FACTORY, RemoteInitialContextFactory.class.getName());
+                setProperty(Context.PROVIDER_URL, String.format("http://localhost:%s/tomee/ejb", base.getPort()));
+                setProperty(Context.SECURITY_PRINCIPAL, "tomcat");
+                setProperty(Context.SECURITY_CREDENTIALS, "wrong");
+            }});
+            fail();
+        } catch (final AuthenticationException ae) {
+            // ok
+        }
+    }
+
+    @Test
+    public void missingCredentials() throws NamingException {
+        try {
+            hi(new Properties() {{
+                setProperty(Context.INITIAL_CONTEXT_FACTORY, RemoteInitialContextFactory.class.getName());
+                setProperty(Context.PROVIDER_URL, String.format("http://localhost:%s/tomee/ejb", base.getPort()));
+            }});
+            fail();
+        } catch (final EJBAccessException eae) {
+            // no-op
+        }
+    }
+
+    private String hi(final Properties clientConfig) throws NamingException {
+        return Contract.class.cast(new InitialContext(clientConfig).lookup("java:global/test/ContractImpl!org.superbiz.Contract")).hi();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rodando_a_aplicação">Rodando a aplicação</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn install</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Todos os casos de testes irão passar.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
     </div>
 <footer>
 		<div class="container">
