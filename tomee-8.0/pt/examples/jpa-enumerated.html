@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>JPA and Enums via @Enumerated</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Às vezes pode ser desejável ter um tipo <code>enum</code> do Java para representar uma coluna específica em um banco de dados. A JPA oferece suporte à conversão dos dados de um banco de dados para ou a partir de um tipo <code>enum</code> do Java por meio da anotação  <code>@javax.persistence.Enumerated</code>.</p>
+</div>
+<div class="paragraph">
+<p>Esse exemplo mostrará o uso básico do <code>@Enumerated</code> em um campo de uma <code>@Entity</code>, bem como <code>enum</code> como parâmetro de uma <code>Query</code>.
+Também veremos que a representação de um banco de dados real pode ser <code>String</code> ou <code>int</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enum">Enum</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para o nosso exemplo, vamos aproveitar a familiar entidade <code>Movie</code> e adicionar um novo campo para representar a classificação MPAA.org do filme.  Isso é definido por meio de um <code>enum</code> simples que não requer anotações específicas da JPA.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
+    UNRATED,
+    G,
+    PG,
+    PG13,
+    R,
+    NC17
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__enumerated">@Enumerated</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Em nossa entidade <code>Movie</code>, nós adicionamos um campo <code>rating</code> do enum do tipo <code>Rating</code> e anotamos com <code>@Enumerated(EnumType.STRING)</code> para declarar que seu valor deve ser convertido do que é efetivamente uma <code>String</code> no banco de dados para o tipo <code>Rating</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Entity
+public class Movie {
+
+    @Id
+    @GeneratedValue
+    private int id;
+    private String director;
+    private String title;
+    private int year;
+
+    @Enumerated(EnumType.STRING)
+    private Rating rating;
+
+    public Movie() {
+    }
+
+    public Movie(String director, String title, int year, Rating rating) {
+        this.director = director;
+        this.title = title;
+        this.year = year;
+        this.rating = rating;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O código acima é suficiente e estará efetivamente feito. Por uma questão de completude, mostraremos um exemplo de uma <code>Query</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enum_em_uma_query_jpql">Enum em uma Query JPQL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Observe o método <code>findByRating</code> que cria uma <code>Query</code> com um parâmetro denominado <code>rating</code>. A principal coisa a notar é que a instância do enum <code>rating</code> propriamente dita é passada para o método
+ <code>query.setParameter</code>, <strong>não</strong> <code>rating.name()</code> ou <code>rating.ordinal()</code>.</p>
+</div>
+<div class="paragraph">
+<p>Independentemente se você usar <code>EnumType.STRING</code> ou <code>EnumType.ORDINAL</code>, você ainda sempre tem que passar o enum propriamente dito em chamadas para <code>query.setParameter</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateful
+public class Movies {
+
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
+
+    public void addMovie(Movie movie) {
+        entityManager.persist(movie);
+    }
+
+    public void deleteMovie(Movie movie) {
+        entityManager.remove(movie);
+    }
+
+    public List&lt;Movie&gt; findByRating(Rating rating) {
+        final Query query = entityManager.createQuery("SELECT m FROM Movie as m WHERE m.rating = :rating");
+        query.setParameter("rating", rating);
+        return query.getResultList();
+    }
+
+    public List&lt;Movie&gt; getMovies() throws Exception {
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
+        return query.getResultList();
+    }
+
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enumtype_string_vs_enumtype_ordinal">EnumType.STRING vs EnumType.ORDINAL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>É uma questão de estilo como você gostaria que seus dados <code>enum</code> representados no banco de dados.  Qualquer um deles <code>name()</code> ou <code>ordinal()</code> são suportados:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Enumerated(EnumType.STRING) Rating rating</code> o valor de <code>rating.name()</code> é gravado e lido a partir da coluna correspondente no banco de dados; por exemplo <code>G</code>, <code>PG</code>, <code>PG13</code></p>
+</li>
+<li>
+<p><code>@Enumerated(EnumType.ORDINAL) Rating rating</code> o valor de <code>rating.ordinal()</code> é gravado e lido a partir da coluna correspondente no banco de dados; por exemplo <code>0</code>, <code>1</code>, <code>2</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>O padrão é <code>EnumType.ORDINAL</code></p>
+</div>
+<div class="paragraph">
+<p>Essas são as vantagens e desvantagens de cada.</p>
+</div>
+<div class="sect2">
+<h3 id="_desvantagem_do_enumtype_ordinal">Desvantagem do EnumType.ORDINAL</h3>
+<div class="paragraph">
+<p>A desvantagem do <code>EnumType.ORDINAL</code> é o efeito do tempo e o desejo de manter <code>enums</code> em uma ordem lógica.  Com <code>EnumType.ORDINAL</code> quaisquer novos elementos enum devem ser adicionados ao
+<strong>final</strong> da lista ou você irá alterar acidentalmente o significado de todos os seus registros.</p>
+</div>
+<div class="paragraph">
+<p>Vamos usar o nosso enum <code>Rating</code> e ver como ele teria que evoluir ao longo do tempo para acompanhar as mudanças no sistema de classificações MPAA.org.</p>
+</div>
+<div class="paragraph">
+<p><strong>1980</strong></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>1984</strong> PG-13 é adicionado</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED,
+    PG13
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>1990</strong> NC-17 é adicionado</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public enum Rating {
+    G,
+    PG,
+    R,
+    UNRATED,
+    PG13,
+    NC17
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se <code>EnumType.STRING</code> foi usado, em seguida, o enum poderia ser reordenado a qualquer momento e, em vez disso, olhar como nós o definimos originalmente com classificações começando em <code>G</code> e aumentando em severidade para <code>NC17</code> e, eventualmente, <code>UNRATED</code>.  Com <code>EnumType.ORDINAL</code> a ordenação lógica não teria resistido o teste de tempo como novos valores foram adicionados.</p>
+</div>
+<div class="paragraph">
+<p>Se a ordem dos valores enum for significativa para seu código, evite <code>EnumType.ORDINAL</code></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testando_unitariamente_a_jpa_enumerated">Testando Unitariamente a JPA @Enumerated</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>public class MoviesTest extends TestCase {
+
+    public void test() throws Exception {
+
+        final Properties p = new Properties();
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+
+        EJBContainer container = EJBContainer.createEJBContainer(p);
+        final Context context = container.getContext();
+
+        final Movies movies = (Movies) context.lookup("java:global/jpa-scratch/Movies");
+
+        movies.addMovie(new Movie("James Frawley", "The Muppet Movie", 1979, Rating.G));
+        movies.addMovie(new Movie("Jim Henson", "The Great Muppet Caper", 1981, Rating.G));
+        movies.addMovie(new Movie("Frank Oz", "The Muppets Take Manhattan", 1984, Rating.G));
+        movies.addMovie(new Movie("James Bobin", "The Muppets", 2011, Rating.PG));
+
+        assertEquals("List.size()", 4, movies.getMovies().size());
+
+        assertEquals("List.size()", 3, movies.findByRating(Rating.G).size());
+
+        assertEquals("List.size()", 1, movies.findByRating(Rating.PG).size());
+
+        assertEquals("List.size()", 0, movies.findByRating(Rating.R).size());
+
+        container.close();
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_executando" class="sect0">Executando</h1>
+<div class="paragraph">
+<p>Para executar o exemplo via maven:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cd jpa-enumerated
+mvn clean install</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Que irá gerar saída semelhante ao seguinte:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.jpa.enums.MoviesTest
+Apache OpenEJB 4.0.0-beta-2    build: 20120115-08:26
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - openejb.base = /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/openejb/examples/jpa-enumerated/target/classes
+INFO - Beginning load: /Users/dblevins/openejb/examples/jpa-enumerated/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.jpa.enums.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=movie-unit)
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
+INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/openejb/examples/jpa-enumerated" loaded.
+INFO - Assembling app: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 406ms
+INFO - Jndi(name="java:global/jpa-enumerated/Movies!org.superbiz.jpa.enums.Movies")
+INFO - Jndi(name="java:global/jpa-enumerated/Movies")
+INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Deployed Application(path=/Users/dblevins/openejb/examples/jpa-enumerated)
+INFO - Undeploying app: /Users/dblevins/openejb/examples/jpa-enumerated
+INFO - Closing DataSource: movieDatabase
+INFO - Closing DataSource: movieDatabaseNonJta
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.831 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

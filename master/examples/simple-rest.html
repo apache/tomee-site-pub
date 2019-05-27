@@ -95,42 +95,70 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Defining a REST service is pretty easy, simply ad @Path annotation to a class then define on methods the HTTP method to use (@GET, @POST, ...).</p>
-<h1>The Code</h1>
-<h2>The REST service: @Path, @GET, @POST</h2>
-<p>Here we see a bean that uses the Bean-Managed Concurrency option as well as the @Startup annotation which causes the bean to be instantiated by the container when the application starts. Singleton beans with @ConcurrencyManagement(BEAN) are responsible for their own thread-safety. The bean shown is a simple properties "registry" and provides a place where options could be set and retrieved by all beans in the application.</p>
-<pre><code>package org.superbiz.rest;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Defining a REST service is pretty easy, simply ad <code>@Path</code> annotation to a class then define on methods the HTTP method to use (<code>@GET</code>, <code>@POST</code>, …).</p>
+</div>
+</div>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="sect1">
+<h2 id="_the_rest_service_code_path_code_code_get_code_code_post_code">The REST service: <code>@Path</code>, <code>@GET</code>, <code>@POST</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we have a simple REST, we annotate the class with <code>@Path("/greeting")</code> to indicate the route corresponding to class <code>GreetingService</code>. So we define <code>message()</code> as <code>@GET</code> and <code>lowerCase()</code> as <code>@POST</code> for this <code>/greeting</code> route. There we have a service, pretty simple huh?</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-@Path(&quot;/greeting&quot;)
+@Path("/greeting")
 public class GreetingService {
     @GET
     public String message() {
-        return &quot;Hi REST!&quot;;
+        return "Hi REST!";
     }
 
     @POST
     public String lowerCase(final String message) {
-        return &quot;Hi REST!&quot;.toLowerCase();
+        return "Hi REST!".toLowerCase();
     }
-}
-</code></pre>
-<h1>Testing</h1>
-<h2>Test for the JAXRS service</h2>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_test_for_the_jaxrs_service">Test for the JAXRS service</h3>
+<div class="paragraph">
 <p>The test uses the OpenEJB ApplicationComposer to make it trivial.</p>
-<p>The idea is first to activate the jaxrs services. This is done using @EnableServices annotation.</p>
-<p>Then we create on the fly the application simply returning an object representing the web.xml. Here we simply use it to define the context root but you can use it to define your REST Application too. And to complete the application definition we add @Classes annotation to define the set of classes to use in this app.</p>
-<p>Finally to test it we use cxf client API to call the REST service in get() and post() methods.</p>
-<pre><code>package org.superbiz.rest;
+</div>
+<div class="paragraph">
+<p>The idea is first to activate the <code>jaxrs</code> services. This is done using <code>@EnableServices</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Then we create on the fly the application simply returning an object representing the <code>web.xml</code>. Here we simply use it to define the context root but you can use it to define your REST Application too. And to complete the application definition we add <code>@Classes</code> annotation to define the set of classes to use in this app.</p>
+</div>
+<div class="paragraph">
+<p>Finally to test it we use cxf client API to call the REST service in <code>get()</code> and <code>post()</code> methods.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.rest;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.openejb.jee.SingletonBean;
 import org.apache.openejb.junit.ApplicationComposer;
-import org.apache.openejb.junit.EnableServices;
-import org.apache.openejb.junit.Module;
+import org.apache.openejb.testing.EnableServices;
+import org.apache.openejb.testing.Module;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -138,7 +166,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-@EnableServices(value = &quot;jaxrs&quot;)
+@EnableServices(value = "jaxrs")
 @RunWith(ApplicationComposer.class)
 public class GreetingServiceTest {
     @Module
@@ -148,23 +176,36 @@ public class GreetingServiceTest {
 
     @Test
     public void get() throws IOException {
-        final String message = WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/GreetingServiceTest/greeting/&quot;).get(String.class);
-        assertEquals(&quot;Hi REST!&quot;, message);
+        final String message = WebClient.create("http://localhost:4204").path("/GreetingServiceTest/greeting/").get(String.class);
+        assertEquals("Hi REST!", message);
     }
 
     @Test
     public void post() throws IOException {
-        final String message = WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/GreetingServiceTest/greeting/&quot;).post(&quot;Hi REST!&quot;, String.class);
-        assertEquals(&quot;hi rest!&quot;, message);
+        final String message = WebClient.create("http://localhost:4204").path("/GreetingServiceTest/greeting/").post("Hi REST!", String.class);
+        assertEquals("hi rest!", message);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>Running the example is fairly simple. In the "simple-rest" directory run:</p>
-<pre><code>$ mvn clean install
-</code></pre>
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the <code>simple-rest</code> directory run:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>$ mvn clean install</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Which should create output like the following.</p>
-<pre><code>INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Creating TransactionManager(id=Default Transaction Manager)
@@ -187,7 +228,7 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
-INFO - Enterprise application &quot;/opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest&quot; loaded.
+INFO - Enterprise application "/opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest" loaded.
 INFO - Assembling app: /opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest
 INFO - Existing thread singleton service in SystemInstance() null
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@12c9b196
@@ -197,7 +238,7 @@ INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
 INFO - All injection points are validated successfully.
 INFO - OpenWebBeans Container has started, it took 11 ms.
 INFO - Deployed Application(path=/opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest)
-INFO - Setting the server&#39;s publish address to be http://127.0.0.1:4204/test
+INFO - Setting the server's publish address to be http://127.0.0.1:4204/test
 INFO - REST Service: http://127.0.0.1:4204/test/greeting/.*  -&gt; Pojo org.superbiz.rest.GreetingService
 INFO - Undeploying app: /opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest
 INFO - Stopping network services
@@ -206,8 +247,9 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
             </div>
             
         </div>
