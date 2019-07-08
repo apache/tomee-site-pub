@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Singleton Startup Ordering</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This examples shows in practice the  <code>@Startup</code> and <code>@DependsOn</code> annotations on <code>singleton</code> EJB&#8217;s.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_the_tests">Run the tests</h3>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean test</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_scenario">The scenario</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The example is composed by three singleton beans: <code>SingletonA</code>, <code>SingletonB</code>, <code>SingletonC</code>.</p>
+</li>
+<li>
+<p>The three EJB&#8217;s contains a <code>@PostConstruct</code> annotation for the <code>init</code> method that is executed after dependency injection is done to perform any initialization. This method is invoked before the class is put into service.</p>
+</li>
+<li>
+<p>The <code>init</code> method store the name of the bean class that is been initialized in the <code>Supervisor</code> bean.</p>
+</li>
+<li>
+<p>The <code>Supervisor</code> bean is annotated with <code>@ApplicationScoped</code> to be able to share the list of bean names stored in the <code>records</code> attribute.</p>
+</li>
+<li>
+<p><code>SingletonA</code> and <code>SingletonB</code> are annotated with <code>@Startup</code> which means they are going to initialized upon application startup.  <code>SingletonC</code> will be initilized until the bean is going to be used in later injection point.</p>
+</li>
+<li>
+<p><code>SingletonB</code> is annotated with <code>@DependsOn("SingletonA")</code> to enforce a initialization order with respect to <code>SingletonA</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>SingletonA.java</code>: Singleton EJB annotated with  <code>@Startup</code>. It depends on the EJB <code>Supervisor</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.foo;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+@Singleton
+@Startup
+public class SingletonA {
+
+    @Inject
+    Supervisor supervisor;
+
+    private final static Logger LOGGER = Logger.getLogger(SingletonA.class.getName());
+
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("Hi from init in class: " + this.getClass().getName());
+        supervisor.addRecord(this.getClass().getSimpleName());
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SingletonB.java</code>: Singleton EJB annotated with  <code>@Startup</code> and <code>DependsOn</code>. It depends on the EJB <code>Supervisor</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.foo;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.DependsOn;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+@Singleton
+@Startup
+@DependsOn("SingletonA")
+public class SingletonB {
+
+    @Inject
+    Supervisor supervisor;
+
+    private final static Logger LOGGER = Logger.getLogger(SingletonB.class.getName());
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("Hi from init in class: " + this.getClass().getName());
+        supervisor.addRecord(this.getClass().getSimpleName());
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SingletonC.java</code>: Singleton EJB. It depends on the EJB <code>Supervisor</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.inject.Inject;
+import java.util.logging.Logger;
+
+@Singleton
+public class SingletonC {
+    @Inject
+    Supervisor supervisor;
+
+    private final static Logger LOGGER = Logger.getLogger(SingletonC.class.getName());
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("Hi from init in class: " + this.getClass().getName());
+        supervisor.addRecord(this.getClass().getSimpleName());
+
+    }
+
+    public String hello() {
+        return "Hello from SingletonC.class";
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Supervisor.java</code>: Applicaiton scoped Bean that keep track of a list of Bean Names.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
+import java.util.List;
+
+@ApplicationScoped
+public class Supervisor {
+    private final List&lt;String&gt; records = new ArrayList&lt;&gt;();
+
+    public void addRecord(String beanClass){
+        records.add(beanClass);
+    }
+
+    public String getRecord(){
+        return records.toString();
+    }
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_tests">The tests</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The class <code>TestSingletonStartupOrder.java</code> contains two test that are executed in order via the annotation <code>@FixMethodOrder(MethodSorters.NAME_ASCENDING)</code></p>
+</li>
+<li>
+<p><code>firstTest</code>: assert true if an only if the records stored in the <code>Supervisor.record</code> are equals to <code>[SingletonA, SingletonB]</code>. Notice that the order is validated too. In this test we don&#8217;t expect to see <code>SingletonC</code> initilized since it&#8217;s not annotated with <code>@Startup</code>.</p>
+</li>
+<li>
+<p><code>secondTest</code>:  This test inject <code>SingletonC</code> as a parameter in the tests, therefore it asserts to true if an only if the records stored in the <code>Supervisor.record</code> are equals to <code>[SingletonA, SingletonB, SingletonC]</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>TestSingletonStartupOrder.java</code></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.foo.SingletonA;
+import org.foo.SingletonB;
+import org.foo.SingletonC;
+import org.foo.Supervisor;
+
+import java.util.logging.Logger;
+
+import static junit.framework.TestCase.assertTrue;
+
+
+@RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class TestSingletonStartupOrder {
+    private final static Logger LOGGER = Logger.getLogger(TestSingletonStartupOrder.class.getName());
+
+    @Deployment()
+    public static WebArchive createDeployment() {
+        final WebArchive webArchive = ShrinkWrap.create(WebArchive.class, "test.war")
+                                                .addClass(SingletonA.class)
+                                                .addClass(SingletonB.class)
+                                                .addClass(SingletonC.class)
+                                                .addClass(Supervisor.class)
+                                                .addAsWebInfResource(new StringAsset("&lt;beans/&gt;"), "beans.xml");
+        return webArchive;
+    }
+
+
+    @Test
+    public void firstTest(Supervisor supervisor) {
+        LOGGER.info("SUPERVISOR: [" + supervisor.getRecord() + "]");
+        assertTrue(supervisor.getRecord().equals("[SingletonA, SingletonB]"));
+    }
+
+    @Test
+    public void secondTest(Supervisor supervisor, SingletonC singletonC) {
+        LOGGER.info(singletonC.hello());
+        LOGGER.info("SUPERVISOR: [" + supervisor.getRecord() + "]");
+        assertTrue(supervisor.getRecord().equals("[SingletonA, SingletonB, SingletonC]"));
+    }
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_about_the_test_architecture">About the Test architecture</h3>
+<div class="paragraph">
+<p>The test cases from this project are built using Arquillian and TomEE
+Remote. The arquillian configuration can be found in
+<code>src/test/resources/arquillian.xml</code></p>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

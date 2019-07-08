@@ -95,153 +95,210 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>The <code>org.apache.openejb.junit.ApplicationComposer</code> is JUnit test runner modeled after the way we've done testing internally in OpenEJB for years (since about 2006). It involves no classpath scanning at all. If you want something to be in the app, you must build it directly in your testcase.</p>
-<p>With the <code>ApplicationComposer</code> you can do identical testing that OpenEJB uses internally, but with limited dependency on OpenEJB itself. The main dependency is on the code that is used to build the actual applications:</p>
-<pre><code>&lt;dependency&gt;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>org.apache.openejb.junit.ApplicationComposer</code> is JUnit test runner modeled after the way we&#8217;ve done testing internally in OpenEJB for years (since about 2006).
+It involves no classpath scanning at all.  If you want something to be in the app, you must build it directly in your testcase.</p>
+</div>
+<div class="paragraph">
+<p>With the <code>ApplicationComposer</code> you can do identical testing that OpenEJB uses internally, but with limited dependency on OpenEJB itself.  The main dependency is on the code
+that is used to build the actual applications:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;dependency&gt;
   &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
   &lt;artifactId&gt;openejb-jee&lt;/artifactId&gt;
   &lt;version&gt;4.0.0-beta-1&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h1>Composing an Application</h1>
-<p>The main difference to the embedded <code>EJBContainer</code> API is building the application in the test code. This is done with one or more methods in the test case annotated with <code>org.apache.openejb.junit.Module</code> using the following format:</p>
-<pre><code>@Module
-public &lt;return-value&gt; &lt;module-name&gt;() {
-</code></pre>
+&lt;/dependency&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_composing_an_application">Composing an Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The main difference to the embedded <code>EJBContainer</code> API is building the application in the test code.  This is done with one or more methods in the test case annotated
+with <code>org.apache.openejb.testing.Module</code> using the following format:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Module
+public &lt;return-value&gt; &lt;module-name&gt;() {</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Where <strong>module-name</strong> is the name you wish to use for that module and <strong>return-value</strong> can be any one of the following:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>java.lang.Class</li>
-  <li>java.lang.Class[]</li>
-  <li>org.apache.openejb.jee.EjbJar</li>
-  <li>org.apache.openejb.jee.EnterpriseBean</li>
-  <li>org.apache.openejb.jee.Application</li>
-  <li>org.apache.openejb.jee.Connector</li>
-  <li>org.apache.openejb.jee.Beans</li>
-  <li>org.apache.openejb.jee.jpa.unit.Persistence</li>
-  <li>org.apache.openejb.jee.jpa.unit.PersistenceUnit</li>
+<li>
+<p>java.lang.Class</p>
+</li>
+<li>
+<p>java.lang.Class[]</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.EjbJar</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.EnterpriseBean</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.Application</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.Connector</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.Beans</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.jpa.unit.Persistence</p>
+</li>
+<li>
+<p>org.apache.openejb.jee.jpa.unit.PersistenceUnit</p>
+</li>
 </ul>
-<h1>Example</h1>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Used in an actual testcase, that might look like so:</p>
-<pre><code>import junit.framework.TestCase;
-import org.apache.openejb.jee.EjbJar;
-import org.apache.openejb.jee.StatefulBean;
-import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
-import org.apache.openejb.junit.ApplicationComposer;
-import org.apache.openejb.junit.Configuration;
-import org.apache.openejb.junit.Module;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    import junit.framework.TestCase;
+    import org.apache.openejb.jee.EjbJar;
+    import org.apache.openejb.jee.StatefulBean;
+    import org.apache.openejb.jee.jpa.unit.PersistenceUnit;
+    import org.apache.openejb.junit.ApplicationComposer;
+    import org.apache.openejb.testing.Configuration;
+    import org.apache.openejb.testing.Module;
+    import org.junit.Test;
+    import org.junit.runner.RunWith;
 
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
-import java.util.List;
-import java.util.Properties;
+    import javax.annotation.Resource;
+    import javax.ejb.EJB;
+    import javax.persistence.EntityManager;
+    import javax.persistence.PersistenceContext;
+    import javax.transaction.UserTransaction;
+    import java.util.List;
+    import java.util.Properties;
 
-@RunWith(ApplicationComposer.class)
-public class MoviesTest extends TestCase {
+    @RunWith(ApplicationComposer.class)
+    public class MoviesTest extends TestCase {
 
-    @EJB
-    private Movies movies;
+        @EJB
+        private Movies movies;
 
-    @Resource
-    private UserTransaction userTransaction;
+        @Resource
+        private UserTransaction userTransaction;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+        @PersistenceContext
+        private EntityManager entityManager;
 
-    @Module
-    public PersistenceUnit persistence() {
-        PersistenceUnit unit = new PersistenceUnit(&quot;movie-unit&quot;);
-        unit.setJtaDataSource(&quot;movieDatabase&quot;);
-        unit.setNonJtaDataSource(&quot;movieDatabaseUnmanaged&quot;);
-        unit.getClazz().add(Movie.class.getName());
-        unit.setProperty(&quot;openjpa.jdbc.SynchronizeMappings&quot;, &quot;buildSchema(ForeignKeys=true)&quot;);
-        return unit;
-    }
-
-    @Module
-    public EjbJar beans() {
-        EjbJar ejbJar = new EjbJar(&quot;movie-beans&quot;);
-        ejbJar.addEnterpriseBean(new StatefulBean(MoviesImpl.class));
-        return ejbJar;
-    }
-
-    @Configuration
-    public Properties config() throws Exception {
-        Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
-        return p;
-    }
-
-    @Test
-    public void test() throws Exception {
-
-        userTransaction.begin();
-
-        try {
-            entityManager.persist(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-            entityManager.persist(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-            entityManager.persist(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
-
-            List&lt;Movie&gt; list = movies.getMovies();
-            assertEquals(&quot;List.size()&quot;, 3, list.size());
-
-            for (Movie movie : list) {
-                movies.deleteMovie(movie);
-            }
-
-            assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
-
-        } finally {
-            userTransaction.commit();
+        @Module
+        public PersistenceUnit persistence() {
+            PersistenceUnit unit = new PersistenceUnit("movie-unit");
+            unit.setJtaDataSource("movieDatabase");
+            unit.setNonJtaDataSource("movieDatabaseUnmanaged");
+            unit.getClazz().add(Movie.class.getName());
+            unit.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
+            return unit;
         }
-    }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running org.superbiz.composed.MoviesTest
-INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
-INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
-INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
-INFO - Configuring enterprise application: /Users/dblevins/examples/application-composer/MoviesTest
-WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
-INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
-INFO - Auto-creating a container for bean org.superbiz.composed.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
-INFO - Auto-creating a container for bean MoviesImpl: Container(type=STATEFUL, id=Default Stateful Container)
-INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
-INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/application-composer/MoviesTest&quot; loaded.
-INFO - Assembling app: /Users/dblevins/examples/application-composer/MoviesTest
-INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 449ms
-INFO - Jndi(name=org.superbiz.composed.MoviesTestLocalBean) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
-INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest!org.superbiz.composed.MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
-INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
-INFO - Jndi(name=MoviesImplLocal) --&gt; Ejb(deployment-id=MoviesImpl)
-INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl!org.superbiz.composed.Movies) --&gt; Ejb(deployment-id=MoviesImpl)
-INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl) --&gt; Ejb(deployment-id=MoviesImpl)
-INFO - Created Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
-INFO - Created Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
-INFO - Started Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
-INFO - Started Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
-INFO - Deployed Application(path=/Users/dblevins/examples/application-composer/MoviesTest)
-INFO - Undeploying app: /Users/dblevins/examples/application-composer/MoviesTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.221 sec
 
-Results :
+        @Module
+        public EjbJar beans() {
+            EjbJar ejbJar = new EjbJar("movie-beans");
+            ejbJar.addEnterpriseBean(new StatefulBean(MoviesImpl.class));
+            return ejbJar;
+        }
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+        @Configuration
+        public Properties config() throws Exception {
+            Properties p = new Properties();
+            p.put("movieDatabase", "new://Resource?type=DataSource");
+            p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+            p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+            return p;
+        }
+
+        @Test
+        public void test() throws Exception {
+
+            userTransaction.begin();
+
+            try {
+                entityManager.persist(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+                entityManager.persist(new Movie("Joel Coen", "Fargo", 1996));
+                entityManager.persist(new Movie("Joel Coen", "The Big Lebowski", 1998));
+
+                List&lt;Movie&gt; list = movies.getMovies();
+                assertEquals("List.size()", 3, list.size());
+
+                for (Movie movie : list) {
+                    movies.deleteMovie(movie);
+                }
+
+                assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+
+            } finally {
+                userTransaction.commit();
+            }
+        }
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    -------------------------------------------------------
+     T E S T S
+    -------------------------------------------------------
+    Running org.superbiz.composed.MoviesTest
+    INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+    INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+    INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+    INFO - Configuring enterprise application: /Users/dblevins/examples/application-composer/MoviesTest
+    WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
+    INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+    INFO - Auto-creating a container for bean org.superbiz.composed.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+    INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+    INFO - Auto-creating a container for bean MoviesImpl: Container(type=STATEFUL, id=Default Stateful Container)
+    INFO - Configuring PersistenceUnit(name=movie-unit)
+    INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
+    INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+    INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+    INFO - Enterprise application "/Users/dblevins/examples/application-composer/MoviesTest" loaded.
+    INFO - Assembling app: /Users/dblevins/examples/application-composer/MoviesTest
+    INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 449ms
+    INFO - Jndi(name=org.superbiz.composed.MoviesTestLocalBean) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+    INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest!org.superbiz.composed.MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+    INFO - Jndi(name=global/MoviesTest/EjbModule2027711095/MoviesTest) --&gt; Ejb(deployment-id=org.superbiz.composed.MoviesTest)
+    INFO - Jndi(name=MoviesImplLocal) --&gt; Ejb(deployment-id=MoviesImpl)
+    INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl!org.superbiz.composed.Movies) --&gt; Ejb(deployment-id=MoviesImpl)
+    INFO - Jndi(name=global/MoviesTest/movie-beans/MoviesImpl) --&gt; Ejb(deployment-id=MoviesImpl)
+    INFO - Created Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
+    INFO - Created Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
+    INFO - Started Ejb(deployment-id=org.superbiz.composed.MoviesTest, ejb-name=MoviesTest, container=Default Managed Container)
+    INFO - Started Ejb(deployment-id=MoviesImpl, ejb-name=MoviesImpl, container=Default Stateful Container)
+    INFO - Deployed Application(path=/Users/dblevins/examples/application-composer/MoviesTest)
+    INFO - Undeploying app: /Users/dblevins/examples/application-composer/MoviesTest
+    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.221 sec
+
+    Results :
+
+    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
             </div>
             
         </div>
