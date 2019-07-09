@@ -90,54 +90,101 @@
               
               <div class='btn-toolbar pull-right' style="z-index: 2000;">
                 <div class='btn-group'>
-                    <a class="btn" href="../../../../tomee-8.0/docs/admin/configuration/index.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
+                    <a class="btn" href="../../../../latest/docs/admin/configuration/log4j2.pdf"><i class="fa fa-file-pdf-o"></i> Download as PDF</a>
                 </div>
               </div>
               
-              <h1>Server Configuration</h1>
+              <h1>Log4j2 Configuration</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <div class="sect1">
-<h2 id="_container">Container</h2>
+                <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>TomEE specific configuration (ie not inherited one from Tomcat) is based on properties. Therefore
-you can fully configure TomEE using properties in <code>conf/system.properties</code>.
-However for convenience it also provides a hybrid XML alternative a.k.a. <code>conf/tomee.xml</code>.</p>
+<p>Title: Log4j2 with TomEE</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="server.html">Server Configuration: Properties</a>.</p>
-</li>
-<li>
-<p><a href="resources.html">Resources</a></p>
-</li>
-<li>
-<p><a href="containers.html">Containers</a></p>
-</li>
-<li>
-<p><a href="log4j2.html">Using log4j2</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Out of the box, TomEE is uses a Java-Util-Logging (JUL) based logging system, which is configured using conf/logging.properties.</p>
+</div>
+<div class="paragraph">
+<p>Occassionally, users may wish to swap over to using Log4j2. These instructions detail how to do this with the latest TomEE versions.
+These instructions have been tested with TomEE 7.x and TomEE 8 SNAPSHOT (master) on July 9th, 2019.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_application">Application</h2>
+<h2 id="_setup">Setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Some settings can be specific to applications, these ones are also properties based and
-are read in <code>WEB-INF/application.properties</code>. When you can&#8217;t use <code>tomee.xml</code> to configure
-resources you can use <code>WEB-INF/resources.xml</code> which inherit from <code>tomee.xml</code> its syntax
-but binds the resources to the application and reuses the application classloader.</p>
+<p>You&#8217;ll need to obtain the following jars: log4j-core, log4j-api and log4j-jul. These instructions were tested with the 2.12.0 versions:</p>
 </div>
 <div class="paragraph">
-<p>More about <a href="application.html">Container Configuration</a>.</p>
+<p><a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.12.0/log4j-core-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.12.0/log4j-core-2.12.0.jar</a>
+<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.12.0/log4j-api-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.12.0/log4j-api-2.12.0.jar</a>
+<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.12.0/log4j-jul-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.12.0/log4j-jul-2.12.0.jar</a></p>
+</div>
+<div class="paragraph">
+<p>Add these to the TomEE bin directory. Add the following to setenv.sh on *nix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+    LOGGING_CONFIG="-DnoOp"
+    LOGGING_MANAGER="-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
+    CLASSPATH=".:$CATALINA_BASE/bin:$CATALINA_BASE/bin/log4j-core-2.12.0.jar:$CATALINA_BASE/bin/log4j-api-2.12.0.jar:$CATALINA_BASE/bin/log4j-jul-2.12.0.jar"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or add the following to setenv.bat on Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    @echo off
+    set "JAVA_OPTS=%JAVA_OPTS% -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+    set LOGGING_CONFIG=-DnoOpp
+    set LOGGING_MANAGER=-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
+    set "CLASSPATH=.;%CATALINA_BASE%\bin;%CATALINA_BASE%\bin\log4j-core-2.12.0.jar;%CATALINA_BASE%\bin\log4j-api-2.12.0.jar;%CATALINA_BASE%\bin\log4j-jul-2.12.0.jar"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Take care to match the jar filenames if you have downloaded jars for a slightly different version of log4j2.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Add your log4j2.xml config in the <code>bin</code> directory.  Here&#8217;s a simple config you can use to help you get started:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+    &lt;Configuration status="warn" name="catalina" packages=""&gt;
+        &lt;Appenders&gt;
+            &lt;Console name="console" target="SYSTEM_OUT"&gt;
+                &lt;PatternLayout pattern="%d %p %c{1.} [%t] %m%n" /&gt;
+            &lt;/Console&gt;
+            &lt;File name="catalina" fileName="${sys:catalina.base}/logs/catalina.log"&gt;
+                &lt;PatternLayout&gt;
+                    &lt;Pattern&gt;%d %p %c{1.} [%t] %m%n&lt;/Pattern&gt;
+                &lt;/PatternLayout&gt;
+            &lt;/File&gt;
+            &lt;Async name="Async"&gt;
+                &lt;AppenderRef ref="catalina" /&gt;
+            &lt;/Async&gt;
+        &lt;/Appenders&gt;
+        &lt;Loggers&gt;
+            &lt;Root level="info"&gt;
+                &lt;AppenderRef ref="Async" /&gt;
+                &lt;AppenderRef ref="console" /&gt;
+            &lt;/Root&gt;
+        &lt;/Loggers&gt;
+    &lt;/Configuration&gt;</code></pre>
+</div>
 </div>
 </div>
 </div>
