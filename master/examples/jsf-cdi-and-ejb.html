@@ -95,49 +95,119 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>The simple application contains a CDI managed bean <code>CalculatorBean</code>, which uses the <code>Calculator</code> EJB to add two numbers and display the results to the user. The EJB is injected in the managed bean using @Inject annotation.</p>
-<p>You could run this in the latest Apache TomEE <a href="https://repository.apache.org/content/repositories/snapshots/org/apache/openejb/apache-tomee/">snapshot</a></p>
-<p>The complete source code is below but lets break down to look at some smaller snippets and see how it works.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simple application contains a CDI managed bean <code>CalculatorBean</code>,
+which uses the <code>Calculator</code> EJB to add two numbers and display the
+results to the user. The EJB is injected in the managed bean using
+@Inject annotation.</p>
+</div>
+<div class="paragraph">
+<p>You could run this in the latest Apache TomEE
+<a href="https://repository.apache.org/content/repositories/snapshots/org/apache/openejb/apache-tomee/">snapshot</a></p>
+</div>
+<div class="paragraph">
+<p>The complete source code is below but lets break down to look at some
+smaller snippets and see how it works.</p>
+</div>
+<div class="paragraph">
 <p>A little note on the setup:</p>
-<p>As for the libraries, myfaces-api and myfaces-impl are provided in tomee/lib and hence they should not be a part of the war. In maven terms, they would be with scope 'provided'</p>
-<p>Also note that we use servlet 2.5 declaration in web.xml<br/>&lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br/> xmlns="http://java.sun.com/xml/ns/javaee"<br/> xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"<br/> xsi:schemaLocation="http://java.sun.com/xml/ns/javaee<br/> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>"<br/> version="2.5"&gt;</p>
+</div>
+<div class="paragraph">
+<p>As for the libraries, myfaces-api and myfaces-impl are provided in
+tomee/lib and hence they should not be a part of the war. In maven
+terms, they would be with scope `provided'</p>
+</div>
+<div class="paragraph">
+<p>Also note that we use servlet 2.5 declaration in web.xml</p>
+</div>
+<div class="paragraph">
 <p>And we use 2.0 version of faces-config</p>
-<p>&lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"<br/> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br/> xsi:schemaLocation="http://java.sun.com/xml/ns/javaee<br/> <a href="http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd</a>"<br/> version="2.0"&gt;</p>
-<p>To make this a cdi-aware-archive (i.e bean archive) an empty beans.xml is added in WEB-INF</p>
-<pre><code>   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</div>
+<div class="paragraph">
+<p>To make this a cdi-aware-archive (i.e bean archive) an empty beans.xml
+is added in WEB-INF</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>   &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
-   &lt;beans xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-     xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee
-     http://java.sun.com/xml/ns/javaee/beans_1_0.xsd&quot;&gt;
-   &lt;/beans&gt;
-</code></pre>
-<p>We'll first declare the FacesServlet in the web.xml</p>
-<pre><code>  &lt;servlet&gt;
+   &lt;beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+     http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"&gt;
+   &lt;/beans&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We’ll first declare the FacesServlet in the web.xml</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>  &lt;servlet&gt;
     &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
     &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
     &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-  &lt;/servlet&gt;
-</code></pre>
+  &lt;/servlet&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>FacesServlet acts as the master controller.</p>
-<p>We'll then create the calculator.xhtml file.</p>
-<pre><code>       &lt;h:outputText value=&#39;Enter first number&#39;/&gt;
-       &lt;h:inputText value=&#39;#{calculatorBean.x}&#39;/&gt;
-       &lt;h:outputText value=&#39;Enter second number&#39;/&gt;
-       &lt;h:inputText value=&#39;#{calculatorBean.y}&#39;/&gt;
-       &lt;h:commandButton action=&quot;#{calculatorBean.add}&quot; value=&quot;Add&quot;/&gt;
-</code></pre>
-<p>Notice how we've used the bean here. By default, the bean name would be the simple name of the bean class with the first letter in lower case.</p>
-<p>We've annotated the <code>CalculatorBean</code> with <code>@RequestScoped</code>. So when a request comes in, the bean is instantiated and placed in the request scope.</p>
-<p>&lt;h:inputText value='#{calculatorBean.x}'/&gt;</p>
-<p>Here, getX() method of calculatorBean is invoked and the resulting value is displayed. x being a Double, we rightly should see 0.0 displayed.</p>
-<p>When you change the value and submit the form, these entered values are bound using the setters in the bean and then the commandButton-action method is invoked.</p>
+</div>
+<div class="paragraph">
+<p>We’ll then create the calculator.xhtml file.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>       &lt;h:outputText value='Enter first number'/&gt;
+       &lt;h:inputText value='#{calculatorBean.x}'/&gt;
+       &lt;h:outputText value='Enter second number'/&gt;
+       &lt;h:inputText value='#{calculatorBean.y}'/&gt;
+       &lt;h:commandButton action="#{calculatorBean.add}" value="Add"/&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice how we’ve used the bean here. By default, the bean name would be
+the simple name of the bean class with the first letter in lower case.</p>
+</div>
+<div class="paragraph">
+<p>We’ve annotated the <code>CalculatorBean</code> with <code>@RequestScoped</code>. So when a
+request comes in, the bean is instantiated and placed in the request
+scope.</p>
+</div>
+<div class="paragraph">
+<p>Here, getX() method of calculatorBean is invoked and the resulting value
+is displayed. x being a Double, we rightly should see 0.0 displayed.</p>
+</div>
+<div class="paragraph">
+<p>When you change the value and submit the form, these entered values are
+bound using the setters in the bean and then the commandButton-action
+method is invoked.</p>
+</div>
+<div class="paragraph">
 <p>In this case, CalculatorBean#add() is invoked.</p>
-<p>Calculator#add() delegates the work to the ejb, gets the result, stores it and then returns what view is to be rendered.</p>
-<p>The return value "success" is checked up in faces-config navigation-rules and the respective page is rendered.</p>
-<p>In our case, 'result.xhtml' page is rendered where use EL and display the result from the request-scoped <code>calculatorBean</code>.</p>
-<h1>Source Code</h1>
-<h2>CalculatorBean</h2>
-<pre><code>import javax.enterprise.context.RequestScoped;
+</div>
+<div class="paragraph">
+<p>Calculator#add() delegates the work to the ejb, gets the result, stores
+it and then returns what view is to be rendered.</p>
+</div>
+<div class="paragraph">
+<p>The return value <code>success</code> is checked up in faces-config
+navigation-rules and the respective page is rendered.</p>
+</div>
+<div class="paragraph">
+<p>In our case, <code>result.xhtml</code> page is rendered where use EL and display
+the result from the request-scoped <code>calculatorBean</code>.</p>
+</div>
+</div>
+</div>
+<h1 id="_source_code" class="sect0">Source Code</h1>
+<div class="sect1">
+<h2 id="_calculatorbean">CalculatorBean</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.inject.Inject;
 
@@ -176,12 +246,19 @@ public class CalculatorBean {
 
     public String add() {
         result = calculator.add(x, y);
-        return &quot;success&quot;;
+        return "success";
     }
-}
-</code></pre>
-<h2>Calculator</h2>
-<pre><code>package org.superbiz.jsf;
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculator">Calculator</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.jsf;
 
 import javax.ejb.Stateless;
 
@@ -191,26 +268,57 @@ public class Calculator{
     public double add(double x, double y) {
         return x + y;
     }
-}
-</code></pre>
-<h1>web.xml</h1>
-<p>&lt;?xml version="1.0"?&gt;</p>
-<p>&lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br/> xmlns="http://java.sun.com/xml/ns/javaee"<br/> xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"<br/> xsi:schemaLocation="http://java.sun.com/xml/ns/javaee<br/> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>"<br/> version="2.5"&gt;</p>
-<p><description>MyProject web.xml</description></p>
-<p><!-- Faces Servlet --><br/> <servlet><br/> <servlet-name>Faces Servlet</servlet-name><br/> <servlet-class>javax.faces.webapp.FacesServlet</servlet-class><br/> <load-on-startup>1</load-on-startup><br/> </servlet></p>
-<p><!-- Faces Servlet Mapping --><br/> <servlet-mapping><br/> <servlet-name>Faces Servlet</servlet-name><br/> <url-pattern>*.jsf</url-pattern><br/> </servlet-mapping></p>
-<p><!-- Welcome files --><br/> <welcome-file-list><br/> <welcome-file>index.jsp</welcome-file><br/> <welcome-file>index.html</welcome-file><br/> </welcome-file-list></p>
-<p></web-app></p>
-<h1>Calculator.xhtml</h1>
-<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"<br/>"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;<br/>&lt;html xmlns="http://www.w3.org/1999/xhtml"<br/> xmlns:f="http://java.sun.com/jsf/core"<br/> xmlns:h="http://java.sun.com/jsf/html"&gt;</p>
-<p>&lt;h:body bgcolor="white"&gt;<br/> &lt;f:view&gt;<br/> &lt;h:form&gt;<br/> &lt;h:panelGrid columns="2"&gt;<br/> &lt;h:outputText value='Enter first number'/&gt;<br/> &lt;h:inputText value='#{calculatorBean.x}'/&gt;<br/> &lt;h:outputText value='Enter second number'/&gt;<br/> &lt;h:inputText value='#{calculatorBean.y}'/&gt;<br/> &lt;h:commandButton action="#{calculatorBean.add}" value="Add"/&gt;<br/> &lt;/h:panelGrid&gt;<br/> &lt;/h:form&gt;<br/> &lt;/f:view&gt;<br/>&lt;/h:body&gt;<br/></html></p>
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>#web.xml</p>
+</div>
+<div class="paragraph">
+<p>MyProject web.xml</p>
+</div>
+<div class="paragraph">
+<p>Faces Servlet javax.faces.webapp.FacesServlet 1</p>
+</div>
+<div class="paragraph">
+<p>Faces Servlet *.jsf</p>
+</div>
+<div class="paragraph">
+<p>index.jsp index.html</p>
+</div>
+<div class="paragraph">
+<p>#Calculator.xhtml</p>
+</div>
+<div class="paragraph">
+<p>&lt;!DOCTYPE html PUBLIC <code>-//W3C//DTD XHTML 1.0 Transitional//EN''
+</code><a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd''&gt" class="bare">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd''&gt</a>;</p>
+</div>
+<div class="paragraph">
 <p>#Result.xhtml</p>
-<p>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"<br/> "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;<br/>&lt;html xmlns="http://www.w3.org/1999/xhtml"<br/> xmlns:f="http://java.sun.com/jsf/core"<br/> xmlns:h="http://java.sun.com/jsf/html"&gt;</p>
-<p>&lt;h:body&gt;<br/>&lt;f:view&gt;<br/> &lt;h:form id="mainForm"&gt;<br/> <h2>&lt;h:outputText value="Result of adding #{calculatorBean.x} and #{calculatorBean.y} is #{calculatorBean.result }"/&gt;</h2><br/> &lt;h:commandLink action="back"&gt;<br/> &lt;h:outputText value="Home"/&gt;<br/> &lt;/h:commandLink&gt;<br/> &lt;/h:form&gt;<br/>&lt;/f:view&gt;<br/>&lt;/h:body&gt;<br/></html></p>
+</div>
+<div class="paragraph">
+<p>&lt;!DOCTYPE html PUBLIC <code>-//W3C//DTD XHTML 1.0 Transitional//EN''
+</code><a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd''&gt" class="bare">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd''&gt</a>;</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    &lt;h:commandLink action="back"&gt;
+        &lt;h:outputText value="Home"/&gt;
+    &lt;/h:commandLink&gt;
+&lt;/h:form&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>#faces-config.xml</p>
-<p>&lt;?xml version="1.0"?&gt;<br/> &lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"<br/> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br/> xsi:schemaLocation="http://java.sun.com/xml/ns/javaee<br/> <a href="http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd</a>"<br/> version="2.0"&gt;</p>
-<p><navigation-rule><br/> <from-view-id>/calculator.xhtml</from-view-id><br/> <navigation-case><br/> <from-outcome>success</from-outcome><br/> <to-view-id>/result.xhtml</to-view-id><br/> </navigation-case><br/> </navigation-rule></p>
-<p><navigation-rule><br/> <from-view-id>/result.xhtml</from-view-id><br/> <navigation-case><br/> <from-outcome>back</from-outcome><br/> <to-view-id>/calculator.xhtml</to-view-id><br/> </navigation-case><br/> </navigation-rule><br/> </faces-config></p>
+</div>
+<div class="paragraph">
+<p>/calculator.xhtml success /result.xhtml</p>
+</div>
+<div class="paragraph">
+<p>/result.xhtml back /calculator.xhtml</p>
+</div>
+</div>
+</div>
             </div>
             
         </div>

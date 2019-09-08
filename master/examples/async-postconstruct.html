@@ -95,14 +95,34 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Placing <code>@Asynchronous</code> on the <code>@PostConstruct</code> of an EJB is not a supported part of Java EE, but this example shows a pattern which works just as well with little effort.</p>
+                <div class="paragraph">
+<p>Placing <code>@Asynchronous</code> on the <code>@PostConstruct</code> of an EJB is not a
+supported part of Java EE, but this example shows a pattern which works
+just as well with little effort.</p>
+</div>
+<div class="paragraph">
 <p>The heart of this pattern is to:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>pass the construction "logic" to an <code>@Asynchronous</code> method via a <code>java.util.concurrent.Callable</code></li>
-  <li>ensure the bean does not process invocations till construction is complete via an <code>@AroundInvoke</code> method on the bean and the <code>java.util.concurrent.Future</code></li>
+<li>
+<p>pass the construction <code>logic</code> to an <code>@Asynchronous</code> method via a
+<code>java.util.concurrent.Callable</code></p>
+</li>
+<li>
+<p>ensure the bean does not process invocations till construction is
+complete via an <code>@AroundInvoke</code> method on the bean and the
+<code>java.util.concurrent.Future</code></p>
+</li>
 </ul>
-<p>Simple and effective. The result is a faster starting application that is still thread-safe.</p>
-<pre><code>package org.superbiz.asyncpost;
+</div>
+<div class="paragraph">
+<p>Simple and effective. The result is a faster starting application that
+is still thread-safe.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.asyncpost;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -134,8 +154,8 @@ public class SlowStarter {
             @Override
             public Object call() throws Exception {
                 Thread.sleep(SECONDS.toMillis(10));
-                SlowStarter.this.color = &quot;orange&quot;;
-                SlowStarter.this.shape = &quot;circle&quot;;
+                SlowStarter.this.color = "orange";
+                SlowStarter.this.shape = "circle";
                 return null;
             }
         });
@@ -154,10 +174,18 @@ public class SlowStarter {
     public String getShape() {
         return shape;
     }
-}
-</code></pre>
-<p>The <code>Executor</code> is a simple pattern, useful for many things, which exposes an interface functionaly equivalent to <code>java.util.concurrent.ExecutorService</code>, but with the underlying thread pool controlled by the container.</p>
-<pre><code>package org.superbiz.asyncpost;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Executor</code> is a simple pattern, useful for many things, which
+exposes an interface functionally equivalent to
+<code>java.util.concurrent.ExecutorService</code>, but with the underlying thread
+pool controlled by the container.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.asyncpost;
 
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
@@ -176,10 +204,16 @@ public class Executor {
         return new AsyncResult&lt;T&gt;(task.call());
     }
 
-}
-</code></pre>
-<p>Finally a test case shows the usefulness of <code>@AroundInvoke</code> call in our bean that calls <code>construct.get()</code></p>
-<pre><code>package org.superbiz.asyncpost;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally a test case shows the usefulness of <code>@AroundInvoke</code> call in our
+bean that calls <code>construct.get()</code></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.asyncpost;
 
 import junit.framework.Assert;
 import org.junit.Test;
@@ -196,15 +230,16 @@ public class SlowStarterTest {
     public void test() throws Exception {
 
         // Start the Container
-        EJBContainer.createEJBContainer().getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
 
         // Immediately access the fields initialized in the PostConstruct
         // This will fail without the @AroundInvoke call to construct.get()
-        Assert.assertEquals(&quot;orange&quot;, slowStarter.getColor());
-        Assert.assertEquals(&quot;circle&quot;, slowStarter.getShape());
+        Assert.assertEquals("orange", slowStarter.getColor());
+        Assert.assertEquals("circle", slowStarter.getShape());
     }
-}
-</code></pre>
+}</pre>
+</div>
+</div>
             </div>
             
         </div>

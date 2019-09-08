@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>CDI @SessionScoped</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este exemplo mostra o uso da anotação <code>@SessionScoped</code> para objetos injetados. Um objeto que é definido
+como <code>@SessionScoped</code> é criado para cada HTTPSession e é compartilhado por todos os beans que o injetam
+através do mesmo HTTPSession.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_execute_a_aplicação">Execute a aplicação:</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exemplo">Exemplo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este exemplo tem um endpoint em que um usuário fornece um <code>name</code> no parâmetro da requisição, que é
+persistido como um field em um session scoped bean chamado <code>SessionBean</code> e então é recuperado por outro
+endpoint.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requisição">Requisição</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GET <a href="http://localhost:8080/cdi-session-scope/set-name?name=Puneeth" class="bare">http://localhost:8080/cdi-session-scope/set-name?name=Puneeth</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta">Resposta</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>done, go to /name servlet</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_requisição_2">Requisição</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GET <a href="http://localhost:8080/cdi-session-scope/name" class="bare">http://localhost:8080/cdi-session-scope/name</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta_2">Resposta</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>name = {Puneeth}</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sessionbean">SessionBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A anotação <code>@SessionScoped</code> especifica que este bean tem escopo de sessão, então haverá apenas uma
+instância dessa classe associada a uma HTTPSession particular.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@SessionScoped
+public class SessionBean implements Serializable {
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inputservlet">InputServlet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>InputServlet</code> é um servlet genérico que é mapeado pela url <code>/set-name</code>. O bean de escopo de sessão
+<code>SessionBean</code> foi injetado neste servlet, e o parâmetro de entrada da requisição sera atribuído ao field
+<code>name</code> do bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet(name = "input-servlet", urlPatterns = {"/set-name"})
+public class InputServlet extends HttpServlet {
+
+    @Inject
+    private SessionBean bean;
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp
+    throws ServletException, IOException {
+        final String name = req.getParameter("name");
+        if (name == null || name.isEmpty()) {
+            resp.getWriter().write("please add a parameter name=xxx");
+        } else {
+            bean.setName(name);
+            resp.getWriter().write("done, go to /name servlet");
+        }
+
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_answerbean">AnswerBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>O bean <code>AnswerBean</code> tem escopo de requisição com um <code>SessionBean</code> injetado. Ele contem um método
+<code>@PostConstruct</code> em que o valor do campo <code>name</code> do <code>SessionBean</code> é recuperado e atribuído ao campo <code>value</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class AnswerBean {
+
+    @Inject
+    private SessionBean bean;
+
+    private String value;
+
+    @PostConstruct
+    public void init() {
+        value = '{' + bean.getName() + '}';
+    }
+
+    public String value() {
+        return value;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_outputservlet">OutputServlet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>OutputServlet</code> é outro servlet com o <code>AnswerBean</code> injetado. Quando <code>/name</code> é chamado o valor do <code>AnswerBean</code>
+é lido e escrito na resposta.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet(name = "output-servlet", urlPatterns = {"/name"})
+public class OutputServlet extends HttpServlet {
+
+    @Inject
+    private AnswerBean bean;
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+     throws ServletException, IOException {
+        final String name = bean.value();
+        if (name == null || name.isEmpty()) {
+            resp.getWriter().write("please go to servlet /set-name please");
+        } else {
+            resp.getWriter().write("name = " + name);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

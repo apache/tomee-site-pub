@@ -95,10 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<p>To change a webservice deployment URI one solution is to use openejb-jar.xml.</p>
-<p>In this sample we have a webservice though the class Rot13:</p>
-<pre><code>package org.superbiz.jaxws;
+                <div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+<div class="paragraph">
+<p>To change a web service deployment URI one solution is to use
+<code>openejb-jar.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>In this sample we have a web service through the class <code>Rot13</code>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.jaxws;
 
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -115,7 +125,7 @@ public class Rot13 {
             int cap = b &amp; 32;
             b &amp;= ~cap;
             if (Character.isUpperCase(b)) {
-                b = (b - &#39;A&#39; + 13) % 26 + &#39;A&#39;;
+                b = (b - 'A' + 13) % 26 + 'A';
             } else {
                 b = cap;
             }
@@ -124,23 +134,40 @@ public class Rot13 {
         }
         return builder.toString();
     }
-}
-</code></pre>
-<p>We decide to deploy to /tool/rot13 url.</p>
-<p>To do so we first define it in openejb-jar.xml:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;openejb-jar xmlns=&quot;http://www.openejb.org/xml/ns/openejb-jar-2.1&quot;&gt;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We decide to deploy to <code>/tool/rot13</code> url.</p>
+</div>
+<div class="paragraph">
+<p>To do so we first define it in <code>openejb-jar.xml</code>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;openejb-jar xmlns="http://www.openejb.org/xml/ns/openejb-jar-2.1"&gt;
   &lt;enterprise-beans&gt;
     &lt;session&gt;
       &lt;ejb-name&gt;Rot13&lt;/ejb-name&gt;
       &lt;web-service-address&gt;/tool/rot13&lt;/web-service-address&gt;
     &lt;/session&gt;
   &lt;/enterprise-beans&gt;
-&lt;/openejb-jar&gt;
-</code></pre>
-<p>It is not enough since by default TomEE deploys the webservices in a subcontext called webservices. To skip it simply set the system property tomee.jaxws.subcontext to / (done in arquillian.xml for our test).</p>
-<p>Then now our Rot13 webservice is deployed as expected to /tool/rot13 and we check it with arquillian and tomee embedded:</p>
-<pre><code> package org.superbiz.jaxws;
+&lt;/openejb-jar&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is not enough since by default TomEE deploys the webs ervices in a
+subcontext called <code>webservices</code>. To skip it simply set the system property
+<code>tomee.jaxws.subcontext</code> to <code>/</code> (done in <code>arquillian.xml</code> for our test).</p>
+</div>
+<div class="paragraph">
+<p>Then now our <code>Rot13</code> web service is deployed as expected to <code>/tool/rot13</code> and
+we check it with Arquillian and TomEE embedded:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre> package org.superbiz.jaxws;
 
  import org.apache.ziplock.IO;
  import org.jboss.arquillian.container.test.api.Deployment;
@@ -169,16 +196,17 @@ public class Rot13 {
      public static WebArchive war() {
          return ShrinkWrap.create(WebArchive.class)
                      .addClass(Rot13.class)
-                     .addAsWebInfResource(new ClassLoaderAsset(&quot;META-INF/openejb-jar.xml&quot;), ArchivePaths.create(&quot;openejb-jar.xml&quot;));
+                     .addAsWebInfResource(new ClassLoaderAsset("META-INF/openejb-jar.xml"), ArchivePaths.create("openejb-jar.xml"));
      }
 
      @Test
      public void checkWSDLIsDeployedWhereItIsConfigured() throws Exception {
-         final String wsdl = IO.slurp(new URL(url.toExternalForm() + &quot;tool/rot13?wsdl&quot;));
-         assertThat(wsdl, containsString(&quot;Rot13&quot;));
+         final String wsdl = IO.slurp(new URL(url.toExternalForm() + "tool/rot13?wsdl"));
+         assertThat(wsdl, containsString("Rot13"));
      }
- }
-</code></pre>
+ }</pre>
+</div>
+</div>
             </div>
             
         </div>

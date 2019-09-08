@@ -95,88 +95,157 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Simple CDI Interceptor</h1>
-<p>Let's write a simple application that would allow us to book tickets for a movie show. As with all applications, logging is one cross-cutting concern that we have. </p>
-<p>(Relevant snippets are inlined but you can check out the complete code, from the links provided)</p>
-<p>How do we mark which methods are to be intercepted ? Wouldn't it be handy to annotate a method like </p>
-<pre><code>@Log
-public void aMethod(){...} 
-</code></pre>
-<p>Let's create an annotation that would "mark" a method for interception. </p>
-<pre><code>@InterceptorBinding
+                <div class="paragraph">
+<p>Let’s write a simple application that would allow us to book tickets for
+a movie show. As with all applications, logging is one cross-cutting
+concern that we have.</p>
+</div>
+<div class="paragraph">
+<p>(Relevant snippets are inlined but you can check out the complete code,
+from the links provided)</p>
+</div>
+<div class="paragraph">
+<p>How do we mark which methods are to be intercepted ? Wouldn’t it be
+handy to annotate a method like</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Log
+public void aMethod(){...}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let’s create an annotation that would "mark" a method for
+interception.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface Log {
-}
-</code></pre>
-<p>Sure, you haven't missed the @InterceptorBinding annotation above ! Now that our custom annotation is created, lets attach it (or to use a better term for it, "bind it" ) to an interceptor. </p>
-<p>So here's our logging interceptor. An @AroundInvoke method and we are almost done.</p>
-<pre><code>@Interceptor
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sure, you haven’t missed the <code>@InterceptorBinding</code> annotation above ! Now
+that our custom annotation is created, lets attach it (or to use a
+better term for it, "bind it" ) to an interceptor.</p>
+</div>
+<div class="paragraph">
+<p>So here’s our logging interceptor. An <code>@AroundInvoke</code> method and we are
+almost done.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Interceptor
 @Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
 public class LoggingInterceptor {
     @AroundInvoke
     public Object logMethodEntry(InvocationContext ctx) throws Exception {
-        System.out.println(&quot;Entering method: &quot; + ctx.getMethod().getName());
-        //or logger.info statement 
+        System.out.println("Entering method: " + ctx.getMethod().getName());
+        //or logger.info statement
         return ctx.proceed();
     }
-}
-</code></pre>
-<p>Now the @Log annotation we created is bound to this interceptor.</p>
-<p>That done, let's annotate at class-level or method-level and have fun intercepting ! </p>
-<pre><code>@Log
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the <code>@Log</code> annotation we created is bound to this interceptor.</p>
+</div>
+<div class="paragraph">
+<p>That done, let’s annotate at class-level or method-level and have fun
+intercepting !</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Log
 @Stateful
 public class BookShow implements Serializable {
     private static final long serialVersionUID = 6350400892234496909L;
     public List&lt;String&gt; getMoviesList() {
         List&lt;String&gt; moviesAvailable = new ArrayList&lt;String&gt;();
-        moviesAvailable.add(&quot;12 Angry Men&quot;);
-        moviesAvailable.add(&quot;Kings speech&quot;);
+        moviesAvailable.add("12 Angry Men");
+        moviesAvailable.add("Kings speech");
         return moviesAvailable;
     }
     public Integer getDiscountedPrice(int ticketPrice) {
         return ticketPrice - 50;
     }
     // assume more methods are present
-}
-</code></pre>
-<p>The <code>@Log</code> annotation applied at class level denotes that all the methods should be intercepted with <code>LoggingInterceptor</code>.</p>
-<p>Before we say "all done" there's one last thing we are left with ! To enable the interceptors ! </p>
-<p>Lets quickly put up a [beans.xml file]</p>
-<pre><code>&lt;beans&gt;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Log</code> annotation applied at class level denotes that all the
+methods should be intercepted with <code>LoggingInterceptor</code>.</p>
+</div>
+<div class="paragraph">
+<p>Before we say "all done" there’s one last thing we are left with ! To
+enable the interceptors !</p>
+</div>
+<div class="paragraph">
+<p>Lets quickly put up a <code>beans.xml</code> file in <code>META-INF</code></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;beans&gt;
   &lt;interceptors&gt;
     &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.LoggingInterceptor
     &lt;/class&gt;
   &lt;/interceptors&gt;
-&lt;/beans&gt;
-</code></pre>
-<p>in META-INF</p>
-<p>Those lines in beans.xml not only "enable" the interceptors, but also define the "order of execution" of the interceptors. But we'll see that in another example on multiple-cdi-interceptors.</p>
-<p>Fire up the test, and we should see a 'Entering method: getMoviesList' printed in the console.</p>
-<h1>Tests</h1>
-<pre><code>Apache OpenEJB 4.0.0-beta-2    build: 20111103-01:00
-http://tomee.apache.org/
-INFO - openejb.home = /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
-INFO - openejb.base = /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39; 
-INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
-INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
-INFO - Found EjbModule in classpath: /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors/target/classes
-INFO - Beginning load: /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors/target/classes
-INFO - Configuring enterprise application: /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
-INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
-INFO - Auto-creating a container for bean cdi-simple-interceptors.Comp: Container(type=MANAGED, id=Default Managed Container)
-INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
-INFO - Auto-creating a container for bean BookShow: Container(type=STATEFUL, id=Default Stateful Container)
-INFO - Enterprise application &quot;/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors&quot; loaded.
-INFO - Assembling app: /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
-INFO - Jndi(name=&quot;java:global/cdi-simple-interceptors/BookShow!org.superbiz.cdi.bookshow.beans.BookShow&quot;)
-INFO - Jndi(name=&quot;java:global/cdi-simple-interceptors/BookShow&quot;)
-INFO - Created Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default Stateful Container)
-INFO - Started Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default Stateful Container)
-INFO - Deployed Application(path=/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors)
-Entering method: getMoviesList
-</code></pre>
+&lt;/beans&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Those lines in <code>beans.xml</code> not only "enable" the interceptors, but also
+define the "order of execution" of the interceptors. But we’ll see
+that in another example on multiple-cdi-interceptors.</p>
+</div>
+<div class="paragraph">
+<p>Fire up the test, and we should see a <code>Entering method: getMoviesList</code>
+printed in the console.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>#Tests Apache OpenEJB 4.0.0-beta-2 build: 20111103-01:00
+http://tomee.apache.org/ INFO - openejb.home =
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
+INFO - openejb.base =
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
+INFO - Using `javax.ejb.embeddable.EJBContainer=true' INFO - Configuring
+Service(id=Default Security Service, type=SecurityService,
+provider-id=Default Security Service) INFO - Configuring
+Service(id=Default Transaction Manager, type=TransactionManager,
+provider-id=Default Transaction Manager) INFO - Found EjbModule in
+classpath:
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors/target/classes
+INFO - Beginning load:
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors/target/classes
+INFO - Configuring enterprise application:
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
+INFO - Configuring Service(id=Default Managed Container, type=Container,
+provider-id=Default Managed Container) INFO - Auto-creating a container
+for bean cdi-simple-interceptors.Comp: Container(type=MANAGED,
+id=Default Managed Container) INFO - Configuring Service(id=Default
+Stateful Container, type=Container, provider-id=Default Stateful
+Container) INFO - Auto-creating a container for bean BookShow:
+Container(type=STATEFUL, id=Default Stateful Container) INFO -
+Enterprise application
+``/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors''
+loaded. INFO - Assembling app:
+/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
+INFO -
+Jndi(name=``java:global/cdi-simple-interceptors/BookShow!org.superbiz.cdi.bookshow.beans.BookShow'')
+INFO - Jndi(name=``java:global/cdi-simple-interceptors/BookShow'') INFO
+- Created Ejb(deployment-id=BookShow, ejb-name=BookShow,
+container=Default Stateful Container) INFO - Started
+Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default
+Stateful Container) INFO - Deployed
+Application(path=/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors)
+Entering method: getMoviesList</pre>
+</div>
+</div>
             </div>
             
         </div>
