@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Utilitário de Concorrência para o Java EE</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Neste exemplo será usado o <a href="https://docs.oracle.com/javaee/7/tutorial/concurrency-utilities.htm">Utilitário de Concorrência para Java EE</a>, ou JSR 236.</p>
+</div>
+<div class="paragraph">
+<p>Esse padrão permite que os desenvolvedores de aplicativos usem utilitários de concorrência gerenciados pelo servidor de aplicação.
+Dessa forma, o desenvolvedor não tem mais a responsabilidade de gerenciar manualmente pesquisas de thread ou threads.
+Além disso, em um objeto de thread não gerenciado, o contêiner não pode garantir que outros serviços da plataforma Java EE funcionem corretamente. Por esses motivos, é recomendável o uso de threads gerenciadas sempre que a necessidade surgir.
+Mais informações podem ser encontradas <a href="https://docs.oracle.com/javaee/7/tutorial/concurrency-utilities001.htm">aqui</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_principais_componentes_do_utilitário_de_concorrência">Principais Componentes do Utilitário de Concorrência</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>O padrão especifica os componentes principais do utilitário de concorrência. Em suma, esses componentes são objetos gerenciados que oferecem facilidades de concorrência. Esses objetos, uma vez que são gerenciados pelo aplicativo, podem ser injetados usando CDI ou JNDI. Mais informações podem ser encontradas <a href="https://docs.oracle.com/javaee/7/tutorial/concurrency-utilities002.htm">aqui</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_managedexecutorservice">ManagedExecutorService</h3>
+<div class="paragraph">
+<p>Um <code>ManagedExecutorService</code> é um objeto que permite ao desenvolvedor do aplicativo enviar tarefas de forma assíncrona. As tarefas são executadas em threads que são gerenciadas pelo contêiner.</p>
+</div>
+<div class="sect3">
+<h4 id="_exemplo">Exemplo</h4>
+<div class="paragraph">
+<p>Aqui está a classe que usa um <code>ManagedExecutorService</code> (código completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/main/java/org/superbiz/executor/ManagedService.java">aqui</a>):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RequestScoped
+public class ManagedService {
+
+    @Resource
+    private ManagedExecutorService executor;
+
+    public CompletableFuture&lt;Integer&gt; asyncTask(final int value) {
+        return CompletableFuture
+                .supplyAsync(longTask(value, 100, null), executor)
+                .thenApply(i -&gt; i + 1);
+    }
+
+    public CompletableFuture&lt;Integer&gt; asyncTaskWithException(final int value) {
+        return CompletableFuture
+                .supplyAsync(longTask(value, 100, "Planned exception"), executor)
+                .thenApply(i -&gt; i + 1);
+    }
+
+    private Supplier&lt;Integer&gt; longTask(final int value,
+                                       final int taskDurationMs,
+                                       final String errorMessage) {
+        return () -&gt; {
+            if (nonNull(errorMessage)) {
+                throw new RuntimeException(errorMessage);
+            }
+
+            try {
+                TimeUnit.MILLISECONDS.sleep(taskDurationMs);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Problem while waiting");
+            }
+            return value + 1;
+        };
+    }
+
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O objeto <code>ManagedExecutorService</code>, está sendo gerenciado, é injetado usando a anotação <code>@Resource</code>.</p>
+</div>
+<div class="paragraph">
+<p>Esse exemplo simula uma computação de longa execução, definida no método <code>longTask</code>.</p>
+</div>
+<div class="paragraph">
+<p>As capacidades do <code>ManagedExecutorService</code> são exemplificadas nos métodos <code>asyncTask</code> e <code>asyncTaskWithException</code>.
+Os dois métodos invocam o método <code>longTask`definido acima; cada execução do `longTask</code> é feita em uma thread gerenciada pela aplicação.
+O método <code>asyncTask</code> simula uma execução bem sucedida, enquanto o <code>asyncTaskWithException</code> simula uma execução que vai lançar uma exceção.</p>
+</div>
+<div class="paragraph">
+<p>Os métodos são usados na seguinte classe de teste  (exemplo completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/test/java/org/superbiz/executor/ManagedServiceTest.java">aqui</a>):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RunWith(Arquillian.class)
+public class ManagedServiceTest {
+
+    @Inject
+    private ManagedService managedService;
+
+    @Deployment()
+    public static final WebArchive app() {
+        return ShrinkWrap.create(WebArchive.class, "example.war")
+                .addClasses(ManagedService.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @Test
+    public void managedInvocationTest() {
+        final CompletableFuture&lt;Integer&gt; future = managedService.asyncTask(1);
+        try {
+            assertEquals(3, future.get(200, TimeUnit.MILLISECONDS).intValue());
+        } catch (Exception e) {
+            fail("Unexpected exception" + e);
+        }
+    }
+
+    @Test(expected = TimeoutException.class)
+    public void managedInvocationTestWithTimeout() throws InterruptedException, ExecutionException, TimeoutException {
+        final CompletableFuture&lt;Integer&gt; future = managedService.asyncTask(1);
+        future.get(10, TimeUnit.MILLISECONDS);
+    }
+
+    @Test
+    public void managedInvocationTestWithException() {
+        final CompletableFuture&lt;Integer&gt; future = managedService.asyncTaskWithException(1);
+
+        try {
+            future.get(200, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException e) {
+            assertEquals("Planned exception", e.getCause().getMessage());
+        } catch (Exception e) {
+            fail("Unexpected exception" + e);
+        }
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managedscheduledexecutorservice">ManagedScheduledExecutorService</h3>
+<div class="paragraph">
+<p>Um <code>ManagedScheduledExecutorService</code> é um objeto que permite que os desenvolvedores executem tarefas assíncronas em momentos específicos. As tarefas são executadas em threads iniciadas pelo contêiner.</p>
+</div>
+<div class="sect3">
+<h4 id="_exemplo_2">Exemplo</h4>
+<div class="paragraph">
+<p>Exemplo completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/main/java/org/superbiz/executor/ManagedScheduledService.java">aqui</a>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RequestScoped
+public class ManagedScheduledService {
+
+    @Resource
+    private ManagedScheduledExecutorService executor;
+
+    public Future&lt;Integer&gt; singleFixedDelayTask(final int value,
+                                                final String errorMessage) {
+        return executor.schedule(
+                longCallableTask(value, 10, errorMessage), 100, TimeUnit.MILLISECONDS);
+    }
+
+    public ScheduledFuture&lt;?&gt; periodicFixedDelayTask(final int value,
+                                                     final String errorMessage,
+                                                     final CountDownLatch countDownLatch) {
+        return executor.scheduleAtFixedRate(
+                longRunnableTask(value, 10, errorMessage, countDownLatch), 0, 100, TimeUnit.MILLISECONDS);
+    }
+
+    private Runnable longRunnableTask(final int value,
+                                      final int taskDurationMs,
+                                      final String errorMessage,
+                                      final CountDownLatch countDownLatch) {
+        return () -&gt; {
+            failOrWait(taskDurationMs, errorMessage);
+            Integer result = value + 1;
+            countDownLatch.countDown();
+        };
+    }
+
+    private Callable&lt;Integer&gt; longCallableTask(final int value,
+                                               final int taskDurationMs,
+                                               final String errorMessage) {
+        return () -&gt; {
+            failOrWait(taskDurationMs, errorMessage);
+            return value + 1;
+        };
+    }
+
+    private void failOrWait(final int taskDurationMs,
+                            final String errorMessage) {
+        if (nonNull(errorMessage)) {
+            throw new RuntimeException(errorMessage);
+        }
+        try {
+            TimeUnit.MILLISECONDS.sleep(taskDurationMs);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Problem while waiting");
+        }
+    }
+
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esse exemplo também define um método, <code>longCallableTask</code>, simulando a execução de uma computação de longa duração.</p>
+</div>
+<div class="paragraph">
+<p>O método <code>singleFixedDelayTask</code> agenda uma tarefa de longa duração (chamando <code>longCallableTask</code>), mas a execução vai iniciar depois de 100 ms.
+O método <code>periodicFixedDelayTask</code> agenda tarefas para serem executadas periodicamente, após cada 100 ms, com um delay inicial de 0.</p>
+</div>
+<div class="paragraph">
+<p>Os metódos são usados nas seguintes classes de teste (código completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/test/java/org/superbiz/executor/ManagedScheduledServiceTest.java">aqui</a>):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RunWith(Arquillian.class)
+public class ManagedScheduledServiceTest {
+
+    @Inject
+    private ManagedScheduledService scheduledService;
+
+    @Deployment()
+    public static final WebArchive app() {
+        return ShrinkWrap.create(WebArchive.class, "example.war")
+                .addClasses(ManagedScheduledService.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @Test
+    public void singleFixedDelayTask() throws InterruptedException, ExecutionException, TimeoutException {
+        final Future&lt;Integer&gt; futureA = scheduledService.singleFixedDelayTask(1, null);
+        final Future&lt;Integer&gt; futureB = scheduledService.singleFixedDelayTask(50, null);
+
+        assertEquals(2, futureA.get(200, TimeUnit.MILLISECONDS).intValue());
+        assertEquals(51, futureB.get(200, TimeUnit.MILLISECONDS).intValue());
+
+    }
+
+    @Test
+    public void periodicFixedDelayTask() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(4); // execute 4 times
+        final ScheduledFuture&lt;?&gt; scheduledFuture = scheduledService.periodicFixedDelayTask(1, null, countDownLatch);
+        countDownLatch.await(500, TimeUnit.MILLISECONDS);
+        if (!scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(true);
+        }
+    }
+
+    @Test
+    public void singleFixedDelayTaskWithException() {
+        final Future&lt;Integer&gt; future = scheduledService.singleFixedDelayTask(1, "Planned exception");
+        try {
+            future.get(200, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException e) {
+            assertEquals("Planned exception", e.getCause().getMessage());
+        } catch (Exception e) {
+            fail("Unexpected exception" + e);
+        }
+    }
+
+    @Test
+    public void periodicFixedDelayTaskWithException() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final ScheduledFuture&lt;?&gt; scheduledFuture = scheduledService.periodicFixedDelayTask(1, "Planned exception", countDownLatch);
+
+        try {
+            countDownLatch.await(200, TimeUnit.MILLISECONDS);
+            scheduledFuture.get(200, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException e) {
+            assertEquals("Planned exception", e.getCause().getMessage());
+        } catch (Exception e) {
+            fail("Unexpected exception" + e);
+        }
+
+        if (!scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(true);
+        }
+    }
+
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managedthreadfactory">ManagedThreadFactory</h3>
+<div class="paragraph">
+<p>Um <code>ManagedThreadFactory</code> é um objeto que permite aos  desenvolvedores criar threads gerenciadas por contêiner.</p>
+</div>
+<div class="sect3">
+<h4 id="_exemplo_3">Exemplo</h4>
+<div class="paragraph">
+<p>Exemplo completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/main/java/org/superbiz/executor/ThreadFactoryService.java">aqui</a>:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RequestScoped
+public class ThreadFactoryService {
+
+    @Resource
+    private ManagedThreadFactory factory;
+
+    public void asyncTask(final LongTask longTask) throws InterruptedException {
+        final Thread thread = factory.newThread(longTask);
+        thread.setName("pretty asyncTask");
+        thread.start();
+    }
+
+    public void asyncHangingTask(final Runnable longTask) {
+        final Thread thread = factory.newThread(longTask);
+        thread.setName("pretty asyncHangingTask");
+        thread.start();
+
+        if (thread.isAlive()) {
+            thread.interrupt();
+        }
+    }
+
+    public static class LongTask implements Runnable {
+        private final int value;
+        private final long taskDurationMs;
+        private final CountDownLatch countDownLatch;
+        private int result;
+        private AtomicBoolean isTerminated = new AtomicBoolean(false);
+
+        public LongTask(final int value,
+                        final long taskDurationMs,
+                        final CountDownLatch countDownLatch) {
+            this.value = value;
+            this.taskDurationMs = taskDurationMs;
+            this.countDownLatch = countDownLatch;
+        }
+
+        public int getResult() {
+            return result;
+        }
+
+        public boolean getIsTerminated() {
+            return isTerminated.get();
+        }
+
+        @Override
+        public void run() {
+            try {
+                TimeUnit.MILLISECONDS.sleep(taskDurationMs);
+            } catch (InterruptedException e) {
+                isTerminated.set(true);
+                countDownLatch.countDown();
+                throw new RuntimeException("Problem while waiting");
+            }
+
+            result = value + 1;
+            countDownLatch.countDown();
+        }
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esse exemplo define uma classe que implementa <code>Runnable</code>, executando uma tarefa de longa duração no método <code>run</code>.</p>
+</div>
+<div class="paragraph">
+<p>O método <code>asyncTask</code> apenas cria uma thread gerenciada (usando o <code>ManagedThreadFactory</code> injetado) em seguida, a inicia.
+O método <code>asyncHangingTask</code> também cria uma thread gerenciada, a inicia, mas também a para.</p>
+</div>
+<div class="paragraph">
+<p>A seguinte classe testa esses métodos (código completo pode ser encontrado <a href="https://github.com/apache/tomee/blob/master/examples/concurrency-utils/src/test/java/org/superbiz/executor/ThreadFactoryServiceTest.java">aqui</a>):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@RunWith(Arquillian.class)
+public class ThreadFactoryServiceTest {
+
+    @Inject
+    private ThreadFactoryService factoryService;
+
+    @Deployment()
+    public static final WebArchive app() {
+        return ShrinkWrap.create(WebArchive.class, "example.war")
+                .addClasses(ThreadFactoryService.class)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @Test
+    public void asyncTask() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final LongTask longTask = new LongTask(1, 50, countDownLatch);
+        factoryService.asyncTask(longTask);
+
+        countDownLatch.await(200, TimeUnit.MILLISECONDS);
+
+        assertEquals(2, longTask.getResult());
+    }
+
+    @Test
+    public void asyncHangingTask() throws InterruptedException {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final LongTask longTask = new LongTask(1, 1000000, countDownLatch);
+
+        factoryService.asyncHangingTask(longTask);
+
+        countDownLatch.await(200, TimeUnit.MILLISECONDS);
+
+        assertTrue(longTask.getIsTerminated());
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O exemplo completo do projeto pode ser encontrado <a href="https://github.com/apache/tomee/tree/master/examples/concurrency-utils">aqui</a>.
+É um projeto Maven, e todos os testes podem ser rodados executando o comando <code>mvn clean install</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

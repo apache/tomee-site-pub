@@ -101,6 +101,100 @@
 <p>This is an example on how to implement a custom MicroProfile Configuration ConfigSource. The custom ConfigSource is
 going to read configuration values from a Database.</p>
 </div>
+<h4 id="_configsource_feature" class="discrete">ConfigSource Feature</h4>
+<div class="paragraph">
+<p>To provide a customized ConfigSource from a database, you need to begin with a class that implements <code>ConfigSource</code> interface, overriding 3 methods:
+<code>getProperties</code> , <code>getValue</code> , and <code>getName</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class DatabaseConfigSource implements ConfigSource {
+    private DataSource dataSource;
+
+    public DatabaseConfigSource() {
+        try {
+            dataSource = (DataSource) new InitialContext().lookup("openejb:Resource/config-source-database");
+        } catch (final NamingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public Map&lt;String, String&gt; getProperties() {
+        final Map&lt;String, String&gt; properties = new HashMap&lt;&gt;();
+
+        try {
+            final Connection connection = dataSource.getConnection();
+            final PreparedStatement query = connection.prepareStatement("SELECT NAME, VALUE FROM CONFIGURATIONS");
+            final ResultSet names = query.executeQuery();
+
+            while (names.next()) {
+                properties.put(names.getString(0), names.getString(1));
+            }
+
+            DbUtils.closeQuietly(names);
+            DbUtils.closeQuietly(query);
+            DbUtils.closeQuietly(connection);
+        } catch (final SQLException e) {
+            e.printStackTrace();
+        }
+
+        return properties;
+    }
+
+    @Override
+    public String getValue(final String propertyName) {
+        try {
+            final Connection connection = dataSource.getConnection();
+            final PreparedStatement query =
+                    connection.prepareStatement("SELECT VALUE FROM CONFIGURATIONS WHERE NAME = ?");
+            query.setString(1, propertyName);
+            final ResultSet value = query.executeQuery();
+
+            if (value.next()) {
+                return value.getString(1);
+            }
+
+            DbUtils.closeQuietly(value);
+            DbUtils.closeQuietly(query);
+            DbUtils.closeQuietly(connection);
+        } catch (final SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return DatabaseConfigSource.class.getSimpleName();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For simplicity, in the example above, the database definition and data to be used for the configuration, correspond to a <code>Resource</code>, declared
+in the <code>tomee.xml</code> configuration file as <code>Resource</code> of type: <code>DataSource</code>, as following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">&lt;tomee&gt;
+  &lt;Resource id="config-source-database" type="DataSource"&gt;
+
+  &lt;/Resource&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and It&#8217;s linked to the a set of DDL/DML instructions, defined in the <code>import-config-source-database.sql</code> script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">CREATE TABLE CONFIGURATIONS (NAME VARCHAR (255) NOT NULL PRIMARY KEY, VALUE VARCHAR(255) NOT NULL);
+INSERT INTO CONFIGURATIONS(NAME, VALUE) VALUES('application.currency', 'Euro');
+INSERT INTO CONFIGURATIONS(NAME, VALUE) VALUES('application.country', 'PT');</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">

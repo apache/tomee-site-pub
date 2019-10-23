@@ -98,54 +98,70 @@
                 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is an example on how to use microprofile metrics in TomEE.  The project includes a docker profile which can be used to create a Docker image.</p>
+<p>This is an example of how to use microprofile metrics in TomEE.  The project
+includes a docker profile which can be used to create a Docker image.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_run_the_application">Run the application:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>mvn clean install tomee:run</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn clean install tomee:run</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Alternatively, build and run the application via Docker (note the use of the docker profile):
+</td>
+</tr>
+</table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_alternatively_build_and_run_the_application_via_docker_note_the_use_of_the_docker_profile">Alternatively build and run the application via Docker (note the use of the docker profile):</h2>
-<div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>mvn -Pdocker docker:build
-docker run -it --rm \
-       -p 8080:8080 \
-       --name=tomee-mp-metrics-counted \
-       tomee/mp-metrics-counted</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn -Pdocker docker:build</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ docker run -it --rm -p 8080:8080 --name=tomee-mp-metrics-counted tomee/mp-metrics-counted</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Within the application there is an endpoint that will give you weather
+<p>Within the application, there is an endpoint that will give you weather
 status for the day and week.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_for_the_day_status_call">For the day status call:</h2>
+<h2 id="_get_the_weather_for_the_week">Get the weather for the week:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>GET http://localhost:8080/mp-metrics-counted/weather/week/status</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-counted/weather/week/status</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If running via Docker, because the application is installed as the ROOT application, remove the application name from the URL:
+</td>
+</tr>
+</table>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_if_running_via_docker_because_the_application_is_installed_as_the_root_application_remove_the_application_name_such_as">If running via Docker, because the application is installed as the ROOT application, remove the application name such as:</h2>
-<div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>GET http://localhost:8080/weather/week/status</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/weather/week/status</code></pre>
 </div>
 </div>
 </div>
@@ -153,9 +169,9 @@ status for the day and week.</p>
 <div class="sect1">
 <h2 id="_response">Response:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>Hi, today is a sunny day!</pre>
+<pre class="highlight"><code class="language-text" data-lang="text">Hi, today is a sunny day!</code></pre>
 </div>
 </div>
 </div>
@@ -169,11 +185,11 @@ a service.</p>
 </div>
 <div class="paragraph">
 <p>To use this feature you need to annotate the JAX-RS resource method with
-@Counted.</p>
+<code>@Counted</code>.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Path("/weather")
+<pre class="highlight"><code class="language-java" data-lang="java">@Path("/weather")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
@@ -187,36 +203,34 @@ public class WeatherService {
         return "Hi, today is a sunny day!";
     }
 ...
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>There are some configurations, as part of @Counted, that you need to
-know:</p>
+<p>There are some configurations, as part of <code>@Counted</code>, that you need to know:</p>
 </div>
 <div class="paragraph">
-<p><strong>String name</strong> Optional. Sets the name of the metric. If not explicitly
-given the name of the annotated object is used.</p>
+<p><strong>String name</strong> Optional. Sets the name of the metric. If not explicitly given
+the name of the annotated object is used.</p>
 </div>
 <div class="paragraph">
-<p><strong>boolean absolute</strong> If true, uses the given name as the absolute name of
-the metric. If false, prepends the package name and class name before
-the given name. Default value is false.</p>
+<p><strong>boolean absolute</strong> If true, uses the given name as the absolute name of the
+metric. If false, prepends the package name and class name before the given
+name. Default value is false.</p>
 </div>
 <div class="paragraph">
-<p><strong>String displayName</strong> Optional. A human-readable display name for
-metadata.</p>
+<p><strong>String displayName</strong> Optional. A human-readable display name for metadata.</p>
 </div>
 <div class="paragraph">
 <p><strong>String description</strong> Optional. A description of the metric.</p>
 </div>
 <div class="paragraph">
-<p><strong>String[] tags</strong> Optional. Array of Strings in the = format to supply
-special tags to a metric.</p>
+<p><strong>String[] tags</strong> Optional. Array of Strings in the = format to supply special
+tags to a metric.</p>
 </div>
 <div class="paragraph">
-<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be
-registered in more than one place. Does not apply to gauges.</p>
+<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be registered in
+more than one place. Does not apply to <code>@Gauge</code>.</p>
 </div>
 </div>
 </div>
@@ -228,35 +242,43 @@ registered in more than one place. Does not apply to gauges.</p>
 </div>
 <div class="sect2">
 <h3 id="_prometheus_format">Prometheus format:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>GET http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_response_2">Response:</h3>
-<div class="literalblock">
+<h3 id="_prometheus_response">Prometheus Response:</h3>
+<div class="listingblock">
 <div class="content">
-<pre># TYPE application:weather_day_status counter
-application:weather_day_status 1.0</pre>
+<pre class="highlight"><code class="language-text" data-lang="text"># TYPE application:weather_day_status counter
+application:weather_day_status 1.0</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_json_format">JSON Format:</h3>
 <div class="paragraph">
-<p>For json format add the header <em>Accept=application/json</em> to the request.</p>
+<p>For json format add the header <code>Accept: application/json</code> to the HTTP request.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>{
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET -H "Accept: application/json" http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_json_response">JSON Response:</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
     "weather_day_status": {
         "delegate": {},
         "unit": "none",
         "count": 1
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -266,25 +288,25 @@ application:weather_day_status 1.0</pre>
 <h2 id="_metric_metadata">Metric metadata</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A metric will have a metadata so you can know more information about it,
-like displayName, description, tags e etc.</p>
+<p>A metric will have metadata so you can know more information about it,
+like <code>displayName</code>, <code>description</code>, <code>tags</code>, etc.</p>
 </div>
 <div class="paragraph">
-<p>Check the metric metadata doing a <em>OPTIONS</em> request:</p>
+<p>Check the metric metadata doing a <em>OPTIONS</em> HTTP request:</p>
 </div>
 <div class="sect2">
-<h3 id="_request">Request</h3>
-<div class="literalblock">
+<h3 id="__em_options_em_http_request"><em>OPTIONS</em> HTTP Request</h3>
+<div class="listingblock">
 <div class="content">
-<pre>OPTIONS http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X OPTIONS http://localhost:8080/mp-metrics-counted/metrics/application/weather_day_status</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_response_3">Response:</h3>
-<div class="literalblock">
+<h3 id="_response_2">Response:</h3>
+<div class="listingblock">
 <div class="content">
-<pre>{
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
     "weather_day_status": {
         "unit": "none",
         "displayName": "Weather Day Status",
@@ -306,12 +328,12 @@ like displayName, description, tags e etc.</p>
         "reusable": false,
         "tags": ""
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also try it out using the WeatherServiceTest.java available in
-the project.</p>
+<p>You can also try it out using the WeatherServiceTest.java available in the
+project.</p>
 </div>
 </div>
 </div>

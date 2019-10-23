@@ -88,7 +88,7 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>MicroProfile Metrics Histogram</h1>
+              <h1>MicroProfile Metrics <code>@Histogram</code></h1>
             </div>
           </div>
         </div>
@@ -105,9 +105,9 @@
 <div class="sect1">
 <h2 id="_run_the_application">Run the application:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>mvn clean install tomee:run</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn clean install tomee:run</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -119,9 +119,9 @@ histogram of the most recent New York City temperatures.</p>
 <div class="sect1">
 <h2 id="_request">Request:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>curl -X GET http://localhost:8080/mp-metrics-histogram/weather/histogram</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-histogram/weather/histogram</code></pre>
 </div>
 </div>
 </div>
@@ -129,9 +129,9 @@ histogram of the most recent New York City temperatures.</p>
 <div class="sect1">
 <h2 id="_response">Response:</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>{
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
     "count":15,
     "max":55,
     "mean":44.4,
@@ -144,7 +144,7 @@ histogram of the most recent New York City temperatures.</p>
     "p999":54.0,
     "stddev":7.0710678118654755,
     "unit":"degrees F"
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -156,12 +156,12 @@ histogram of the most recent New York City temperatures.</p>
 <p>Microprofile metrics has a feature create a histogram of data.</p>
 </div>
 <div class="paragraph">
-<p>To use this feature, inject a MetricRegistry, register the Histogram,
-and add data to the histogram as shown below.</p>
+<p>To use this feature, inject a <code>MetricRegistry</code>, register the Histogram, and add
+data to the histogram as shown below.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Inject
+<pre class="highlight"><code class="language-java" data-lang="java">@Inject
 private MetricRegistry registry;
 
 @Inject
@@ -181,54 +181,51 @@ public Histogram getTemperatures() {
         histogram.update(temp);
     }
     return histogram;
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>There are some Histogram configurations defined in the @Metric
-annotation:</p>
+<p>There are some Histogram configurations defined in the <code>@Metric</code> annotation:</p>
 </div>
 <div class="paragraph">
-<p><strong>String name</strong> Optional. The name of the metric. If not explicitly given
-the name of the annotated object is used.</p>
+<p><strong>String name</strong> Optional. The name of the metric. If not explicitly given the
+name of the annotated object is used.</p>
 </div>
 <div class="paragraph">
-<p><strong>String displayName</strong> Optional. A human readable display name for
-metadata.</p>
+<p><strong>String displayName</strong> Optional. A human readable display name for metadata.</p>
 </div>
 <div class="paragraph">
 <p><strong>String description</strong> Optional. A description of the metric.</p>
 </div>
 <div class="paragraph">
-<p><strong>String[] tags</strong> Optional. An array of Strings in the = format to supply
-special tags to a metric.</p>
+<p><strong>String[] tags</strong> Optional. An array of Strings in the = format to supply special
+tags to a metric.</p>
 </div>
 <div class="paragraph">
-<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be
-registered in more than one place. Does not apply to gauges or
-histograms.</p>
+<p><strong>boolean reusable</strong> Denotes if a metric with a certain name can be registered in
+more than one place. Does not apply to gauges or histograms.</p>
 </div>
 <div class="sect2">
 <h3 id="_for_the_histogram_status">For the histogram status:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>GET http://localhost:8080/mp-metrics-histogram/weather/histogram/status</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-histogram/weather/histogram/status</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_reponse">Reponse:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre> Here are the most recent New York City temperatures.</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"> Here are the most recent New York City temperatures.</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_expected_prometheus_format">Expected Prometheus format:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>    # TYPE application:temperatures_degrees F summary histogram
+<pre class="highlight"><code class="language-text" data-lang="text">    # TYPE application:temperatures_degrees F summary histogram
     # TYPE application:temperatures_degrees F_count histogram
     application:temperatures_degrees F_count 15.0
     # TYPE application:temperatures_min_degrees F histogram
@@ -273,23 +270,23 @@ histograms.</p>
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
     application:org_superbiz_histogram_weather_service_temperatures{quantile="0.99"} 0.0
     # TYPE application:org_superbiz_histogram_weather_service_temperatures histogram
-    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.999"} 0.0</pre>
+    application:org_superbiz_histogram_weather_service_temperatures{quantile="0.999"} 0.0</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_request_2">Request:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>curl -X GET http://localhost:8080/mp-metrics-histogram/metrics/application</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-histogram/metrics/application</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_response_2">Response:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>{
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
     "org.superbiz.histogram.WeatherService.temperatures": {
         "count":0,
         "max":0,
@@ -303,7 +300,7 @@ histograms.</p>
         "stddev":0.0,
         "unit":"none"
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -314,21 +311,21 @@ histograms.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A metric will have a metadata to provide information about it such as
-displayName, description, tags, etc.</p>
+<code>displayName</code>, <code>description</code>, <code>tags</code>, etc.</p>
 </div>
 <div class="sect2">
 <h3 id="_request_3">Request:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>curl -X OPTIONS http://localhost:8080/mp-metrics-histogram/metrics/application</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X OPTIONS http://localhost:8080/mp-metrics-histogram/metrics/application</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_response_3">Response:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>{
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
     "org.superbiz.histogram.WeatherService.temperatures": {
         "description": "A histogram metrics example.",
         "displayName":"Histogram of Recent New York Temperatures",
@@ -339,15 +336,15 @@ displayName, description, tags, etc.</p>
         "typeRaw":"HISTOGRAM",
         "unit":"none"
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_test_the_application">Test the application:</h3>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>mvn test</pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn test</code></pre>
 </div>
 </div>
 </div>
