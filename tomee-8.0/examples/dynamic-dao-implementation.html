@@ -88,30 +88,83 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>Dynamic DAO Implementation</h1>
+              <h1>z</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p>Many aspects of Data Access Objects (DAOs) are very repetitive and boiler plate. As a fun and experimental feature, TomEE supports dynamically implementing an interface that is seen to have standard DAO-style methods.</p>
-<p>The interface has to be annotated with @PersistenceContext to define which EntityManager to use.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many aspects of Data Access Objects (DAOs) are very repetitive and
+boiler plate. As a fun and experimental feature, TomEE supports
+dynamically implementing an interface that is seen to have standard
+DAO-style methods.</p>
+</div>
+<div class="paragraph">
+<p>The interface has to be annotated with @PersistenceContext to define
+which EntityManager to use.</p>
+</div>
+<div class="paragraph">
 <p>Methods should respect these conventions:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>void save(Foo foo): persist foo</li>
-  <li>Foo update(Foo foo): merge foo</li>
-  <li>void delete(Foo foo): remove foo, if foo is detached it tries to attach it</li>
-  <li>Collection<Foo>|Foo namedQuery(String name[, Map&lt;String, ?&gt; params, int first, int max]): run the named query called name, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
-  <li>Collection<Foo>|Foo nativeQuery(String name[, Map&lt;String, ?&gt; params, int first, int max]): run the native query called name, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
-  <li>Collection<Foo>|Foo query(String value [, Map&lt;String, ?&gt; params, int first, int max]): run the query put as first parameter, params contains bindings, first and max are used for magination. Last three parameters are optionnals</li>
-  <li>Collection<Foo> findAll([int first, int max]): find all Foo, parameters are used for pagination</li>
-  <li>Collection<Foo> findByBar1AndBar2AndBar3(<bar 1 type> bar1, <bar 2 type> bar2, <bar3 type> bar3 [, int first, int max]): find all Foo with specified field values for bar1, bar2, bar3.</li>
+<li>
+<p>void save(Foo foo): persist foo</p>
+</li>
+<li>
+<p>Foo update(Foo foo): merge foo</p>
+</li>
+<li>
+<p>void delete(Foo foo): remove foo, if foo is detached it tries to
+attach it</p>
+</li>
+<li>
+<p>Collection|Foo namedQuery(String name[, Map&lt;String, ?&gt; params, int
+first, int max]): run the named query called name, params contains
+bindings, first and max are used for pagination. Last three parameters
+are optionnals</p>
+</li>
+<li>
+<p>Collection|Foo nativeQuery(String name[, Map&lt;String, ?&gt; params, int
+first, int max]): run the native query called name, params contains
+bindings, first and max are used for pagination. Last three parameters
+are optionnals</p>
+</li>
+<li>
+<p>Collection|Foo query(String value [, Map&lt;String, ?&gt; params, int first,
+int max]): run the query put as first parameter, params contains
+bindings, first and max are used for pagination. Last three parameters
+are optionnals</p>
+</li>
+<li>
+<p>Collection findAll([int first, int max]): find all Foo, parameters are
+used for pagination</p>
+</li>
+<li>
+<p>Collection findByBar1AndBar2AndBar3(&lt;bar 1 type&gt; bar1, &lt;bar 2 type&gt;
+bar2, bar3 [, int first, int max]): find all Foo with specified field
+values for bar1, bar2, bar3.</p>
+</li>
 </ul>
-<p>Dynamic finder can have as much as you want field constraints. For String like is used and for other type equals is used.</p>
-<h1>Example</h1>
-<h2>User</h2>
-<pre><code>package org.superbiz.dynamic;
+</div>
+<div class="paragraph">
+<p>Dynamic finder can have as much as you want field constraints. For
+String like is used and for other type equals is used.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_user">User</h3>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -121,8 +174,8 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = &quot;dynamic-ejb-impl-test.query&quot;, query = &quot;SELECT u FROM User AS u WHERE u.name LIKE :name&quot;),
-        @NamedQuery(name = &quot;dynamic-ejb-impl-test.all&quot;, query = &quot;SELECT u FROM User AS u&quot;)
+        @NamedQuery(name = "dynamic-ejb-impl-test.query", query = "SELECT u FROM User AS u WHERE u.name LIKE :name"),
+        @NamedQuery(name = "dynamic-ejb-impl-test.all", query = "SELECT u FROM User AS u")
 })
 public class User {
     @Id
@@ -154,10 +207,15 @@ public class User {
     public void setAge(int age) {
         this.age = age;
     }
-}
-</code></pre>
-<h2>UserDao</h2>
-<pre><code>package org.superbiz.dynamic;
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_userdao">UserDao</h3>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic;
 
 
 import javax.ejb.Stateless;
@@ -166,7 +224,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Stateless
-@PersistenceContext(name = &quot;dynamic&quot;)
+@PersistenceContext(name = "dynamic")
 public interface UserDao {
     User findById(long id);
 
@@ -193,26 +251,36 @@ public interface UserDao {
     void delete(User u);
 
     User update(User u);
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence version=&quot;2.0&quot;
-             xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_persistence_xml">persistence.xml</h3>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
       http://java.sun.com/xml/ns/persistence
-      http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;&gt;
-  &lt;persistence-unit name=&quot;dynamic&quot; transaction-type=&quot;JTA&quot;&gt;
+      http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="dynamic" transaction-type="JTA"&gt;
     &lt;jta-data-source&gt;jdbc/dynamicDB&lt;/jta-data-source&gt;
     &lt;class&gt;org.superbiz.dynamic.User&lt;/class&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>DynamicUserDaoTest</h2>
-<pre><code>package org.superbiz.dynamic;
+&lt;/persistence&gt;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamicuserdaotest">DynamicUserDaoTest</h3>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.dynamic;
 
 import junit.framework.Assert;
 import org.junit.BeforeClass;
@@ -241,15 +309,15 @@ public class DynamicUserDaoTest {
     @BeforeClass
     public static void init() throws Exception {
         final Properties p = new Properties();
-        p.put(&quot;jdbc/dynamicDB&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;jdbc/dynamicDB.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;jdbc/dynamicDB.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
-        p.put(&quot;jdbc/dynamicDB.UserName&quot;, &quot;sa&quot;);
-        p.put(&quot;jdbc/dynamicDB.Password&quot;, &quot;&quot;);
+        p.put("jdbc/dynamicDB", "new://Resource?type=DataSource");
+        p.put("jdbc/dynamicDB.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("jdbc/dynamicDB.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        p.put("jdbc/dynamicDB.UserName", "sa");
+        p.put("jdbc/dynamicDB.Password", "");
 
         final Context context = EJBContainer.createEJBContainer(p).getContext();
-        dao = (UserDao) context.lookup(&quot;java:global/dynamic-dao-implementation/UserDao&quot;);
-        util = (Util) context.lookup(&quot;java:global/dynamic-dao-implementation/Util&quot;);
+        dao = (UserDao) context.lookup("java:global/dynamic-dao-implementation/UserDao");
+        util = (Util) context.lookup("java:global/dynamic-dao-implementation/Util");
 
         util.init(); // init database
     }
@@ -316,46 +384,46 @@ public class DynamicUserDaoTest {
 
     @Test
     public void oneCriteria() {
-        Collection&lt;User&gt; users = dao.findByName(&quot;foo&quot;);
+        Collection&lt;User&gt; users = dao.findByName("foo");
         assertEquals(4, users.size());
         for (User user : users) {
-            assertEquals(&quot;foo&quot;, user.getName());
+            assertEquals("foo", user.getName());
         }
     }
 
     @Test
     public void twoCriteria() {
-        Collection&lt;User&gt; users = dao.findByNameAndAge(&quot;bar-1&quot;, 1);
+        Collection&lt;User&gt; users = dao.findByNameAndAge("bar-1", 1);
         assertEquals(1, users.size());
 
         User user = users.iterator().next();
-        assertEquals(&quot;bar-1&quot;, user.getName());
+        assertEquals("bar-1", user.getName());
         assertEquals(1, user.getAge());
     }
 
     @Test
     public void query() {
         Map&lt;String, Object&gt; params = new HashMap&lt;String, Object&gt;();
-        params.put(&quot;name&quot;, &quot;foo&quot;);
+        params.put("name", "foo");
 
-        Collection&lt;User&gt; users = dao.namedQuery(&quot;dynamic-ejb-impl-test.query&quot;, params, 0, 100);
+        Collection&lt;User&gt; users = dao.namedQuery("dynamic-ejb-impl-test.query", params, 0, 100);
         assertEquals(4, users.size());
 
-        users = dao.namedQuery(&quot;dynamic-ejb-impl-test.query&quot;, params);
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", params);
         assertEquals(4, users.size());
 
-        users = dao.namedQuery(&quot;dynamic-ejb-impl-test.query&quot;, params, 0, 2);
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", params, 0, 2);
         assertEquals(2, users.size());
 
-        users = dao.namedQuery(&quot;dynamic-ejb-impl-test.query&quot;, 0, 2, params);
+        users = dao.namedQuery("dynamic-ejb-impl-test.query", 0, 2, params);
         assertEquals(2, users.size());
 
-        users = dao.namedQuery(&quot;dynamic-ejb-impl-test.all&quot;);
+        users = dao.namedQuery("dynamic-ejb-impl-test.all");
         assertEquals(10, users.size());
 
-        params.remove(&quot;name&quot;);
-        params.put(&quot;age&quot;, 1);
-        users = dao.query(&quot;SELECT u FROM User AS u WHERE u.age = :age&quot;, params);
+        params.remove("name");
+        params.put("age", 1);
+        users = dao.query("SELECT u FROM User AS u WHERE u.age = :age", params);
         assertEquals(3, users.size());
     }
 
@@ -373,18 +441,26 @@ public class DynamicUserDaoTest {
                 User u = new User();
                 u.setAge(i % 4);
                 if (i % 3 == 0) {
-                    u.setName(&quot;foo&quot;);
+                    u.setName("foo");
                 } else {
-                    u.setName(&quot;bar-&quot; + i);
+                    u.setName("bar-" + i);
                 }
                 em.persist(u);
             }
         }
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.dynamic.DynamicUserDaoTest
@@ -392,7 +468,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/dynamic-dao-implementation
 INFO - openejb.base = /Users/dblevins/examples/dynamic-dao-implementation
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=jdbc/dynamicDB, type=Resource, provider-id=Default JDBC Database)
@@ -406,18 +482,18 @@ INFO - Auto-creating a container for bean UserDao: Container(type=STATELESS, id=
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.dynamic.DynamicUserDaoTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=dynamic)
-INFO - Auto-creating a Resource with id &#39;jdbc/dynamicDBNonJta&#39; of type &#39;DataSource for &#39;dynamic&#39;.
+INFO - Auto-creating a Resource with id 'jdbc/dynamicDBNonJta' of type 'DataSource for 'dynamic'.
 INFO - Configuring Service(id=jdbc/dynamicDBNonJta, type=Resource, provider-id=jdbc/dynamicDB)
-INFO - Adjusting PersistenceUnit dynamic &lt;non-jta-data-source&gt; to Resource ID &#39;jdbc/dynamicDBNonJta&#39; from &#39;null&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/dynamic-dao-implementation&quot; loaded.
+INFO - Adjusting PersistenceUnit dynamic &lt;non-jta-data-source&gt; to Resource ID 'jdbc/dynamicDBNonJta' from 'null'
+INFO - Enterprise application "/Users/dblevins/examples/dynamic-dao-implementation" loaded.
 INFO - Assembling app: /Users/dblevins/examples/dynamic-dao-implementation
 INFO - PersistenceUnit(name=dynamic, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 417ms
-INFO - Jndi(name=&quot;java:global/dynamic-dao-implementation/UserDao!org.superbiz.dynamic.UserDao&quot;)
-INFO - Jndi(name=&quot;java:global/dynamic-dao-implementation/UserDao&quot;)
-INFO - Jndi(name=&quot;java:global/dynamic-dao-implementation/Util!org.superbiz.dynamic.DynamicUserDaoTest$Util&quot;)
-INFO - Jndi(name=&quot;java:global/dynamic-dao-implementation/Util&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest!org.superbiz.dynamic.DynamicUserDaoTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest&quot;)
+INFO - Jndi(name="java:global/dynamic-dao-implementation/UserDao!org.superbiz.dynamic.UserDao")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/UserDao")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/Util!org.superbiz.dynamic.DynamicUserDaoTest$Util")
+INFO - Jndi(name="java:global/dynamic-dao-implementation/Util")
+INFO - Jndi(name="java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest!org.superbiz.dynamic.DynamicUserDaoTest")
+INFO - Jndi(name="java:global/EjbModule346613126/org.superbiz.dynamic.DynamicUserDaoTest")
 INFO - Created Ejb(deployment-id=UserDao, ejb-name=UserDao, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=Util, ejb-name=Util, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=org.superbiz.dynamic.DynamicUserDaoTest, ejb-name=org.superbiz.dynamic.DynamicUserDaoTest, container=Default Managed Container)
@@ -425,14 +501,17 @@ INFO - Started Ejb(deployment-id=UserDao, ejb-name=UserDao, container=Default St
 INFO - Started Ejb(deployment-id=Util, ejb-name=Util, container=Default Stateless Container)
 INFO - Started Ejb(deployment-id=org.superbiz.dynamic.DynamicUserDaoTest, ejb-name=org.superbiz.dynamic.DynamicUserDaoTest, container=Default Managed Container)
 INFO - Deployed Application(path=/Users/dblevins/examples/dynamic-dao-implementation)
-WARN - Meta class &quot;org.superbiz.dynamic.User_&quot; for entity class org.superbiz.dynamic.User can not be registered with following exception &quot;java.security.PrivilegedActionException: java.lang.ClassNotFoundException: org.superbiz.dynamic.User_&quot;
-WARN - Query &quot;SELECT u FROM User AS u WHERE u.name LIKE :name&quot; is removed from cache  excluded permanently. Query &quot;SELECT u FROM User AS u WHERE u.name LIKE :name&quot; is not cached because it uses pagination..
+WARN - Meta class "org.superbiz.dynamic.User_" for entity class org.superbiz.dynamic.User can not be registered with following exception "java.security.PrivilegedActionException: java.lang.ClassNotFoundException: org.superbiz.dynamic.User_"
+WARN - Query "SELECT u FROM User AS u WHERE u.name LIKE :name" is removed from cache  excluded permanently. Query "SELECT u FROM User AS u WHERE u.name LIKE :name" is not cached because it uses pagination..
 Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.471 sec
 
 Results :
 
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

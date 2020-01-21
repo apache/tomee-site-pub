@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>MicroProfile Fault Tolerance - Retry Policy</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este es un ejemplo de cómo usar Microprofile @Retry en TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_retry_feature">Retry Feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Microprofile Fault Tolerance tiene una función llamada Reintentar que se puede utilizar
+para recuperase de una operación del error, invocando la misma operación de nuevo
+hasta que se alcancen los criterios de detención.</p>
+</div>
+<div class="paragraph">
+<p>La directiva de reintento permite configurar:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>maxRetries</strong>: los reintentos máximos</p>
+</li>
+<li>
+<p><strong>delay</strong>: retrasos entre cada reintento</p>
+</li>
+<li>
+<p><strong>delayUnit</strong>: la unidad de retardo</p>
+</li>
+<li>
+<p><strong>maxDuration</strong>: duración máxima para realizar el reintento.</p>
+</li>
+<li>
+<p><strong>durationUnit</strong>: unidad de duración</p>
+</li>
+<li>
+<p><strong>jitter:</strong> la variación aleatoria de retrasos de reintento</p>
+</li>
+<li>
+<p><strong>jitterDelayUnit:</strong> la unidad de fluctuación</p>
+</li>
+<li>
+<p><strong>retryOn:</strong> especifica reintentar en caso de errores</p>
+</li>
+<li>
+<p><strong>abortOn:</strong> especifica anular en caso de errores</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Para utilizar esta función puede anotar una clase y/o método con la anotación <code>@Retry</code>. Compruebe la
+<a href="http://download.eclipse.org/microprofile/microprofile-fault-tolerance-1.1/microprofile-fault-tolerance-spec.html">especificación</a>
+para más detalles.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejemplos">Ejemplos</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ejecutar_la_aplicación">Ejecutar la aplicación</h3>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_1">Ejemplo 1</h3>
+<div class="paragraph">
+<p>El método statusOfDay producirá un error tres veces, cada vez,
+lanzando una 'WeatherGatewayTimeoutException' y como la anotación @Retry
+está configurada para <code>retryOn</code> en caso de error, la libreria FailSafe tomará
+el valor <code>maxRetry</code> y volverá a intentar la misma operación hasta que alcance
+el número máximo de intentos, que es 3 (valor predeterminado).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RequestScoped
+public class WeatherGateway{
+   ...
+   @Retry(maxRetry=3, retryOn = WeatherGatewayTimeoutException.class)
+   public String statusOfDay(){
+       if(counterStatusOfDay.addAndGet(1) &lt;= DEFAULT_MAX_RETRY){
+           LOGGER.warning(String.format(FORECAST_TIMEOUT_MESSAGE, DEFAULT_MAX_RETRY, counterStatusOfDay.get()));
+           throw new WeatherGatewayTimeoutException();
+       }
+       return "Today is a sunny day!";
+   }
+   ...
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada de estado del día</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-retry/weather/day/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Registro del servidor</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (1)
+WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (2)
+WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (3)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Respuesta</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Today is a sunny day! (¡Hoy es un día soleado!)</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_2">Ejemplo 2</h3>
+<div class="paragraph">
+<p>El método weekStatus fallará dos veces, cada vez, lanzando una excepción
+<code>WeatherGatewayTimeoutException</code> porque <code>retryOn</code> está configurado y
+en lugar de devolver una respuesta al autor de la llamada, la lógica indica que en
+el tercer intento, una excepción <code>WeatherGatewayBusyServiceException</code> será
+lanzada. Como la anotación <code>@Retry</code> está configurada para <code>abortOn</code> en caso que
+<code>WeatherGatewayTimeoutException</code> ocurra, el intento restante no será
+ejecutado y el autor de la llamada tendra que controlar la excepción.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Retry(maxRetries = 3, retryOn = WeatherGatewayTimeoutException.class, abortOn = WeatherGatewayBusyServiceException.class)
+public String statusOfWeek(){
+    if(counterStatusOfWeek.addAndGet(1) &lt;= DEFAULT_MAX_RETRY){
+        LOGGER.warning(String.format(FORECAST_TIMEOUT_MESSAGE_ATTEMPTS, DEFAULT_MAX_RETRY, counterStatusOfWeek.get()));
+        throw new WeatherGatewayTimeoutException();
+    }
+    LOGGER.log(Level.SEVERE, String.format(FORECAST_BUSY_MESSAGE, counterStatusOfWeek.get()));
+    throw new WeatherGatewayBusyServiceException();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada de estado de la semana</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-retry/weather/week/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Registro del servidor</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (1)
+WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (2)
+WARNING - Timeout when accessing AccuWeather Forecast Service. Max of Attempts: (3), Attempts: (3)
+SEVERE  - Error AccuWeather Forecast Service is busy. Number of Attempts: (4)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Respuesta</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WeatherGateway Service is Busy. Retry later</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_3">Ejemplo 3</h3>
+<div class="paragraph">
+<p>La anotación <code>@Retry</code> permite configurar un retraso para ejecutar cada nuevo intento
+dando la oportunidad al servicio solicitado para recuperarse y contestador de la
+solicitud correctamente. Para cada nuevo reintento siga el retraso
+configurar, es necesario establecer <code>jitter</code> a cero (0). De lo contrario, el retraso de
+cada nuevo intento será aleatorio.</p>
+</div>
+<div class="paragraph">
+<p>Analizando los mensajes registrados, es posible ver que todos los intentos
+toman más o menos el mismo tiempo para ejecutar.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Retry(retryOn = WeatherGatewayTimeoutException.class, maxRetries = 5, delay = 500, jitter = 0)
+public String statusOfWeekend() {
+    if (counterStatusOfWeekend.addAndGet(1) &lt;= 5) {
+        logTimeoutMessage(statusOfWeekendInstant);
+        statusOfWeekendInstant = Instant.now();
+        throw new WeatherGatewayTimeoutException();
+    }
+    return "The Forecast for the Weekend is Scattered Showers.";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada de estado de la semana</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-retry/weather/weekend/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Registro del servidor</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WARNING - Timeout when accessing AccuWeather Forecast Service.
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (501) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (501) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (501) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (500) millis</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_4">Ejemplo 4</h3>
+<div class="paragraph">
+<p>Básicamente con el mismo comportamiento del <code>Ejemplo 3</code>, este ejemplo establece
+el <code>delay</code> y el <code>jitter</code> con 500 milisegundos para crear aleatoriamente un nuevo retardo
+para cada nuevo intento después del primer error.
+<a href="https://github.com/jhalterman/failsafe/blob/master/src/main/java/net/jodah/failsafe/AbstractExecution.java">AbstractExecution-randomDelay(delay,jitter,random)</a> puede dar una idea de cómo se calcula el nuevo retraso.</p>
+</div>
+<div class="paragraph">
+<p>Mediante el análisis de los mensajes registrados, es posible ver cuanto
+cada intento tiene que esperar antes de ejecutarse.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Retry(retryOn = WeatherGatewayTimeoutException.class, delay = 500, jitter = 500)
+public String statusOfMonth() {
+    if (counterStatusOfWeekend.addAndGet(1) &lt;= DEFAULT_MAX_RETRY) {
+        logTimeoutMessage(statusOfMonthInstant);
+        statusOfMonthInstant = Instant.now();
+        throw new WeatherGatewayTimeoutException();
+    }
+    return "The Forecast for the Weekend is Scattered Showers.";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada de estado del mes</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-retry/weather/month/status</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Registro del servidor</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WARNING - Timeout when accessing AccuWeather Forecast Service.
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (417) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (90) millis</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejemplo_5">Ejemplo 5</h3>
+<div class="paragraph">
+<p>Si no se establece una condición para que una operación que se vuelva a ejecutar
+como en los ejemplos anteriores mediante el parámetro <code>retryOn</code>, la operación
+se ejecuta de nuevo para <em>cualquier</em> excepción que se produce.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Retry(maxDuration = 1000)
+public String statusOfYear(){
+    if (counterStatusOfWeekend.addAndGet(1) &lt;= 5) {
+        logTimeoutMessage(statusOfYearInstant);
+        statusOfYearInstant = Instant.now();
+        throw new RuntimeException();
+    }
+    return "WeatherGateway Service Error";
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Llamada de estado del año</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET http://localhost:8080/mp-faulttolerance-retry/weather/year/statusk</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Registro del servidor</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>WARNING - Timeout when accessing AccuWeather Forecast Service.
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (666) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (266) millis
+WARNING - Timeout when accessing AccuWeather Forecast Service. Delay before this attempt: (66) millis</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejecutar_las_pruebas">Ejecutar las pruebas</h3>
+<div class="paragraph">
+<p>También puede probarlo utilizando el enlace:src/test/java/org/superbiz/rest/WeatherServiceTest.java[WeatherServiceTest.java] disponible en el proyecto.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean test</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

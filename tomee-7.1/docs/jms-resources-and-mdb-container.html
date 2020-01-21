@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a href="../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>JMS Resources and MDB Container</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="sect1">
+<h2 id="_external_activemq_broker">External ActiveMQ Broker</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        # Do not start the embedded ActiveMQ broker
+        BrokerXmlConfig  =
+        ServerUrl = tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>ServerUrl</code> would be changed to point to the host and port of the
+ActiveMQ process. The various URL formats that ActiveMQ supports also
+work, such as 'failover:'.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_internal_activemq_broker">Internal ActiveMQ Broker</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  broker:(tcp://someHostName:61616)
+        ServerUrl       =  tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>BrokerXmlConfig</code> tells ActiveMQ to start on the tcp host/port
+<code>someHostName</code> and <code>61616</code></p>
+</div>
+<div class="sect2">
+<h3 id="_internal_activemq_broker_with_jdbc_persistence">Internal ActiveMQ Broker with JDBC Persistence</h3>
+<div class="paragraph">
+<p>Adding the <code>DataSource</code> property to your <code>ActiveMQResourceAdapter</code>
+config will automatically setup JDBC Persistence using the
+<code>org.apache.activemq.store.jdbc.JDBCPersistenceAdapter</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  broker:(tcp://someHostName:61616)
+        ServerUrl       =  tcp://someHostName:61616
+        DataSource      =  MyDataSource
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyDataSource" type="javax.sql.DataSource"&gt;
+        JdbcDriver  = org.hsqldb.jdbcDriver.
+        JdbcUrl     = jdbc:hsqldb:file:data/hsqldb/hsqldb.
+        UserName    = sa
+        Password    = foo
+    &lt;/Resource&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_internal_activemq_broker_with_activemq_xml">Internal ActiveMQ Broker with activemq.xml</h3>
+<div class="paragraph">
+<p>The activemq.xml file format requires a number of Spring dependencies,
+and is therefore not included in the distribution by default. This is
+purley due to the fact that this ActiveMQ file format is parsed using
+Spring libraries and this is beyond our control. However, the advantage
+is opening up the door to the huge number of configuration options
+available found here: <a href="http://activemq.apache.org/xml-configuration.html" class="bare">http://activemq.apache.org/xml-configuration.html</a>.</p>
+</div>
+<div class="paragraph">
+<p>This support can be enabled by adding the right libraries and creating
+an <a href="activemq.xml"><code>[tomee</a>/conf/activemq.xml</code>] file (Click the link
+for a basic example).</p>
+</div>
+<div class="paragraph">
+<p>Add the following jars to the <code>tomee/lib/</code> directory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://repo1.maven.org/maven2/org/springframework/spring-beans/3.2.9.RELEASE/spring-beans-3.2.9.RELEASE.jar">spring-beans-3.2.9.RELEASE.jar</a></p>
+</li>
+<li>
+<p><a href="http://repo1.maven.org/maven2/org/springframework/spring-context/3.2.9.RELEASE/spring-context-3.2.9.RELEASE.jar">spring-context-3.2.9.RELEASE.jar</a></p>
+</li>
+<li>
+<p><a href="http://repo1.maven.org/maven2/org/springframework/spring-core/3.2.9.RELEASE/spring-core-3.2.9.RELEASE.jar">spring-core-3.2.9.RELEASE.jar</a></p>
+</li>
+<li>
+<p><a href="http://repo1.maven.org/maven2/org/springframework/spring-web/3.2.9.RELEASE/spring-web-3.2.9.RELEASE.jar">spring-web-3.2.9.RELEASE.jar</a></p>
+</li>
+<li>
+<p><a href="http://repo1.maven.org/maven2/org/apache/xbean/xbean-spring/3.2.9.RELEASE/xbean-spring-3.9.jar">xbean-spring-3.9.jar</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Later versions should work, but have not been tested.</p>
+</div>
+<div class="paragraph">
+<p>Create an <a href="activemq.xml">activemq.xml file</a> a in
+<code>[tomee]/conf/activemq.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Then use the <code>xbean:file:</code> url prefix in the <code>BrokerXmlConfig</code> as shown
+belog.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
+    &lt;Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter"&gt;
+        BrokerXmlConfig =  xbean:file:conf/activemq.xml
+        ServerUrl       =  tcp://someHostName:61616
+    &lt;/Resource&gt;
+
+    &lt;Resource id="MyJmsConnectionFactory" type="javax.jms.ConnectionFactory"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Resource&gt;
+
+    &lt;Container id="MyJmsMdbContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter = MyJmsResourceAdapter
+    &lt;/Container&gt;
+
+    &lt;Resource id="FooQueue" type="javax.jms.Queue"/&gt;
+    &lt;Resource id="BarTopic" type="javax.jms.Topic"/&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, restart the server.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_via_system_properties">Configuration via System properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The same can be done via properties in an embedded configuration, via
+the <code>conf/system.properties</code> file or on the command line via <code>-D</code> flags.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, LocalInitialContextFactory.class.getName());
+
+p.put("MyJmsResourceAdapter", "new://Resource?type=ActiveMQResourceAdapter");
+p.put("MyJmsResourceAdapter.ServerUrl", "tcp://someHostName:61616");
+p.put("MyJmsResourceAdapter.BrokerXmlConfig", "");
+
+p.put("MyJmsConnectionFactory", "new://Resource?type=javax.jms.ConnectionFactory");
+p.put("MyJmsConnectionFactory.ResourceAdapter", "MyJmsResourceAdapter");
+
+p.put("MyJmsMdbContainer", "new://Container?type=MESSAGE");
+p.put("MyJmsMdbContainer.ResourceAdapter", "MyJmsResourceAdapter");
+
+p.put("FooQueue", "new://Resource?type=javax.jms.Queue");
+p.put("BarTopic", "new://Resource?type=javax.jms.Topic");
+
+InitialContext context = new InitialContext(p);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_global_lookup_of_jms_resources">Global lookup of JMS Resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From anywhere in the same VM as the EJB Container you could lookup the
+above resources like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">javax.jms.ConnectionFactory cf = (ConnectionFactory)
+        context.lookup("openejb:Resource/MyJmsConnectionFactory");
+
+javax.jms.Queue queue = (Queue) context.lookup("openejb:Resource/FooQueue");
+javax.jms.Topic topic = (Topic) context.lookup("openejb:Resource/BarTopic");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mdb_activationconfig">MDB ActivationConfig</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here, the value for <code>destination</code> is the physical name of the desired
+destination. The value for <code>destinationType</code> is the class name that
+defines the type of destination. It should be <code>javax.jms.Queue</code> or
+<code>javax.jms.Topic</code>.</p>
+</div>
+<div class="paragraph">
+<p>The Activation Spec properties that can be configured are:</p>
+</div>
+<table class="tableblock frame-all grid-all spread table table-bordered">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>acknowledgeMode</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Auto-acknowledge</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The JMS Acknowledgement mode to use. Valid values are: Auto-acknowledge or Dups-ok-acknowledge</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>clientId</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>set in resource adapter</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The JMS Client ID to use (only really required for durable topics)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>destinationType</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>null</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The type of destination; a queue or topic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>destination</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>null</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The destination name (queue or topic name)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>enableBatch</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>false</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to enable transaction batching for increased performance</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>maxMessagesPerBatch</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>10</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of messages per transaction batch</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>maxMessagesPerSessions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>10</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is actually the prefetch size for the subscription. (Yes, badlynamed).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>maxSessions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>10</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of concurrent sessions to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>messageSelector</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message Selector to use on the subscription to perform content based routing filtering the messages</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>noLocal</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>false</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only required for topic subscriptions; indicates if locally published messages should be included in the subscription or not</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>password</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>set in resource adapter</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password for the JMS connection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>subscriptionDurability</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>NonDurable</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether or not a durable (topic) subscription is required. Valid values are: Durable or NonDurable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>subscriptionName</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>null</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the durable subscriber. Only used for durable topics and combined with the clientID to uniquely identify the durable topic subscription</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>userName</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>set in resource adapter</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user for the JMS connection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>useRAManagedTransaction</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>false</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typically, a resource adapter delivers messages to an endpoint which is managed by a container. Normally, this container likes to be the one that wants to control the transaction that the inbound message is being delivered on. But sometimes, you want to deliver to a simpler container system that will not be controlling the inbound transaction. In these cases, if you set useRAManagedTransaction to true, the resource adapter will commit the transaction if no exception was generated from the MessageListener and rollback if an exception is thrown.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>initialRedeliveryDelay</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>1000</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The delay before redeliveries start. Also configurable on the ResourceAdapter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>maximumRedeliveries</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>5</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of redeliveries or -1 for no maximum. Also configurable on the ResourceAdapter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>redeliveryBackOffMultiplier</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>5</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The multiplier to use if exponential back off is enabled. Also configurable on the ResourceAdapter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>redeliveryUseExponentialBackOff</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>false</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">To enable exponential backoff. Also configurable on the ResourceAdapter</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
