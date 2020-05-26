@@ -95,14 +95,35 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>The goal of this example is to demonstrate how maven projects might be organized in a more real world style and how testing with OpenEJB can fit into that structure.</p>
-<p>This example takes the basic moviefun code we us in many of examples and splits it into two modules:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The goal of this example is to demonstrate how maven projects might be
+organized in a more real world style and how testing with OpenEJB can
+fit into that structure.</p>
+</div>
+<div class="paragraph">
+<p>This example takes the basic moviefun code we us in many of examples and
+splits it into two modules:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>business-logic</code></li>
-  <li><code>business-model</code></li>
+<li>
+<p><code>business-logic</code></p>
+</li>
+<li>
+<p><code>business-model</code></p>
+</li>
 </ul>
-<p>As the names imply, we keep our <code>@Entity</code> beans in the <code>business-model</code> module and our session beans in the <code>business-logic</code> model. The tests located and run from the business logic module.</p>
-<pre><code>ear-testing
+</div>
+<div class="paragraph">
+<p>As the names imply, we keep our <code>@Entity</code> beans in the <code>business-model</code>
+module and our session beans in the <code>business-logic</code> model. The tests
+located and run from the business logic module.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>ear-testing
 ear-testing/business-logic
 ear-testing/business-logic/pom.xml
 ear-testing/business-logic/src/main/java/org/superbiz/logic/Movies.java
@@ -115,11 +136,20 @@ ear-testing/business-model
 ear-testing/business-model/pom.xml
 ear-testing/business-model/src/main/java/org/superbiz/model/Movie.java
 ear-testing/business-model/src/main/resources/META-INF/persistence.xml
-ear-testing/pom.xml
-</code></pre>
-<h1>Project configuration</h1>
+ear-testing/pom.xml</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_configuration">Project configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The parent pom, trimmed to the minimum, looks like so:</p>
-<pre><code>&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
 
   &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
   &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
@@ -147,10 +177,15 @@ ear-testing/pom.xml
       &lt;/dependency&gt;
     &lt;/dependencies&gt;
   &lt;/dependencyManagement&gt;
-&lt;/project&gt;
-</code></pre>
+&lt;/project&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The <code>business-model/pom.xml</code> as follows:</p>
-<pre><code>&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
   &lt;parent&gt;
     &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
     &lt;artifactId&gt;myear&lt;/artifactId&gt;
@@ -176,10 +211,16 @@ ear-testing/pom.xml
 
   &lt;/dependencies&gt;
 
-&lt;/project&gt;
-</code></pre>
-<p>And finally, the <code>business-logic/pom.xml</code> which is setup to support embedded testing with OpenEJB:</p>
-<pre><code>&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+&lt;/project&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And finally, the <code>business-logic/pom.xml</code> which is setup to support
+embedded testing with OpenEJB:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
   &lt;parent&gt;
     &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
     &lt;artifactId&gt;myear&lt;/artifactId&gt;
@@ -218,48 +259,64 @@ ear-testing/pom.xml
       &lt;scope&gt;test&lt;/scope&gt;
     &lt;/dependency&gt;
   &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre>
-<h1>TestCode</h1>
+&lt;/project&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_code">Test Code</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The test code is the same as always:</p>
-<pre><code>public class MoviesTest extends TestCase {
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public class MoviesTest extends TestCase {
 
     public void test() throws Exception {
         Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
-        p.put(&quot;openejb.deployments.classpath.ear&quot;, &quot;true&quot;);
+        p.put("openejb.deployments.classpath.ear", "true");
 
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
-        p.put(&quot;movieDatabaseUnmanaged&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JtaManaged&quot;, &quot;false&quot;);
+        p.put("movieDatabaseUnmanaged", "new://Resource?type=DataSource");
+        p.put("movieDatabaseUnmanaged.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabaseUnmanaged.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        p.put("movieDatabaseUnmanaged.JtaManaged", "false");
 
         Context context = new InitialContext(p);
 
-        Movies movies = (Movies) context.lookup(&quot;MoviesLocal&quot;);
+        Movies movies = (Movies) context.lookup("MoviesLocal");
 
-        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
         List&lt;Movie&gt; list = movies.getMovies();
-        assertEquals(&quot;List.size()&quot;, 3, list.size());
+        assertEquals("List.size()", 3, list.size());
 
         for (Movie movie : list) {
             movies.deleteMovie(movie);
         }
 
-        assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
+        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.logic.MoviesTest
@@ -273,14 +330,14 @@ INFO - Configuring Service(id=movieDatabaseUnmanaged, type=Resource, provider-id
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
 INFO - Found PersistenceModule in classpath: /Users/dblevins/examples/ear-testing/business-model/target/business-model-1.0.jar
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/ear-testing/business-logic/target/classes
-INFO - Using &#39;openejb.deployments.classpath.ear=true&#39;
+INFO - Using 'openejb.deployments.classpath.ear=true'
 INFO - Beginning load: /Users/dblevins/examples/ear-testing/business-model/target/business-model-1.0.jar
 INFO - Beginning load: /Users/dblevins/examples/ear-testing/business-logic/target/classes
 INFO - Configuring enterprise application: /Users/dblevins/examples/ear-testing/business-logic/classpath.ear
 INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
 INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Enterprise application &quot;/Users/dblevins/examples/ear-testing/business-logic/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/ear-testing/business-logic/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/ear-testing/business-logic/classpath.ear
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 415ms
 INFO - Jndi(name=MoviesLocal) --&gt; Ejb(deployment-id=Movies)
@@ -293,8 +350,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.393 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
