@@ -95,9 +95,19 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.injection.secure;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Theses is a simple example to show how to use the login possibilities. We show what is the result behaviors from login fail, success and errors.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.secure;
 
 import javax.persistence.Entity;
 
@@ -141,10 +151,17 @@ public class Movie {
         this.year = year;
     }
 
-}
-</code></pre>
-<h2>Movies</h2>
-<pre><code>package org.superbiz.injection.secure;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.secure;
 
 //START SNIPPET: code
 
@@ -162,15 +179,15 @@ import java.util.List;
 @Stateful
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.EXTENDED)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
     private EntityManager entityManager;
 
-    @RolesAllowed({&quot;Employee&quot;, &quot;Manager&quot;})
+    @RolesAllowed({"Employee", "Manager"})
     public void addMovie(Movie movie) throws Exception {
         entityManager.persist(movie);
     }
 
-    @RolesAllowed({&quot;Manager&quot;})
+    @RolesAllowed({"Manager"})
     public void deleteMovie(Movie movie) throws Exception {
         entityManager.remove(movie);
     }
@@ -178,13 +195,20 @@ public class Movies {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List&lt;Movie&gt; getMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}
-</code></pre>
-<h2>MyLoginProvider</h2>
-<pre><code>package org.superbiz.injection.secure;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_myloginprovider">MyLoginProvider</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.secure;
 
 import org.apache.openejb.core.security.jaas.LoginProvider;
 
@@ -197,37 +221,58 @@ public class MyLoginProvider implements LoginProvider {
 
     @Override
     public List&lt;String&gt; authenticate(String user, String password) throws FailedLoginException {
-        if (&quot;paul&quot;.equals(user) &amp;&amp; &quot;michelle&quot;.equals(password)) {
-            return Arrays.asList(&quot;Manager&quot;, &quot;rockstar&quot;, &quot;beatle&quot;);
+        if ("paul".equals(user) &amp;&amp; "michelle".equals(password)) {
+            return Arrays.asList("Manager", "rockstar", "beatle");
         }
 
-        if (&quot;eddie&quot;.equals(user) &amp;&amp; &quot;jump&quot;.equals(password)) {
-            return Arrays.asList(&quot;Employee&quot;, &quot;rockstar&quot;, &quot;vanhalen&quot;);
+        if ("eddie".equals(user) &amp;&amp; "jump".equals(password)) {
+            return Arrays.asList("Employee", "rockstar", "vanhalen");
         }
 
-        throw new FailedLoginException(&quot;Bad user or password!&quot;);
+        throw new FailedLoginException("Bad user or password!");
     }
-}
-</code></pre>
-<h2>org.apache.openejb.core.security.jaas.LoginProvider</h2>
-<pre><code>org.superbiz.injection.secure.MyLoginProvider
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_org_apache_openejb_core_security_jaas_loginprovider">org.apache.openejb.core.security.jaas.LoginProvider</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">org.superbiz.injection.secure.MyLoginProvider</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
 
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.injection.secure.Movie&lt;/class&gt;
 
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>MovieTest</h2>
-<pre><code>package org.superbiz.injection.secure;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movietest">MovieTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.secure;
 
 import junit.framework.TestCase;
 
@@ -247,8 +292,8 @@ public class MovieTest extends TestCase {
 
     private Context getContext(String user, String pass) throws NamingException {
         Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        p.setProperty(&quot;openejb.authentication.realmName&quot;, &quot;ServiceProviderLogin&quot;);
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        p.setProperty("openejb.authentication.realmName", "ServiceProviderLogin");
         p.put(Context.SECURITY_PRINCIPAL, user);
         p.put(Context.SECURITY_CREDENTIALS, pass);
 
@@ -257,56 +302,56 @@ public class MovieTest extends TestCase {
 
     protected void setUp() throws Exception {
         Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
-        EJBContainer.createEJBContainer(p).getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
     }
 
     public void testAsManager() throws Exception {
-        final Context context = getContext(&quot;paul&quot;, &quot;michelle&quot;);
+        final Context context = getContext("paul", "michelle");
 
         try {
-            movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-            movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-            movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+            movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+            movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+            movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
             List&lt;Movie&gt; list = movies.getMovies();
-            assertEquals(&quot;List.size()&quot;, 3, list.size());
+            assertEquals("List.size()", 3, list.size());
 
             for (Movie movie : list) {
                 movies.deleteMovie(movie);
             }
 
-            assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
+            assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
         } finally {
             context.close();
         }
     }
 
     public void testAsEmployee() throws Exception {
-        final Context context = getContext(&quot;eddie&quot;, &quot;jump&quot;);
+        final Context context = getContext("eddie", "jump");
 
         try {
-            movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-            movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-            movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+            movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+            movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+            movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
             List&lt;Movie&gt; list = movies.getMovies();
-            assertEquals(&quot;List.size()&quot;, 3, list.size());
+            assertEquals("List.size()", 3, list.size());
 
             for (Movie movie : list) {
                 try {
                     movies.deleteMovie(movie);
-                    fail(&quot;Employees should not be allowed to delete&quot;);
+                    fail("Employees should not be allowed to delete");
                 } catch (EJBAccessException e) {
                     // Good, Employees cannot delete things
                 }
             }
 
             // The list should still be three movies long
-            assertEquals(&quot;Movies.getMovies()&quot;, 3, movies.getMovies().size());
+            assertEquals("Movies.getMovies()", 3, movies.getMovies().size());
         } finally {
             context.close();
         }
@@ -314,15 +359,15 @@ public class MovieTest extends TestCase {
 
     public void testUnauthenticated() throws Exception {
         try {
-            movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-            fail(&quot;Unauthenticated users should not be able to add movies&quot;);
+            movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+            fail("Unauthenticated users should not be able to add movies");
         } catch (EJBAccessException e) {
             // Good, guests cannot add things
         }
 
         try {
             movies.deleteMovie(null);
-            fail(&quot;Unauthenticated users should not be allowed to delete&quot;);
+            fail("Unauthenticated users should not be allowed to delete");
         } catch (EJBAccessException e) {
             // Good, Unauthenticated users cannot delete things
         }
@@ -333,30 +378,37 @@ public class MovieTest extends TestCase {
             List&lt;Movie&gt; list = movies.getMovies();
 
         } catch (EJBAccessException e) {
-            fail(&quot;Read access should be allowed&quot;);
+            fail("Read access should be allowed");
         }
 
     }
 
     public void testLoginFailure() throws NamingException {
         try {
-            getContext(&quot;eddie&quot;, &quot;panama&quot;);
-            fail(&quot;supposed to have a login failure here&quot;);
+            getContext("eddie", "panama");
+            fail("supposed to have a login failure here");
         } catch (javax.naming.AuthenticationException e) {
             //expected
         }
 
         try {
-            getContext(&quot;jimmy&quot;, &quot;foxylady&quot;);
-            fail(&quot;supposed to have a login failure here&quot;);
+            getContext("jimmy", "foxylady");
+            fail("supposed to have a login failure here");
         } catch (javax.naming.AuthenticationException e) {
             //expected
         }
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.secure.MovieTest
@@ -372,7 +424,7 @@ INFO - openejb.home = /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-s
 INFO - openejb.base = /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-security-3
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@38ee6681
 INFO - Succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
@@ -392,16 +444,16 @@ INFO - Auto-creating a container for bean org.superbiz.injection.secure.MovieTes
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
 INFO - Creating Resource(id=movieDatabaseNonJta)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/home/boto/dev/ws/openejb_trunk/openejb/examples/testing-security-3&quot; loaded.
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/home/boto/dev/ws/openejb_trunk/openejb/examples/testing-security-3" loaded.
 INFO - Assembling app: /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-security-3
 SEVERE - JAVA AGENT NOT INSTALLED. The JPA Persistence Provider requested installation of a ClassFileTransformer which requires a JavaAgent.  See http://tomee.apache.org/3.0/javaagent.html
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 268ms
-INFO - Jndi(name=&quot;java:global/testing-security-3/Movies!org.superbiz.injection.secure.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/testing-security-3/Movies&quot;)
+INFO - Jndi(name="java:global/testing-security-3/Movies!org.superbiz.injection.secure.Movies")
+INFO - Jndi(name="java:global/testing-security-3/Movies")
 INFO - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@38ee6681
 INFO - OpenWebBeans Container is starting...
 INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
@@ -413,9 +465,9 @@ INFO - Deployed Application(path=/home/boto/dev/ws/openejb_trunk/openejb/example
 20-Jul-2012 8:42:55 AM null openjpa.Runtime
 INFO: Starting OpenJPA 2.2.0
 20-Jul-2012 8:42:56 AM null openjpa.jdbc.JDBC
-INFO: Using dictionary class &quot;org.apache.openjpa.jdbc.sql.HSQLDictionary&quot; (HSQL Database Engine 2.2.8 ,HSQL Database Engine Driver 2.2.8).
+INFO: Using dictionary class "org.apache.openjpa.jdbc.sql.HSQLDictionary" (HSQL Database Engine 2.2.8 ,HSQL Database Engine Driver 2.2.8).
 20-Jul-2012 8:42:57 AM null openjpa.Enhance
-INFO: Creating subclass and redefining methods for &quot;[class org.superbiz.injection.secure.Movie]&quot;. This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
+INFO: Creating subclass and redefining methods for "[class org.superbiz.injection.secure.Movie]". This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
 INFO - Logging in
 INFO - Logging out
 INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
@@ -426,8 +478,11 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.069 sec
 
 Results :
 
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -447,7 +502,7 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

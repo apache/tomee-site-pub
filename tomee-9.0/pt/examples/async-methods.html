@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Métodos Assíncronos</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A anotação <code>@Asynchronous</code> foi introduzida no EJB 3.1 como um  simples meio
+de criar processamento assícrono.</p>
+</div>
+<div class="paragraph">
+<p>Toda vez que um método anotado com <code>@Asynchronous</code> é invocado por qualquer um que
+vai imediatamente retornar independentemente de quanto tempo o método realmente leva.</p>
+</div>
+<div class="paragraph">
+<p>Cada invocação retorna um objeto <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html">Future</a>
+que essencialmente inicia  <em>vazio</em> e terá mais tarde o seu valor preenchido pelo contêiner quando o método relacionado é chamado concluir.</p>
+</div>
+<div class="paragraph">
+<p>Retornar um objeto <code>Future</code> não é necessário e os métodos <code>@ Asynchronous</code> podem retornar <code>void</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exemplo">Exemplo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui, no <code>JobProcessorTest</code>,</p>
+</div>
+<div class="paragraph">
+<p><code>final Future&lt;String&gt; red = processor.addJob("red");</code> prossegue para a
+próxima declaração,</p>
+</div>
+<div class="paragraph">
+<p><code>final Future&lt;String&gt; orange = processor.addJob("orange");</code></p>
+</div>
+<div class="paragraph">
+<p>sem aguardar pelo método <code>addJob()</code> para completar. E depois poderíamos
+perguntar pelo resultado usando o método <code>Future &lt;?&gt;. get ()</code> como</p>
+</div>
+<div class="paragraph">
+<p><code>assertEquals("blue", blue.get());</code></p>
+</div>
+<div class="paragraph">
+<p>Aguardar que o processamento seja concluído (se ainda não estiver concluído)
+e obter o resultado. Se você não se importar com o resultado, você poderia
+simplesmente ter seu método assíncrono como um método vazio.</p>
+</div>
+<div class="paragraph">
+<p>Veja a documentação para saber mais: <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html">Future</a></p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Uma Future representa o resultado de um cálculo assíncrono. Métodos
+são fornecidos para verificar se o cálculo está completo, para aguardar
+a conclusão, e para recuperar o resultado do cálculo. O resultado
+pode somente ser recuperado usando o método get quando o cálculo estiver
+completado, bloqueando se necessário, até que esteja pronto. O cancelamento é
+realizada pelo método de cancelamento. Método adicionais são fornecidos para
+determinar se a tarefa completou normalmente ou foi cancelada. Uma vez
+o cálculo foi concluído, o cálculo não pode ser cancelado. Se você
+gostaria de usar um Future para causa de cancelabilidade mas não
+fornecer um resultado utilizável, você pode declarar tipos do formulário Future &lt;?&gt; e
+retornar null como resultado da tarefa subjacente.</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_o_código">O código</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Singleton
+public class JobProcessor {
+@Asynchronous
+@Lock(READ)
+@AccessTimeout(-1)
+public Future&lt;String&gt; addJob(String jobName) {
+
+    // Finja que este trabalho leva um tempo
+    doSomeHeavyLifting();
+
+    // Devolva nosso resultado
+    return new AsyncResult&lt;String&gt;(jobName);
+}
+
+private void doSomeHeavyLifting() {
+    try {
+        Thread.sleep(SECONDS.toMillis(10));
+    } catch (InterruptedException e) {
+        Thread.interrupted();
+        throw new IllegalStateException(e);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_teste">Teste</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class JobProcessorTest extends TestCase {
+
+public void test() throws Exception {
+
+    final Context context = EJBContainer.createEJBContainer().getContext();
+
+    final JobProcessor processor = (JobProcessor) context.lookup("java:global/async-methods/JobProcessor");
+
+    final long start = System.nanoTime();
+
+    // Enfileirar um monte de trabalho
+    final Future&lt;String&gt; red = processor.addJob("red");
+    final Future&lt;String&gt; orange = processor.addJob("orange");
+    final Future&lt;String&gt; yellow = processor.addJob("yellow");
+    final Future&lt;String&gt; green = processor.addJob("green");
+    final Future&lt;String&gt; blue = processor.addJob("blue");
+    final Future&lt;String&gt; violet = processor.addJob("violet");
+
+    // Aguarde o resultado - 1 minuto de trabalho
+    assertEquals("blue", blue.get());
+    assertEquals("orange", orange.get());
+    assertEquals("green", green.get());
+    assertEquals("red", red.get());
+    assertEquals("yellow", yellow.get());
+    assertEquals("violet", violet.get());
+
+    // Quanto tempo levou?
+    final long total = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - start);
+
+    // A execução deve ser em torno de 9 a 21 segundos
+    // O tempo de execução depende do número de encadeamentos disponíveis para execução assíncrona.
+    //No melhor dos casos, é 10s mais algum tempo de processamento mínimo.
+    assertTrue("Expected &gt; 9 but was: " + total, total &gt; 9);
+    assertTrue("Expected &lt; 21 but was: " + total, total &lt; 21);
+
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.async.JobProcessorTest
+INFO - ********************************************************************************
+INFO - OpenEJB http://tomee.apache.org/
+INFO - Startup: Wed Feb 27 12:46:11 BRT 2019
+INFO - Copyright 1999-2018 (C) Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 8.0.0-SNAPSHOT
+INFO - Build date: 20190227
+INFO - Build time: 04:12
+INFO - ********************************************************************************
+INFO - openejb.home = /home/soro/git/apache/tomee/examples/async-methods
+INFO - openejb.base = /home/soro/git/apache/tomee/examples/async-methods
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@22f71333
+INFO - Succeeded in installing singleton service
+INFO - Using 'jakarta.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Found EjbModule in classpath: /home/soro/git/apache/tomee/examples/async-methods/target/classes
+INFO - Beginning load: /home/soro/git/apache/tomee/examples/async-methods/target/classes
+INFO - Configuring enterprise application: /home/soro/git/apache/tomee/examples/async-methods
+INFO - Auto-deploying ejb JobProcessor: EjbDeployment(deployment-id=JobProcessor)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean JobProcessor: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Creating Container(id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.async.JobProcessorTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/soro/git/apache/tomee/examples/async-methods" loaded.
+INFO - Assembling app: /home/soro/git/apache/tomee/examples/async-methods
+INFO - Jndi(name="java:global/async-methods/JobProcessor!org.superbiz.async.JobProcessor")
+INFO - Jndi(name="java:global/async-methods/JobProcessor")
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@22f71333
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 316 ms.
+INFO - Created Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=JobProcessor, ejb-name=JobProcessor, container=Default Singleton Container)
+INFO - Deployed Application(path=/home/soro/git/apache/tomee/examples/async-methods)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.491 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_como_funciona_debaixo_dos_panos">Como funciona debaixo dos panos</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sob os panos, o que faz esse trabalho é:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>O <code>JobProcessor</code> que é o chamador vê que não é realmente uma instância de
+<code>JobProcessor</code>. Pelo contrário, é uma subclasse ou proxy que tem todos os métodos sobrescrito. Métodos que devem ser assíncronos são manipulados diferentemente.</p>
+</li>
+<li>
+<p>Chamadas para um método assíncrono simplesmente resultam em um <code>Runnable</code> sendo
+criado envolve o método e os parâmetros que você deu. Este runnable é
+dado a um
+<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html">Executor</a>
+que é simplesmente uma fila de trabalho anexada a um conjunto de encadeamentos.</p>
+</li>
+<li>
+<p>Depois de adicionar o trabalho à fila, a versão com proxy do método
+retorna uma implementação de <code>Future</code> que está ligada ao` Runnable`
+que agora está esperando na fila.</p>
+</li>
+<li>
+<p>Quando o <code>Runnable</code> finalmente executa o método no <em>real</em>
+Na instância <code>JobProcessor</code>, ele pegará o valor de retorno e o configurará
+o <code>Future</code> tornando-o disponível para o chamador.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Importante notar que o objeto <code>AsyncResult</code> o` JobProcessor`
+retornado não é o mesmo objeto <code>Future</code> que o chamador está segurando.</p>
+</div>
+<div class="paragraph">
+<p>Seria legal se o <code>JobProcessor</code> real pudesse retornar` String` e
+a versão do chamador de <code>JobProcessor</code> poderia retornar` Future &lt;String&gt; `,
+mas nós não vimos nenhuma maneira de fazer isso sem adicionar mais complexidade.</p>
+</div>
+<div class="paragraph">
+<p>Então o <code>AsyncResult</code> é um simples objeto wrapper. O contêiner vai puxar
+o <code>String</code> para fora, lançar o ` AsyncResult`, então colocar o <code>String</code> em
+<em>real</em> <code>Future</code> que o chamador está segurando.</p>
+</div>
+<div class="paragraph">
+<p>Para obter progresso ao longo do caminho, simplesmente passe um objeto seguro para thread como <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html">AtomicInteger</a>
+para o método <code>@ Asynchronous</code> e ter o código do bean periodicamente atualizado
+com o percentual completo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exemplos_relacionados">Exemplos relacionados</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para processamento assíncrono complexo, a resposta do JavaEE é
+<code>@ MessageDrivenBean</code>. Dê uma olhada no exemplo
+<a href="../simple-mdb/README.html">simple-mdb</a></p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -108,23 +108,23 @@ from the links provided)</p>
 <p>How do we mark which methods are to be intercepted ? Wouldn’t it be
 handy to annotate a method like</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Log
-public void aMethod(){...}</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">@Log
+public void aMethod(){...}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Let’s create an annotation that would "mark" a method for
 interception.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@InterceptorBinding
+<pre class="highlight"><code class="language-java" data-lang="java">@InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface Log {
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -136,9 +136,9 @@ better term for it, "bind it" ) to an interceptor.</p>
 <p>So here’s our logging interceptor. An <code>@AroundInvoke</code> method and we are
 almost done.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Interceptor
+<pre class="highlight"><code class="language-java" data-lang="java">@Interceptor
 @Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
 public class LoggingInterceptor {
     @AroundInvoke
@@ -147,7 +147,7 @@ public class LoggingInterceptor {
         //or logger.info statement
         return ctx.proceed();
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -157,9 +157,9 @@ public class LoggingInterceptor {
 <p>That done, let’s annotate at class-level or method-level and have fun
 intercepting !</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Log
+<pre class="highlight"><code class="language-java" data-lang="java">@Log
 @Stateful
 public class BookShow implements Serializable {
     private static final long serialVersionUID = 6350400892234496909L;
@@ -173,7 +173,7 @@ public class BookShow implements Serializable {
         return ticketPrice - 50;
     }
     // assume more methods are present
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -187,14 +187,14 @@ enable the interceptors !</p>
 <div class="paragraph">
 <p>Lets quickly put up a <code>beans.xml</code> file in <code>META-INF</code></p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;beans&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;beans&gt;
   &lt;interceptors&gt;
     &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.LoggingInterceptor
     &lt;/class&gt;
   &lt;/interceptors&gt;
-&lt;/beans&gt;</pre>
+&lt;/beans&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -206,9 +206,9 @@ that in another example on multiple-cdi-interceptors.</p>
 <p>Fire up the test, and we should see a <code>Entering method: getMoviesList</code>
 printed in the console.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>#Tests Apache OpenEJB 4.0.0-beta-2 build: 20111103-01:00
+<pre class="highlight"><code class="language-java" data-lang="java">#Tests Apache OpenEJB 4.0.0-beta-2 build: 20111103-01:00
 http://tomee.apache.org/ INFO - openejb.home =
 /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
 INFO - openejb.base =
@@ -243,7 +243,7 @@ container=Default Stateful Container) INFO - Started
 Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default
 Stateful Container) INFO - Deployed
 Application(path=/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors)
-Entering method: getMoviesList</pre>
+Entering method: getMoviesList</code></pre>
 </div>
 </div>
             </div>
@@ -265,7 +265,7 @@ Entering method: getMoviesList</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

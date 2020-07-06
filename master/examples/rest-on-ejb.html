@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>User</h2>
-<pre><code>package org.superbiz.rest;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_user">User</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -108,11 +119,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = &quot;user.list&quot;, query = &quot;select u from User u&quot;)
-}
-</code></pre>
-<h2>UserService</h2>
-<pre><code>package org.superbiz.rest;
+        @NamedQuery(name = "user.list", query = "select u from User u")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userservice">UserService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -139,17 +157,17 @@ import java.util.List;
  */
 @Singleton
 @Lock(LockType.WRITE)
-@Path(&quot;/user&quot;)
+@Path("/user")
 @Produces(MediaType.APPLICATION_XML)
 public class UserService {
     @PersistenceContext
     private EntityManager em;
 
-    @Path(&quot;/create&quot;)
+    @Path("/create")
     @PUT
-    public User create(@QueryParam(&quot;name&quot;) String name,
-                       @QueryParam(&quot;pwd&quot;) String pwd,
-                       @QueryParam(&quot;mail&quot;) String mail) {
+    public User create(@QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
         User user = new User();
         user.setFullname(name);
         user.setPassword(pwd);
@@ -158,21 +176,21 @@ public class UserService {
         return user;
     }
 
-    @Path(&quot;/list&quot;)
+    @Path("/list")
     @GET
-    public List&lt;User&gt; list(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) int first,
-                           @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) int max) {
+    public List&lt;User&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
         List&lt;User&gt; users = new ArrayList&lt;User&gt;();
-        List&lt;User&gt; found = em.createNamedQuery(&quot;user.list&quot;, User.class).setFirstResult(first).setMaxResults(max).getResultList();
+        List&lt;User&gt; found = em.createNamedQuery("user.list", User.class).setFirstResult(first).setMaxResults(max).getResultList();
         for (User u : found) {
             users.add(u.copy());
         }
         return users;
     }
 
-    @Path(&quot;/show/{id}&quot;)
+    @Path("/show/{id}")
     @GET
-    public User find(@PathParam(&quot;id&quot;) long id) {
+    public User find(@PathParam("id") long id) {
         User user = em.find(User.class, id);
         if (user == null) {
             return null;
@@ -180,24 +198,24 @@ public class UserService {
         return user.copy();
     }
 
-    @Path(&quot;/delete/{id}&quot;)
+    @Path("/delete/{id}")
     @DELETE
-    public void delete(@PathParam(&quot;id&quot;) long id) {
+    public void delete(@PathParam("id") long id) {
         User user = em.find(User.class, id);
         if (user != null) {
             em.remove(user);
         }
     }
 
-    @Path(&quot;/update/{id}&quot;)
+    @Path("/update/{id}")
     @POST
-    public Response update(@PathParam(&quot;id&quot;) long id,
-                           @QueryParam(&quot;name&quot;) String name,
-                           @QueryParam(&quot;pwd&quot;) String pwd,
-                           @QueryParam(&quot;mail&quot;) String mail) {
+    public Response update(@PathParam("id") long id,
+                           @QueryParam("name") String name,
+                           @QueryParam("pwd") String pwd,
+                           @QueryParam("mail") String mail) {
         User user = em.find(User.class, id);
         if (user == null) {
-            throw new IllegalArgumentException(&quot;user id &quot; + id + &quot; not found&quot;);
+            throw new IllegalArgumentException("user id " + id + " not found");
         }
 
         user.setFullname(name);
@@ -207,26 +225,40 @@ public class UserService {
 
         return Response.ok(user.copy()).build();
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence version=&quot;2.0&quot;
-             xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence
-                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;&gt;
-  &lt;persistence-unit name=&quot;user&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="user"&gt;
     &lt;jta-data-source&gt;My DataSource&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;My Unmanaged DataSource&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.rest.User&lt;/class&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>UserServiceTest</h2>
-<pre><code>package org.superbiz.rest;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userservicetest">UserServiceTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.openejb.OpenEjbContainer;
@@ -257,13 +289,13 @@ public class UserServiceTest {
     @BeforeClass
     public static void start() throws NamingException {
         Properties properties = new Properties();
-        properties.setProperty(OpenEjbContainer.OPENEJB_EMBEDDED_REMOTABLE, &quot;true&quot;);
+        properties.setProperty(OpenEjbContainer.OPENEJB_EMBEDDED_REMOTABLE, "true");
         context = EJBContainer.createEJBContainer(properties).getContext();
 
         // create some records
-        service = (UserService) context.lookup(&quot;java:global/rest-on-ejb/UserService&quot;);
-        users.add(service.create(&quot;foo&quot;, &quot;foopwd&quot;, &quot;foo@foo.com&quot;));
-        users.add(service.create(&quot;bar&quot;, &quot;barpwd&quot;, &quot;bar@bar.com&quot;));
+        service = (UserService) context.lookup("java:global/rest-on-ejb/UserService");
+        users.add(service.create("foo", "foopwd", "foo@foo.com"));
+        users.add(service.create("bar", "barpwd", "bar@bar.com"));
     }
 
     @AfterClass
@@ -276,11 +308,11 @@ public class UserServiceTest {
     @Test
     public void create() {
         int expected = service.list(0, 100).size() + 1;
-        Response response = WebClient.create(&quot;http://localhost:4204&quot;)
-                .path(&quot;/user/create&quot;)
-                .query(&quot;name&quot;, &quot;dummy&quot;)
-                .query(&quot;pwd&quot;, &quot;unbreakable&quot;)
-                .query(&quot;mail&quot;, &quot;foo@bar.fr&quot;)
+        Response response = WebClient.create("http://localhost:4204")
+                .path("/user/create")
+                .query("name", "dummy")
+                .query("pwd", "unbreakable")
+                .query("mail", "foo@bar.fr")
                 .put(null);
         List&lt;User&gt; list = service.list(0, 100);
         for (User u : list) {
@@ -289,14 +321,14 @@ public class UserServiceTest {
                 return;
             }
         }
-        fail(&quot;user was not added&quot;);
+        fail("user was not added");
     }
 
     @Test
     public void delete() throws Exception {
-        User user = service.create(&quot;todelete&quot;, &quot;dontforget&quot;, &quot;delete@me.com&quot;);
+        User user = service.create("todelete", "dontforget", "delete@me.com");
 
-        WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/user/delete/&quot; + user.getId()).delete();
+        WebClient.create("http://localhost:4204").path("/user/delete/" + user.getId()).delete();
 
         user = service.find(user.getId());
         assertNull(user);
@@ -304,58 +336,65 @@ public class UserServiceTest {
 
     @Test
     public void show() {
-        User user = WebClient.create(&quot;http://localhost:4204&quot;)
-                .path(&quot;/user/show/&quot; + users.iterator().next().getId())
+        User user = WebClient.create("http://localhost:4204")
+                .path("/user/show/" + users.iterator().next().getId())
                 .get(User.class);
-        assertEquals(&quot;foo&quot;, user.getFullname());
-        assertEquals(&quot;foopwd&quot;, user.getPassword());
-        assertEquals(&quot;foo@foo.com&quot;, user.getEmail());
+        assertEquals("foo", user.getFullname());
+        assertEquals("foopwd", user.getPassword());
+        assertEquals("foo@foo.com", user.getEmail());
     }
 
     @Test
     public void list() throws Exception {
-        String users = WebClient.create(&quot;http://localhost:4204&quot;)
-                .path(&quot;/user/list&quot;)
+        String users = WebClient.create("http://localhost:4204")
+                .path("/user/list")
                 .get(String.class);
         assertEquals(
-                &quot;&lt;users&gt;&quot; +
-                        &quot;&lt;user&gt;&quot; +
-                        &quot;&lt;email&gt;foo@foo.com&lt;/email&gt;&quot; +
-                        &quot;&lt;fullname&gt;foo&lt;/fullname&gt;&quot; +
-                        &quot;&lt;id&gt;1&lt;/id&gt;&quot; +
-                        &quot;&lt;password&gt;foopwd&lt;/password&gt;&quot; +
-                        &quot;&lt;/user&gt;&quot; +
-                        &quot;&lt;user&gt;&quot; +
-                        &quot;&lt;email&gt;bar@bar.com&lt;/email&gt;&quot; +
-                        &quot;&lt;fullname&gt;bar&lt;/fullname&gt;&quot; +
-                        &quot;&lt;id&gt;2&lt;/id&gt;&quot; +
-                        &quot;&lt;password&gt;barpwd&lt;/password&gt;&quot; +
-                        &quot;&lt;/user&gt;&quot; +
-                        &quot;&lt;/users&gt;&quot;, users);
+                "&lt;users&gt;" +
+                        "&lt;user&gt;" +
+                        "&lt;email&gt;foo@foo.com&lt;/email&gt;" +
+                        "&lt;fullname&gt;foo&lt;/fullname&gt;" +
+                        "&lt;id&gt;1&lt;/id&gt;" +
+                        "&lt;password&gt;foopwd&lt;/password&gt;" +
+                        "&lt;/user&gt;" +
+                        "&lt;user&gt;" +
+                        "&lt;email&gt;bar@bar.com&lt;/email&gt;" +
+                        "&lt;fullname&gt;bar&lt;/fullname&gt;" +
+                        "&lt;id&gt;2&lt;/id&gt;" +
+                        "&lt;password&gt;barpwd&lt;/password&gt;" +
+                        "&lt;/user&gt;" +
+                        "&lt;/users&gt;", users);
     }
 
     @Test
     public void update() throws Exception {
-        User created = service.create(&quot;name&quot;, &quot;pwd&quot;, &quot;mail&quot;);
-        Response response = WebClient.create(&quot;http://localhost:4204&quot;)
-                .path(&quot;/user/update/&quot; + created.getId())
-                .query(&quot;name&quot;, &quot;corrected&quot;)
-                .query(&quot;pwd&quot;, &quot;userpwd&quot;)
-                .query(&quot;mail&quot;, &quot;it@is.ok&quot;)
+        User created = service.create("name", "pwd", "mail");
+        Response response = WebClient.create("http://localhost:4204")
+                .path("/user/update/" + created.getId())
+                .query("name", "corrected")
+                .query("pwd", "userpwd")
+                .query("mail", "it@is.ok")
                 .post(null);
 
         JAXBContext ctx = JAXBContext.newInstance(User.class);
         Unmarshaller unmarshaller = ctx.createUnmarshaller();
         User modified = (User) unmarshaller.unmarshal(InputStream.class.cast(response.getEntity()));
 
-        assertEquals(&quot;corrected&quot;, modified.getFullname());
-        assertEquals(&quot;userpwd&quot;, modified.getPassword());
-        assertEquals(&quot;it@is.ok&quot;, modified.getEmail());
+        assertEquals("corrected", modified.getFullname());
+        assertEquals("userpwd", modified.getPassword());
+        assertEquals("it@is.ok", modified.getEmail());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.rest.UserServiceTest
@@ -363,7 +402,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/rest-on-ejb
 INFO - openejb.base = /Users/dblevins/examples/rest-on-ejb
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/rest-on-ejb/target/classes
@@ -375,18 +414,18 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean org.superbiz.rest.UserServiceTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=user)
 INFO - Configuring Service(id=Default JDBC Database, type=Resource, provider-id=Default JDBC Database)
-INFO - Auto-creating a Resource with id &#39;Default JDBC Database&#39; of type &#39;DataSource for &#39;user&#39;.
+INFO - Auto-creating a Resource with id 'Default JDBC Database' of type 'DataSource for 'user'.
 INFO - Configuring Service(id=Default Unmanaged JDBC Database, type=Resource, provider-id=Default Unmanaged JDBC Database)
-INFO - Auto-creating a Resource with id &#39;Default Unmanaged JDBC Database&#39; of type &#39;DataSource for &#39;user&#39;.
-INFO - Adjusting PersistenceUnit user &lt;jta-data-source&gt; to Resource ID &#39;Default JDBC Database&#39; from &#39;My DataSource&#39;
-INFO - Adjusting PersistenceUnit user &lt;non-jta-data-source&gt; to Resource ID &#39;Default Unmanaged JDBC Database&#39; from &#39;My Unmanaged DataSource&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/rest-on-ejb&quot; loaded.
+INFO - Auto-creating a Resource with id 'Default Unmanaged JDBC Database' of type 'DataSource for 'user'.
+INFO - Adjusting PersistenceUnit user &lt;jta-data-source&gt; to Resource ID 'Default JDBC Database' from 'My DataSource'
+INFO - Adjusting PersistenceUnit user &lt;non-jta-data-source&gt; to Resource ID 'Default Unmanaged JDBC Database' from 'My Unmanaged DataSource'
+INFO - Enterprise application "/Users/dblevins/examples/rest-on-ejb" loaded.
 INFO - Assembling app: /Users/dblevins/examples/rest-on-ejb
 INFO - PersistenceUnit(name=user, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 407ms
-INFO - Jndi(name=&quot;java:global/rest-on-ejb/UserService!org.superbiz.rest.UserService&quot;)
-INFO - Jndi(name=&quot;java:global/rest-on-ejb/UserService&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest!org.superbiz.rest.UserServiceTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest&quot;)
+INFO - Jndi(name="java:global/rest-on-ejb/UserService!org.superbiz.rest.UserService")
+INFO - Jndi(name="java:global/rest-on-ejb/UserService")
+INFO - Jndi(name="java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest!org.superbiz.rest.UserServiceTest")
+INFO - Jndi(name="java:global/EjbModule1789767313/org.superbiz.rest.UserServiceTest")
 INFO - Created Ejb(deployment-id=org.superbiz.rest.UserServiceTest, ejb-name=org.superbiz.rest.UserServiceTest, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=UserService, ejb-name=UserService, container=Default Singleton Container)
 INFO - Started Ejb(deployment-id=org.superbiz.rest.UserServiceTest, ejb-name=org.superbiz.rest.UserServiceTest, container=Default Managed Container)
@@ -400,20 +439,23 @@ INFO - Creating ServerService(id=ejbds)
 INFO - Creating ServerService(id=cxf-rs)
 INFO - Initializing network services
   ** Starting Services **
-  NAME                 IP              PORT  
-  httpejbd             127.0.0.1       4204  
-  admin thread         127.0.0.1       4200  
-  ejbd                 127.0.0.1       4201  
-  ejbd                 127.0.0.1       4203  
+  NAME                 IP              PORT
+  httpejbd             127.0.0.1       4204
+  admin thread         127.0.0.1       4200
+  ejbd                 127.0.0.1       4201
+  ejbd                 127.0.0.1       4203
 -------
 Ready!
-WARN - Query &quot;select u from User u&quot; is removed from cache  excluded permanently. Query &quot;select u from User u&quot; is not cached because it uses pagination..
+WARN - Query "select u from User u" is removed from cache  excluded permanently. Query "select u from User u" is not cached because it uses pagination..
 Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.102 sec
 
 Results :
 
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -433,7 +475,7 @@ Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

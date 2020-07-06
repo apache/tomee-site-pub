@@ -196,9 +196,9 @@ private void doSomeHeavyLifting() {
 <div class="sect1">
 <h2 id="_teste">Teste</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public class JobProcessorTest extends TestCase {
+<pre class="highlight"><code class="language-java" data-lang="java">public class JobProcessorTest extends TestCase {
 
 public void test() throws Exception {
 
@@ -234,12 +234,12 @@ public void test() throws Exception {
     assertTrue("Expected &lt; 21 but was: " + total, total &lt; 21);
 
   }
-}
-----
-
-[source,java]
-----
--------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.async.JobProcessorTest
@@ -289,49 +289,70 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.491 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-----
-
-== Como funciona debaixo dos panos
-
-Sob os panos, o que faz esse trabalho é:
-
-* O `JobProcessor` que é o chamador vê que não é realmente uma instância de
-`JobProcessor`. Pelo contrário, é uma subclasse ou proxy que tem todos os métodos sobrescrito. Métodos que devem ser assíncronos são manipulados diferentemente.
-
-* Chamadas para um método assíncrono simplesmente resultam em um `Runnable` sendo
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_como_funciona_debaixo_dos_panos">Como funciona debaixo dos panos</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sob os panos, o que faz esse trabalho é:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>O <code>JobProcessor</code> que é o chamador vê que não é realmente uma instância de
+<code>JobProcessor</code>. Pelo contrário, é uma subclasse ou proxy que tem todos os métodos sobrescrito. Métodos que devem ser assíncronos são manipulados diferentemente.</p>
+</li>
+<li>
+<p>Chamadas para um método assíncrono simplesmente resultam em um <code>Runnable</code> sendo
 criado envolve o método e os parâmetros que você deu. Este runnable é
 dado a um
-http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html[Executor]
-que é simplesmente uma fila de trabalho anexada a um conjunto de encadeamentos.
-* Depois de adicionar o trabalho à fila, a versão com proxy do método
-retorna uma implementação de `Future` que está ligada ao` Runnable`
-que agora está esperando na fila.
-* Quando o `Runnable` finalmente executa o método no _real_
-Na instância `JobProcessor`, ele pegará o valor de retorno e o configurará
-o `Future` tornando-o disponível para o chamador.
-
-Importante notar que o objeto `AsyncResult` o` JobProcessor`
-retornado não é o mesmo objeto `Future` que o chamador está segurando.
-
-Seria legal se o `JobProcessor` real pudesse retornar` String` e
-a versão do chamador de `JobProcessor` poderia retornar` Future &lt;String&gt; `,
-mas nós não vimos nenhuma maneira de fazer isso sem adicionar mais complexidade.
-
-Então o `AsyncResult` é um simples objeto wrapper. O contêiner vai puxar
-o `String` para fora, lançar o ` AsyncResult`, então colocar o `String` em
-_real_ `Future` que o chamador está segurando.
-
-Para obter progresso ao longo do caminho, simplesmente passe um objeto seguro para thread como http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html[AtomicInteger]
-para o método `@ Asynchronous` e ter o código do bean periodicamente atualizado
-com o percentual completo.
-
-== Exemplos relacionados
-
-Para processamento assíncrono complexo, a resposta do JavaEE é
-`@ MessageDrivenBean`. Dê uma olhada no exemplo
-link:../simple-mdb/README.html[simple-mdb]</pre>
+<a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Executor.html">Executor</a>
+que é simplesmente uma fila de trabalho anexada a um conjunto de encadeamentos.</p>
+</li>
+<li>
+<p>Depois de adicionar o trabalho à fila, a versão com proxy do método
+retorna uma implementação de <code>Future</code> que está ligada ao` Runnable`
+que agora está esperando na fila.</p>
+</li>
+<li>
+<p>Quando o <code>Runnable</code> finalmente executa o método no <em>real</em>
+Na instância <code>JobProcessor</code>, ele pegará o valor de retorno e o configurará
+o <code>Future</code> tornando-o disponível para o chamador.</p>
+</li>
+</ul>
 </div>
+<div class="paragraph">
+<p>Importante notar que o objeto <code>AsyncResult</code> o` JobProcessor`
+retornado não é o mesmo objeto <code>Future</code> que o chamador está segurando.</p>
+</div>
+<div class="paragraph">
+<p>Seria legal se o <code>JobProcessor</code> real pudesse retornar` String` e
+a versão do chamador de <code>JobProcessor</code> poderia retornar` Future &lt;String&gt; `,
+mas nós não vimos nenhuma maneira de fazer isso sem adicionar mais complexidade.</p>
+</div>
+<div class="paragraph">
+<p>Então o <code>AsyncResult</code> é um simples objeto wrapper. O contêiner vai puxar
+o <code>String</code> para fora, lançar o ` AsyncResult`, então colocar o <code>String</code> em
+<em>real</em> <code>Future</code> que o chamador está segurando.</p>
+</div>
+<div class="paragraph">
+<p>Para obter progresso ao longo do caminho, simplesmente passe um objeto seguro para thread como <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/atomic/AtomicInteger.html">AtomicInteger</a>
+para o método <code>@ Asynchronous</code> e ter o código do bean periodicamente atualizado
+com o percentual completo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exemplos_relacionados">Exemplos relacionados</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para processamento assíncrono complexo, a resposta do JavaEE é
+<code>@ MessageDrivenBean</code>. Dê uma olhada no exemplo
+<a href="../simple-mdb/README.html">simple-mdb</a></p>
 </div>
 </div>
 </div>
@@ -354,7 +375,7 @@ link:../simple-mdb/README.html[simple-mdb]</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

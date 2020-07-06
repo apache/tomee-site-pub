@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.injection;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 /**
  * @version $Revision: 607077 $ $Date: 2007-12-27 06:55:23 -0800 (Thu, 27 Dec 2007) $
@@ -140,10 +151,17 @@ public class Movie {
         this.year = year;
     }
 
-}
-</code></pre>
-<h2>Movies</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -159,16 +177,16 @@ import java.util.List;
 public class Movies {
 
     /**
-     * The field name &quot;movieDatabase&quot; matches the DataSource we
+     * The field name "movieDatabase" matches the DataSource we
      * configure in the TestCase via :
-     * p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
+     * p.put("movieDatabase", "new://Resource?type=DataSource");
      * &lt;p/&gt;
      * This would also match an equivalent delcaration in an openejb.xml:
-     * &lt;Resource id=&quot;movieDatabase&quot; type=&quot;DataSource&quot;/&gt;
+     * &lt;Resource id="movieDatabase" type="DataSource"/&gt;
      * &lt;p/&gt;
-     * If you&#39;d like the freedom to change the field name without
-     * impact on your configuration you can set the &quot;name&quot; attribute
-     * of the @Resource annotation to &quot;movieDatabase&quot; instead.
+     * If you'd like the freedom to change the field name without
+     * impact on your configuration you can set the "name" attribute
+     * of the @Resource annotation to "movieDatabase" instead.
      */
     @Resource
     private DataSource movieDatabase;
@@ -177,7 +195,7 @@ public class Movies {
     private void construct() throws Exception {
         Connection connection = movieDatabase.getConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement(&quot;CREATE TABLE movie ( director VARCHAR(255), title VARCHAR(255), year integer)&quot;);
+            PreparedStatement stmt = connection.prepareStatement("CREATE TABLE movie ( director VARCHAR(255), title VARCHAR(255), year integer)");
             stmt.execute();
         } finally {
             connection.close();
@@ -187,7 +205,7 @@ public class Movies {
     public void addMovie(Movie movie) throws Exception {
         Connection conn = movieDatabase.getConnection();
         try {
-            PreparedStatement sql = conn.prepareStatement(&quot;INSERT into movie (director, title, year) values (?, ?, ?)&quot;);
+            PreparedStatement sql = conn.prepareStatement("INSERT into movie (director, title, year) values (?, ?, ?)");
             sql.setString(1, movie.getDirector());
             sql.setString(2, movie.getTitle());
             sql.setInt(3, movie.getYear());
@@ -200,7 +218,7 @@ public class Movies {
     public void deleteMovie(Movie movie) throws Exception {
         Connection conn = movieDatabase.getConnection();
         try {
-            PreparedStatement sql = conn.prepareStatement(&quot;DELETE from movie where director = ? AND title = ? AND year = ?&quot;);
+            PreparedStatement sql = conn.prepareStatement("DELETE from movie where director = ? AND title = ? AND year = ?");
             sql.setString(1, movie.getDirector());
             sql.setString(2, movie.getTitle());
             sql.setInt(3, movie.getYear());
@@ -214,13 +232,13 @@ public class Movies {
         ArrayList&lt;Movie&gt; movies = new ArrayList&lt;Movie&gt;();
         Connection conn = movieDatabase.getConnection();
         try {
-            PreparedStatement sql = conn.prepareStatement(&quot;SELECT director, title, year from movie&quot;);
+            PreparedStatement sql = conn.prepareStatement("SELECT director, title, year from movie");
             ResultSet set = sql.executeQuery();
             while (set.next()) {
                 Movie movie = new Movie();
-                movie.setDirector(set.getString(&quot;director&quot;));
-                movie.setTitle(set.getString(&quot;title&quot;));
-                movie.setYear(set.getInt(&quot;year&quot;));
+                movie.setDirector(set.getString("director"));
+                movie.setTitle(set.getString("title"));
+                movie.setYear(set.getInt("year"));
                 movies.add(movie);
             }
         } finally {
@@ -228,10 +246,17 @@ public class Movies {
         }
         return movies;
     }
-}
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import junit.framework.TestCase;
 
@@ -246,31 +271,38 @@ public class MoviesTest extends TestCase {
     public void test() throws Exception {
 
         Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
         Context context = EJBContainer.createEJBContainer(p).getContext();
 
-        Movies movies = (Movies) context.lookup(&quot;java:global/injection-of-datasource/Movies&quot;);
+        Movies movies = (Movies) context.lookup("java:global/injection-of-datasource/Movies");
 
-        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
         List&lt;Movie&gt; list = movies.getMovies();
-        assertEquals(&quot;List.size()&quot;, 3, list.size());
+        assertEquals("List.size()", 3, list.size());
 
         for (Movie movie : list) {
             movies.deleteMovie(movie);
         }
 
-        assertEquals(&quot;Movies.getMovies()&quot;, 0, movies.getMovies().size());
+        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.MoviesTest
@@ -278,25 +310,25 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/injection-of-datasource
 INFO - openejb.base = /Users/dblevins/examples/injection-of-datasource
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/injection-of-datasource/target/classes
 INFO - Beginning load: /Users/dblevins/examples/injection-of-datasource/target/classes
 INFO - Configuring enterprise application: /Users/dblevins/examples/injection-of-datasource
-WARN - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+WARN - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
 INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
 INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
-INFO - Auto-linking resource-ref &#39;java:comp/env/org.superbiz.injection.Movies/movieDatabase&#39; in bean Movies to Resource(id=movieDatabase)
+INFO - Auto-linking resource-ref 'java:comp/env/org.superbiz.injection.Movies/movieDatabase' in bean Movies to Resource(id=movieDatabase)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.injection.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/injection-of-datasource&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/injection-of-datasource" loaded.
 INFO - Assembling app: /Users/dblevins/examples/injection-of-datasource
-INFO - Jndi(name=&quot;java:global/injection-of-datasource/Movies!org.superbiz.injection.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-datasource/Movies&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1508028338/org.superbiz.injection.MoviesTest!org.superbiz.injection.MoviesTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1508028338/org.superbiz.injection.MoviesTest&quot;)
+INFO - Jndi(name="java:global/injection-of-datasource/Movies!org.superbiz.injection.Movies")
+INFO - Jndi(name="java:global/injection-of-datasource/Movies")
+INFO - Jndi(name="java:global/EjbModule1508028338/org.superbiz.injection.MoviesTest!org.superbiz.injection.MoviesTest")
+INFO - Jndi(name="java:global/EjbModule1508028338/org.superbiz.injection.MoviesTest")
 INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
 INFO - Created Ejb(deployment-id=org.superbiz.injection.MoviesTest, ejb-name=org.superbiz.injection.MoviesTest, container=Default Managed Container)
 INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
@@ -306,8 +338,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.276 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -327,7 +362,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -125,23 +125,23 @@
 <div class="paragraph">
 <p>Esse método irá injetar dinamicamente a implementação correta usando os recursos do CDI</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public String finishWithCash() {
+<pre class="highlight"><code class="language-java" data-lang="java">public String finishWithCash() {
 
 	paymentChoosed = paymentsLazy.select(Cash.class).get();
 	return paymentChoosed.pay();
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>observe que está sendo usado uma variável chamada de <code>paymentsLazy</code> essa variável irá conter todas as implementações da interface <code>Payment</code></p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Inject
+<pre class="highlight"><code class="language-java" data-lang="java">@Inject
 @Any
-private Instance&lt;Payment&gt; paymentsLazy;</pre>
+private Instance&lt;Payment&gt; paymentsLazy;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -180,9 +180,9 @@ private Instance&lt;Payment&gt; paymentsLazy;</pre>
 <div class="paragraph">
 <p>com essa variável pronta podemos chama-la usando o:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>paymentsLazy.select(Cash.class).get();</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">paymentsLazy.select(Cash.class).get();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -212,21 +212,21 @@ private Instance&lt;Payment&gt; paymentsLazy;</pre>
 <div class="paragraph">
 <p>Esse método irá injetar dinamicamente a implementação correta usando um <code>Qualifier</code>(PaymentType).</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public String finishByQualifier(PaymentType type) {
+<pre class="highlight"><code class="language-java" data-lang="java">public String finishByQualifier(PaymentType type) {
 
     paymentChoosed = paymentsLazy.select( new PayByQualifier(type) ).get();
     return paymentChoosed.pay();
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Para essa abordagem funcionar precisaremos criar uma nova classe chamada <code>PayByQualifier</code> que extende <code>AnnotationLiteral</code> que espera a passagem de um qualifier em seu parametro <code>T extends Annotation</code>(Generics).</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public class PayByQualifier extends AnnotationLiteral&lt;PaymentQualifier&gt; implements PaymentQualifier {
+<pre class="highlight"><code class="language-java" data-lang="java">public class PayByQualifier extends AnnotationLiteral&lt;PaymentQualifier&gt; implements PaymentQualifier {
 
 	private PaymentType type;
 
@@ -239,7 +239,7 @@ private Instance&lt;Payment&gt; paymentsLazy;</pre>
 	public PaymentType type() {
 		return this.type;
 	}
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -248,20 +248,20 @@ private Instance&lt;Payment&gt; paymentsLazy;</pre>
 <div class="paragraph">
 <p>Para faciliar essa implementação recebemos esse valor por construtor de nossa nova classe</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public PayByQualifier(PaymentType type) {
+<pre class="highlight"><code class="language-java" data-lang="java">public PayByQualifier(PaymentType type) {
 
     this.type = type;
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Com essa classe pronta podemos usa-la em nossa classe de negócio:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>paymentChoosed = paymentsLazy.select( new PayByQualifier(type) ).get();</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">paymentChoosed = paymentsLazy.select( new PayByQualifier(type) ).get();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -288,7 +288,7 @@ private Instance&lt;Payment&gt; paymentsLazy;</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

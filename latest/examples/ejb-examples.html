@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>AnnotatedEJB</h2>
-<pre><code>package org.superbiz.servlet;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotatedejb">AnnotatedEJB</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -110,7 +121,7 @@ public class AnnotatedEJB implements AnnotatedEJBLocal, AnnotatedEJBRemote {
     @Resource
     private DataSource ds;
 
-    private String name = &quot;foo&quot;;
+    private String name = "foo";
 
     public String getName() {
         return name;
@@ -129,12 +140,19 @@ public class AnnotatedEJB implements AnnotatedEJBLocal, AnnotatedEJBRemote {
     }
 
     public String toString() {
-        return &quot;AnnotatedEJB[name=&quot; + name + &quot;]&quot;;
+        return "AnnotatedEJB[name=" + name + "]";
     }
-}
-</code></pre>
-<h2>AnnotatedEJBLocal</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotatedejblocal">AnnotatedEJBLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.Local;
 import javax.sql.DataSource;
@@ -148,10 +166,17 @@ public interface AnnotatedEJBLocal {
     DataSource getDs();
 
     void setDs(DataSource ds);
-}
-</code></pre>
-<h2>AnnotatedEJBRemote</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotatedejbremote">AnnotatedEJBRemote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.Remote;
 
@@ -160,10 +185,17 @@ public interface AnnotatedEJBRemote {
     String getName();
 
     void setName(String name);
-}
-</code></pre>
-<h2>AnnotatedServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotatedservlet">AnnotatedServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -192,138 +224,180 @@ public class AnnotatedServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
-        out.println(&quot;LocalBean EJB&quot;);
-        out.println(&quot;@EJB=&quot; + localbeanEJB);
+        out.println("LocalBean EJB");
+        out.println("@EJB=" + localbeanEJB);
         if (localbeanEJB != null) {
-            out.println(&quot;@EJB.getName()=&quot; + localbeanEJB.getName());
-            out.println(&quot;@EJB.getDs()=&quot; + localbeanEJB.getDs());
+            out.println("@EJB.getName()=" + localbeanEJB.getName());
+            out.println("@EJB.getDs()=" + localbeanEJB.getDs());
         }
-        out.println(&quot;JNDI=&quot; + lookupField(&quot;localbeanEJB&quot;));
+        out.println("JNDI=" + lookupField("localbeanEJB"));
         out.println();
 
-        out.println(&quot;Local EJB&quot;);
-        out.println(&quot;@EJB=&quot; + localEJB);
+        out.println("Local EJB");
+        out.println("@EJB=" + localEJB);
         if (localEJB != null) {
-            out.println(&quot;@EJB.getName()=&quot; + localEJB.getName());
-            out.println(&quot;@EJB.getDs()=&quot; + localEJB.getDs());
+            out.println("@EJB.getName()=" + localEJB.getName());
+            out.println("@EJB.getDs()=" + localEJB.getDs());
         }
-        out.println(&quot;JNDI=&quot; + lookupField(&quot;localEJB&quot;));
+        out.println("JNDI=" + lookupField("localEJB"));
         out.println();
 
-        out.println(&quot;Remote EJB&quot;);
-        out.println(&quot;@EJB=&quot; + remoteEJB);
+        out.println("Remote EJB");
+        out.println("@EJB=" + remoteEJB);
         if (localEJB != null) {
-            out.println(&quot;@EJB.getName()=&quot; + remoteEJB.getName());
+            out.println("@EJB.getName()=" + remoteEJB.getName());
         }
-        out.println(&quot;JNDI=&quot; + lookupField(&quot;remoteEJB&quot;));
+        out.println("JNDI=" + lookupField("remoteEJB"));
         out.println();
 
 
-        out.println(&quot;DataSource&quot;);
-        out.println(&quot;@Resource=&quot; + ds);
-        out.println(&quot;JNDI=&quot; + lookupField(&quot;ds&quot;));
+        out.println("DataSource");
+        out.println("@Resource=" + ds);
+        out.println("JNDI=" + lookupField("ds"));
     }
 
     private Object lookupField(String name) {
         try {
-            return new InitialContext().lookup(&quot;java:comp/env/&quot; + getClass().getName() + &quot;/&quot; + name);
+            return new InitialContext().lookup("java:comp/env/" + getClass().getName() + "/" + name);
         } catch (NamingException e) {
             return null;
         }
     }
-}
-</code></pre>
-<h2>ClientHandler</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_clienthandler">ClientHandler</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 
 public class ClientHandler implements Handler {
     public boolean handleMessage(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;    ClientHandler handleMessage&quot;);
+        WebserviceServlet.write("    ClientHandler handleMessage");
         return true;
     }
 
     public void close(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;    ClientHandler close&quot;);
+        WebserviceServlet.write("    ClientHandler close");
     }
 
     public boolean handleFault(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;    ClientHandler handleFault&quot;);
+        WebserviceServlet.write("    ClientHandler handleFault");
         return true;
     }
-}
-</code></pre>
-<h2>HelloEjb</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helloejb">HelloEjb</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.jws.WebService;
 
-@WebService(targetNamespace = &quot;http://examples.org/wsdl&quot;)
+@WebService(targetNamespace = "http://examples.org/wsdl")
 public interface HelloEjb {
     String hello(String name);
-}
-</code></pre>
-<h2>HelloEjbService</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helloejbservice">HelloEjbService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.Stateless;
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
 
 @WebService(
-        portName = &quot;HelloEjbPort&quot;,
-        serviceName = &quot;HelloEjbService&quot;,
-        targetNamespace = &quot;http://examples.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.servlet.HelloEjb&quot;
+        portName = "HelloEjbPort",
+        serviceName = "HelloEjbService",
+        targetNamespace = "http://examples.org/wsdl",
+        endpointInterface = "org.superbiz.servlet.HelloEjb"
 )
-@HandlerChain(file = &quot;server-handlers.xml&quot;)
+@HandlerChain(file = "server-handlers.xml")
 @Stateless
 public class HelloEjbService implements HelloEjb {
     public String hello(String name) {
-        WebserviceServlet.write(&quot;                HelloEjbService hello(&quot; + name + &quot;)&quot;);
-        if (name == null) name = &quot;World&quot;;
-        return &quot;Hello &quot; + name + &quot; from EJB Webservice!&quot;;
+        WebserviceServlet.write("                HelloEjbService hello(" + name + ")");
+        if (name == null) name = "World";
+        return "Hello " + name + " from EJB Webservice!";
     }
-}
-</code></pre>
-<h2>HelloPojo</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hellopojo">HelloPojo</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.jws.WebService;
 
-@WebService(targetNamespace = &quot;http://examples.org/wsdl&quot;)
+@WebService(targetNamespace = "http://examples.org/wsdl")
 public interface HelloPojo {
     String hello(String name);
-}
-</code></pre>
-<h2>HelloPojoService</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hellopojoservice">HelloPojoService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
 
 @WebService(
-        portName = &quot;HelloPojoPort&quot;,
-        serviceName = &quot;HelloPojoService&quot;,
-        targetNamespace = &quot;http://examples.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.servlet.HelloPojo&quot;
+        portName = "HelloPojoPort",
+        serviceName = "HelloPojoService",
+        targetNamespace = "http://examples.org/wsdl",
+        endpointInterface = "org.superbiz.servlet.HelloPojo"
 )
-@HandlerChain(file = &quot;server-handlers.xml&quot;)
+@HandlerChain(file = "server-handlers.xml")
 public class HelloPojoService implements HelloPojo {
     public String hello(String name) {
-        WebserviceServlet.write(&quot;                HelloPojoService hello(&quot; + name + &quot;)&quot;);
-        if (name == null) name = &quot;World&quot;;
-        return &quot;Hello &quot; + name + &quot; from Pojo Webservice!&quot;;
+        WebserviceServlet.write("                HelloPojoService hello(" + name + ")");
+        if (name == null) name = "World";
+        return "Hello " + name + " from Pojo Webservice!";
     }
-}
-</code></pre>
-<h2>JndiServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jndiservlet">JndiServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -341,58 +415,65 @@ import java.util.TreeMap;
 
 public class JndiServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
         Map&lt;String, Object&gt; bindings = new TreeMap&lt;String, Object&gt;(String.CASE_INSENSITIVE_ORDER);
         try {
-            Context context = (Context) new InitialContext().lookup(&quot;java:comp/&quot;);
-            addBindings(&quot;&quot;, bindings, context);
+            Context context = (Context) new InitialContext().lookup("java:comp/");
+            addBindings("", bindings, context);
         } catch (NamingException e) {
             throw new ServletException(e);
         }
 
-        out.println(&quot;JNDI Context:&quot;);
+        out.println("JNDI Context:");
         for (Map.Entry&lt;String, Object&gt; entry : bindings.entrySet()) {
             if (entry.getValue() != null) {
-                out.println(&quot;  &quot; + entry.getKey() + &quot;=&quot; + entry.getValue());
+                out.println("  " + entry.getKey() + "=" + entry.getValue());
             } else {
-                out.println(&quot;  &quot; + entry.getKey());
+                out.println("  " + entry.getKey());
             }
         }
     }
 
     private void addBindings(String path, Map&lt;String, Object&gt; bindings, Context context) {
         try {
-            for (NameClassPair pair : Collections.list(context.list(&quot;&quot;))) {
+            for (NameClassPair pair : Collections.list(context.list(""))) {
                 String name = pair.getName();
                 String className = pair.getClassName();
-                if (&quot;org.apache.naming.resources.FileDirContext$FileResource&quot;.equals(className)) {
-                    bindings.put(path + name, &quot;&lt;file&gt;&quot;);
+                if ("org.apache.naming.resources.FileDirContext$FileResource".equals(className)) {
+                    bindings.put(path + name, "&lt;file&gt;");
                 } else {
                     try {
                         Object value = context.lookup(name);
                         if (value instanceof Context) {
                             Context nextedContext = (Context) value;
-                            bindings.put(path + name, &quot;&quot;);
-                            addBindings(path + name + &quot;/&quot;, bindings, nextedContext);
+                            bindings.put(path + name, "");
+                            addBindings(path + name + "/", bindings, nextedContext);
                         } else {
                             bindings.put(path + name, value);
                         }
                     } catch (NamingException e) {
                         // lookup failed
-                        bindings.put(path + name, &quot;ERROR: &quot; + e.getMessage());
+                        bindings.put(path + name, "ERROR: " + e.getMessage());
                     }
                 }
             }
         } catch (NamingException e) {
-            bindings.put(path, &quot;ERROR: list bindings threw an exception: &quot; + e.getMessage());
+            bindings.put(path, "ERROR: list bindings threw an exception: " + e.getMessage());
         }
     }
-}
-</code></pre>
-<h2>JpaBean</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jpabean">JpaBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -404,10 +485,10 @@ import javax.persistence.Id;
 public class JpaBean {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = &quot;id&quot;)
+    @Column(name = "id")
     private int id;
 
-    @Column(name = &quot;name&quot;)
+    @Column(name = "name")
     private String name;
 
     public int getId() {
@@ -424,12 +505,19 @@ public class JpaBean {
 
 
     public String toString() {
-        return &quot;[JpaBean id=&quot; + id + &quot;, name=&quot; + name + &quot;]&quot;;
+        return "[JpaBean id=" + id + ", name=" + name + "]";
     }
-}
-</code></pre>
-<h2>JpaServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jpaservlet">JpaServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -444,50 +532,57 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JpaServlet extends HttpServlet {
-    @PersistenceUnit(name = &quot;jpa-example&quot;)
+    @PersistenceUnit(name = "jpa-example")
     private EntityManagerFactory emf;
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
-        out.println(&quot;@PersistenceUnit=&quot; + emf);
+        out.println("@PersistenceUnit=" + emf);
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
         JpaBean jpaBean = new JpaBean();
-        jpaBean.setName(&quot;JpaBean&quot;);
+        jpaBean.setName("JpaBean");
         em.persist(jpaBean);
 
         transaction.commit();
         transaction.begin();
 
-        Query query = em.createQuery(&quot;SELECT j FROM JpaBean j WHERE j.name=&#39;JpaBean&#39;&quot;);
+        Query query = em.createQuery("SELECT j FROM JpaBean j WHERE j.name='JpaBean'");
         jpaBean = (JpaBean) query.getSingleResult();
-        out.println(&quot;Loaded &quot; + jpaBean);
+        out.println("Loaded " + jpaBean);
 
         em.remove(jpaBean);
 
         transaction.commit();
         transaction.begin();
 
-        query = em.createQuery(&quot;SELECT count(j) FROM JpaBean j WHERE j.name=&#39;JpaBean&#39;&quot;);
+        query = em.createQuery("SELECT count(j) FROM JpaBean j WHERE j.name='JpaBean'");
         int count = ((Number) query.getSingleResult()).intValue();
         if (count == 0) {
-            out.println(&quot;Removed &quot; + jpaBean);
+            out.println("Removed " + jpaBean);
         } else {
-            out.println(&quot;ERROR: unable to remove&quot; + jpaBean);
+            out.println("ERROR: unable to remove" + jpaBean);
         }
 
         transaction.commit();
     }
-}
-</code></pre>
-<h2>ResourceBean</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resourcebean">ResourceBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 public class ResourceBean {
     private String value;
@@ -501,12 +596,19 @@ public class ResourceBean {
     }
 
     public String toString() {
-        return &quot;[ResourceBean &quot; + value + &quot;]&quot;;
+        return "[ResourceBean " + value + "]";
     }
-}
-</code></pre>
-<h2>RunAsServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_runasservlet">RunAsServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBAccessException;
@@ -523,67 +625,74 @@ public class RunAsServlet extends HttpServlet {
     private SecureEJBLocal secureEJBLocal;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
-        out.println(&quot;Servlet&quot;);
+        out.println("Servlet");
         Principal principal = request.getUserPrincipal();
         if (principal != null) {
-            out.println(&quot;Servlet.getUserPrincipal()=&quot; + principal + &quot; [&quot; + principal.getName() + &quot;]&quot;);
+            out.println("Servlet.getUserPrincipal()=" + principal + " [" + principal.getName() + "]");
         } else {
-            out.println(&quot;Servlet.getUserPrincipal()=&lt;null&gt;&quot;);
+            out.println("Servlet.getUserPrincipal()=&lt;null&gt;");
         }
-        out.println(&quot;Servlet.isCallerInRole(\&quot;user\&quot;)=&quot; + request.isUserInRole(&quot;user&quot;));
-        out.println(&quot;Servlet.isCallerInRole(\&quot;manager\&quot;)=&quot; + request.isUserInRole(&quot;manager&quot;));
-        out.println(&quot;Servlet.isCallerInRole(\&quot;fake\&quot;)=&quot; + request.isUserInRole(&quot;fake&quot;));
+        out.println("Servlet.isCallerInRole(\"user\")=" + request.isUserInRole("user"));
+        out.println("Servlet.isCallerInRole(\"manager\")=" + request.isUserInRole("manager"));
+        out.println("Servlet.isCallerInRole(\"fake\")=" + request.isUserInRole("fake"));
         out.println();
 
-        out.println(&quot;@EJB=&quot; + secureEJBLocal);
+        out.println("@EJB=" + secureEJBLocal);
         if (secureEJBLocal != null) {
             principal = secureEJBLocal.getCallerPrincipal();
             if (principal != null) {
-                out.println(&quot;@EJB.getCallerPrincipal()=&quot; + principal + &quot; [&quot; + principal.getName() + &quot;]&quot;);
+                out.println("@EJB.getCallerPrincipal()=" + principal + " [" + principal.getName() + "]");
             } else {
-                out.println(&quot;@EJB.getCallerPrincipal()=&lt;null&gt;&quot;);
+                out.println("@EJB.getCallerPrincipal()=&lt;null&gt;");
             }
-            out.println(&quot;@EJB.isCallerInRole(\&quot;user\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;user&quot;));
-            out.println(&quot;@EJB.isCallerInRole(\&quot;manager\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;manager&quot;));
-            out.println(&quot;@EJB.isCallerInRole(\&quot;fake\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;fake&quot;));
+            out.println("@EJB.isCallerInRole(\"user\")=" + secureEJBLocal.isCallerInRole("user"));
+            out.println("@EJB.isCallerInRole(\"manager\")=" + secureEJBLocal.isCallerInRole("manager"));
+            out.println("@EJB.isCallerInRole(\"fake\")=" + secureEJBLocal.isCallerInRole("fake"));
 
             try {
                 secureEJBLocal.allowUserMethod();
-                out.println(&quot;@EJB.allowUserMethod() ALLOWED&quot;);
+                out.println("@EJB.allowUserMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowUserMethod() DENIED&quot;);
+                out.println("@EJB.allowUserMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.allowManagerMethod();
-                out.println(&quot;@EJB.allowManagerMethod() ALLOWED&quot;);
+                out.println("@EJB.allowManagerMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowManagerMethod() DENIED&quot;);
+                out.println("@EJB.allowManagerMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.allowFakeMethod();
-                out.println(&quot;@EJB.allowFakeMethod() ALLOWED&quot;);
+                out.println("@EJB.allowFakeMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowFakeMethod() DENIED&quot;);
+                out.println("@EJB.allowFakeMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.denyAllMethod();
-                out.println(&quot;@EJB.denyAllMethod() ALLOWED&quot;);
+                out.println("@EJB.denyAllMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.denyAllMethod() DENIED&quot;);
+                out.println("@EJB.denyAllMethod() DENIED");
             }
         }
         out.println();
     }
-}
-</code></pre>
-<h2>SecureEJB</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secureejb">SecureEJB</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -594,7 +703,7 @@ import javax.ejb.Stateless;
 import java.security.Principal;
 
 @Stateless
-@DeclareRoles({&quot;user&quot;, &quot;manager&quot;, &quot;fake&quot;})
+@DeclareRoles({"user", "manager", "fake"})
 public class SecureEJB implements SecureEJBLocal {
     @Resource
     private SessionContext context;
@@ -607,15 +716,15 @@ public class SecureEJB implements SecureEJBLocal {
         return context.isCallerInRole(role);
     }
 
-    @RolesAllowed(&quot;user&quot;)
+    @RolesAllowed("user")
     public void allowUserMethod() {
     }
 
-    @RolesAllowed(&quot;manager&quot;)
+    @RolesAllowed("manager")
     public void allowManagerMethod() {
     }
 
-    @RolesAllowed(&quot;fake&quot;)
+    @RolesAllowed("fake")
     public void allowFakeMethod() {
     }
 
@@ -624,12 +733,19 @@ public class SecureEJB implements SecureEJBLocal {
     }
 
     public String toString() {
-        return &quot;SecureEJB[userName=&quot; + getCallerPrincipal() + &quot;]&quot;;
+        return "SecureEJB[userName=" + getCallerPrincipal() + "]";
     }
-}
-</code></pre>
-<h2>SecureEJBLocal</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secureejblocal">SecureEJBLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.Local;
 import java.security.Principal;
@@ -647,10 +763,17 @@ public interface SecureEJBLocal {
     void allowFakeMethod();
 
     void denyAllMethod();
-}
-</code></pre>
-<h2>SecureServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secureservlet">SecureServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBAccessException;
@@ -667,89 +790,103 @@ public class SecureServlet extends HttpServlet {
     private SecureEJBLocal secureEJBLocal;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
-        out.println(&quot;Servlet&quot;);
+        out.println("Servlet");
         Principal principal = request.getUserPrincipal();
         if (principal != null) {
-            out.println(&quot;Servlet.getUserPrincipal()=&quot; + principal + &quot; [&quot; + principal.getName() + &quot;]&quot;);
+            out.println("Servlet.getUserPrincipal()=" + principal + " [" + principal.getName() + "]");
         } else {
-            out.println(&quot;Servlet.getUserPrincipal()=&lt;null&gt;&quot;);
+            out.println("Servlet.getUserPrincipal()=&lt;null&gt;");
         }
-        out.println(&quot;Servlet.isCallerInRole(\&quot;user\&quot;)=&quot; + request.isUserInRole(&quot;user&quot;));
-        out.println(&quot;Servlet.isCallerInRole(\&quot;manager\&quot;)=&quot; + request.isUserInRole(&quot;manager&quot;));
-        out.println(&quot;Servlet.isCallerInRole(\&quot;fake\&quot;)=&quot; + request.isUserInRole(&quot;fake&quot;));
+        out.println("Servlet.isCallerInRole(\"user\")=" + request.isUserInRole("user"));
+        out.println("Servlet.isCallerInRole(\"manager\")=" + request.isUserInRole("manager"));
+        out.println("Servlet.isCallerInRole(\"fake\")=" + request.isUserInRole("fake"));
         out.println();
 
-        out.println(&quot;@EJB=&quot; + secureEJBLocal);
+        out.println("@EJB=" + secureEJBLocal);
         if (secureEJBLocal != null) {
             principal = secureEJBLocal.getCallerPrincipal();
             if (principal != null) {
-                out.println(&quot;@EJB.getCallerPrincipal()=&quot; + principal + &quot; [&quot; + principal.getName() + &quot;]&quot;);
+                out.println("@EJB.getCallerPrincipal()=" + principal + " [" + principal.getName() + "]");
             } else {
-                out.println(&quot;@EJB.getCallerPrincipal()=&lt;null&gt;&quot;);
+                out.println("@EJB.getCallerPrincipal()=&lt;null&gt;");
             }
-            out.println(&quot;@EJB.isCallerInRole(\&quot;user\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;user&quot;));
-            out.println(&quot;@EJB.isCallerInRole(\&quot;manager\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;manager&quot;));
-            out.println(&quot;@EJB.isCallerInRole(\&quot;fake\&quot;)=&quot; + secureEJBLocal.isCallerInRole(&quot;fake&quot;));
+            out.println("@EJB.isCallerInRole(\"user\")=" + secureEJBLocal.isCallerInRole("user"));
+            out.println("@EJB.isCallerInRole(\"manager\")=" + secureEJBLocal.isCallerInRole("manager"));
+            out.println("@EJB.isCallerInRole(\"fake\")=" + secureEJBLocal.isCallerInRole("fake"));
 
             try {
                 secureEJBLocal.allowUserMethod();
-                out.println(&quot;@EJB.allowUserMethod() ALLOWED&quot;);
+                out.println("@EJB.allowUserMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowUserMethod() DENIED&quot;);
+                out.println("@EJB.allowUserMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.allowManagerMethod();
-                out.println(&quot;@EJB.allowManagerMethod() ALLOWED&quot;);
+                out.println("@EJB.allowManagerMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowManagerMethod() DENIED&quot;);
+                out.println("@EJB.allowManagerMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.allowFakeMethod();
-                out.println(&quot;@EJB.allowFakeMethod() ALLOWED&quot;);
+                out.println("@EJB.allowFakeMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.allowFakeMethod() DENIED&quot;);
+                out.println("@EJB.allowFakeMethod() DENIED");
             }
 
             try {
                 secureEJBLocal.denyAllMethod();
-                out.println(&quot;@EJB.denyAllMethod() ALLOWED&quot;);
+                out.println("@EJB.denyAllMethod() ALLOWED");
             } catch (EJBAccessException e) {
-                out.println(&quot;@EJB.denyAllMethod() DENIED&quot;);
+                out.println("@EJB.denyAllMethod() DENIED");
             }
         }
         out.println();
     }
-}
-</code></pre>
-<h2>ServerHandler</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_serverhandler">ServerHandler</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 
 public class ServerHandler implements Handler {
     public boolean handleMessage(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;        ServerHandler handleMessage&quot;);
+        WebserviceServlet.write("        ServerHandler handleMessage");
         return true;
     }
 
     public void close(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;        ServerHandler close&quot;);
+        WebserviceServlet.write("        ServerHandler close");
     }
 
     public boolean handleFault(MessageContext messageContext) {
-        WebserviceServlet.write(&quot;        ServerHandler handleFault&quot;);
+        WebserviceServlet.write("        ServerHandler handleFault");
         return true;
     }
-}
-</code></pre>
-<h2>WebserviceClient</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webserviceclient">WebserviceClient</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.xml.ws.Service;
 import java.io.PrintStream;
@@ -781,7 +918,7 @@ public class WebserviceClient {
      * geronimo-activation_1.1_spec-1.0.jar
      * geronimo-annotation_1.0_spec-1.1.jar
      * geronimo-ejb_3.0_spec-1.0.jar
-     * geronimo-jpa_3.0_spec-1.1.jar
+     * geronimo-jpa_2.2_spec-1.0.jar
      * geronimo-servlet_2.5_spec-1.1.jar
      * geronimo-stax-api_1.0_spec-1.0.jar
      * jaxws-api-2.0.jar
@@ -794,26 +931,33 @@ public class WebserviceClient {
     public static void main(String[] args) throws Exception {
         PrintStream out = System.out;
 
-        Service helloPojoService = Service.create(new URL(&quot;http://localhost:8080/ejb-examples/hello?wsdl&quot;), null);
+        Service helloPojoService = Service.create(new URL("http://localhost:8080/ejb-examples/hello?wsdl"), null);
         HelloPojo helloPojo = helloPojoService.getPort(HelloPojo.class);
         out.println();
-        out.println(&quot;Pojo Webservice&quot;);
-        out.println(&quot;    helloPojo.hello(\&quot;Bob\&quot;)=&quot; + helloPojo.hello(&quot;Bob&quot;));
-        out.println(&quot;    helloPojo.hello(null)=&quot; + helloPojo.hello(null));
+        out.println("Pojo Webservice");
+        out.println("    helloPojo.hello(\"Bob\")=" + helloPojo.hello("Bob"));
+        out.println("    helloPojo.hello(null)=" + helloPojo.hello(null));
         out.println();
 
-        Service helloEjbService = Service.create(new URL(&quot;http://localhost:8080/HelloEjbService?wsdl&quot;), null);
+        Service helloEjbService = Service.create(new URL("http://localhost:8080/HelloEjbService?wsdl"), null);
         HelloEjb helloEjb = helloEjbService.getPort(HelloEjb.class);
         out.println();
-        out.println(&quot;EJB Webservice&quot;);
-        out.println(&quot;    helloEjb.hello(\&quot;Bob\&quot;)=&quot; + helloEjb.hello(&quot;Bob&quot;));
-        out.println(&quot;    helloEjb.hello(null)=&quot; + helloEjb.hello(null));
+        out.println("EJB Webservice");
+        out.println("    helloEjb.hello(\"Bob\")=" + helloEjb.hello("Bob"));
+        out.println("    helloEjb.hello(null)=" + helloEjb.hello(null));
         out.println();
     }
-}
-</code></pre>
-<h2>WebserviceServlet</h2>
-<pre><code>package org.superbiz.servlet;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webserviceservlet">WebserviceServlet</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.servlet;
 
 import javax.jws.HandlerChain;
 import javax.servlet.ServletException;
@@ -827,28 +971,28 @@ import java.io.IOException;
 public class WebserviceServlet extends HttpServlet {
 
     @WebServiceRef
-    @HandlerChain(file = &quot;client-handlers.xml&quot;)
+    @HandlerChain(file = "client-handlers.xml")
     private HelloPojo helloPojo;
 
     @WebServiceRef
-    @HandlerChain(file = &quot;client-handlers.xml&quot;)
+    @HandlerChain(file = "client-handlers.xml")
     private HelloEjb helloEjb;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(&quot;text/plain&quot;);
+        response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
 
         OUT = out;
         try {
-            out.println(&quot;Pojo Webservice&quot;);
-            out.println(&quot;    helloPojo.hello(\&quot;Bob\&quot;)=&quot; + helloPojo.hello(&quot;Bob&quot;));
+            out.println("Pojo Webservice");
+            out.println("    helloPojo.hello(\"Bob\")=" + helloPojo.hello("Bob"));
             out.println();
-            out.println(&quot;    helloPojo.hello(null)=&quot; + helloPojo.hello(null));
+            out.println("    helloPojo.hello(null)=" + helloPojo.hello(null));
             out.println();
-            out.println(&quot;EJB Webservice&quot;);
-            out.println(&quot;    helloEjb.hello(\&quot;Bob\&quot;)=&quot; + helloEjb.hello(&quot;Bob&quot;));
+            out.println("EJB Webservice");
+            out.println("    helloEjb.hello(\"Bob\")=" + helloEjb.hello("Bob"));
             out.println();
-            out.println(&quot;    helloEjb.hello(null)=&quot; + helloEjb.hello(null));
+            out.println("    helloEjb.hello(null)=" + helloEjb.hello(null));
             out.println();
         } finally {
             OUT = out;
@@ -865,106 +1009,155 @@ public class WebserviceServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
-  &lt;persistence-unit transaction-type=&quot;RESOURCE_LOCAL&quot; name=&quot;jpa-example&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+  &lt;persistence-unit transaction-type="RESOURCE_LOCAL" name="jpa-example"&gt;
     &lt;jta-data-source&gt;java:openejb/Connector/Default JDBC Database&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;java:openejb/Connector/Default Unmanaged JDBC Database&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.servlet.JpaBean&lt;/class&gt;
 
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>client-handlers.xml</h2>
-<pre><code>&lt;jws:handler-chains xmlns:jws=&quot;http://java.sun.com/xml/ns/javaee&quot;&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_client_handlers_xml">client-handlers.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee"&gt;
   &lt;jws:handler-chain&gt;
     &lt;jws:handler&gt;
       &lt;jws:handler-name&gt;ClientHandler&lt;/jws:handler-name&gt;
       &lt;jws:handler-class&gt;org.superbiz.servlet.ClientHandler&lt;/jws:handler-class&gt;
     &lt;/jws:handler&gt;
   &lt;/jws:handler-chain&gt;
-&lt;/jws:handler-chains&gt;
-</code></pre>
-<h2>server-handlers.xml</h2>
-<pre><code>&lt;jws:handler-chains xmlns:jws=&quot;http://java.sun.com/xml/ns/javaee&quot;&gt;
+&lt;/jws:handler-chains&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_server_handlers_xml">server-handlers.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee"&gt;
   &lt;jws:handler-chain&gt;
     &lt;jws:handler&gt;
       &lt;jws:handler-name&gt;ServerHandler&lt;/jws:handler-name&gt;
       &lt;jws:handler-class&gt;org.superbiz.servlet.ServerHandler&lt;/jws:handler-class&gt;
     &lt;/jws:handler&gt;
   &lt;/jws:handler-chain&gt;
-&lt;/jws:handler-chains&gt;
-</code></pre>
-<h2>context.xml</h2>
-<pre><code>&lt;Context&gt;
+&lt;/jws:handler-chains&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_context_xml">context.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Context&gt;
   &lt;!-- This only works if the context is installed under the correct name --&gt;
-  &lt;Realm className=&quot;org.apache.catalina.realm.MemoryRealm&quot;
-         pathname=&quot;webapps/ejb-examples-1.0-SNAPSHOT/WEB-INF/tomcat-users.xml&quot;/&gt;
+  &lt;Realm className="org.apache.catalina.realm.MemoryRealm"
+         pathname="webapps/ejb-examples-1.0-SNAPSHOT/WEB-INF/tomcat-users.xml"/&gt;
 
   &lt;Environment
-      name=&quot;context.xml/environment&quot;
-      value=&quot;ContextString&quot;
-      type=&quot;java.lang.String&quot;/&gt;
+      name="context.xml/environment"
+      value="ContextString"
+      type="java.lang.String"/&gt;
   &lt;Resource
-      name=&quot;context.xml/resource&quot;
-      auth=&quot;Container&quot;
-      type=&quot;org.superbiz.servlet.ResourceBean&quot;
-      factory=&quot;org.apache.naming.factory.BeanFactory&quot;
-      value=&quot;ContextResource&quot;/&gt;
+      name="context.xml/resource"
+      auth="Container"
+      type="org.superbiz.servlet.ResourceBean"
+      factory="org.apache.naming.factory.BeanFactory"
+      value="ContextResource"/&gt;
   &lt;ResourceLink
-      name=&quot;context.xml/resource-link&quot;
-      global=&quot;server.xml/environment&quot;
-      type=&quot;java.lang.String&quot;/&gt;
+      name="context.xml/resource-link"
+      global="server.xml/environment"
+      type="java.lang.String"/&gt;
 
   &lt;!-- web.xml resources --&gt;
   &lt;Resource
-      name=&quot;web.xml/resource-env-ref&quot;
-      auth=&quot;Container&quot;
-      type=&quot;org.superbiz.servlet.ResourceBean&quot;
-      factory=&quot;org.apache.naming.factory.BeanFactory&quot;
-      value=&quot;ContextResourceEnvRef&quot;/&gt;
+      name="web.xml/resource-env-ref"
+      auth="Container"
+      type="org.superbiz.servlet.ResourceBean"
+      factory="org.apache.naming.factory.BeanFactory"
+      value="ContextResourceEnvRef"/&gt;
   &lt;Resource
-      name=&quot;web.xml/resource-ref&quot;
-      auth=&quot;Container&quot;
-      type=&quot;org.superbiz.servlet.ResourceBean&quot;
-      factory=&quot;org.apache.naming.factory.BeanFactory&quot;
-      value=&quot;ContextResourceRef&quot;/&gt;
+      name="web.xml/resource-ref"
+      auth="Container"
+      type="org.superbiz.servlet.ResourceBean"
+      factory="org.apache.naming.factory.BeanFactory"
+      value="ContextResourceRef"/&gt;
   &lt;ResourceLink
-      name=&quot;web.xml/resource-link&quot;
-      global=&quot;server.xml/environment&quot;
-      type=&quot;java.lang.String&quot;/&gt;
-&lt;/Context&gt;
-</code></pre>
-<h2>jetty-web.xml</h2>
-<pre><code>&lt;Configure class=&quot;org.eclipse.jetty.webapp.WebAppContext&quot;&gt;
-  &lt;Get name=&quot;securityHandler&quot;&gt;
-    &lt;Set name=&quot;loginService&quot;&gt;
-      &lt;New class=&quot;org.eclipse.jetty.security.HashLoginService&quot;&gt;
-        &lt;Set name=&quot;name&quot;&gt;Test Realm&lt;/Set&gt;
-        &lt;Set name=&quot;config&quot;&gt;&lt;SystemProperty name=&quot;jetty.home&quot; default=&quot;.&quot;/&gt;/etc/realm.properties
+      name="web.xml/resource-link"
+      global="server.xml/environment"
+      type="java.lang.String"/&gt;
+&lt;/Context&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jetty_web_xml">jetty-web.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Configure class="org.eclipse.jetty.webapp.WebAppContext"&gt;
+  &lt;Get name="securityHandler"&gt;
+    &lt;Set name="loginService"&gt;
+      &lt;New class="org.eclipse.jetty.security.HashLoginService"&gt;
+        &lt;Set name="name"&gt;Test Realm&lt;/Set&gt;
+        &lt;Set name="config"&gt;&lt;SystemProperty name="jetty.home" default="."/&gt;/etc/realm.properties
         &lt;/Set&gt;
       &lt;/New&gt;
     &lt;/Set&gt;
   &lt;/Get&gt;
-&lt;/Configure&gt;
-</code></pre>
-<h2>tomcat-users.xml</h2>
-<pre><code>&lt;tomcat-users&gt;
-  &lt;user name=&quot;manager&quot; password=&quot;manager&quot; roles=&quot;manager,user&quot;/&gt;
-  &lt;user name=&quot;user&quot; password=&quot;user&quot; roles=&quot;user&quot;/&gt;
-&lt;/tomcat-users&gt;
-</code></pre>
-<h2>web.xml</h2>
-<pre><code>&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;
-         metadata-complete=&quot;false&quot;
-         version=&quot;2.5&quot;&gt;
+&lt;/Configure&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tomcat_users_xml">tomcat-users.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomcat-users&gt;
+  &lt;user name="manager" password="manager" roles="manager,user"/&gt;
+  &lt;user name="user" password="user" roles="user"/&gt;
+&lt;/tomcat-users&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_xml">web.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         metadata-complete="false"
+         version="2.5"&gt;
 
   &lt;display-name&gt;OpenEJB Servlet Examples&lt;/display-name&gt;
 
@@ -1104,8 +1297,11 @@ public class WebserviceServlet extends HttpServlet {
     &lt;persistence-unit-name&gt;jpa-example&lt;/persistence-unit-name&gt;
     &lt;persistence-context-type&gt;Transactional&lt;/persistence-context-type&gt;
   &lt;/persistence-context-ref&gt;
-&lt;/web-app&gt;
-</code></pre>
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -1125,7 +1321,7 @@ public class WebserviceServlet extends HttpServlet {
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

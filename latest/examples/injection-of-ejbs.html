@@ -95,16 +95,44 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows how to use the @EJB annotation on a bean class to refer to other beans.</p>
-<p>This functionality is often referred as dependency injection (see <a href="http://www.martinfowler.com/articles/injection.html)">http://www.martinfowler.com/articles/injection.html)</a>, and has been recently introduced in Java EE 5.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to use the @EJB annotation on a bean class to
+refer to other beans.</p>
+</div>
+<div class="paragraph">
+<p>This functionality is often referred as dependency injection (see
+<a href="http://www.martinfowler.com/articles/injection.html" class="bare">http://www.martinfowler.com/articles/injection.html</a>), and has been
+recently introduced in Java EE 5.</p>
+</div>
+<div class="paragraph">
 <p>In this particular example, we will create two session stateless beans</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>a DataStore session bean</li>
-  <li>a DataReader session bean</li>
+<li>
+<p>a DataStore session bean</p>
+</li>
+<li>
+<p>a DataReader session bean</p>
+</li>
 </ul>
-<p>The DataReader bean uses the DataStore to retrieve some informations, and we will see how we can, inside the DataReader bean, get a reference to the DataStore bean using the @EJB annotation, thus avoiding the use of the JNDI API.</p>
-<h2>DataReader</h2>
-<pre><code>package org.superbiz.injection;
+</div>
+<div class="paragraph">
+<p>The DataReader bean uses the DataStore to retrieve some informations,
+and we will see how we can, inside the DataReader bean, get a reference
+to the DataStore bean using the @EJB annotation, thus avoiding the use
+of the JNDI API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datareader">DataReader</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -116,11 +144,11 @@ import javax.ejb.Stateless;
  * This EJB has 2 business interfaces: DataReaderRemote, a remote business
  * interface, and DataReaderLocal, a local business interface
  * &lt;p/&gt;
- * The instance variables &#39;dataStoreRemote&#39; is annotated with the @EJB annotation:
+ * The instance variables 'dataStoreRemote' is annotated with the @EJB annotation:
  * this means that the application server, at runtime, will inject in this instance
  * variable a reference to the EJB DataStoreRemote
  * &lt;p/&gt;
- * The instance variables &#39;dataStoreLocal&#39; is annotated with the @EJB annotation:
+ * The instance variables 'dataStoreLocal' is annotated with the @EJB annotation:
  * this means that the application server, at runtime, will inject in this instance
  * variable a reference to the EJB DataStoreLocal
  */
@@ -136,20 +164,27 @@ public class DataReader {
     private DataStore dataStore;
 
     public String readDataFromLocalStore() {
-        return &quot;LOCAL:&quot; + dataStoreLocal.getData();
+        return "LOCAL:" + dataStoreLocal.getData();
     }
 
     public String readDataFromLocalBeanStore() {
-        return &quot;LOCALBEAN:&quot; + dataStore.getData();
+        return "LOCALBEAN:" + dataStore.getData();
     }
 
     public String readDataFromRemoteStore() {
-        return &quot;REMOTE:&quot; + dataStoreRemote.getData();
+        return "REMOTE:" + dataStoreRemote.getData();
     }
-}
-</code></pre>
-<h2>DataStore</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datastore">DataStore</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -167,19 +202,26 @@ import javax.ejb.Stateless;
 public class DataStore implements DataStoreLocal, DataStoreRemote {
 
     public String getData() {
-        return &quot;42&quot;;
+        return "42";
     }
-}
-</code></pre>
-<h2>DataStoreLocal</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datastorelocal">DataStoreLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import javax.ejb.Local;
 
 /**
  * This is an EJB 3 local business interface
  * A local business interface may be annotated with the @Local
- * annotation, but it&#39;s optional. A business interface which is
+ * annotation, but it's optional. A business interface which is
  * not annotated with @Local or @Remote is assumed to be Local
  */
 //START SNIPPET: code
@@ -187,10 +229,17 @@ import javax.ejb.Local;
 public interface DataStoreLocal {
 
     public String getData();
-}
-</code></pre>
-<h2>DataStoreRemote</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datastoreremote">DataStoreRemote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import javax.ejb.Remote;
 
@@ -204,10 +253,17 @@ import javax.ejb.Remote;
 public interface DataStoreRemote {
 
     public String getData();
-}
-</code></pre>
-<h2>EjbDependencyTest</h2>
-<pre><code>package org.superbiz.injection;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejbdependencytest">EjbDependencyTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection;
 
 import junit.framework.TestCase;
 
@@ -223,18 +279,25 @@ public class EjbDependencyTest extends TestCase {
     public void test() throws Exception {
         final Context context = EJBContainer.createEJBContainer().getContext();
 
-        DataReader dataReader = (DataReader) context.lookup(&quot;java:global/injection-of-ejbs/DataReader&quot;);
+        DataReader dataReader = (DataReader) context.lookup("java:global/injection-of-ejbs/DataReader");
 
         assertNotNull(dataReader);
 
-        assertEquals(&quot;LOCAL:42&quot;, dataReader.readDataFromLocalStore());
-        assertEquals(&quot;REMOTE:42&quot;, dataReader.readDataFromRemoteStore());
-        assertEquals(&quot;LOCALBEAN:42&quot;, dataReader.readDataFromLocalBeanStore());
+        assertEquals("LOCAL:42", dataReader.readDataFromLocalStore());
+        assertEquals("REMOTE:42", dataReader.readDataFromRemoteStore());
+        assertEquals("LOCALBEAN:42", dataReader.readDataFromLocalBeanStore());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.EjbDependencyTest
@@ -242,7 +305,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/injection-of-ejbs
 INFO - openejb.base = /Users/dblevins/examples/injection-of-ejbs
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/injection-of-ejbs/target/classes
@@ -252,16 +315,16 @@ INFO - Configuring Service(id=Default Stateless Container, type=Container, provi
 INFO - Auto-creating a container for bean DataReader: Container(type=STATELESS, id=Default Stateless Container)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.injection.EjbDependencyTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/injection-of-ejbs&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/injection-of-ejbs" loaded.
 INFO - Assembling app: /Users/dblevins/examples/injection-of-ejbs
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataReader!org.superbiz.injection.DataReader&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataReader&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStore&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreLocal&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreRemote&quot;)
-INFO - Jndi(name=&quot;java:global/injection-of-ejbs/DataStore&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest!org.superbiz.injection.EjbDependencyTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest&quot;)
+INFO - Jndi(name="java:global/injection-of-ejbs/DataReader!org.superbiz.injection.DataReader")
+INFO - Jndi(name="java:global/injection-of-ejbs/DataReader")
+INFO - Jndi(name="java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStore")
+INFO - Jndi(name="java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreLocal")
+INFO - Jndi(name="java:global/injection-of-ejbs/DataStore!org.superbiz.injection.DataStoreRemote")
+INFO - Jndi(name="java:global/injection-of-ejbs/DataStore")
+INFO - Jndi(name="java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest!org.superbiz.injection.EjbDependencyTest")
+INFO - Jndi(name="java:global/EjbModule355598874/org.superbiz.injection.EjbDependencyTest")
 INFO - Created Ejb(deployment-id=DataReader, ejb-name=DataReader, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=DataStore, ejb-name=DataStore, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=org.superbiz.injection.EjbDependencyTest, ejb-name=org.superbiz.injection.EjbDependencyTest, container=Default Managed Container)
@@ -273,8 +336,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.225 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -294,7 +360,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

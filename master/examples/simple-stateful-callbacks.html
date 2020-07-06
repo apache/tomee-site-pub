@@ -95,9 +95,21 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows how to create a stateful session bean that uses the @PrePassivate, @PostActivate, @PostConstruct, @PreDestroy and @AroundInvoke annotations.</p>
-<h2>CallbackCounter</h2>
-<pre><code>package org.superbiz.counter;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to create a stateful session bean that uses the
+@PrePassivate, @PostActivate, @PostConstruct, @PreDestroy and
+@AroundInvoke annotations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_callbackcounter">CallbackCounter</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -118,22 +130,22 @@ public class CallbackCounter implements Serializable {
 
     @PrePassivate
     public void prePassivate() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;prePassivate&quot;);
+        ExecutionChannel.getInstance().notifyObservers("prePassivate");
     }
 
     @PostActivate
     public void postActivate() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;postActivate&quot;);
+        ExecutionChannel.getInstance().notifyObservers("postActivate");
     }
 
     @PostConstruct
     public void postConstruct() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;postConstruct&quot;);
+        ExecutionChannel.getInstance().notifyObservers("postConstruct");
     }
 
     @PreDestroy
     public void preDestroy() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;preDestroy&quot;);
+        ExecutionChannel.getInstance().notifyObservers("preDestroy");
     }
 
     @AroundInvoke
@@ -153,10 +165,17 @@ public class CallbackCounter implements Serializable {
     public int reset() {
         return (count = 0);
     }
-}
-</code></pre>
-<h2>ExecutionChannel</h2>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executionchannel">ExecutionChannel</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,19 +198,33 @@ public class ExecutionChannel {
             observer.onExecution(value);
         }
     }
-}
-</code></pre>
-<h2>ExecutionObserver</h2>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executionobserver">ExecutionObserver</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 public interface ExecutionObserver {
 
     void onExecution(Object value);
 
-}
-</code></pre>
-<h2>CounterCallbacksTest</h2>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_countercallbackstest">CounterCallbacksTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import junit.framework.Assert;
 import org.junit.Test;
@@ -207,7 +240,7 @@ public class CounterCallbacksTest implements ExecutionObserver {
 
     public Context getContext() throws NamingException {
         final Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         return new InitialContext(p);
 
     }
@@ -215,10 +248,10 @@ public class CounterCallbacksTest implements ExecutionObserver {
     @Test
     public void test() throws Exception {
         final Map&lt;String, Object&gt; p = new HashMap&lt;String, Object&gt;();
-        p.put(&quot;MySTATEFUL&quot;, &quot;new://Container?type=STATEFUL&quot;);
-        p.put(&quot;MySTATEFUL.Capacity&quot;, &quot;2&quot;); //How many instances of Stateful beans can our server hold in memory?
-        p.put(&quot;MySTATEFUL.Frequency&quot;, &quot;1&quot;); //Interval in seconds between checks
-        p.put(&quot;MySTATEFUL.BulkPassivate&quot;, &quot;0&quot;); //No bulkPassivate - just passivate entities whenever it is needed
+        p.put("MySTATEFUL", "new://Container?type=STATEFUL");
+        p.put("MySTATEFUL.Capacity", "2"); //How many instances of Stateful beans can our server hold in memory?
+        p.put("MySTATEFUL.Frequency", "1"); //Interval in seconds between checks
+        p.put("MySTATEFUL.BulkPassivate", "0"); //No bulkPassivate - just passivate entities whenever it is needed
         final EJBContainer container = EJBContainer.createEJBContainer(p);
 
         //this is going to track the execution
@@ -227,30 +260,30 @@ public class CounterCallbacksTest implements ExecutionObserver {
         {
             final Context context = getContext();
 
-            CallbackCounter counterA = (CallbackCounter) context.lookup(&quot;java:global/simple-stateful-callbacks/CallbackCounter&quot;);
+            CallbackCounter counterA = (CallbackCounter) context.lookup("java:global/simple-stateful-callbacks/CallbackCounter");
             Assert.assertNotNull(counterA);
-            Assert.assertEquals(&quot;postConstruct&quot;, received.remove(0));
+            Assert.assertEquals("postConstruct", received.remove(0));
 
             Assert.assertEquals(0, counterA.count());
-            Assert.assertEquals(&quot;count&quot;, received.remove(0));
+            Assert.assertEquals("count", received.remove(0));
 
             Assert.assertEquals(1, counterA.increment());
-            Assert.assertEquals(&quot;increment&quot;, received.remove(0));
+            Assert.assertEquals("increment", received.remove(0));
 
             Assert.assertEquals(0, counterA.reset());
-            Assert.assertEquals(&quot;reset&quot;, received.remove(0));
+            Assert.assertEquals("reset", received.remove(0));
 
             Assert.assertEquals(1, counterA.increment());
-            Assert.assertEquals(&quot;increment&quot;, received.remove(0));
+            Assert.assertEquals("increment", received.remove(0));
 
-            System.out.println(&quot;Waiting 2 seconds...&quot;);
+            System.out.println("Waiting 2 seconds...");
             Thread.sleep(2000);
 
-            Assert.assertEquals(&quot;preDestroy&quot;, received.remove(0));
+            Assert.assertEquals("preDestroy", received.remove(0));
 
             try {
                 counterA.increment();
-                Assert.fail(&quot;The ejb is not supposed to be there.&quot;);
+                Assert.fail("The ejb is not supposed to be there.");
             } catch (javax.ejb.NoSuchEJBException e) {
                 //excepted
             }
@@ -261,43 +294,50 @@ public class CounterCallbacksTest implements ExecutionObserver {
         {
             final Context context = getContext();
 
-            CallbackCounter counterA = (CallbackCounter) context.lookup(&quot;java:global/simple-stateful-callbacks/CallbackCounter&quot;);
-            Assert.assertEquals(&quot;postConstruct&quot;, received.remove(0));
+            CallbackCounter counterA = (CallbackCounter) context.lookup("java:global/simple-stateful-callbacks/CallbackCounter");
+            Assert.assertEquals("postConstruct", received.remove(0));
 
             Assert.assertEquals(1, counterA.increment());
-            Assert.assertEquals(&quot;increment&quot;, received.remove(0));
+            Assert.assertEquals("increment", received.remove(0));
 
-            ((CallbackCounter) context.lookup(&quot;java:global/simple-stateful-callbacks/CallbackCounter&quot;)).count();
-            Assert.assertEquals(&quot;postConstruct&quot;, received.remove(0));
-            Assert.assertEquals(&quot;count&quot;, received.remove(0));
+            ((CallbackCounter) context.lookup("java:global/simple-stateful-callbacks/CallbackCounter")).count();
+            Assert.assertEquals("postConstruct", received.remove(0));
+            Assert.assertEquals("count", received.remove(0));
 
-            ((CallbackCounter) context.lookup(&quot;java:global/simple-stateful-callbacks/CallbackCounter&quot;)).count();
-            Assert.assertEquals(&quot;postConstruct&quot;, received.remove(0));
-            Assert.assertEquals(&quot;count&quot;, received.remove(0));
+            ((CallbackCounter) context.lookup("java:global/simple-stateful-callbacks/CallbackCounter")).count();
+            Assert.assertEquals("postConstruct", received.remove(0));
+            Assert.assertEquals("count", received.remove(0));
 
-            System.out.println(&quot;Waiting 2 seconds...&quot;);
+            System.out.println("Waiting 2 seconds...");
             Thread.sleep(2000);
-            Assert.assertEquals(&quot;prePassivate&quot;, received.remove(0));
+            Assert.assertEquals("prePassivate", received.remove(0));
 
             context.close();
         }
         container.close();
 
-        Assert.assertEquals(&quot;preDestroy&quot;, received.remove(0));
-        Assert.assertEquals(&quot;preDestroy&quot;, received.remove(0));
+        Assert.assertEquals("preDestroy", received.remove(0));
+        Assert.assertEquals("preDestroy", received.remove(0));
 
         Assert.assertTrue(received.toString(), received.isEmpty());
     }
 
     @Override
     public void onExecution(Object value) {
-        System.out.println(&quot;Test step -&gt; &quot; + value);
+        System.out.println("Test step -&gt; " + value);
         received.add(value);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.counter.CounterCallbacksTest
@@ -313,7 +353,7 @@ INFO - openejb.home = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-st
 INFO - openejb.base = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateful-callbacks
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
 INFO - Succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
@@ -329,10 +369,10 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean org.superbiz.counter.CounterCallbacksTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
-INFO - Enterprise application &quot;/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateful-callbacks&quot; loaded.
+INFO - Enterprise application "/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateful-callbacks" loaded.
 INFO - Assembling app: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateful-callbacks
-INFO - Jndi(name=&quot;java:global/simple-stateful-callbacks/CallbackCounter!org.superbiz.counter.CallbackCounter&quot;)
-INFO - Jndi(name=&quot;java:global/simple-stateful-callbacks/CallbackCounter&quot;)
+INFO - Jndi(name="java:global/simple-stateful-callbacks/CallbackCounter!org.superbiz.counter.CallbackCounter")
+INFO - Jndi(name="java:global/simple-stateful-callbacks/CallbackCounter")
 INFO - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
 INFO - OpenWebBeans Container is starting...
 INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
@@ -376,8 +416,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [INFO] Total time: 15.803s
 [INFO] Finished at: Sat Jul 21 08:18:35 EDT 2012
 [INFO] Final Memory: 11M/247M
-[INFO] ------------------------------------------------------------------------
-</code></pre>
+[INFO] ------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -397,7 +440,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

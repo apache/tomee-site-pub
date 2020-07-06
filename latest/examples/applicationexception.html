@@ -95,94 +95,115 @@
         <div class="row">
             
             <div class="col-md-12">
-                <h1>Declaring an @ApplicationException</h1>
-<pre><code>import javax.ejb.ApplicationException;
+                <h1 id="_declaring_an_applicationexception" class="sect0">Declaring an @ApplicationException</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    import javax.ejb.ApplicationException;
 
-/**
- * @version $Rev: 784112 $ $Date: 2009-06-12 06:23:57 -0700 (Fri, 12 Jun 2009) $
- */
-@ApplicationException(rollback = true)
-public abstract class BusinessException extends RuntimeException {
-}
-</code></pre>
+    /**
+     * @version $Rev: 784112 $ $Date: 2009-06-12 06:23:57 -0700 (Fri, 12 Jun 2009) $
+     */
+    @ApplicationException(rollback = true)
+    public abstract class BusinessException extends RuntimeException {
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>By default, @ApplicationException is inherited</p>
-<pre><code>public class ValueRequiredException extends BusinessException {
-}
-</code></pre>
-<h1>In the bean code</h1>
-<pre><code>@Stateless
-public class ThrowBusinessExceptionImpl implements ThrowBusinessException {
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    public class ValueRequiredException extends BusinessException {
+    }</code></pre>
+</div>
+</div>
+<h1 id="_in_the_bean_code" class="sect0">In the bean code</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    @Stateless
+    public class ThrowBusinessExceptionImpl implements ThrowBusinessException {
 
-    public void throwValueRequiredException() throws BusinessException {
-        throw new ValueRequiredException();
-    }
+        public void throwValueRequiredException() throws BusinessException {
+            throw new ValueRequiredException();
+        }
 
-}
-</code></pre>
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Normally throwing a <code>RuntimeException</code> would cause the container to both rollback the transaction and destroy the bean instance that threw the exception.</p>
+</div>
+<div class="paragraph">
 <p>As <code>BusinessException</code> has been annotated <code>@ApplicationException(rollback = true)</code> only the transaction rollback will occur and the bean will not get destroyed.</p>
-<h1>The TestCase</h1>
-<pre><code>import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+</div>
+<h1 id="_the_testcase" class="sect0">The TestCase</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    import org.junit.Assert;
+    import org.junit.Before;
+    import org.junit.Test;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import java.util.Properties;
+    import javax.naming.Context;
+    import javax.naming.InitialContext;
+    import java.util.Properties;
 
-public class ThrowBusinessExceptionImplTest {
+    public class ThrowBusinessExceptionImplTest {
 
-    private InitialContext initialContext;
+        private InitialContext initialContext;
 
-    @Before
-    public void setUp() throws Exception {
-        Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        @Before
+        public void setUp() throws Exception {
+            Properties properties = new Properties();
+            properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
-        initialContext = new InitialContext(properties);
-    }
+            initialContext = new InitialContext(properties);
+        }
 
-    @Test(expected = ValueRequiredException.class)
-    public void testCounterViaRemoteInterface() throws Exception {
-        Object object = initialContext.lookup(&quot;ThrowBusinessExceptionImplRemote&quot;);
+        @Test(expected = ValueRequiredException.class)
+        public void testCounterViaRemoteInterface() throws Exception {
+            Object object = initialContext.lookup("ThrowBusinessExceptionImplRemote");
 
-        Assert.assertNotNull(object);
-        Assert.assertTrue(object instanceof ThrowBusinessException);
-        ThrowBusinessException bean = (ThrowBusinessException) object;
-        bean.throwValueRequiredException();
-    }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running org.superbiz.appexception.ThrowBusinessExceptionImplTest
-Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
-http://tomee.apache.org/
-INFO - openejb.home = /Users/dblevins/examples/applicationexception
-INFO - openejb.base = /Users/dblevins/examples/applicationexception
-INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
-INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
-INFO - Found EjbModule in classpath: /Users/dblevins/examples/applicationexception/target/classes
-INFO - Beginning load: /Users/dblevins/examples/applicationexception/target/classes
-INFO - Configuring enterprise application: /Users/dblevins/examples/applicationexception/classpath.ear
-INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
-INFO - Auto-creating a container for bean ThrowBusinessExceptionImpl: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/applicationexception/classpath.ear&quot; loaded.
-INFO - Assembling app: /Users/dblevins/examples/applicationexception/classpath.ear
-INFO - Jndi(name=ThrowBusinessExceptionImplRemote) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
-INFO - Jndi(name=global/classpath.ear/applicationexception/ThrowBusinessExceptionImpl!org.superbiz.appexception.ThrowBusinessException) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
-INFO - Jndi(name=global/classpath.ear/applicationexception/ThrowBusinessExceptionImpl) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
-INFO - Created Ejb(deployment-id=ThrowBusinessExceptionImpl, ejb-name=ThrowBusinessExceptionImpl, container=Default Stateless Container)
-INFO - Started Ejb(deployment-id=ThrowBusinessExceptionImpl, ejb-name=ThrowBusinessExceptionImpl, container=Default Stateless Container)
-INFO - Deployed Application(path=/Users/dblevins/examples/applicationexception/classpath.ear)
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.434 sec
+            Assert.assertNotNull(object);
+            Assert.assertTrue(object instanceof ThrowBusinessException);
+            ThrowBusinessException bean = (ThrowBusinessException) object;
+            bean.throwValueRequiredException();
+        }
+    }</code></pre>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>    -------------------------------------------------------
+     T E S T S
+    -------------------------------------------------------
+    Running org.superbiz.appexception.ThrowBusinessExceptionImplTest
+    Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+    http://tomee.apache.org/
+    INFO - openejb.home = /Users/dblevins/examples/applicationexception
+    INFO - openejb.base = /Users/dblevins/examples/applicationexception
+    INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+    INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+    INFO - Found EjbModule in classpath: /Users/dblevins/examples/applicationexception/target/classes
+    INFO - Beginning load: /Users/dblevins/examples/applicationexception/target/classes
+    INFO - Configuring enterprise application: /Users/dblevins/examples/applicationexception/classpath.ear
+    INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+    INFO - Auto-creating a container for bean ThrowBusinessExceptionImpl: Container(type=STATELESS, id=Default Stateless Container)
+    INFO - Enterprise application "/Users/dblevins/examples/applicationexception/classpath.ear" loaded.
+    INFO - Assembling app: /Users/dblevins/examples/applicationexception/classpath.ear
+    INFO - Jndi(name=ThrowBusinessExceptionImplRemote) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
+    INFO - Jndi(name=global/classpath.ear/applicationexception/ThrowBusinessExceptionImpl!org.superbiz.appexception.ThrowBusinessException) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
+    INFO - Jndi(name=global/classpath.ear/applicationexception/ThrowBusinessExceptionImpl) --&gt; Ejb(deployment-id=ThrowBusinessExceptionImpl)
+    INFO - Created Ejb(deployment-id=ThrowBusinessExceptionImpl, ejb-name=ThrowBusinessExceptionImpl, container=Default Stateless Container)
+    INFO - Started Ejb(deployment-id=ThrowBusinessExceptionImpl, ejb-name=ThrowBusinessExceptionImpl, container=Default Stateless Container)
+    INFO - Deployed Application(path=/Users/dblevins/examples/applicationexception/classpath.ear)
+    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.434 sec
 
-Results :
+    Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
             </div>
             
         </div>
@@ -202,7 +223,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

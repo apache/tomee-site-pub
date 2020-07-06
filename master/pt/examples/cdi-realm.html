@@ -126,9 +126,9 @@ encontradas <a href="https://tomcat.apache.org/tomcat-9.0-doc/realm-howto.html">
 <p>Este exemplo mostra um secured servlet (servlet seguro/protegido) usando um realm. O secured servlet
 tem uma funcionalidade simples, apenas ilustrar os conceitos aqui explicados:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import javax.servlet.ServletException;
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -141,15 +141,15 @@ public class SecuredServlet extends HttpServlet {
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         resp.getWriter().write("Servlet!");
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Para proteger este servlet, adicionaremos a seguinte classe:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import javax.enterprise.context.RequestScoped;
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.enterprise.context.RequestScoped;
 import java.security.Principal;
 
 @RequestScoped // just to show we can be bound to the request but @ApplicationScoped is what makes sense
@@ -178,7 +178,7 @@ public class AuthBean {
                         || principal.getName().equals("userB") &amp;&amp; (role.equals("user"))
         );
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -186,13 +186,13 @@ public class AuthBean {
 Ambos métodos vão ser utilizados pela classe <code>LazyRealm</code>, implementada no servidor de aplicação TomEE.
 Este realm é configurado no arquivo <code>webapp/META-INF/context.xml</code>:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;Context preemptiveAuthentication="true"&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Context preemptiveAuthentication="true"&gt;
   &lt;Valve className="org.apache.catalina.authenticator.BasicAuthenticator" /&gt;
   &lt;Realm className="org.apache.tomee.catalina.realm.LazyRealm"
          cdi="true" realmClass="org.superbiz.AuthBean"/&gt;
-&lt;/Context&gt;</pre>
+&lt;/Context&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -206,9 +206,9 @@ para verificar se um usuário tem acesso ao conteúdo fornecido pelo nosso servl
 <div class="sect1">
 <h2 id="_testes">Testes</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import org.apache.http.HttpHost;
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -291,7 +291,7 @@ public class AuthBeanTest {
             }
         }
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -324,7 +324,7 @@ e <code>failure</code>, onde nosso servlet é acessado com uma senha incorreta.<
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

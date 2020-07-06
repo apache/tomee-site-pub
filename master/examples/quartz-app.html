@@ -95,12 +95,41 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Note: this example is somewhat dated. It predates the schedule API which was added to EJB 3.1. Modern applications should use the schedule API which has many, if not all, the same features as Quartz. In fact, Quartz is the engine that drives the <code>@Schedule</code> and <code>ScheduleExpression</code> support in OpenEJB and TomEE.</p>
-<p>Despite being dated from a scheduling perspective it is still an excellent reference for how to plug-in and test a custom Java EE Resource Adapter.</p>
-<h1>Project structure</h1>
-<p>As <code>.rar</code> files do not do well on a standard classpath structure the goal is to effectively "unwrap" the <code>.rar</code> so that its dependencies are on the classpath and its <code>ra.xml</code> file can be found and scanned by OpenEJB.</p>
-<p>We do this by creating a mini maven module to represent the <code>.rar</code> in maven terms. The <code>pom.xml</code> of the "rar module" declares all of the jars that would be inside the <code>.rar</code> as maven dependencies. The <code>ra.xml</code> file is added to the project in <code>src/main/resources/META-INF/ra.xml</code> where it will be visible to other modules.</p>
-<pre><code>quartz-app
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note: this example is somewhat dated. It predates the schedule API which
+was added to EJB 3.1. Modern applications should use the schedule API
+which has many, if not all, the same features as Quartz. In fact, Quartz
+is the engine that drives the <code>@Schedule</code> and <code>ScheduleExpression</code>
+support in OpenEJB and TomEE.</p>
+</div>
+<div class="paragraph">
+<p>Despite being dated from a scheduling perspective it is still an
+excellent reference for how to plug-in and test a custom Java EE
+Resource Adapter.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_structure">Project structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As <code>.rar</code> files do not do well on a standard classpath structure the
+goal is to effectively <code>`unwrap'' the `.rar</code> so that its dependencies
+are on the classpath and its <code>ra.xml</code> file can be found and scanned by
+OpenEJB.</p>
+</div>
+<div class="paragraph">
+<p>We do this by creating a mini maven module to represent the <code>.rar</code> in
+maven terms. The <code>pom.xml</code> of the <code>`rar module'' declares all of the
+jars that would be inside the `.rar</code> as maven dependencies. The <code>ra.xml</code>
+file is added to the project in <code>src/main/resources/META-INF/ra.xml</code>
+where it will be visible to other modules.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">quartz-app
 quartz-app/pom.xml
 quartz-app/quartz-beans
 quartz-app/quartz-beans/pom.xml
@@ -113,16 +142,28 @@ quartz-app/quartz-beans/src/test/java/org/superbiz/quartz/QuartzMdbTest.java
 quartz-app/quartz-ra
 quartz-app/quartz-ra/pom.xml
 quartz-app/quartz-ra/src/main/resources/META-INF
-quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml
-</code></pre>
-<h2>ra.xml</h2>
-<p>The connector in question has both inbound and outbound Resource Adapters. The inbound Resource Adapter can be used to drive message driven beans (MDBs)</p>
-<p>the outbound Resource Adapter, <code>QuartzResourceAdapter</code>, can be injected into any component via <code>@Resource</code> and used to originate and send messages or events.</p>
-<pre><code>&lt;connector xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
-           xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-           xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee
-           http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd&quot;
-           version=&quot;1.5&quot;&gt;
+quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ra_xml">ra.xml</h3>
+<div class="paragraph">
+<p>The connector in question has both inbound and outbound Resource
+Adapters. The inbound Resource Adapter can be used to drive message
+driven beans (MDBs)</p>
+</div>
+<div class="paragraph">
+<p>the outbound Resource Adapter, <code>QuartzResourceAdapter</code>, can be injected
+into any component via <code>@Resource</code> and used to originate and send
+messages or events.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;connector xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+           http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+           version="1.5"&gt;
 
   &lt;description&gt;Quartz ResourceAdapter&lt;/description&gt;
   &lt;display-name&gt;Quartz ResourceAdapter&lt;/display-name&gt;
@@ -131,7 +172,7 @@ quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml
   &lt;eis-type&gt;Quartz Adapter&lt;/eis-type&gt;
   &lt;resourceadapter-version&gt;1.0&lt;/resourceadapter-version&gt;
 
-  &lt;resourceadapter id=&quot;QuartzResourceAdapter&quot;&gt;
+  &lt;resourceadapter id="QuartzResourceAdapter"&gt;
     &lt;resourceadapter-class&gt;org.apache.openejb.resource.quartz.QuartzResourceAdapter&lt;/resourceadapter-class&gt;
 
     &lt;inbound-resourceadapter&gt;
@@ -146,11 +187,22 @@ quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml
     &lt;/inbound-resourceadapter&gt;
 
   &lt;/resourceadapter&gt;
-&lt;/connector&gt;
-</code></pre>
-<h1>Using the Outbound Resource Adapter</h1>
-<p>Here we see the outbound resource adapter used in a stateless session bean to schedule a job that will be executed by the MDB</p>
-<pre><code>package org.superbiz.quartz;
+&lt;/connector&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_outbound_resource_adapter">Using the Outbound Resource Adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we see the outbound resource adapter used in a stateless session
+bean to schedule a job that will be executed by the MDB</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
 
 import org.apache.openejb.resource.quartz.QuartzResourceAdapter;
 import org.quartz.Job;
@@ -170,15 +222,15 @@ public class JobBean implements JobScheduler {
     @Override
     public Date createJob() throws Exception {
 
-        final QuartzResourceAdapter ra = (QuartzResourceAdapter) new InitialContext().lookup(&quot;java:openejb/Resource/QuartzResourceAdapter&quot;);
+        final QuartzResourceAdapter ra = (QuartzResourceAdapter) new InitialContext().lookup("java:openejb/Resource/QuartzResourceAdapter");
         final Scheduler s = ra.getScheduler();
 
         //Add a job type
-        final JobDetail jd = new JobDetail(&quot;job1&quot;, &quot;group1&quot;, JobBean.MyTestJob.class);
-        jd.getJobDataMap().put(&quot;MyJobKey&quot;, &quot;MyJobValue&quot;);
+        final JobDetail jd = new JobDetail("job1", "group1", JobBean.MyTestJob.class);
+        jd.getJobDataMap().put("MyJobKey", "MyJobValue");
 
-        //Schedule my &#39;test&#39; job to run now
-        final SimpleTrigger trigger = new SimpleTrigger(&quot;trigger1&quot;, &quot;group1&quot;, new Date());
+        //Schedule my 'test' job to run now
+        final SimpleTrigger trigger = new SimpleTrigger("trigger1", "group1", new Date());
         return s.scheduleJob(jd, trigger);
     }
 
@@ -186,13 +238,20 @@ public class JobBean implements JobScheduler {
 
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
-            System.out.println(&quot;This is a simple test job to get: &quot; + context.getJobDetail().getJobDataMap().get(&quot;MyJobKey&quot;));
+            System.out.println("This is a simple test job to get: " + context.getJobDetail().getJobDataMap().get("MyJobKey"));
         }
     }
-}
-</code></pre>
-<h1>Recieving data from the Inbound Resource Adapter</h1>
-<pre><code>package org.superbiz.quartz;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_recieving_data_from_the_inbound_resource_adapter">Recieving data from the Inbound Resource Adapter</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -202,17 +261,24 @@ import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 
 @MessageDriven(activationConfig = {
-        @ActivationConfigProperty(propertyName = &quot;cronExpression&quot;, propertyValue = &quot;* * * * * ?&quot;)})
+        @ActivationConfigProperty(propertyName = "cronExpression", propertyValue = "* * * * * ?")})
 public class QuartzMdb implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        System.out.println(&quot;Executing Job&quot;);
+        System.out.println("Executing Job");
     }
-}
-</code></pre>
-<h1>Test case</h1>
-<pre><code>package org.superbiz.quartz;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_case">Test case</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -232,7 +298,7 @@ public class QuartzMdbTest {
 
         if (null == initialContext) {
             Properties properties = new Properties();
-            properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+            properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
             initialContext = new InitialContext(properties);
         }
@@ -249,10 +315,10 @@ public class QuartzMdbTest {
     @Test
     public void testLookup() throws Exception {
 
-        final JobScheduler jbi = (JobScheduler) initialContext.lookup(&quot;JobBeanLocal&quot;);
+        final JobScheduler jbi = (JobScheduler) initialContext.lookup("JobBeanLocal");
         final Date d = jbi.createJob();
         Thread.sleep(500);
-        System.out.println(&quot;Scheduled test job should have run at: &quot; + d.toString());
+        System.out.println("Scheduled test job should have run at: " + d.toString());
     }
 
     @Test
@@ -260,10 +326,17 @@ public class QuartzMdbTest {
         // Sleep 3 seconds and give quartz a chance to execute our MDB
         Thread.sleep(3000);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.quartz.QuartzMdbTest
@@ -284,7 +357,7 @@ INFO - Configuring Service(id=Default Stateless Container, type=Container, provi
 INFO - Auto-creating a container for bean JobBean: Container(type=STATELESS, id=Default Stateless Container)
 INFO - Configuring Service(id=QuartzResourceAdapter, type=Resource, provider-id=QuartzResourceAdapter)
 INFO - Configuring Service(id=quartz-ra-1.0, type=Container, provider-id=Default MDB Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear
 INFO - Jndi(name=JobBeanLocal) --&gt; Ejb(deployment-id=JobBean)
 INFO - Jndi(name=global/classpath.ear/quartz-beans/JobBean!org.superbiz.quartz.JobScheduler) --&gt; Ejb(deployment-id=JobBean)
@@ -304,8 +377,11 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.971 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -325,7 +401,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

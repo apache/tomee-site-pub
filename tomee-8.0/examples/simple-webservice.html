@@ -95,18 +95,37 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Creating Web Services with JAX-WS is quite easy. Little has to be done aside from annotating a class with <code>@WebService</code>. For the purposes of this example we will also annotate our component with <code>@Stateless</code> which takes some of the configuration out of the process and gives us some nice options such as transactions and security.</p>
-<h2>@WebService</h2>
-<p>The following is all that is required. No external xml files are needed. This class placed in a jar or war and deployed into a compliant Java EE server like TomEE is enough to have the Calculator class discovered and deployed and the webservice online.</p>
-<pre><code>import javax.ejb.Stateless;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Creating Web Services with JAX-WS is quite easy. Little has to be done
+aside from annotating a class with <code>@WebService</code>. For the purposes of
+this example we will also annotate our component with <code>@Stateless</code> which
+takes some of the configuration out of the process and gives us some
+nice options such as transactions and security.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__webservice">@WebService</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following is all that is required. No external xml files are needed.
+This class placed in a jar or war and deployed into a compliant Java EE
+server like TomEE is enough to have the Calculator class discovered and
+deployed and the webservice online.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.Stateless;
 import javax.jws.WebService;
 
 @Stateless
 @WebService(
-        portName = &quot;CalculatorPort&quot;,
-        serviceName = &quot;CalculatorService&quot;,
-        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.calculator.ws.CalculatorWs&quot;)
+        portName = "CalculatorPort",
+        serviceName = "CalculatorService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.ws.CalculatorWs")
 public class Calculator implements CalculatorWs {
 
     public int sum(int add1, int add2) {
@@ -116,113 +135,149 @@ public class Calculator implements CalculatorWs {
     public int multiply(int mul1, int mul2) {
         return mul1 * mul2;
     }
-}
-</code></pre>
-<h2>@WebService Endpoint Interface</h2>
-<p>Having an endpoint interface is not required, but it can make testing and using the web service from other Java clients far easier.</p>
-<pre><code>import javax.jws.WebService;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__webservice_endpoint_interface">@WebService Endpoint Interface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Having an endpoint interface is not required, but it can make testing
+and using the web service from other Java clients far easier.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.jws.WebService;
 
-@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+@WebService(targetNamespace = "http://superbiz.org/wsdl")
 public interface CalculatorWs {
 
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>Calculator WSDL</h2>
-<p>The wsdl for our service is autmatically created for us and available at <code>http://127.0.0.1:4204/Calculator?wsdl</code>. In TomEE or Tomcat this would be at <code>http://127.0.0.1:8080/simple-webservice/Calculator?wsdl</code></p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;wsdl:definitions xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot; name=&quot;CalculatorService&quot;
-                  targetNamespace=&quot;http://superbiz.org/wsdl&quot;
-                  xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
-                  xmlns:tns=&quot;http://superbiz.org/wsdl&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculator_wsdl">Calculator WSDL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The wsdl for our service is autmatically created for us and available at
+<code><a href="http://127.0.0.1:4204/Calculator?wsdl" class="bare">http://127.0.0.1:4204/Calculator?wsdl</a></code>. In TomEE or Tomcat this would
+be at <code><a href="http://127.0.0.1:8080/simple-webservice/Calculator?wsdl" class="bare">http://127.0.0.1:8080/simple-webservice/Calculator?wsdl</a></code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="CalculatorService"
+                  targetNamespace="http://superbiz.org/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://superbiz.org/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;wsdl:types&gt;
-    &lt;xsd:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;unqualified&quot;
-                targetNamespace=&quot;http://superbiz.org/wsdl&quot; xmlns:tns=&quot;http://superbiz.org/wsdl&quot;
-                xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-      &lt;xsd:element name=&quot;multiply&quot; type=&quot;tns:multiply&quot;/&gt;
-      &lt;xsd:complexType name=&quot;multiply&quot;&gt;
+    &lt;xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                targetNamespace="http://superbiz.org/wsdl" xmlns:tns="http://superbiz.org/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;xsd:element name="multiply" type="tns:multiply"/&gt;
+      &lt;xsd:complexType name="multiply"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element name=&quot;arg0&quot; type=&quot;xsd:int&quot;/&gt;
-          &lt;xsd:element name=&quot;arg1&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
-      &lt;xsd:element name=&quot;multiplyResponse&quot; type=&quot;tns:multiplyResponse&quot;/&gt;
-      &lt;xsd:complexType name=&quot;multiplyResponse&quot;&gt;
+      &lt;xsd:element name="multiplyResponse" type="tns:multiplyResponse"/&gt;
+      &lt;xsd:complexType name="multiplyResponse"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element name=&quot;return&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
-      &lt;xsd:element name=&quot;sum&quot; type=&quot;tns:sum&quot;/&gt;
-      &lt;xsd:complexType name=&quot;sum&quot;&gt;
+      &lt;xsd:element name="sum" type="tns:sum"/&gt;
+      &lt;xsd:complexType name="sum"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element name=&quot;arg0&quot; type=&quot;xsd:int&quot;/&gt;
-          &lt;xsd:element name=&quot;arg1&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
-      &lt;xsd:element name=&quot;sumResponse&quot; type=&quot;tns:sumResponse&quot;/&gt;
-      &lt;xsd:complexType name=&quot;sumResponse&quot;&gt;
+      &lt;xsd:element name="sumResponse" type="tns:sumResponse"/&gt;
+      &lt;xsd:complexType name="sumResponse"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element name=&quot;return&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name="return" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
     &lt;/xsd:schema&gt;
   &lt;/wsdl:types&gt;
-  &lt;wsdl:message name=&quot;multiplyResponse&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:multiplyResponse&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="multiplyResponse"&gt;
+    &lt;wsdl:part element="tns:multiplyResponse" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:message name=&quot;sumResponse&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:sumResponse&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="sumResponse"&gt;
+    &lt;wsdl:part element="tns:sumResponse" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:message name=&quot;sum&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:sum&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="sum"&gt;
+    &lt;wsdl:part element="tns:sum" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:message name=&quot;multiply&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:multiply&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="multiply"&gt;
+    &lt;wsdl:part element="tns:multiply" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:portType name=&quot;CalculatorWs&quot;&gt;
-    &lt;wsdl:operation name=&quot;multiply&quot;&gt;
-      &lt;wsdl:input message=&quot;tns:multiply&quot; name=&quot;multiply&quot;/&gt;
-      &lt;wsdl:output message=&quot;tns:multiplyResponse&quot; name=&quot;multiplyResponse&quot;/&gt;
+  &lt;wsdl:portType name="CalculatorWs"&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;wsdl:input message="tns:multiply" name="multiply"/&gt;
+      &lt;wsdl:output message="tns:multiplyResponse" name="multiplyResponse"/&gt;
     &lt;/wsdl:operation&gt;
-    &lt;wsdl:operation name=&quot;sum&quot;&gt;
-      &lt;wsdl:input message=&quot;tns:sum&quot; name=&quot;sum&quot;/&gt;
-      &lt;wsdl:output message=&quot;tns:sumResponse&quot; name=&quot;sumResponse&quot;/&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;wsdl:input message="tns:sum" name="sum"/&gt;
+      &lt;wsdl:output message="tns:sumResponse" name="sumResponse"/&gt;
     &lt;/wsdl:operation&gt;
   &lt;/wsdl:portType&gt;
-  &lt;wsdl:binding name=&quot;CalculatorServiceSoapBinding&quot; type=&quot;tns:CalculatorWs&quot;&gt;
-    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
-    &lt;wsdl:operation name=&quot;multiply&quot;&gt;
-      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
-      &lt;wsdl:input name=&quot;multiply&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+  &lt;wsdl:binding name="CalculatorServiceSoapBinding" type="tns:CalculatorWs"&gt;
+    &lt;soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    &lt;wsdl:operation name="multiply"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="multiply"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:input&gt;
-      &lt;wsdl:output name=&quot;multiplyResponse&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;wsdl:output name="multiplyResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:output&gt;
     &lt;/wsdl:operation&gt;
-    &lt;wsdl:operation name=&quot;sum&quot;&gt;
-      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
-      &lt;wsdl:input name=&quot;sum&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+    &lt;wsdl:operation name="sum"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="sum"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:input&gt;
-      &lt;wsdl:output name=&quot;sumResponse&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;wsdl:output name="sumResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:output&gt;
     &lt;/wsdl:operation&gt;
   &lt;/wsdl:binding&gt;
-  &lt;wsdl:service name=&quot;CalculatorService&quot;&gt;
-    &lt;wsdl:port binding=&quot;tns:CalculatorServiceSoapBinding&quot; name=&quot;CalculatorPort&quot;&gt;
-      &lt;soap:address location=&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;/&gt;
+  &lt;wsdl:service name="CalculatorService"&gt;
+    &lt;wsdl:port binding="tns:CalculatorServiceSoapBinding" name="CalculatorPort"&gt;
+      &lt;soap:address location="http://127.0.0.1:4204/Calculator?wsdl"/&gt;
     &lt;/wsdl:port&gt;
   &lt;/wsdl:service&gt;
-&lt;/wsdl:definitions&gt;
-</code></pre>
-<h2>Accessing the @WebService with javax.xml.ws.Service</h2>
-<p>In our testcase we see how to create a client for our <code>Calculator</code> service via the <code>javax.xml.ws.Service</code> class and leveraging our <code>CalculatorWs</code> endpoint interface.</p>
-<p>With this we can get an implementation of the interfacce generated dynamically for us that can be used to send compliant SOAP messages to our service.</p>
-<pre><code>import org.junit.BeforeClass;
+&lt;/wsdl:definitions&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_the_webservice_with_javax_xml_ws_service">Accessing the @WebService with javax.xml.ws.Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In our testcase we see how to create a client for our <code>Calculator</code>
+service via the <code>javax.xml.ws.Service</code> class and leveraging our
+<code>CalculatorWs</code> endpoint interface.</p>
+</div>
+<div class="paragraph">
+<p>With this we can get an implementation of the interfacce generated
+dynamically for us that can be used to send compliant SOAP messages to
+our service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -239,17 +294,17 @@ public class CalculatorTest {
     @BeforeClass
     public static void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
-        //properties.setProperty(&quot;httpejbd.print&quot;, &quot;true&quot;);
-        //properties.setProperty(&quot;httpejbd.indent.xml&quot;, &quot;true&quot;);
+        properties.setProperty("openejb.embedded.remotable", "true");
+        //properties.setProperty("httpejbd.print", "true");
+        //properties.setProperty("httpejbd.indent.xml", "true");
         EJBContainer.createEJBContainer(properties);
     }
 
     @Test
     public void test() throws Exception {
         Service calculatorService = Service.create(
-                new URL(&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorService&quot;));
+                new URL("http://127.0.0.1:4204/Calculator?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorService"));
 
         assertNotNull(calculatorService);
 
@@ -257,13 +312,29 @@ public class CalculatorTest {
         assertEquals(10, calculator.sum(4, 6));
         assertEquals(12, calculator.multiply(3, 4));
     }
-}
-</code></pre>
-<p>For easy testing we'll use the Embeddable EJBContainer API part of EJB 3.1 to boot CXF in our testcase. This will deploy our application in the embedded container and bring the web service online so we can invoke it.</p>
-<h1>Running</h1>
-<p>Running the example can be done from maven with a simple 'mvn clean install' command run from the 'simple-webservice' directory.</p>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For easy testing we’ll use the Embeddable EJBContainer API part of EJB
+3.1 to boot CXF in our testcase. This will deploy our application in the
+embedded container and bring the web service online so we can invoke it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running the example can be done from maven with a simple `mvn clean
+install' command run from the `simple-webservice' directory.</p>
+</div>
+<div class="paragraph">
 <p>When run you should see output similar to the following.</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.calculator.ws.CalculatorTest
@@ -279,14 +350,14 @@ INFO - openejb.home = /Users/dblevins/work/all/trunk/openejb/examples/simple-web
 INFO - openejb.base = /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@16bdb503
 INFO - succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Creating TransactionManager(id=Default Transaction Manager)
 INFO - Creating SecurityService(id=Default Security Service)
 INFO - Beginning load: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice/target/classes
-INFO - Using &#39;openejb.embedded=true&#39;
+INFO - Using 'openejb.embedded=true'
 INFO - Configuring enterprise application: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
 INFO - Auto-deploying ejb Calculator: EjbDeployment(deployment-id=Calculator)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
@@ -296,7 +367,7 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean org.superbiz.calculator.ws.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T for stateful session passivation
-INFO - Enterprise application &quot;/Users/dblevins/work/all/trunk/openejb/examples/simple-webservice&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/work/all/trunk/openejb/examples/simple-webservice" loaded.
 INFO - Assembling app: /Users/dblevins/work/all/trunk/openejb/examples/simple-webservice
 INFO - ignoreXmlConfiguration == true
 INFO - ignoreXmlConfiguration == true
@@ -309,7 +380,7 @@ INFO - Created Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Defa
 INFO - Started Ejb(deployment-id=Calculator, ejb-name=Calculator, container=Default Stateless Container)
 INFO - Deployed Application(path=/Users/dblevins/work/all/trunk/openejb/examples/simple-webservice)
 INFO - Initializing network services
-INFO - can&#39;t find log4j MDC class
+INFO - can't find log4j MDC class
 INFO - Creating ServerService(id=httpejbd)
 INFO - Creating ServerService(id=cxf)
 INFO - Creating ServerService(id=admin)
@@ -320,7 +391,7 @@ INFO -   ** Starting Services **
 INFO -   NAME                 IP              PORT
 INFO -   httpejbd             127.0.0.1       4204
 INFO - Creating Service {http://superbiz.org/wsdl}CalculatorService from class org.superbiz.calculator.ws.CalculatorWs
-INFO - Setting the server&#39;s publish address to be http://nopath:80
+INFO - Setting the server's publish address to be http://nopath:80
 INFO - Webservice(wsdl=http://127.0.0.1:4204/Calculator, qname={http://superbiz.org/wsdl}CalculatorService) --&gt; Ejb(id=Calculator)
 INFO -   admin thread         127.0.0.1       4200
 INFO -   ejbd                 127.0.0.1       4201
@@ -335,58 +406,98 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.584 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
-<h2>Inspecting the messages</h2>
-<p>The above test case will result in the following SOAP messages being sent between the clien and server.</p>
-<h3>sum(int, int)</h3>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inspecting_the_messages">Inspecting the messages</h3>
+<div class="paragraph">
+<p>The above test case will result in the following SOAP messages being
+sent between the clien and server.</p>
+</div>
+<div class="sect3">
+<h4 id="_sum_int_int">sum(int, int)</h4>
+<div class="paragraph">
 <p>Request SOAP message:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:sum xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:sum xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;arg0&gt;4&lt;/arg0&gt;
       &lt;arg1&gt;6&lt;/arg1&gt;
     &lt;/ns1:sum&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Response SOAP message:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:sumResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:sumResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;return&gt;10&lt;/return&gt;
     &lt;/ns1:sumResponse&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
-<h3>multiply(int, int)</h3>
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_multiply_int_int">multiply(int, int)</h4>
+<div class="paragraph">
 <p>Request SOAP message:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:multiply xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:multiply xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;arg0&gt;3&lt;/arg0&gt;
       &lt;arg1&gt;4&lt;/arg1&gt;
     &lt;/ns1:multiply&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Response SOAP message:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:multiplyResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:multiplyResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;return&gt;12&lt;/return&gt;
     &lt;/ns1:multiplyResponse&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
-<h2>Inside the jar</h2>
-<p>With so much going on it can make things look more complex than they are. It can be hard to believe that so much can happen with such little code. That's the benefit of having an app server.</p>
-<p>If we look at the jar built by maven, we'll see the application itself is quite small:</p>
-<pre><code>$ jar tvf target/simple-webservice-1.1.0-SNAPSHOT.jar
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inside_the_jar">Inside the jar</h3>
+<div class="paragraph">
+<p>With so much going on it can make things look more complex than they
+are. It can be hard to believe that so much can happen with such little
+code. That’s the benefit of having an app server.</p>
+</div>
+<div class="paragraph">
+<p>If we look at the jar built by maven, we’ll see the application itself
+is quite small:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ jar tvf target/simple-webservice-1.1.0-SNAPSHOT.jar
      0 Sat Feb 18 19:17:06 PST 2012 META-INF/
    127 Sat Feb 18 19:17:04 PST 2012 META-INF/MANIFEST.MF
      0 Sat Feb 18 19:17:02 PST 2012 org/
@@ -394,10 +505,24 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
      0 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/
      0 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/
    855 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/Calculator.class
-   288 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/CalculatorWs.class
-</code></pre>
-<p>This single jar could be deployed any any compliant Java EE implementation. In TomEE you'd simply place it in the <code>tomee.home/webapps/</code> directory. No war file necessary. If you did want to create a war, you'd simply place the jar in the <code>WEB-INF/lib/</code> directory of the war.</p>
-<p>The server already contains the right libraries to run the code, such as Apache CXF, so no need to include anything extra beyond your own application code.</p>
+   288 Sat Feb 18 19:17:02 PST 2012 org/superbiz/calculator/ws/CalculatorWs.class</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This single jar could be deployed any any compliant Java EE
+implementation. In TomEE you’d simply place it in the
+<code>tomee.home/webapps/</code> directory. No war file necessary. If you did want
+to create a war, you’d simply place the jar in the <code>WEB-INF/lib/</code>
+directory of the war.</p>
+</div>
+<div class="paragraph">
+<p>The server already contains the right libraries to run the code, such as
+Apache CXF, so no need to include anything extra beyond your own
+application code.</p>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -417,7 +542,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

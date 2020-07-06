@@ -95,70 +95,135 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows you how to use versioned DataSources of the same provider using the classpath attribute.</p>
-<h1>Configuration</h1>
-<p>The DataSource configuration can be made several ways and here we layout two common methods in the form of unit tests. Before we start, if you take a peek in the project pom.xml and look for the maven-dependency-plugin usage you will see that we pull in two completely different driver files for this example.</p>
-<h1>AlternateDataSourceTest.java</h1>
-<p>This test utilizes the Arquillian testing framework. See <a href="http://tomee.apache.org/arquillian-available-adapters.html">here</a> for more details.</p>
-<p>The example uses src/test/resources/arquillian.xml and src/test/conf/tomee.xml to define the DataSources. Note the differing driver version paths, yet still using the same provider (org.apache.derby.jdbc.EmbeddedDriver):</p>
-<pre><code>&lt;tomee&gt;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows you how to use versioned DataSources of the same
+provider using the classpath attribute.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The DataSource configuration can be made several ways and here we layout
+two common methods in the form of unit tests. Before we start, if you
+take a peek in the project pom.xml and look for the
+maven-dependency-plugin usage you will see that we pull in two
+completely different driver files for this example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatedatasourcetest_java">AlternateDataSourceTest.java</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This test utilizes the Arquillian testing framework. See
+<a href="http://tomee.apache.org/arquillian-available-adapters.html">here</a> for
+more details.</p>
+</div>
+<div class="paragraph">
+<p>The example uses src/test/resources/arquillian.xml and
+src/test/conf/tomee.xml to define the DataSources. Note the differing
+driver version paths, yet still using the same provider
+(org.apache.derby.jdbc.EmbeddedDriver):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;tomee&gt;
 
-  &lt;Resource id=&quot;DatabaseOne&quot; type=&quot;DataSource&quot; classpath=&quot;${catalina.base}/../../drivers/derby-10.10.1.1.jar&quot;&gt;
+  &lt;Resource id="DatabaseOne" type="DataSource" classpath="${catalina.base}/../../drivers/derby-10.10.1.1.jar"&gt;
     JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
     JdbcUrl jdbc:derby:databaseOne;create=true
     UserName SA
   &lt;/Resource&gt;
 
-  &lt;Resource id=&quot;DatabaseTwo&quot; type=&quot;DataSource&quot; classpath=&quot;${catalina.base}/../../drivers/derby-10.9.1.0.jar&quot;&gt;
+  &lt;Resource id="DatabaseTwo" type="DataSource" classpath="${catalina.base}/../../drivers/derby-10.9.1.0.jar"&gt;
     JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
     JdbcUrl jdbc:derby:databaseTwo;create=true
     UserName SA
   &lt;/Resource&gt;
 
-&lt;/tomee&gt;
-</code></pre>
-<h1>Developer Information</h1>
-<p>When testing within a Maven environment it is also possible to use direct maven coordinates rather than a file link, like so:</p>
-<pre><code>....
-&lt;Resource id=&quot;DatabaseOne&quot; type=&quot;DataSource&quot; classpath=&quot;mvn:org.apache.derby:derby:10.10.1.1&quot;&gt;
-....
-</code></pre>
-<h1>AlternateDriverJarTest.java</h1>
-<p>This test takes an embedded approach and as you can see the driver paths are specified as a DataSource parameter. Both examples demonstrate the same, in that two driver versions can be loaded and used within the same application.</p>
-<pre><code>@Configuration
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_developer_information">Developer Information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When testing within a Maven environment it is also possible to use
+direct maven coordinates rather than a file link, like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console"></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&lt;Resource id="DatabaseOne" type="DataSource" classpath="mvn:org.apache.derby:derby:10.10.1.1"&gt;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console"></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatedriverjartest_java">AlternateDriverJarTest.java</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This test takes an embedded approach and as you can see the driver paths
+are specified as a DataSource parameter. Both examples demonstrate the
+same, in that two driver versions can be loaded and used within the same
+application.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration
 public Properties config() {
 
-    final File drivers = new File(new File(&quot;target&quot;), &quot;drivers&quot;).getAbsoluteFile();
+    final File drivers = new File(new File("target"), "drivers").getAbsoluteFile();
 
     final Properties p = new Properties();
-    p.put(&quot;openejb.jdbc.datasource-creator&quot;, &quot;dbcp-alternative&quot;);
+    p.put("openejb.jdbc.datasource-creator", "dbcp-alternative");
 
-    File file = new File(drivers, &quot;derby-10.10.1.1.jar&quot;);
-    Assert.assertTrue(&quot;Failed to find: &quot; + file, file.exists());
+    File file = new File(drivers, "derby-10.10.1.1.jar");
+    Assert.assertTrue("Failed to find: " + file, file.exists());
 
-    p.put(&quot;JdbcOne&quot;, &quot;new://Resource?type=DataSource&amp;classpath=&quot;
-            + file.getAbsolutePath().replace(&quot;\\&quot;, &quot;/&quot;));
-    p.put(&quot;JdbcOne.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
-    p.put(&quot;JdbcOne.JdbcUrl&quot;, &quot;jdbc:derby:memory:JdbcOne;create=true&quot;);
-    p.put(&quot;JdbcOne.UserName&quot;, USER);
-    p.put(&quot;JdbcOne.Password&quot;, PASSWORD);
-    p.put(&quot;JdbcOne.JtaManaged&quot;, &quot;false&quot;);
+    p.put("JdbcOne", "new://Resource?type=DataSource&amp;classpath="
+            + file.getAbsolutePath().replace("\\", "/"));
+    p.put("JdbcOne.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+    p.put("JdbcOne.JdbcUrl", "jdbc:derby:memory:JdbcOne;create=true");
+    p.put("JdbcOne.UserName", USER);
+    p.put("JdbcOne.Password", PASSWORD);
+    p.put("JdbcOne.JtaManaged", "false");
 
-    file = new File(drivers, &quot;derby-10.9.1.0.jar&quot;);
-    Assert.assertTrue(&quot;Failed to find: &quot; + file, file.exists());
+    file = new File(drivers, "derby-10.9.1.0.jar");
+    Assert.assertTrue("Failed to find: " + file, file.exists());
 
-    p.put(&quot;JdbcTwo&quot;, &quot;new://Resource?type=DataSource&amp;classpath=&quot;
-            + file.getAbsolutePath().replace(&quot;\\&quot;, &quot;/&quot;));
-    p.put(&quot;JdbcTwo.JdbcDriver&quot;, &quot;org.apache.derby.jdbc.EmbeddedDriver&quot;);
-    p.put(&quot;JdbcTwo.JdbcUrl&quot;, &quot;jdbc:derby:memory:JdbcTwo;create=true&quot;);
-    p.put(&quot;JdbcTwo.UserName&quot;, USER);
-    p.put(&quot;JdbcTwo.Password&quot;, PASSWORD);
-    p.put(&quot;JdbcTwo.JtaManaged&quot;, &quot;false&quot;);
+    p.put("JdbcTwo", "new://Resource?type=DataSource&amp;classpath="
+            + file.getAbsolutePath().replace("\\", "/"));
+    p.put("JdbcTwo.JdbcDriver", "org.apache.derby.jdbc.EmbeddedDriver");
+    p.put("JdbcTwo.JdbcUrl", "jdbc:derby:memory:JdbcTwo;create=true");
+    p.put("JdbcTwo.UserName", USER);
+    p.put("JdbcTwo.Password", PASSWORD);
+    p.put("JdbcTwo.JtaManaged", "false");
     return p;
-}
-</code></pre>
-<h1>Full Test Source for AlternateDataSourceTest.java</h1>
-<pre><code>package org.superbiz;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_full_test_source_for_alternatedatasourcetest_java">Full Test Source for AlternateDataSourceTest.java</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -183,11 +248,11 @@ public class AlternateDataSourceTest {
     @Deployment
     public static WebArchive createDeployment() {
 
-        return ShrinkWrap.create(WebArchive.class, &quot;test.war&quot;)
+        return ShrinkWrap.create(WebArchive.class, "test.war")
             .addClasses(DataSourceTester.class)
-            .addAsResource(new ClassLoaderAsset(&quot;META-INF/ejb-jar.xml&quot;), &quot;META-INF/ejb-jar.xml&quot;);
-        //We are using src/test/conf/tomee.xml, but this also works - .addAsResource(new ClassLoaderAsset(&quot;META-INF/resources.xml&quot;), &quot;META-INF/resources.xml&quot;);
-        //Or even using a persistence context - .addAsResource(new ClassLoaderAsset(&quot;META-INF/persistence.xml&quot;), &quot;META-INF/persistence.xml&quot;);
+            .addAsResource(new ClassLoaderAsset("META-INF/ejb-jar.xml"), "META-INF/ejb-jar.xml");
+        //We are using src/test/conf/tomee.xml, but this also works - .addAsResource(new ClassLoaderAsset("META-INF/resources.xml"), "META-INF/resources.xml");
+        //Or even using a persistence context - .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml");
     }
 
     @EJB
@@ -195,26 +260,26 @@ public class AlternateDataSourceTest {
 
     @Test
     public void testDataSourceOne() throws Exception {
-        Assert.assertEquals(&quot;Should be using 10.10.1.1 - (1458268)&quot;, &quot;10.10.1.1 - (1458268)&quot;, tester.getOne());
+        Assert.assertEquals("Should be using 10.10.1.1 - (1458268)", "10.10.1.1 - (1458268)", tester.getOne());
     }
 
     @Test
     public void testDataSourceTwo() throws Exception {
-        Assert.assertEquals(&quot;Should be using 10.9.1.0 - (1344872)&quot;, &quot;10.9.1.0 - (1344872)&quot;, tester.getTwo());
+        Assert.assertEquals("Should be using 10.9.1.0 - (1344872)", "10.9.1.0 - (1344872)", tester.getTwo());
     }
 
     @Test
     public void testDataSourceBoth() throws Exception {
-        Assert.assertEquals(&quot;Should be using 10.10.1.1 - (1458268)|10.9.1.0 - (1344872)&quot;, &quot;10.10.1.1 - (1458268)|10.9.1.0 - (1344872)&quot;, tester.getBoth());
+        Assert.assertEquals("Should be using 10.10.1.1 - (1458268)|10.9.1.0 - (1344872)", "10.10.1.1 - (1458268)|10.9.1.0 - (1344872)", tester.getBoth());
     }
 
     @Stateless
     public static class DataSourceTester {
 
-        @Resource(name = &quot;DatabaseOne&quot;)
+        @Resource(name = "DatabaseOne")
         DataSource dataSourceOne;
 
-        @Resource(name = &quot;DatabaseTwo&quot;)
+        @Resource(name = "DatabaseTwo")
         DataSource dataSourceTwo;
 
         public String getOne() throws Exception {
@@ -226,7 +291,7 @@ public class AlternateDataSourceTest {
         }
 
         public String getBoth() throws Exception {
-            return getOne() + &quot;|&quot; + getTwo();
+            return getOne() + "|" + getTwo();
         }
 
         private static String getVersion(final DataSource ds) throws SQLException {
@@ -242,10 +307,17 @@ public class AlternateDataSourceTest {
             }
         }
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.AlternateDataSourceTest
@@ -254,13 +326,13 @@ INFO: Unable to find home in: C:\dev\svn\tomee\examples\datasource-versioning\ta
 Apr 17, 2014 2:19:45 PM org.apache.openejb.arquillian.common.MavenCache getArtifact
 INFO: Downloading org.apache.openejb:apache-tomee:1.6.1-SNAPSHOT:zip:webprofile please wait...
 Apr 17, 2014 2:19:45 PM org.apache.openejb.arquillian.common.Zips unzip
-INFO: Extracting &#39;C:\Users\Andy\.m2\repository\org\apache\openejb\apache-tomee\1.6.1-SNAPSHOT\apache-tomee-1.6.1-SNAPSHOT-webprofile.zip&#39; to &#39;C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote&#39;
+INFO: Extracting 'C:\Users\Andy\.m2\repository\org\apache\openejb\apache-tomee\1.6.1-SNAPSHOT\apache-tomee-1.6.1-SNAPSHOT-webprofile.zip' to 'C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote'
 Apr 17, 2014 2:19:47 PM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
 INFO: Downloaded container to: C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT
 INFO - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: C:\Program Files\Java\jdk1.7.0_45\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\SlikSvn\bin;C:\dev\apache-maven-3.2.1\bin;C:\dev\apache-ant-1.9.3\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files (x86)\Git\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\TortoiseSVN\bin;.
-INFO - Initializing ProtocolHandler [&quot;http-bio-55243&quot;]
-INFO - Initializing ProtocolHandler [&quot;ajp-bio-55245&quot;]
-INFO - Using &#39;openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator&#39;
+INFO - Initializing ProtocolHandler ["http-bio-55243"]
+INFO - Initializing ProtocolHandler ["ajp-bio-55245"]
+INFO - Using 'openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator'
 INFO - Optional service not installed: org.apache.tomee.webservices.TomeeJaxRsService
 INFO - Optional service not installed: org.apache.tomee.webservices.TomeeJaxWsService
 INFO - ********************************************************************************
@@ -275,20 +347,20 @@ INFO - openejb.home = C:\dev\svn\tomee\examples\datasource-versioning\target\apa
 INFO - openejb.base = C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@22c2e2dd
 INFO - Succeeded in installing singleton service
-INFO - openejb configuration file is &#39;C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT\conf\tomee.xml&#39;
+INFO - openejb configuration file is 'C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT\conf\tomee.xml'
 INFO - Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=DatabaseOne, type=Resource, provider-id=Default JDBC Database)
 INFO - Configuring Service(id=DatabaseTwo, type=Resource, provider-id=Default JDBC Database)
-INFO - Using &#39;openejb.system.apps=true&#39;
+INFO - Using 'openejb.system.apps=true'
 INFO - Configuring enterprise application: openejb
-INFO - Using openejb.deploymentId.format &#39;{ejbName}&#39;
+INFO - Using openejb.deploymentId.format '{ejbName}'
 INFO - Auto-deploying ejb openejb/Deployer: EjbDeployment(deployment-id=openejb/Deployer)
 INFO - Auto-deploying ejb openejb/ConfigurationInfo: EjbDeployment(deployment-id=openejb/ConfigurationInfo)
 INFO - Auto-deploying ejb MEJB: EjbDeployment(deployment-id=MEJB)
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean openejb/Deployer: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;openejb&quot; loaded.
+INFO - Enterprise application "openejb" loaded.
 INFO - Creating TransactionManager(id=Default Transaction Manager)
 INFO - Creating SecurityService(id=Tomcat Security Service)
 INFO - Creating Resource(id=DatabaseOne)
@@ -297,7 +369,7 @@ INFO - Creating Resource(id=DatabaseTwo)
 INFO - Disabling testOnBorrow since no validation query is provided
 INFO - Creating Container(id=Default Stateless Container)
 INFO - Assembling app: openejb
-INFO - Using &#39;openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}&#39;
+INFO - Using 'openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}'
 INFO - Jndi(name=openejb/DeployerBusinessRemote) --&gt; Ejb(deployment-id=openejb/Deployer)
 INFO - Jndi(name=global/openejb/openejb/Deployer!org.apache.openejb.assembler.Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
 INFO - Jndi(name=global/openejb/openejb/Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
@@ -320,30 +392,30 @@ INFO -   NAME                 IP              PORT
 INFO - -------
 INFO - Ready!
 INFO - Initialization processed in 7959 ms
-INFO - Importing a Tomcat Resource with id &#39;UserDatabase&#39; of type &#39;org.apache.catalina.UserDatabase&#39;.
+INFO - Importing a Tomcat Resource with id 'UserDatabase' of type 'org.apache.catalina.UserDatabase'.
 INFO - Creating Resource(id=UserDatabase)
 INFO - Starting service Catalina
 INFO - Starting Servlet Engine: Apache Tomcat (TomEE)/7.0.53 (1.6.1-SNAPSHOT)
-INFO - Starting ProtocolHandler [&quot;http-bio-55243&quot;]
-INFO - Starting ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Starting ProtocolHandler ["http-bio-55243"]
+INFO - Starting ProtocolHandler ["ajp-bio-55245"]
 INFO - Server startup in 288 ms
-WARNING - StandardServer.await: Invalid command &#39;&#39; received
+WARNING - StandardServer.await: Invalid command '' received
 Apr 17, 2014 2:20:04 PM org.apache.openejb.client.EventLogger log
 INFO: RemoteInitialContextCreated{providerUri=http://localhost:55243/tomee/ejb}
 INFO - Extracting jar: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test.war
 INFO - Extracted path: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
 INFO - using default host: localhost
 INFO - ------------------------- localhost -&gt; /test
-INFO - Using &#39;openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager&#39;
+INFO - Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
 INFO - Configuring enterprise application: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
 INFO - Auto-deploying ejb DataSourceTester: EjbDeployment(deployment-id=DataSourceTester)
-INFO - Auto-linking resource-ref &#39;java:comp/env/DatabaseTwo&#39; in bean DataSourceTester to Resource(id=DatabaseTwo)
-INFO - Auto-linking resource-ref &#39;java:comp/env/DatabaseOne&#39; in bean DataSourceTester to Resource(id=DatabaseOne)
+INFO - Auto-linking resource-ref 'java:comp/env/DatabaseTwo' in bean DataSourceTester to Resource(id=DatabaseTwo)
+INFO - Auto-linking resource-ref 'java:comp/env/DatabaseOne' in bean DataSourceTester to Resource(id=DatabaseOne)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.AlternateDataSourceTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory C:\dev\svn\tomee\examples\datasource-versioning\target\apache-tomee-remote\apache-tomee-webprofile-1.6.1-SNAPSHOT\temp for stateful session passivation
-INFO - Enterprise application &quot;C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test&quot; loaded.
+INFO - Enterprise application "C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test" loaded.
 INFO - Assembling app: C:\dev\svn\tomee\examples\datasource-versioning\target\arquillian-test-working-dir\0\test
 INFO - Jndi(name=DataSourceTesterLocalBean) --&gt; Ejb(deployment-id=DataSourceTester)
 INFO - Jndi(name=global/test/DataSourceTester!org.superbiz.AlternateDataSourceTest$DataSourceTester) --&gt; Ejb(deployment-id=DataSourceTester)
@@ -398,11 +470,11 @@ INFO: Auto-creating a container for bean JdbcOne: Container(type=SINGLETON, id=D
 Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.Assembler createRecipe
 INFO: Creating Container(id=Default Singleton Container)
 Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;java:comp/env/JdbcOne&#39; in bean JdbcOne to Resource(id=JdbcOne)
+INFO: Auto-linking resource-ref 'java:comp/env/JdbcOne' in bean JdbcOne to Resource(id=JdbcOne)
 Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;java:comp/env/JdbcTwo&#39; in bean JdbcTwo to Resource(id=JdbcTwo)
+INFO: Auto-linking resource-ref 'java:comp/env/JdbcTwo' in bean JdbcTwo to Resource(id=JdbcTwo)
 Apr 17, 2014 2:20:16 PM org.apache.openejb.config.AppInfoBuilder build
-INFO: Enterprise application &quot;C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest&quot; loaded.
+INFO: Enterprise application "C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest" loaded.
 Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.Assembler createApplication
 INFO: Assembling app: C:\dev\svn\tomee\examples\datasource-versioning\AlternateDriverJarTest
 Apr 17, 2014 2:20:16 PM org.apache.openejb.assembler.classic.JndiBuilder bind
@@ -447,22 +519,25 @@ Apr 17, 2014 2:20:20 PM org.apache.openejb.assembler.classic.Assembler destroyRe
 INFO: Closing DataSource: JdbcOne
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.857 sec
 INFO - A valid shutdown command was received via the shutdown port. Stopping the Server instance.
-INFO - Pausing ProtocolHandler [&quot;http-bio-55243&quot;]
-INFO - Pausing ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Pausing ProtocolHandler ["http-bio-55243"]
+INFO - Pausing ProtocolHandler ["ajp-bio-55245"]
 INFO - Stopping service Catalina
-INFO - Stopping ProtocolHandler [&quot;http-bio-55243&quot;]
-INFO - Stopping ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Stopping ProtocolHandler ["http-bio-55243"]
+INFO - Stopping ProtocolHandler ["ajp-bio-55245"]
 INFO - Stopping server services
 INFO - Undeploying app: openejb
 INFO - Closing DataSource: DatabaseOne
 INFO - Closing DataSource: DatabaseTwo
-INFO - Destroying ProtocolHandler [&quot;http-bio-55243&quot;]
-INFO - Destroying ProtocolHandler [&quot;ajp-bio-55245&quot;]
+INFO - Destroying ProtocolHandler ["http-bio-55243"]
+INFO - Destroying ProtocolHandler ["ajp-bio-55245"]
 
 Results :
 
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -482,7 +557,7 @@ Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

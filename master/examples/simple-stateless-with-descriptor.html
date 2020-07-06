@@ -95,9 +95,22 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This test is similar to simple-stateless, with two major differences. In this case all the classes are regular POJOs without annotations. The EJB-specific metadata is provided via an XML descriptor. The second difference is the explicite use of Local and Remote interfaces. </p>
-<h2>CalculatorImpl</h2>
-<pre><code>package org.superbiz.calculator;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This test is similar to simple-stateless, with two major differences. In
+this case all the classes are regular POJOs without annotations. The
+EJB-specific metadata is provided via an XML descriptor. The second
+difference is the explicite use of Local and Remote interfaces.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorimpl">CalculatorImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 /**
  * This is an EJB 3 stateless session bean, configured using an EJB 3
@@ -114,10 +127,17 @@ public class CalculatorImpl implements CalculatorRemote, CalculatorLocal {
     public int multiply(int mul1, int mul2) {
         return mul1 * mul2;
     }
-}
-</code></pre>
-<h2>CalculatorLocal</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorlocal">CalculatorLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 /**
  * This is an EJB 3 local business interface
@@ -128,10 +148,17 @@ public interface CalculatorLocal {
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>CalculatorRemote</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorremote">CalculatorRemote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 
 /**
@@ -143,14 +170,24 @@ public interface CalculatorRemote {
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<p>The XML descriptor defines the EJB class and both local and remote interfaces.</p>
-<pre><code>&lt;ejb-jar xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd&quot;
-         version=&quot;3.0&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The XML descriptor defines the EJB class and both local and remote
+interfaces.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+         version="3.0"&gt;
   &lt;enterprise-beans&gt;
     &lt;session&gt;
       &lt;ejb-name&gt;CalculatorImpl&lt;/ejb-name&gt;
@@ -161,11 +198,23 @@ public interface CalculatorRemote {
       &lt;transaction-type&gt;Container&lt;/transaction-type&gt;
     &lt;/session&gt;
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<h2>CalculatorTest</h2>
-<p>Two tests obtain a Local and Remote interface to the bean instance. This time an <code>InitialContext</code> object is directly created, as opposed to getting the context from <code>EJBContainer</code>, as we did in the previous example. </p>
-<pre><code>package org.superbiz.calculator;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two tests obtain a Local and Remote interface to the bean instance. This
+time an <code>InitialContext</code> object is directly created, as opposed to
+getting the context from <code>EJBContainer</code>, as we did in the previous
+example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 import junit.framework.TestCase;
 
@@ -179,7 +228,7 @@ public class CalculatorTest extends TestCase {
 
     protected void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
         initialContext = new InitialContext(properties);
     }
@@ -190,7 +239,7 @@ public class CalculatorTest extends TestCase {
      * @throws Exception
      */
     public void testCalculatorViaRemoteInterface() throws Exception {
-        Object object = initialContext.lookup(&quot;CalculatorImplRemote&quot;);
+        Object object = initialContext.lookup("CalculatorImplRemote");
 
         assertNotNull(object);
         assertTrue(object instanceof CalculatorRemote);
@@ -205,7 +254,7 @@ public class CalculatorTest extends TestCase {
      * @throws Exception
      */
     public void testCalculatorViaLocalInterface() throws Exception {
-        Object object = initialContext.lookup(&quot;CalculatorImplLocal&quot;);
+        Object object = initialContext.lookup("CalculatorImplLocal");
 
         assertNotNull(object);
         assertTrue(object instanceof CalculatorLocal);
@@ -213,10 +262,17 @@ public class CalculatorTest extends TestCase {
         assertEquals(10, calc.sum(4, 6));
         assertEquals(12, calc.multiply(3, 4));
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.calculator.CalculatorTest
@@ -231,7 +287,7 @@ INFO - Beginning load: /Users/dblevins/examples/simple-stateless-with-descriptor
 INFO - Configuring enterprise application: /Users/dblevins/examples/simple-stateless-with-descriptor/classpath.ear
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean CalculatorImpl: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/simple-stateless-with-descriptor/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/simple-stateless-with-descriptor/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/simple-stateless-with-descriptor/classpath.ear
 INFO - Jndi(name=CalculatorImplLocal) --&gt; Ejb(deployment-id=CalculatorImpl)
 INFO - Jndi(name=global/classpath.ear/simple-stateless-with-descriptor/CalculatorImpl!org.superbiz.calculator.CalculatorLocal) --&gt; Ejb(deployment-id=CalculatorImpl)
@@ -245,8 +301,11 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.475 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -266,7 +325,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

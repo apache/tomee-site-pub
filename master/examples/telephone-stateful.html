@@ -95,36 +95,95 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<p>This example shows how to use OpenEJB's remoting capabilities in an embedded scenario.</p>
-<p>The basic recipe is the same for a standard embedded scenario but with these added ingreditents:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+<div class="paragraph">
+<p>This example shows how to use OpenEJB’s remoting capabilities in an
+embedded scenario.</p>
+</div>
+<div class="paragraph">
+<p>The basic recipe is the same for a standard embedded scenario but with
+these added ingreditents:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><code>openejb.embedded.remotable</code> property</li>
-  <li><code>openejb-ejbd</code> jar</li>
+<li>
+<p><code>openejb.embedded.remotable</code> property</p>
+</li>
+<li>
+<p><code>openejb-ejbd</code> jar</p>
+</li>
 </ul>
-<p>While creating the InitialContext, pass in the openejb.embedded.remotable property with the value of "true". When this is seen by the LocalInitialContextFactory, it will boot up the Server ServiceManager in the VM which will in turn look for ServerServices in the classpath.</p>
-<p>Provided you have the openejb-ejbd jar in your classpath along with it's dependencies<br/>(openejb-server, openejb-client, openejb-core), then those services will be brought online<br/>and remote clients will be able to connect into your vm and invoke beans.</p>
-<p>If you want to add more ServerServices such as the http version of the ejbd protocol you'd simply add the openejb-httpejbd jar to your classpath. A number of ServerServices are available currently:</p>
+</div>
+<div class="paragraph">
+<p>While creating the InitialContext, pass in the
+openejb.embedded.remotable property with the value of ``true''. When
+this is seen by the LocalInitialContextFactory, it will boot up the
+Server ServiceManager in the VM which will in turn look for
+ServerServices in the classpath.</p>
+</div>
+<div class="paragraph">
+<p>Provided you have the openejb-ejbd jar in your classpath along with it’s
+dependencies (openejb-server, openejb-client, openejb-core), then those
+services will be brought online and remote clients will be able to
+connect into your vm and invoke beans.</p>
+</div>
+<div class="paragraph">
+<p>If you want to add more ServerServices such as the http version of the
+ejbd protocol you’d simply add the openejb-httpejbd jar to your
+classpath. A number of ServerServices are available currently:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>openejb-ejbd</li>
-  <li>openejb-http</li>
-  <li>openejb-telnet</li>
-  <li>openejb-derbynet</li>
-  <li>openejb-hsql</li>
-  <li>openejb-activemq</li>
+<li>
+<p>openejb-ejbd</p>
+</li>
+<li>
+<p>openejb-http</p>
+</li>
+<li>
+<p>openejb-telnet</p>
+</li>
+<li>
+<p>openejb-derbynet</p>
+</li>
+<li>
+<p>openejb-hsql</p>
+</li>
+<li>
+<p>openejb-activemq</p>
+</li>
 </ul>
-<h2>Telephone</h2>
-<pre><code>package org.superbiz.telephone;
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telephone">Telephone</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.telephone;
 
 public interface Telephone {
 
     void speak(String words);
 
     String listen();
-}
-</code></pre>
-<h2>TelephoneBean</h2>
-<pre><code>package org.superbiz.telephone;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telephonebean">TelephoneBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.telephone;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
@@ -136,15 +195,15 @@ import java.util.List;
 public class TelephoneBean implements Telephone {
 
     private static final String[] answers = {
-            &quot;How nice.&quot;,
-            &quot;Oh, of course.&quot;,
-            &quot;Interesting.&quot;,
-            &quot;Really?&quot;,
-            &quot;No.&quot;,
-            &quot;Definitely.&quot;,
-            &quot;I wondered about that.&quot;,
-            &quot;Good idea.&quot;,
-            &quot;You don&#39;t say!&quot;,
+            "How nice.",
+            "Oh, of course.",
+            "Interesting.",
+            "Really?",
+            "No.",
+            "Definitely.",
+            "I wondered about that.",
+            "Good idea.",
+            "You don't say!",
     };
 
     private List&lt;String&gt; conversation = new ArrayList&lt;String&gt;();
@@ -155,16 +214,23 @@ public class TelephoneBean implements Telephone {
 
     public String listen() {
         if (conversation.size() == 0) {
-            return &quot;Nothing has been said&quot;;
+            return "Nothing has been said";
         }
 
         String lastThingSaid = conversation.get(conversation.size() - 1);
         return answers[Math.abs(lastThingSaid.hashCode()) % answers.length];
     }
-}
-</code></pre>
-<h2>TelephoneTest</h2>
-<pre><code>package org.superbiz.telephone;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telephonetest">TelephoneTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.telephone;
 
 import junit.framework.TestCase;
 
@@ -179,14 +245,14 @@ public class TelephoneTest extends TestCase {
 
     protected void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.embedded.remotable", "true");
         // Uncomment these properties to change the defaults
-        //properties.setProperty(&quot;ejbd.port&quot;, &quot;4202&quot;);
-        //properties.setProperty(&quot;ejbd.bind&quot;, &quot;localhost&quot;);
-        //properties.setProperty(&quot;ejbd.threads&quot;, &quot;200&quot;);
-        //properties.setProperty(&quot;ejbd.disabled&quot;, &quot;false&quot;);
-        //properties.setProperty(&quot;ejbd.only_from&quot;, &quot;127.0.0.1,192.168.1.1&quot;);
+        //properties.setProperty("ejbd.port", "4202");
+        //properties.setProperty("ejbd.bind", "localhost");
+        //properties.setProperty("ejbd.threads", "200");
+        //properties.setProperty("ejbd.disabled", "false");
+        //properties.setProperty("ejbd.only_from", "127.0.0.1,192.168.1.1");
 
         new InitialContext(properties);
     }
@@ -199,25 +265,25 @@ public class TelephoneTest extends TestCase {
     public void testTalkOverLocalNetwork() throws Exception {
 
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         InitialContext localContext = new InitialContext(properties);
 
-        Telephone telephone = (Telephone) localContext.lookup(&quot;TelephoneBeanRemote&quot;);
+        Telephone telephone = (Telephone) localContext.lookup("TelephoneBeanRemote");
 
-        telephone.speak(&quot;Did you know I am talking directly through the embedded container?&quot;);
+        telephone.speak("Did you know I am talking directly through the embedded container?");
 
-        assertEquals(&quot;Interesting.&quot;, telephone.listen());
-
-
-        telephone.speak(&quot;Yep, I&#39;m using the bean&#39;s remote interface but since the ejb container is embedded &quot; +
-                &quot;in the same vm I&#39;m just using the LocalInitialContextFactory.&quot;);
-
-        assertEquals(&quot;Really?&quot;, telephone.listen());
+        assertEquals("Interesting.", telephone.listen());
 
 
-        telephone.speak(&quot;Right, you really only have to use the RemoteInitialContextFactory if you&#39;re in a different vm.&quot;);
+        telephone.speak("Yep, I'm using the bean's remote interface but since the ejb container is embedded " +
+                "in the same vm I'm just using the LocalInitialContextFactory.");
 
-        assertEquals(&quot;Oh, of course.&quot;, telephone.listen());
+        assertEquals("Really?", telephone.listen());
+
+
+        telephone.speak("Right, you really only have to use the RemoteInitialContextFactory if you're in a different vm.");
+
+        assertEquals("Oh, of course.", telephone.listen());
     }
 
     /**
@@ -227,35 +293,42 @@ public class TelephoneTest extends TestCase {
      */
     public void testTalkOverRemoteNetwork() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.client.RemoteInitialContextFactory&quot;);
-        properties.setProperty(Context.PROVIDER_URL, &quot;ejbd://localhost:4201&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
+        properties.setProperty(Context.PROVIDER_URL, "ejbd://localhost:4201");
         InitialContext remoteContext = new InitialContext(properties);
 
-        Telephone telephone = (Telephone) remoteContext.lookup(&quot;TelephoneBeanRemote&quot;);
+        Telephone telephone = (Telephone) remoteContext.lookup("TelephoneBeanRemote");
 
-        telephone.speak(&quot;Is this a local call?&quot;);
+        telephone.speak("Is this a local call?");
 
-        assertEquals(&quot;No.&quot;, telephone.listen());
-
-
-        telephone.speak(&quot;This would be a lot cooler if I was connecting from another VM then, huh?&quot;);
-
-        assertEquals(&quot;I wondered about that.&quot;, telephone.listen());
+        assertEquals("No.", telephone.listen());
 
 
-        telephone.speak(&quot;I suppose I should hangup and call back over the LocalInitialContextFactory.&quot;);
+        telephone.speak("This would be a lot cooler if I was connecting from another VM then, huh?");
 
-        assertEquals(&quot;Good idea.&quot;, telephone.listen());
+        assertEquals("I wondered about that.", telephone.listen());
 
 
-        telephone.speak(&quot;I&#39;ll remember this though in case I ever have to call you accross a network.&quot;);
+        telephone.speak("I suppose I should hangup and call back over the LocalInitialContextFactory.");
 
-        assertEquals(&quot;Definitely.&quot;, telephone.listen());
+        assertEquals("Good idea.", telephone.listen());
+
+
+        telephone.speak("I'll remember this though in case I ever have to call you accross a network.");
+
+        assertEquals("Definitely.", telephone.listen());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.telephone.TelephoneTest
@@ -270,7 +343,7 @@ INFO - Beginning load: /Users/dblevins/examples/telephone-stateful/target/classe
 INFO - Configuring enterprise application: /Users/dblevins/examples/telephone-stateful/classpath.ear
 INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
 INFO - Auto-creating a container for bean TelephoneBean: Container(type=STATEFUL, id=Default Stateful Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/telephone-stateful/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/telephone-stateful/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/telephone-stateful/classpath.ear
 INFO - Jndi(name=TelephoneBeanRemote) --&gt; Ejb(deployment-id=TelephoneBean)
 INFO - Jndi(name=global/classpath.ear/telephone-stateful/TelephoneBean!org.superbiz.telephone.Telephone) --&gt; Ejb(deployment-id=TelephoneBean)
@@ -284,18 +357,21 @@ INFO - Creating ServerService(id=ejbd)
 INFO - Creating ServerService(id=ejbds)
 INFO - Initializing network services
   ** Starting Services **
-  NAME                 IP              PORT  
-  admin thread         127.0.0.1       4200  
-  ejbd                 127.0.0.1       4201  
-  ejbd                 127.0.0.1       4203  
+  NAME                 IP              PORT
+  admin thread         127.0.0.1       4200
+  ejbd                 127.0.0.1       4201
+  ejbd                 127.0.0.1       4203
 -------
 Ready!
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.448 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -315,7 +391,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>AttachmentImpl</h2>
-<pre><code>package org.superbiz.attachment;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attachmentimpl">AttachmentImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -116,10 +127,10 @@ import java.io.InputStream;
  */
 @Stateless
 @WebService(
-        portName = &quot;AttachmentPort&quot;,
-        serviceName = &quot;AttachmentWsService&quot;,
-        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.attachment.AttachmentWs&quot;)
+        portName = "AttachmentPort",
+        serviceName = "AttachmentWsService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.attachment.AttachmentWs")
 @BindingType(value = SOAPBinding.SOAP12HTTP_MTOM_BINDING)
 public class AttachmentImpl implements AttachmentWs {
 
@@ -139,7 +150,7 @@ public class AttachmentImpl implements AttachmentWs {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return &quot;&quot;;
+        return "";
     }
 
     public String stringFromDataHandler(DataHandler handler) {
@@ -149,12 +160,19 @@ public class AttachmentImpl implements AttachmentWs {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return &quot;&quot;;
+        return "";
     }
-}
-</code></pre>
-<h2>AttachmentWs</h2>
-<pre><code>package org.superbiz.attachment;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attachmentws">AttachmentWs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.attachment;
 
 import javax.activation.DataHandler;
 import javax.jws.WebService;
@@ -162,7 +180,7 @@ import javax.jws.WebService;
 /**
  * This is an EJB 3 webservice interface to send attachments throughout SAOP.
  */
-@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+@WebService(targetNamespace = "http://superbiz.org/wsdl")
 public interface AttachmentWs {
 
     public String stringFromBytes(byte[] data);
@@ -171,13 +189,27 @@ public interface AttachmentWs {
     //public String stringFromDataSource(DataSource source);
 
     public String stringFromDataHandler(DataHandler handler);
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar/&gt;
-</code></pre>
-<h2>AttachmentTest</h2>
-<pre><code>package org.superbiz.attachment;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attachmenttest">AttachmentTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.attachment;
 
 import junit.framework.TestCase;
 
@@ -195,18 +227,18 @@ import java.util.Properties;
 
 public class AttachmentTest extends TestCase {
 
-    //START SNIPPET: setup  
+    //START SNIPPET: setup
     private InitialContext initialContext;
 
     protected void setUp() throws Exception {
 
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.embedded.remotable", "true");
 
         initialContext = new InitialContext(properties);
     }
-    //END SNIPPET: setup    
+    //END SNIPPET: setup
 
     /**
      * Create a webservice client using wsdl url
@@ -216,8 +248,8 @@ public class AttachmentTest extends TestCase {
     //START SNIPPET: webservice
     public void testAttachmentViaWsInterface() throws Exception {
         Service service = Service.create(
-                new URL(&quot;http://127.0.0.1:4204/AttachmentImpl?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;AttachmentWsService&quot;));
+                new URL("http://127.0.0.1:4204/AttachmentImpl?wsdl"),
+                new QName("http://superbiz.org/wsdl", "AttachmentWsService"));
         assertNotNull(service);
 
         AttachmentWs ws = service.getPort(AttachmentWs.class);
@@ -226,14 +258,14 @@ public class AttachmentTest extends TestCase {
         SOAPBinding binding = (SOAPBinding) ((BindingProvider) ws).getBinding();
         binding.setMTOMEnabled(true);
 
-        String request = &quot;tsztelak@gmail.com&quot;;
+        String request = "tsztelak@gmail.com";
 
         // Byte array
         String response = ws.stringFromBytes(request.getBytes());
         assertEquals(request, response);
 
         // Data Source
-        DataSource source = new ByteArrayDataSource(request.getBytes(), &quot;text/plain; charset=UTF-8&quot;);
+        DataSource source = new ByteArrayDataSource(request.getBytes(), "text/plain; charset=UTF-8");
 
         // not yet supported !
 //        response = ws.stringFromDataSource(source);
@@ -244,10 +276,17 @@ public class AttachmentTest extends TestCase {
         assertEquals(request, response);
     }
     //END SNIPPET: webservice
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.attachment.AttachmentTest
@@ -262,7 +301,7 @@ INFO - Beginning load: /Users/dblevins/examples/webservice-attachments/target/cl
 INFO - Configuring enterprise application: /Users/dblevins/examples/webservice-attachments/classpath.ear
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean AttachmentImpl: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/webservice-attachments/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/webservice-attachments/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/webservice-attachments/classpath.ear
 INFO - Created Ejb(deployment-id=AttachmentImpl, ejb-name=AttachmentImpl, container=Default Stateless Container)
 INFO - Started Ejb(deployment-id=AttachmentImpl, ejb-name=AttachmentImpl, container=Default Stateless Container)
@@ -275,19 +314,22 @@ INFO - Creating ServerService(id=ejbd)
 INFO - Creating ServerService(id=ejbds)
 INFO - Initializing network services
   ** Starting Services **
-  NAME                 IP              PORT  
-  httpejbd             127.0.0.1       4204  
-  admin thread         127.0.0.1       4200  
-  ejbd                 127.0.0.1       4201  
-  ejbd                 127.0.0.1       4203  
+  NAME                 IP              PORT
+  httpejbd             127.0.0.1       4204
+  admin thread         127.0.0.1       4200
+  ejbd                 127.0.0.1       4201
+  ejbd                 127.0.0.1       4203
 -------
 Ready!
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.034 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -307,7 +349,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

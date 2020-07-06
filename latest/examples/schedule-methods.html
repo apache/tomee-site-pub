@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>FarmerBrown</h2>
-<pre><code>package org.superbiz.corn;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_farmerbrown">FarmerBrown</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.corn;
 
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -107,7 +118,7 @@ import javax.ejb.Singleton;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * This is where we schedule all of Farmer Brown&#39;s corn jobs
+ * This is where we schedule all of Farmer Brown's corn jobs
  *
  * @version $Revision$ $Date$
  */
@@ -118,22 +129,22 @@ public class FarmerBrown {
     private final AtomicInteger checks = new AtomicInteger();
 
     @Schedules({
-            @Schedule(month = &quot;5&quot;, dayOfMonth = &quot;20-Last&quot;, minute = &quot;0&quot;, hour = &quot;8&quot;),
-            @Schedule(month = &quot;6&quot;, dayOfMonth = &quot;1-10&quot;, minute = &quot;0&quot;, hour = &quot;8&quot;)
+            @Schedule(month = "5", dayOfMonth = "20-Last", minute = "0", hour = "8"),
+            @Schedule(month = "6", dayOfMonth = "1-10", minute = "0", hour = "8")
     })
     private void plantTheCorn() {
         // Dig out the planter!!!
     }
 
     @Schedules({
-            @Schedule(month = &quot;9&quot;, dayOfMonth = &quot;20-Last&quot;, minute = &quot;0&quot;, hour = &quot;8&quot;),
-            @Schedule(month = &quot;10&quot;, dayOfMonth = &quot;1-10&quot;, minute = &quot;0&quot;, hour = &quot;8&quot;)
+            @Schedule(month = "9", dayOfMonth = "20-Last", minute = "0", hour = "8"),
+            @Schedule(month = "10", dayOfMonth = "1-10", minute = "0", hour = "8")
     })
     private void harvestTheCorn() {
         // Dig out the combine!!!
     }
 
-    @Schedule(second = &quot;*&quot;, minute = &quot;*&quot;, hour = &quot;*&quot;)
+    @Schedule(second = "*", minute = "*", hour = "*")
     private void checkOnTheDaughters() {
         checks.incrementAndGet();
     }
@@ -141,10 +152,17 @@ public class FarmerBrown {
     public int getChecks() {
         return checks.get();
     }
-}
-</code></pre>
-<h2>FarmerBrownTest</h2>
-<pre><code>package org.superbiz.corn;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_farmerbrowntest">FarmerBrownTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.corn;
 
 import junit.framework.TestCase;
 
@@ -162,17 +180,24 @@ public class FarmerBrownTest extends TestCase {
 
         final Context context = EJBContainer.createEJBContainer().getContext();
 
-        final FarmerBrown farmerBrown = (FarmerBrown) context.lookup(&quot;java:global/schedule-methods/FarmerBrown&quot;);
+        final FarmerBrown farmerBrown = (FarmerBrown) context.lookup("java:global/schedule-methods/FarmerBrown");
 
         // Give Farmer brown a chance to do some work
         Thread.sleep(SECONDS.toMillis(5));
 
         assertTrue(farmerBrown.getChecks() &gt; 4);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.corn.FarmerBrownTest
@@ -180,7 +205,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/schedule-methods
 INFO - openejb.base = /Users/dblevins/examples/schedule-methods
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/schedule-methods/target/classes
@@ -190,12 +215,12 @@ INFO - Configuring Service(id=Default Singleton Container, type=Container, provi
 INFO - Auto-creating a container for bean FarmerBrown: Container(type=SINGLETON, id=Default Singleton Container)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.corn.FarmerBrownTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/schedule-methods&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/schedule-methods" loaded.
 INFO - Assembling app: /Users/dblevins/examples/schedule-methods
-INFO - Jndi(name=&quot;java:global/schedule-methods/FarmerBrown!org.superbiz.corn.FarmerBrown&quot;)
-INFO - Jndi(name=&quot;java:global/schedule-methods/FarmerBrown&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule660493198/org.superbiz.corn.FarmerBrownTest!org.superbiz.corn.FarmerBrownTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule660493198/org.superbiz.corn.FarmerBrownTest&quot;)
+INFO - Jndi(name="java:global/schedule-methods/FarmerBrown!org.superbiz.corn.FarmerBrown")
+INFO - Jndi(name="java:global/schedule-methods/FarmerBrown")
+INFO - Jndi(name="java:global/EjbModule660493198/org.superbiz.corn.FarmerBrownTest!org.superbiz.corn.FarmerBrownTest")
+INFO - Jndi(name="java:global/EjbModule660493198/org.superbiz.corn.FarmerBrownTest")
 INFO - Created Ejb(deployment-id=org.superbiz.corn.FarmerBrownTest, ejb-name=org.superbiz.corn.FarmerBrownTest, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=FarmerBrown, ejb-name=FarmerBrown, container=Default Singleton Container)
 INFO - Started Ejb(deployment-id=org.superbiz.corn.FarmerBrownTest, ejb-name=org.superbiz.corn.FarmerBrownTest, container=Default Managed Container)
@@ -205,8 +230,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.121 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -226,7 +254,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

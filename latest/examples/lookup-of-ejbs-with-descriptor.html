@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>BlueBean</h2>
-<pre><code>package org.superbiz.ejblookup;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bluebean">BlueBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.ejblookup;
 
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
@@ -107,26 +118,33 @@ import javax.naming.NamingException;
 public class BlueBean implements Friend {
 
     public String sayHello() {
-        return &quot;Blue says, Hello!&quot;;
+        return "Blue says, Hello!";
     }
 
     public String helloFromFriend() {
         try {
-            Friend friend = (Friend) new InitialContext().lookup(&quot;java:comp/env/myFriend&quot;);
-            return &quot;My friend &quot; + friend.sayHello();
+            Friend friend = (Friend) new InitialContext().lookup("java:comp/env/myFriend");
+            return "My friend " + friend.sayHello();
         } catch (NamingException e) {
             throw new EJBException(e);
         }
     }
-}
-</code></pre>
-<h2>Friend</h2>
-<pre><code>package org.superbiz.ejblookup;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_friend">Friend</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.ejblookup;
 
 /**
  * This is an EJB 3 local business interface
  * A local business interface may be annotated with the @Local
- * annotation, but it&#39;s optional. A business interface which is
+ * annotation, but it's optional. A business interface which is
  * not annotated with @Local or @Remote is assumed to be Local
  * if the bean does not implement any other interfaces
  */
@@ -136,10 +154,17 @@ public interface Friend {
     public String sayHello();
 
     public String helloFromFriend();
-}
-</code></pre>
-<h2>RedBean</h2>
-<pre><code>package org.superbiz.ejblookup;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_redbean">RedBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.ejblookup;
 
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
@@ -149,21 +174,28 @@ import javax.naming.NamingException;
 public class RedBean implements Friend {
 
     public String sayHello() {
-        return &quot;Red says, Hello!&quot;;
+        return "Red says, Hello!";
     }
 
     public String helloFromFriend() {
         try {
-            Friend friend = (Friend) new InitialContext().lookup(&quot;java:comp/env/myFriend&quot;);
-            return &quot;My friend &quot; + friend.sayHello();
+            Friend friend = (Friend) new InitialContext().lookup("java:comp/env/myFriend");
+            return "My friend " + friend.sayHello();
         } catch (NamingException e) {
             throw new EJBException(e);
         }
     }
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"&gt;
 
   &lt;!-- Notice this changes the global jndi name --&gt;
   &lt;module-name&gt;wombat&lt;/module-name&gt;
@@ -197,10 +229,17 @@ public class RedBean implements Friend {
     &lt;/session&gt;
 
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<h2>EjbDependencyTest</h2>
-<pre><code>package org.superbiz.ejblookup;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejbdependencytest">EjbDependencyTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.ejblookup;
 
 import junit.framework.TestCase;
 
@@ -218,25 +257,32 @@ public class EjbDependencyTest extends TestCase {
 
     public void testRed() throws Exception {
 
-        Friend red = (Friend) context.lookup(&quot;java:global/wombat/RedBean&quot;);
+        Friend red = (Friend) context.lookup("java:global/wombat/RedBean");
 
         assertNotNull(red);
-        assertEquals(&quot;Red says, Hello!&quot;, red.sayHello());
-        assertEquals(&quot;My friend Blue says, Hello!&quot;, red.helloFromFriend());
+        assertEquals("Red says, Hello!", red.sayHello());
+        assertEquals("My friend Blue says, Hello!", red.helloFromFriend());
     }
 
     public void testBlue() throws Exception {
 
-        Friend blue = (Friend) context.lookup(&quot;java:global/wombat/BlueBean&quot;);
+        Friend blue = (Friend) context.lookup("java:global/wombat/BlueBean");
 
         assertNotNull(blue);
-        assertEquals(&quot;Blue says, Hello!&quot;, blue.sayHello());
-        assertEquals(&quot;My friend Red says, Hello!&quot;, blue.helloFromFriend());
+        assertEquals("Blue says, Hello!", blue.sayHello());
+        assertEquals("My friend Red says, Hello!", blue.helloFromFriend());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.ejblookup.EjbDependencyTest
@@ -244,7 +290,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/lookup-of-ejbs-with-descriptor
 INFO - openejb.base = /Users/dblevins/examples/lookup-of-ejbs-with-descriptor
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/lookup-of-ejbs-with-descriptor/target/classes
@@ -254,14 +300,14 @@ INFO - Configuring Service(id=Default Stateless Container, type=Container, provi
 INFO - Auto-creating a container for bean BlueBean: Container(type=STATELESS, id=Default Stateless Container)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.ejblookup.EjbDependencyTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/lookup-of-ejbs-with-descriptor&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/lookup-of-ejbs-with-descriptor" loaded.
 INFO - Assembling app: /Users/dblevins/examples/lookup-of-ejbs-with-descriptor
-INFO - Jndi(name=&quot;java:global/wombat/BlueBean!org.superbiz.ejblookup.Friend&quot;)
-INFO - Jndi(name=&quot;java:global/wombat/BlueBean&quot;)
-INFO - Jndi(name=&quot;java:global/wombat/RedBean!org.superbiz.ejblookup.Friend&quot;)
-INFO - Jndi(name=&quot;java:global/wombat/RedBean&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule136565368/org.superbiz.ejblookup.EjbDependencyTest!org.superbiz.ejblookup.EjbDependencyTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule136565368/org.superbiz.ejblookup.EjbDependencyTest&quot;)
+INFO - Jndi(name="java:global/wombat/BlueBean!org.superbiz.ejblookup.Friend")
+INFO - Jndi(name="java:global/wombat/BlueBean")
+INFO - Jndi(name="java:global/wombat/RedBean!org.superbiz.ejblookup.Friend")
+INFO - Jndi(name="java:global/wombat/RedBean")
+INFO - Jndi(name="java:global/EjbModule136565368/org.superbiz.ejblookup.EjbDependencyTest!org.superbiz.ejblookup.EjbDependencyTest")
+INFO - Jndi(name="java:global/EjbModule136565368/org.superbiz.ejblookup.EjbDependencyTest")
 INFO - Created Ejb(deployment-id=RedBean, ejb-name=RedBean, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=BlueBean, ejb-name=BlueBean, container=Default Stateless Container)
 INFO - Created Ejb(deployment-id=org.superbiz.ejblookup.EjbDependencyTest, ejb-name=org.superbiz.ejblookup.EjbDependencyTest, container=Default Managed Container)
@@ -274,8 +320,11 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.679 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -295,7 +344,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

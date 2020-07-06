@@ -111,9 +111,9 @@ data to a database.</p>
 <div class="paragraph">
 <p>The entity itself is simply a pojo annotated with <code>@Entity</code>.  We create one called <code>Movie</code> which we can use to hold movie records.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.jpa;
 
 import javax.persistence.Entity;
 
@@ -167,7 +167,7 @@ public class Movie {
     public void setYear(int year) {
         this.year = year;
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -179,9 +179,9 @@ public class Movie {
 <p>The above <code>Movie</code> entity can be created, removed, updated or deleted via an <code>EntityManager</code> object.  The <code>EntityManager</code> itself is
 configured via a <code>META-INF/persistence.xml</code> file that is placed in the same jar as the <code>Movie</code> entity.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
 
   &lt;persistence-unit name="movie-unit"&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
@@ -192,7 +192,7 @@ configured via a <code>META-INF/persistence.xml</code> file that is placed in th
       &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;</pre>
+&lt;/persistence&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -211,9 +211,9 @@ runtime, we simply need to request it be injected into one of our components.  W
 <div class="paragraph">
 <p>The <code>@PersistenceContext</code> annotation can be used on any CDI bean, EJB, Servlet, Servlet Listener, Servlet Filter, or JSF ManagedBean.  If you don&#8217;t use an EJB you will need to use a <code>UserTransaction</code> begin and commit transactions manually.  A transaction is required for any of the create, update or delete methods of the EntityManager to work.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.jpa;
 
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -240,7 +240,7 @@ public class Movies {
         Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -259,9 +259,9 @@ data in the <code>EntityManager</code> is cached for the lifetime of the <code>@
 <div class="paragraph">
 <p>Testing JPA is quite easy, we can simply use the <code>EJBContainer</code> API to create a container in our test case.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.jpa;
 
 import junit.framework.TestCase;
 
@@ -297,7 +297,7 @@ public class MoviesTest extends TestCase {
 
         assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -306,9 +306,9 @@ public class MoviesTest extends TestCase {
 <div class="paragraph">
 <p>When we run our test case we should see output similar to the following.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>-------------------------------------------------------
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.jpa.MoviesTest
@@ -347,7 +347,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.301 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 </div>
 </div>
             </div>
@@ -369,7 +369,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -101,17 +101,29 @@
 <p>This example shows the persist, remove and creation a query in JPA Hibernate.
 The Java Persistence API (JPA) is a Java specification for accessing, persisting, and managing data between Java objects / classes and a relational database.</p>
 </div>
+<div class="paragraph">
+<p>To exemplify the use of JPA, we will persist an Object (Movie) in the database.</p>
+</div>
+<div class="paragraph">
+<p>Links to the documentation have been added in key parts of the example for the case of doubts and as a way to encourage their reading for details.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_movie">Movie</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Define the class Movie as an entity with de annotation @Entity</p>
+<p>Here we have a class with some details. See the annotation
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/Entity.html">@Entity</a>
+above the declaration, with it we are saying that this class is an entity (a table in the database). We still have two more annotations above the attribute id, one of them is
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/Id.html">@Id</a>
+annotation, it indicates that this attribute is the identifier of the entity and the other annotation
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/GeneratedValue.html">@GeneratedValue</a>
+indicates that the unique identifier value generation of the entity will be managed by the persistence provider.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.h3jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h3jpa;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -162,7 +174,7 @@ public class Movie {
         this.year = year;
     }
 
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -171,12 +183,22 @@ public class Movie {
 <h2 id="_movies">Movies</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>@PersistenceContext A persistence context is a set of entities such that for any persistent identity there is a unique entity instance.
-@EntityManager is associated with a persistence context. Is at the core of JPA, supported by some methods: persist, remove,merge, find,</p>
+<p>Now we have two important things:
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/PersistenceContext.html">@PersistenceContext</a>
+annotation and the
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
+declaration.
+The
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
+is the interface with the core methods of JPA like persist, remove, merge, find and others&#8230;&#8203;
+We annotate the
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
+with
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/PersistenceContext.html">@PersistenceContext</a>, a persistence context is an entity management where  every persistence context associated with a persistence unit, we will create a persistence.xml soon for this.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.h3jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h3jpa;
 
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -203,7 +225,7 @@ public class Movies {
         Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -211,6 +233,9 @@ public class Movies {
 <div class="sect1">
 <h2 id="_persistence_xml">persistence.xml</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Here we define which database will persist our movies, and we perform other configurations such as: define a persistence-unit with the name movie-unit, followed by the definition of the JPA provider/implementation (in this case Hibernate) and we set some properties for hibernate:</p>
+</div>
 <div class="literalblock">
 <div class="content">
 <pre>&lt;persistence version="1.0"
@@ -234,9 +259,12 @@ public class Movies {
 <div class="sect1">
 <h2 id="_moviestest">MoviesTest</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="paragraph">
+<p>Now we do a test, persisting three films, then we perform a search and finally we delete them.</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.injection.h3jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h3jpa;
 
 import junit.framework.TestCase;
 
@@ -272,7 +300,7 @@ public class MoviesTest extends TestCase {
 
         assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -282,15 +310,27 @@ public class MoviesTest extends TestCase {
 <p>To run the example via maven:</p>
 </div>
 <div class="paragraph">
-<p>cd jpa-hibernate
-mvn clean install</p>
+<p>Access the project folder:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">cd jpa-hibernate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And execute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">mvn clean install</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Which will generate output similar to the following:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>-------------------------------------------------------
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.h3jpa.MoviesTest
@@ -329,7 +369,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.22 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 </div>
 </div>
             </div>
@@ -351,7 +391,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -107,9 +107,9 @@ No entanto, observe que você pode escolher apenas uma fonte de dados por transa
 Isso significa que o objetivo desse recurso não é alternar mais de uma vez
 fonte de dados em uma transação. O código a seguir não funcionará:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Stateless
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 public class MyEJB {
     @Resource private MyRouter router;
     @PersistenceContext private EntityManager em;
@@ -121,7 +121,7 @@ public class MyEJB {
         router.setDataSource("ds2"); // mesma transação -&gt; esta invocação não funciona
         em.persist(new MyEntity());
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -150,9 +150,9 @@ fonte de dados usada atualmente. Lembre-se de que a JPA usou mais de uma vez o
 Método getDatasource() para uma operação. Alterar a fonte de dados em
 uma transação é perigosa e deve ser evitada.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.dynamicdatasourcerouting;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamicdatasourcerouting;
 
 import org.apache.openejb.resource.jdbc.AbstractRouter;
 
@@ -242,7 +242,7 @@ public class DeterminedRouter extends AbstractRouter {
     public void setDefaultDataSourceName(String name) {
         this.defaultDataSourceName = name;
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -257,9 +257,9 @@ META-INF/org.router/ e chamado service-jar.xml (para sua implementação
 <div class="paragraph">
 <p>Ele contém o seguinte código:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;ServiceJar&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ServiceJar&gt;
   &lt;ServiceProvider id="DeterminedRouter" &lt;!-- o nome que você deseja usar --&gt;
       service="Resource"
       type="org.apache.openejb.resource.jdbc.Router"
@@ -270,7 +270,7 @@ META-INF/org.router/ e chamado service-jar.xml (para sua implementação
     DataSourceNames
     DefaultDataSourceName
   &lt;/ServiceProvider&gt;
-&lt;/ServiceJar&gt;</pre>
+&lt;/ServiceJar&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -283,9 +283,9 @@ META-INF/org.router/ e chamado service-jar.xml (para sua implementação
 <p>Aqui temos um bean sem estado <code>RoutedPersister</code> que usa nosso
 <code>DeterminedRouter</code></p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.dynamicdatasourcerouting;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.dynamicdatasourcerouting;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -304,7 +304,7 @@ public class RoutedPersister {
         router.setDataSource(ds);
         em.persist(new Person(id, name));
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -316,9 +316,9 @@ public class RoutedPersister {
 <p>No modo de teste e usando a configuração de estilo de propriedade, a seguinte
 configuração é usada:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>public class DynamicDataSourceTest {
+<pre class="highlight"><code class="language-java" data-lang="java">public class DynamicDataSourceTest {
     @Test
     public void route() throws Exception {
         String[] databases = new String[]{"database1", "database2", "database3"};
@@ -370,7 +370,7 @@ configuração é usada:</p>
 
         ctx.close();
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -381,9 +381,9 @@ configuração é usada:</p>
 <div class="paragraph">
 <p>O testcase acima usa propriedades para configuração. O caminho idêntico para fazê-lo através do <code>conf/openejb.xml</code> é o seguinte:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;!-- Roteador e fonte de dados --&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;!-- Roteador e fonte de dados --&gt;
 &lt;Resource id="My Router" type="org.apache.openejb.router.test.DynamicDataSourceTest$DeterminedRouter" provider="org.routertest:DeterminedRouter"&gt;
     DatasourceNames = database1 database2 database3
     DefaultDataSourceName = database1
@@ -413,7 +413,7 @@ configuração é usada:</p>
     UserName = sa
     Password
     JtaManaged = true
-&lt;/Resource&gt;</pre>
+&lt;/Resource&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
@@ -433,9 +433,9 @@ preguiçosa e isso acontece apenas uma vez; quando você alterna o banco de dado
 e podemos fazer um bean apenas fazendo uma descoberta simples, mesmo que não exista
 entidades, apenas para forçar a criação do banco de dados:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Startup
+<pre class="highlight"><code class="language-java" data-lang="java">@Startup
 @Singleton
 public class BoostrapUtility {
     // injetar todos os bancos de dados reais
@@ -458,7 +458,7 @@ public class BoostrapUtility {
         em2.find(Person.class, 0);
         em3.find(Person.class, 0);
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -469,9 +469,9 @@ public class BoostrapUtility {
 registrou os recursos e você inicializou seus bancos de dados, você pode usar
 e veja como é simples:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Stateless
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 public class RoutedPersister {
     // injeção da fonte de dados "em proxy"
     @PersistenceContext(unitName = "router")
@@ -485,7 +485,7 @@ public class RoutedPersister {
         router.setDataSource(ds); // configurando o banco de dados para a transação atual
         em.persist(new Person(id, name)); // usará o banco de dados ds automaticamente
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -494,9 +494,9 @@ public class RoutedPersister {
 <div class="sect1">
 <h2 id="_executando">Executando</h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>-------------------------------------------------------
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.dynamicdatasourcerouting.DynamicDataSourceTest
@@ -559,7 +559,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.504 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 </div>
 </div>
 </div>
@@ -583,7 +583,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

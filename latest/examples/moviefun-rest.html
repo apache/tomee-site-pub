@@ -95,11 +95,30 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows the CRUD of a movie funny application. The web client is built using backbone and the backend is built with JAX-RS, JPA for the persistence in a H2 database.</p>
-<h1>The Code</h1>
-<h2>ApplicationConfig</h2>
-<p>Here use JAX-RS annotations to create resources. @ApplicationPath identifies the application path that serves as the base URI for all resources. The implementation of method getClasses will be called by the JAX-RS framework to get information about this application. In the following example, it defines two resources: LoadRest and MoviesRest.</p>
-<pre><code>package org.superbiz.moviefun.rest;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows the CRUD of a movie funny application.<br>
+The web client is built using backbone and the backend is built with
+JAX-RS, JPA for the persistence in a H2 database.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_code">The Code</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_applicationconfig">ApplicationConfig</h3>
+<div class="paragraph">
+<p>Here use JAX-RS annotations to create resources. @ApplicationPath
+identifies the application path that serves as the base URI for all
+resources. The implementation of method getClasses will be called by the
+JAX-RS framework to get information about this application. In the
+following example, it defines two resources: LoadRest and MoviesRest.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.moviefun.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -107,19 +126,30 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationPath(&quot;/rest&quot;)
+@ApplicationPath("/rest")
 public class ApplicationConfig extends Application {
 
     @Override
-    @SuppressWarnings(&quot;unchecked&quot;)
+    @SuppressWarnings("unchecked")
     public Set&lt;Class&lt;?&gt;&gt; getClasses() {
         return new HashSet&lt;Class&lt;?&gt;&gt;(Arrays.asList(LoadRest.class, MoviesRest.class));
     }
-}
-</code></pre>
-<h2>LoadRest</h2>
-<p>It is a POJO which is mapped to a root URL ("load") with the annotation @Path and has Java methods for serving requests to this root URL and its sub-URLs. In this case, only have a POST request where use an EJB (MoviesBean) injected to it class<br/> for do an initial load of data in the database. </p>
-<pre><code>package org.superbiz.moviefun.rest;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_loadrest">LoadRest</h3>
+<div class="paragraph">
+<p>It is a POJO which is mapped to a root URL (``load'') with the
+annotation @Path and has Java methods for serving requests to this root
+URL and its sub-URLs. In this case, only have a POST request where use
+an EJB (MoviesBean) injected to it class for do an initial load of data
+in the database.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.moviefun.rest;
 
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
@@ -128,27 +158,37 @@ import javax.ejb.EJB;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-@Path(&quot;load&quot;)
+@Path("load")
 public class LoadRest {
     @EJB
     private MoviesBean moviesBean;
 
     @POST
     public void load() {
-        moviesBean.addMovie(new Movie(&quot;Wedding Crashers&quot;, &quot;David Dobkin&quot;, &quot;Comedy&quot;, 7, 2005));
-        moviesBean.addMovie(new Movie(&quot;Starsky &amp; Hutch&quot;, &quot;Todd Phillips&quot;, &quot;Action&quot;, 6, 2004));
-        moviesBean.addMovie(new Movie(&quot;Shanghai Knights&quot;, &quot;David Dobkin&quot;, &quot;Action&quot;, 6, 2003));
-        moviesBean.addMovie(new Movie(&quot;I-Spy&quot;, &quot;Betty Thomas&quot;, &quot;Adventure&quot;, 5, 2002));
-        moviesBean.addMovie(new Movie(&quot;The Royal Tenenbaums&quot;, &quot;Wes Anderson&quot;, &quot;Comedy&quot;, 8, 2001));
-        moviesBean.addMovie(new Movie(&quot;Zoolander&quot;, &quot;Ben Stiller&quot;, &quot;Comedy&quot;, 6, 2001));
-        moviesBean.addMovie(new Movie(&quot;Shanghai Noon&quot;, &quot;Tom Dey&quot;, &quot;Comedy&quot;, 7, 2000));
+        moviesBean.addMovie(new Movie("Wedding Crashers", "David Dobkin", "Comedy", 7, 2005));
+        moviesBean.addMovie(new Movie("Starsky &amp; Hutch", "Todd Phillips", "Action", 6, 2004));
+        moviesBean.addMovie(new Movie("Shanghai Knights", "David Dobkin", "Action", 6, 2003));
+        moviesBean.addMovie(new Movie("I-Spy", "Betty Thomas", "Adventure", 5, 2002));
+        moviesBean.addMovie(new Movie("The Royal Tenenbaums", "Wes Anderson", "Comedy", 8, 2001));
+        moviesBean.addMovie(new Movie("Zoolander", "Ben Stiller", "Comedy", 6, 2001));
+        moviesBean.addMovie(new Movie("Shanghai Noon", "Tom Dey", "Comedy", 7, 2000));
     }
 
-}
-</code></pre>
-<h2>MovieRest</h2>
-<p>It is a POJO which is mapped to a root URL ("movies") with the annotation @Path and has Java methods for serving requests of entities movies in JSON format according to the @Produces annotation. Here has a method for each HTTP method (GET, POST, PUT, DELETE).</p>
-<pre><code>package org.superbiz.moviefun.rest;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_movierest">MovieRest</h3>
+<div class="paragraph">
+<p>It is a POJO which is mapped to a root URL (``movies'') with the
+annotation @Path and has Java methods for serving requests of entities
+movies in JSON format according to the @Produces annotation. Here has a
+method for each HTTP method (GET, POST, PUT, DELETE).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.moviefun.rest;
 
 import org.superbiz.moviefun.Movie;
 import org.superbiz.moviefun.MoviesBean;
@@ -166,58 +206,65 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path(&quot;movies&quot;)
-@Produces({&quot;application/json&quot;})
+@Path("movies")
+@Produces({"application/json"})
 public class MoviesRest {
 
     @EJB
     private MoviesBean service;
 
     @GET
-    @Path(&quot;{id}&quot;)
-    public Movie find(@PathParam(&quot;id&quot;) Long id) {
+    @Path("{id}")
+    public Movie find(@PathParam("id") Long id) {
         return service.find(id);
     }
 
     @GET
-    public List&lt;Movie&gt; getMovies(@QueryParam(&quot;first&quot;) Integer first, @QueryParam(&quot;max&quot;) Integer max,
-                                 @QueryParam(&quot;field&quot;) String field, @QueryParam(&quot;searchTerm&quot;) String searchTerm) {
+    public List&lt;Movie&gt; getMovies(@QueryParam("first") Integer first, @QueryParam("max") Integer max,
+                                 @QueryParam("field") String field, @QueryParam("searchTerm") String searchTerm) {
         return service.getMovies(first, max, field, searchTerm);
     }
 
     @POST
-    @Consumes(&quot;application/json&quot;)
+    @Consumes("application/json")
     public Movie addMovie(Movie movie) {
         service.addMovie(movie);
         return movie;
     }
 
     @PUT
-    @Path(&quot;{id}&quot;)
-    @Consumes(&quot;application/json&quot;)
+    @Path("{id}")
+    @Consumes("application/json")
     public Movie editMovie(Movie movie) {
         service.editMovie(movie);
         return movie;
     }
 
     @DELETE
-    @Path(&quot;{id}&quot;)
-    public void deleteMovie(@PathParam(&quot;id&quot;) long id) {
+    @Path("{id}")
+    public void deleteMovie(@PathParam("id") long id) {
         service.deleteMovie(id);
     }
 
     @GET
-    @Path(&quot;count&quot;)
+    @Path("count")
     @Produces(MediaType.TEXT_PLAIN)
-    public int count(@QueryParam(&quot;field&quot;) String field, @QueryParam(&quot;searchTerm&quot;) String searchTerm) {
+    public int count(@QueryParam("field") String field, @QueryParam("searchTerm") String searchTerm) {
         return service.count(field, searchTerm);
     }
 
-}
-</code></pre>
-<h2>Movie</h2>
-<p>This is the entity Movie that will be persisted by JPA. </p>
-<pre><code>package org.superbiz.moviefun;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_movie">Movie</h3>
+<div class="paragraph">
+<p>This is the entity Movie that will be persisted by JPA.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.moviefun;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -226,7 +273,7 @@ import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@XmlRootElement(name = &quot;movie&quot;)
+@XmlRootElement(name = "movie")
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -302,13 +349,19 @@ public class Movie {
     public void setRating(int rating) {
         this.rating = rating;
     }
-}
-</code></pre>
-<h2>MoviesBean</h2>
-<pre><code>This is the EJB according to the @Stateless annotation. It uses the unit persistence &quot;movie-unit&quot; for persist 
-entities movie.
-
-package org.superbiz.moviefun;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_moviesbean">MoviesBean</h3>
+<div class="paragraph">
+<p>This is the EJB according to the @Stateless annotation. It uses the unit persistence "movie-unit" for persist
+entities movie.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.moviefun;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -325,7 +378,7 @@ import java.util.List;
 @Stateless
 public class MoviesBean {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;)
+    @PersistenceContext(unitName = "movie-unit")
     private EntityManager entityManager;
 
     public Movie find(Long id) {
@@ -350,9 +403,9 @@ public class MoviesBean {
         CriteriaQuery&lt;Movie&gt; cq = qb.createQuery(Movie.class);
         Root&lt;Movie&gt; root = cq.from(Movie.class);
         EntityType&lt;Movie&gt; type = entityManager.getMetamodel().entity(Movie.class);
-        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !&quot;&quot;.equals(field.trim()) &amp;&amp; !&quot;&quot;.equals(searchTerm.trim())) {
+        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !"".equals(field.trim()) &amp;&amp; !"".equals(searchTerm.trim())) {
             Path&lt;String&gt; path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
-            Predicate condition = qb.like(path, &quot;%&quot; + searchTerm.trim() + &quot;%&quot;);
+            Predicate condition = qb.like(path, "%" + searchTerm.trim() + "%");
             cq.where(condition);
         }
         TypedQuery&lt;Movie&gt; q = entityManager.createQuery(cq);
@@ -371,24 +424,39 @@ public class MoviesBean {
         Root&lt;Movie&gt; root = cq.from(Movie.class);
         EntityType&lt;Movie&gt; type = entityManager.getMetamodel().entity(Movie.class);
         cq.select(qb.count(root));
-        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !&quot;&quot;.equals(field.trim()) &amp;&amp; !&quot;&quot;.equals(searchTerm.trim())) {
+        if (field != null &amp;&amp; searchTerm != null &amp;&amp; !"".equals(field.trim()) &amp;&amp; !"".equals(searchTerm.trim())) {
             Path&lt;String&gt; path = root.get(type.getDeclaredSingularAttribute(field.trim(), String.class));
-            Predicate condition = qb.like(path, &quot;%&quot; + searchTerm.trim() + &quot;%&quot;);
+            Predicate condition = qb.like(path, "%" + searchTerm.trim() + "%");
             cq.where(condition);
         }
         return entityManager.createQuery(cq).getSingleResult().intValue();
     }
 
     public void clean() {
-        entityManager.createQuery(&quot;delete from Movie&quot;).executeUpdate();
+        entityManager.createQuery("delete from Movie").executeUpdate();
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>Running the example is fairly simple. In the "moviefun-rest" directory run:</p>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running the example is fairly simple. In the ``moviefun-rest'' directory
+run:</p>
+</div>
+<div class="paragraph">
 <p>$ mvn clean install</p>
+</div>
+<div class="paragraph">
 <p>Which should create output like the following.</p>
-<pre><code>INFO: OpenJPA dynamically loaded a validation provider.
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">INFO: OpenJPA dynamically loaded a validation provider.
 Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.ReloadableEntityManagerFactory createDelegate
 INFO: PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 36ms
 Dec 18, 2018 1:31:44 PM org.apache.openejb.assembler.classic.JndiBuilder bind
@@ -432,9 +500,9 @@ INFO: Reading config : jar:file:/Users/josediaz/.m2/repository/org/apache/openwe
 Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.DefaultFacesConfigurationProvider getClassloaderFacesConfig
 INFO: Reading config : jar:file:/Users/josediaz/.m2/repository/org/apache/openwebbeans/openwebbeans-jsf/2.0.8/openwebbeans-jsf-2.0.8.jar!/META-INF/faces-config.xml
 Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.LogMetaInfUtils logArtifact
-INFO: Artifact &#39;myfaces-api&#39; was found in version &#39;2.3.2&#39; from path &#39;file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-api/2.3.2/myfaces-api-2.3.2.jar&#39;
+INFO: Artifact 'myfaces-api' was found in version '2.3.2' from path 'file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-api/2.3.2/myfaces-api-2.3.2.jar'
 Dec 18, 2018 1:31:46 PM org.apache.myfaces.config.LogMetaInfUtils logArtifact
-INFO: Artifact &#39;myfaces-impl&#39; was found in version &#39;2.3.2&#39; from path &#39;file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-impl/2.3.2/myfaces-impl-2.3.2.jar&#39;
+INFO: Artifact 'myfaces-impl' was found in version '2.3.2' from path 'file:/Users/josediaz/.m2/repository/org/apache/myfaces/core/myfaces-impl/2.3.2/myfaces-impl-2.3.2.jar'
 Dec 18, 2018 1:31:46 PM org.apache.myfaces.util.ExternalSpecifications isCDIAvailable
 INFO: MyFaces CDI support enabled
 Dec 18, 2018 1:31:46 PM org.apache.myfaces.spi.impl.DefaultInjectionProviderFactory getInjectionProvider
@@ -442,7 +510,7 @@ INFO: Using InjectionProvider org.apache.myfaces.spi.impl.CDIAnnotationDelegateI
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.util.ExternalSpecifications isBeanValidationAvailable
 INFO: MyFaces Bean Validation support enabled
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.application.ApplicationImpl getProjectStage
-INFO: Couldn&#39;t discover the current project stage, using Production
+INFO: Couldn't discover the current project stage, using Production
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.config.FacesConfigurator handleSerialFactory
 INFO: Serialization provider : class org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.config.annotation.DefaultLifecycleProviderFactory getLifecycleProvider
@@ -450,25 +518,28 @@ INFO: Using LifecycleProvider org.apache.myfaces.config.annotation.Tomcat7Annota
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.webapp.AbstractFacesInitializer initFaces
 INFO: ServletContext initialized.
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.view.facelets.ViewPoolProcessor initialize
-INFO: org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to &quot;noCache&quot;. To enable view pooling this param must be set to &quot;alwaysRecompile&quot;. View Pooling disabled.
+INFO: org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to "noCache". To enable view pooling this param must be set to "alwaysRecompile". View Pooling disabled.
 Dec 18, 2018 1:31:47 PM org.apache.myfaces.webapp.StartupServletContextListener contextInitialized
 INFO: MyFaces Core has started, it took [1867] ms.
 Dec 18, 2018 1:31:47 PM null
 INFO: Starting OpenJPA 3.0.0
 Dec 18, 2018 1:31:47 PM null
-INFO: Using dictionary class &quot;org.apache.openjpa.jdbc.sql.HSQLDictionary&quot; (HSQL Database Engine 2.3.2 ,HSQL Database Engine Driver 2.3.2).
+INFO: Using dictionary class "org.apache.openjpa.jdbc.sql.HSQLDictionary" (HSQL Database Engine 2.3.2 ,HSQL Database Engine Driver 2.3.2).
 Dec 18, 2018 1:31:47 PM null
-INFO: Connected to HSQL Database Engine version 2.2 using JDBC driver HSQL Database Engine Driver version 2.3.2. 
+INFO: Connected to HSQL Database Engine version 2.2 using JDBC driver HSQL Database Engine Driver version 2.3.2.
 Dec 18, 2018 1:31:53 PM null
-INFO: Creating subclass and redefining methods for &quot;[class org.superbiz.moviefun.Movie]&quot;. This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
+INFO: Creating subclass and redefining methods for "[class org.superbiz.moviefun.Movie]". This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
 Dec 18, 2018 1:31:54 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
 INFO: Undeploying app: /Users/josediaz/Projects/tomitribe/tomee/examples/moviefun-rest/target/arquillian-test-working-dir/0/test
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.77 sec - in org.superbiz.moviefun.MoviesEJBTest
 
 Results :
 
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -488,7 +559,7 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

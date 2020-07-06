@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows how to create a stateless session bean that uses the @PostConstruct, @PreDestroy and @AroundInvoke annotations.</p>
-<h2>CalculatorBean</h2>
-<pre><code>package org.superbiz.stateless.basic;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to create a stateless session bean that uses the
+@PostConstruct, @PreDestroy and @AroundInvoke annotations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorbean">CalculatorBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.stateless.basic;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -110,12 +121,12 @@ public class CalculatorBean {
 
     @PostConstruct
     public void postConstruct() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;postConstruct&quot;);
+        ExecutionChannel.getInstance().notifyObservers("postConstruct");
     }
 
     @PreDestroy
     public void preDestroy() {
-        ExecutionChannel.getInstance().notifyObservers(&quot;preDestroy&quot;);
+        ExecutionChannel.getInstance().notifyObservers("preDestroy");
     }
 
     @AroundInvoke
@@ -144,10 +155,17 @@ public class CalculatorBean {
         return a % b;
     }
 
-}
-</code></pre>
-<h2>ExecutionChannel</h2>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executionchannel">ExecutionChannel</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,19 +188,33 @@ public class ExecutionChannel {
             observer.onExecution(value);
         }
     }
-}
-</code></pre>
-<h2>ExecutionObserver</h2>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executionobserver">ExecutionObserver</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 public interface ExecutionObserver {
 
     void onExecution(Object value);
 
-}
-</code></pre>
-<h2>CalculatorTest</h2>
-<pre><code>package org.superbiz.stateless.basic;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.stateless.basic;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -196,13 +228,13 @@ import java.util.List;
 import java.util.Properties;
 
 public class CalculatorTest implements ExecutionObserver {
-    private static final String JNDI = &quot;java:global/simple-stateless-callbacks/CalculatorBean&quot;;
+    private static final String JNDI = "java:global/simple-stateless-callbacks/CalculatorBean";
 
     private List&lt;Object&gt; received = new ArrayList&lt;Object&gt;();
 
     public Context getContext() throws NamingException {
         final Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         return new InitialContext(p);
 
     }
@@ -219,44 +251,51 @@ public class CalculatorTest implements ExecutionObserver {
             Assert.assertEquals(10, calculator.add(4, 6));
 
             //the bean is constructed only when it is used for the first time
-            Assert.assertEquals(&quot;postConstruct&quot;, this.received.remove(0));
-            Assert.assertEquals(&quot;add&quot;, this.received.remove(0));
+            Assert.assertEquals("postConstruct", this.received.remove(0));
+            Assert.assertEquals("add", this.received.remove(0));
 
             Assert.assertEquals(-2, calculator.subtract(4, 6));
-            Assert.assertEquals(&quot;subtract&quot;, this.received.remove(0));
+            Assert.assertEquals("subtract", this.received.remove(0));
 
             Assert.assertEquals(24, calculator.multiply(4, 6));
-            Assert.assertEquals(&quot;multiply&quot;, this.received.remove(0));
+            Assert.assertEquals("multiply", this.received.remove(0));
 
             Assert.assertEquals(2, calculator.divide(12, 6));
-            Assert.assertEquals(&quot;divide&quot;, this.received.remove(0));
+            Assert.assertEquals("divide", this.received.remove(0));
 
             Assert.assertEquals(4, calculator.remainder(46, 6));
-            Assert.assertEquals(&quot;remainder&quot;, this.received.remove(0));
+            Assert.assertEquals("remainder", this.received.remove(0));
         }
 
         {
             final CalculatorBean calculator = (CalculatorBean) getContext().lookup(JNDI);
 
             Assert.assertEquals(10, calculator.add(4, 6));
-            Assert.assertEquals(&quot;add&quot;, this.received.remove(0));
+            Assert.assertEquals("add", this.received.remove(0));
 
         }
 
         container.close();
-        Assert.assertEquals(&quot;preDestroy&quot;, this.received.remove(0));
+        Assert.assertEquals("preDestroy", this.received.remove(0));
         Assert.assertTrue(this.received.isEmpty());
     }
 
     @Override
     public void onExecution(Object value) {
-        System.out.println(&quot;Test step -&gt; &quot; + value);
+        System.out.println("Test step -&gt; " + value);
         this.received.add(value);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.stateless.basic.CalculatorTest
@@ -272,7 +311,7 @@ INFO - openejb.home = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-st
 INFO - openejb.base = /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
 INFO - Succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
@@ -288,10 +327,10 @@ INFO - Configuring Service(id=Default Managed Container, type=Container, provide
 INFO - Auto-creating a container for bean org.superbiz.stateless.basic.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
-INFO - Enterprise application &quot;/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks&quot; loaded.
+INFO - Enterprise application "/home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks" loaded.
 INFO - Assembling app: /home/boto/dev/ws/openejb_trunk/openejb/examples/simple-stateless-callbacks
-INFO - Jndi(name=&quot;java:global/simple-stateless-callbacks/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean&quot;)
-INFO - Jndi(name=&quot;java:global/simple-stateless-callbacks/CalculatorBean&quot;)
+INFO - Jndi(name="java:global/simple-stateless-callbacks/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean")
+INFO - Jndi(name="java:global/simple-stateless-callbacks/CalculatorBean")
 INFO - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@527736bd
 INFO - OpenWebBeans Container is starting...
 INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
@@ -313,8 +352,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.884 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -334,7 +376,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

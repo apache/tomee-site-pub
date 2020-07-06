@@ -108,22 +108,22 @@ ver o código completo em nosso repositório no <a href="https://github.com/apac
 Não seria interessante
 poder anotar o método desta forma?</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Log
-public void aMethod(){...}</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">@Log
+public void aMethod(){...}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Vamos criar uma anotação que "marca" nosso método para interceptação.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@InterceptorBinding
+<pre class="highlight"><code class="language-java" data-lang="java">@InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
 public @interface Log {
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -135,9 +135,9 @@ a um interceptador.</p>
 <p>Aqui está nosso interceptador de log. Um método <code>@AroundInvoke</code> e estamos quase
 terminando.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Interceptor
+<pre class="highlight"><code class="language-java" data-lang="java">@Interceptor
 @Log  //binding the interceptor here. now any method annotated with @Log would be intercepted by logMethodEntry
 public class LoggingInterceptor {
     @AroundInvoke
@@ -146,7 +146,7 @@ public class LoggingInterceptor {
         //or logger.info statement
         return ctx.proceed();
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -155,9 +155,9 @@ public class LoggingInterceptor {
 <div class="paragraph">
 <p>Tudo pronto, vamos anotar em nível de classe ou método e nos divertir interceptando !</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@Log
+<pre class="highlight"><code class="language-java" data-lang="java">@Log
 @Stateful
 public class BookShow implements Serializable {
     private static final long serialVersionUID = 6350400892234496909L;
@@ -171,7 +171,7 @@ public class BookShow implements Serializable {
         return ticketPrice - 50;
     }
     // assume more methods are present
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -185,14 +185,14 @@ os interceptadores!</p>
 <div class="paragraph">
 <p>Vamos criar rapidamente um arquivo <code>beans.xml</code> na pasta <code>META-INF</code></p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;beans&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;beans&gt;
   &lt;interceptors&gt;
     &lt;class&gt;org.superbiz.cdi.bookshow.interceptors.LoggingInterceptor
     &lt;/class&gt;
   &lt;/interceptors&gt;
-&lt;/beans&gt;</pre>
+&lt;/beans&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -202,9 +202,9 @@ definem sua "ordem de execução". Mas veremos isso em outro exemplo multiple-cd
 <div class="paragraph">
 <p>Execute o teste, e veremos um <code>Entering method: getMovieList</code> impresso no terminal.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>#Tests Apache OpenEJB 4.0.0-beta-2 build: 20111103-01:00
+<pre class="highlight"><code class="language-java" data-lang="java">#Tests Apache OpenEJB 4.0.0-beta-2 build: 20111103-01:00
 http://tomee.apache.org/
 INFO - openejb.home = /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
 INFO - openejb.base = /media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors
@@ -225,7 +225,7 @@ INFO - Jndi(name="java:global/cdi-simple-interceptors/BookShow")
 INFO - Created Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default Stateful Container)
 INFO - Started Ejb(deployment-id=BookShow, ejb-name=BookShow, container=Default Stateful Container)
 INFO - Deployed Application(path=/media/fthree/Workspace/open4/openejb/examples/cdi-simple-interceptors)
-Entering method: getMoviesList</pre>
+Entering method: getMoviesList</code></pre>
 </div>
 </div>
             </div>
@@ -247,7 +247,7 @@ Entering method: getMoviesList</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

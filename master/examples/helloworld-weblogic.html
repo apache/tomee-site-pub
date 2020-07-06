@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>HelloBean</h2>
-<pre><code>package org.superbiz.hello;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hellobean">HelloBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.hello;
 
 import javax.ejb.LocalHome;
 import javax.ejb.Stateless;
@@ -110,12 +121,19 @@ import javax.ejb.Stateless;
 public class HelloBean {
 
     public String sayHello() {
-        return &quot;Hello, World!&quot;;
+        return "Hello, World!";
     }
-}
-</code></pre>
-<h2>HelloEjbLocal</h2>
-<pre><code>package org.superbiz.hello;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helloejblocal">HelloEjbLocal</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.hello;
 
 import javax.ejb.EJBLocalObject;
 
@@ -125,10 +143,17 @@ import javax.ejb.EJBLocalObject;
 public interface HelloEjbLocal extends EJBLocalObject {
 
     String sayHello();
-}
-</code></pre>
-<h2>HelloEjbLocalHome</h2>
-<pre><code>package org.superbiz.hello;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helloejblocalhome">HelloEjbLocalHome</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.hello;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBLocalHome;
@@ -138,21 +163,42 @@ import javax.ejb.EJBLocalHome;
  */
 public interface HelloEjbLocalHome extends EJBLocalHome {
     HelloEjbLocal create() throws CreateException;
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar/&gt;
-</code></pre>
-<h2>weblogic-ejb-jar.xml</h2>
-<pre><code>&lt;weblogic-ejb-jar&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_weblogic_ejb_jar_xml">weblogic-ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;weblogic-ejb-jar&gt;
   &lt;weblogic-enterprise-bean&gt;
     &lt;ejb-name&gt;HelloBean&lt;/ejb-name&gt;
     &lt;local-jndi-name&gt;MyHello&lt;/local-jndi-name&gt;
   &lt;/weblogic-enterprise-bean&gt;
-&lt;/weblogic-ejb-jar&gt;
-</code></pre>
-<h2>HelloTest</h2>
-<pre><code>package org.superbiz.hello;
+&lt;/weblogic-ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hellotest">HelloTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.hello;
 
 import junit.framework.TestCase;
 
@@ -167,20 +213,27 @@ public class HelloTest extends TestCase {
 
     public void test() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
         InitialContext initialContext = new InitialContext(properties);
 
-        HelloEjbLocalHome localHome = (HelloEjbLocalHome) initialContext.lookup(&quot;MyHello&quot;);
+        HelloEjbLocalHome localHome = (HelloEjbLocalHome) initialContext.lookup("MyHello");
         HelloEjbLocal helloEjb = localHome.create();
 
         String message = helloEjb.sayHello();
 
-        assertEquals(message, &quot;Hello, World!&quot;);
+        assertEquals(message, "Hello, World!");
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.hello.HelloTest
@@ -195,7 +248,7 @@ INFO - Beginning load: /Users/dblevins/examples/helloworld-weblogic/target/class
 INFO - Configuring enterprise application: /Users/dblevins/examples/helloworld-weblogic/classpath.ear
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean HelloBean: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/helloworld-weblogic/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/helloworld-weblogic/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/helloworld-weblogic/classpath.ear
 INFO - Jndi(name=MyHello) --&gt; Ejb(deployment-id=HelloBean)
 INFO - Jndi(name=global/classpath.ear/helloworld-weblogic/HelloBean!org.superbiz.hello.HelloEjbLocalHome) --&gt; Ejb(deployment-id=HelloBean)
@@ -207,8 +260,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.414 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -228,7 +284,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

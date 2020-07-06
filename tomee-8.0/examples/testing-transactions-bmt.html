@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>Shows how to begin, commit and rollback transactions using a UserTransaction via a Stateful Bean.</p>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.injection.tx;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shows how to begin, commit and rollback transactions using a
+UserTransaction via a Stateful Bean.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -154,10 +165,17 @@ public class Movie {
     public void setYear(int year) {
         this.year = year;
     }
-}
-</code></pre>
-<h2>Movies</h2>
-<pre><code>package org.superbiz.injection.tx;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateful;
@@ -169,11 +187,11 @@ import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import javax.transaction.UserTransaction;
 
-@Stateful(name = &quot;Movies&quot;)
+@Stateful(name = "Movies")
 @TransactionManagement(TransactionManagementType.BEAN)
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.TRANSACTION)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.TRANSACTION)
     private EntityManager entityManager;
 
     @Resource
@@ -199,27 +217,41 @@ public class Movies {
     }
 
     public Long countMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT COUNT(m) FROM Movie m&quot;);
+        Query query = entityManager.createQuery("SELECT COUNT(m) FROM Movie m");
         return Long.class.cast(query.getSingleResult());
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
 
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;
 
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.injection.tx;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -236,26 +268,33 @@ public class MoviesTest {
     @Test
     public void testMe() throws Exception {
         final Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
-        EJBContainer.createEJBContainer(p).getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
 
-        movies.addMovie(new Movie(&quot;Asif Kapadia&quot;, &quot;Senna&quot;, 2010));
-        movies.addMovie(new Movie(&quot;José Padilha&quot;, &quot;Tropa de Elite&quot;, 2007));
-        movies.addMovie(new Movie(&quot;Andy Wachowski/Lana Wachowski&quot;, &quot;The Matrix&quot;, 1999));
-        movies.addMovie(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-        movies.addMovie(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+        movies.addMovie(new Movie("Asif Kapadia", "Senna", 2010));
+        movies.addMovie(new Movie("José Padilha", "Tropa de Elite", 2007));
+        movies.addMovie(new Movie("Andy Wachowski/Lana Wachowski", "The Matrix", 1999));
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
         Assert.assertEquals(5L, movies.countMovies().longValue());
     }
 
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.injection.tx.MoviesTest
@@ -271,7 +310,7 @@ INFO - openejb.home = /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-t
 INFO - openejb.base = /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt
 INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@3f3f210f
 INFO - Succeeded in installing singleton service
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
@@ -281,7 +320,7 @@ INFO - Creating SecurityService(id=Default Security Service)
 INFO - Creating Resource(id=movieDatabase)
 INFO - Beginning load: /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt/target/classes
 INFO - Configuring enterprise application: /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt
-WARNING - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
+WARNING - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
 INFO - Auto-deploying ejb Movies: EjbDeployment(deployment-id=Movies)
 INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
 INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
@@ -292,16 +331,16 @@ INFO - Auto-creating a container for bean org.superbiz.injection.tx.MoviesTest: 
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory /tmp for stateful session passivation
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
 INFO - Creating Resource(id=movieDatabaseNonJta)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-INFO - Enterprise application &quot;/home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt&quot; loaded.
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt" loaded.
 INFO - Assembling app: /home/boto/dev/ws/openejb_trunk/openejb/examples/testing-transactions-bmt
 SEVERE - JAVA AGENT NOT INSTALLED. The JPA Persistence Provider requested installation of a ClassFileTransformer which requires a JavaAgent.  See http://tomee.apache.org/3.0/javaagent.html
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 399ms
-INFO - Jndi(name=&quot;java:global/testing-transactions-bmt/Movies!org.superbiz.injection.tx.Movies&quot;)
-INFO - Jndi(name=&quot;java:global/testing-transactions-bmt/Movies&quot;)
+INFO - Jndi(name="java:global/testing-transactions-bmt/Movies!org.superbiz.injection.tx.Movies")
+INFO - Jndi(name="java:global/testing-transactions-bmt/Movies")
 INFO - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@3f3f210f
 INFO - OpenWebBeans Container is starting...
 INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
@@ -314,9 +353,9 @@ INFO - Started user transaction org.apache.geronimo.transaction.manager.Transact
 21-Jul-2012 4:39:32 PM null openjpa.Runtime
 INFO: Starting OpenJPA 2.2.0
 21-Jul-2012 4:39:32 PM null openjpa.jdbc.JDBC
-INFO: Using dictionary class &quot;org.apache.openjpa.jdbc.sql.HSQLDictionary&quot; (HSQL Database Engine 2.2.8 ,HSQL Database Engine Driver 2.2.8).
+INFO: Using dictionary class "org.apache.openjpa.jdbc.sql.HSQLDictionary" (HSQL Database Engine 2.2.8 ,HSQL Database Engine Driver 2.2.8).
 21-Jul-2012 4:39:33 PM null openjpa.Enhance
-INFO: Creating subclass and redefining methods for &quot;[class org.superbiz.injection.tx.Movie]&quot;. This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
+INFO: Creating subclass and redefining methods for "[class org.superbiz.injection.tx.Movie]". This means that your application will be less efficient than it would if you ran the OpenJPA enhancer.
 INFO - Committing user transaction org.apache.geronimo.transaction.manager.TransactionImpl@709a1411
 INFO - Started user transaction org.apache.geronimo.transaction.manager.TransactionImpl@2bb64b70
 INFO - Committing user transaction org.apache.geronimo.transaction.manager.TransactionImpl@2bb64b70
@@ -332,8 +371,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.471 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -353,7 +395,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

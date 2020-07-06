@@ -95,20 +95,44 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows how to automatically create and register mbeans using TomEE features.</p>
-<h1>Dependencies</h1>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to automatically create and register mbeans using
+TomEE features.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependencies">Dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>To be able to use it you need to import the mbean api (annotations):</p>
-<pre><code>&lt;dependency&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.apache.openejb&lt;/groupId&gt;
   &lt;artifactId&gt;mbean-annotation-api&lt;/artifactId&gt;
   &lt;version&gt;4.5.0&lt;/version&gt;
   &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h1>The MBean</h1>
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_mbean">The MBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The mbean implements a simple game where the goal is to guess a number.</p>
+</div>
+<div class="paragraph">
 <p>It allows the user to change the value too.</p>
-<pre><code>package org.superbiz.mbean;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.mbean;
 
 import javax.management.Description;
 import javax.management.MBean;
@@ -116,12 +140,12 @@ import javax.management.ManagedAttribute;
 import javax.management.ManagedOperation;
 
 @MBean
-@Description(&quot;play with me to guess a number&quot;)
+@Description("play with me to guess a number")
 public class GuessHowManyMBean {
     private int value = 0;
 
     @ManagedAttribute
-    @Description(&quot;you are cheating!&quot;)
+    @Description("you are cheating!")
     public int getValue() {
         return value;
     }
@@ -134,20 +158,36 @@ public class GuessHowManyMBean {
     @ManagedOperation
     public String tryValue(int userValue) {
         if (userValue == value) {
-            return &quot;winner&quot;;
+            return "winner";
         }
-        return &quot;not the correct value, please have another try&quot;;
+        return "not the correct value, please have another try";
     }
-}
-</code></pre>
-<p>To register a MBean you simply have to specify a property either in system.properties, or in intial context properties.</p>
-<pre><code>Properties properties = new Properties();
-properties.setProperty(&quot;openejb.user.mbeans.list&quot;, GuessHowManyMBean.class.getName());
-EJBContainer.createEJBContainer(properties);
-</code></pre>
-<h1>Accessing the MBean</h1>
-<p>Then simply get the platform server and you can play with parameters and operations:</p>
-<pre><code>package org.superbiz.mbean;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To register a MBean you simply have to specify a property either in
+system.properties, or in intial context properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties properties = new Properties();
+properties.setProperty("openejb.user.mbeans.list", GuessHowManyMBean.class.getName());
+EJBContainer.createEJBContainer(properties);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_the_mbean">Accessing the MBean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Then simply get the platform server and you can play with parameters and
+operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.mbean;
 
 import org.junit.Test;
 
@@ -162,31 +202,44 @@ import java.util.Properties;
 import static junit.framework.Assert.assertEquals;
 
 public class GuessHowManyMBeanTest {
-    private static final String OBJECT_NAME = &quot;openejb.user.mbeans:group=org.superbiz.mbean,application=mbean-auto-registration,name=GuessHowManyMBean&quot;;
+    private static final String OBJECT_NAME = "openejb.user.mbeans:group=org.superbiz.mbean,application=mbean-auto-registration,name=GuessHowManyMBean";
 
     @Test
     public void play() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(&quot;openejb.user.mbeans.list&quot;, GuessHowManyMBean.class.getName());
+        properties.setProperty("openejb.user.mbeans.list", GuessHowManyMBean.class.getName());
         EJBContainer container = EJBContainer.createEJBContainer(properties);
 
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         ObjectName objectName = new ObjectName(OBJECT_NAME);
         MBeanInfo infos = server.getMBeanInfo(objectName);
-        assertEquals(0, server.getAttribute(objectName, &quot;value&quot;));
-        server.setAttribute(objectName, new Attribute(&quot;value&quot;, 3));
-        assertEquals(3, server.getAttribute(objectName, &quot;value&quot;));
-        assertEquals(&quot;winner&quot;, server.invoke(objectName, &quot;tryValue&quot;, new Object[]{3}, null));
-        assertEquals(&quot;not the correct value, please have another try&quot;, server.invoke(objectName, &quot;tryValue&quot;, new Object[]{2}, null));
+        assertEquals(0, server.getAttribute(objectName, "value"));
+        server.setAttribute(objectName, new Attribute("value", 3));
+        assertEquals(3, server.getAttribute(objectName, "value"));
+        assertEquals("winner", server.invoke(objectName, "tryValue", new Object[]{3}, null));
+        assertEquals("not the correct value, please have another try", server.invoke(objectName, "tryValue", new Object[]{2}, null));
 
         container.close();
     }
-}
-</code></pre>
-<h4>Note</h4>
-<p>If OpenEJB can't find any module it can't start. So to force him to start even if the example has only the mbean as java class, we added a <code>beans.xml</code> file to turn our project into a Java EE module.</p>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_note">Note</h3>
+<div class="paragraph">
+<p>If OpenEJB can’t find any module it can’t start. So to force him to
+start even if the example has only the mbean as java class, we added a
+<code>beans.xml</code> file to turn our project into a Java EE module.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.mbean.GuessHowManyMBeanTest
@@ -194,7 +247,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/mbean-auto-registration
 INFO - openejb.base = /Users/dblevins/examples/mbean-auto-registration
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/mbean-auto-registration/target/classes
@@ -205,12 +258,12 @@ INFO - MBean openejb.user.mbeans:application=mbean-auto-registration,group=org.s
 INFO - MBean openejb.user.mbeans:application=EjbModule1847652919,group=org.superbiz.mbean,name=GuessHowManyMBean registered.
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean mbean-auto-registration.Comp: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/mbean-auto-registration&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/mbean-auto-registration" loaded.
 INFO - Assembling app: /Users/dblevins/examples/mbean-auto-registration
-INFO - Jndi(name=&quot;java:global/mbean-auto-registration/mbean-auto-registration.Comp!org.apache.openejb.BeanContext$Comp&quot;)
-INFO - Jndi(name=&quot;java:global/mbean-auto-registration/mbean-auto-registration.Comp&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1847652919/org.superbiz.mbean.GuessHowManyMBeanTest!org.superbiz.mbean.GuessHowManyMBeanTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule1847652919/org.superbiz.mbean.GuessHowManyMBeanTest&quot;)
+INFO - Jndi(name="java:global/mbean-auto-registration/mbean-auto-registration.Comp!org.apache.openejb.BeanContext$Comp")
+INFO - Jndi(name="java:global/mbean-auto-registration/mbean-auto-registration.Comp")
+INFO - Jndi(name="java:global/EjbModule1847652919/org.superbiz.mbean.GuessHowManyMBeanTest!org.superbiz.mbean.GuessHowManyMBeanTest")
+INFO - Jndi(name="java:global/EjbModule1847652919/org.superbiz.mbean.GuessHowManyMBeanTest")
 INFO - Created Ejb(deployment-id=mbean-auto-registration.Comp, ejb-name=mbean-auto-registration.Comp, container=Default Managed Container)
 INFO - Created Ejb(deployment-id=org.superbiz.mbean.GuessHowManyMBeanTest, ejb-name=org.superbiz.mbean.GuessHowManyMBeanTest, container=Default Managed Container)
 INFO - Started Ejb(deployment-id=mbean-auto-registration.Comp, ejb-name=mbean-auto-registration.Comp, container=Default Managed Container)
@@ -221,8 +274,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.063 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -242,7 +298,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

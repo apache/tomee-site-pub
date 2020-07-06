@@ -115,9 +115,9 @@
 <div class="paragraph">
 <p>You ca see the simplicity of using the JMSContext object to send messages to and consume messages from the queue.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>package org.superbiz.jms;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.jms;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -156,7 +156,7 @@ public class CustomJmsService {
     private void sendMessage(final Queue queue, final String message) {
         jmsContext.createProducer().send(messageQueue, jmsContext.createTextMessage(message));
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -175,9 +175,9 @@ public class CustomJmsService {
 <div class="paragraph">
 <p>Finally, in order to verify both HTTP status from the responses are asserted as equals to the expected HTTP codes (204/200), as well as the message&#8217;s content.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>@RunWith(Arquillian.class)
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
 @RunAsClient
 public class CustomJmsServiceTest {
 
@@ -209,7 +209,7 @@ public class CustomJmsServiceTest {
             assertEquals("This is a test", content);
         }
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -218,17 +218,17 @@ public class CustomJmsServiceTest {
 <div class="paragraph">
 <p>Building and testing the example is simple. In the <code>simple-jms-context</code> directory run:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>$ mvn clean install</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn clean install</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Which should create output like the following.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[WARNING]
+<pre class="highlight"><code class="language-java" data-lang="java">[WARNING]
 [WARNING] Some problems were encountered while building the effective settings
 [WARNING] 'servers.server.id' must be unique but found duplicate server with id tomitribe-all @ /home/jgallimore/.m2/settings.xml
 [WARNING]
@@ -537,7 +537,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [INFO] ------------------------------------------------------------------------
 [INFO] Total time:  11.834 s
 [INFO] Finished at: 2020-03-31T20:38:15+01:00
-[INFO] ------------------------------------------------------------------------</pre>
+[INFO] ------------------------------------------------------------------------</code></pre>
 </div>
 </div>
 </div>
@@ -547,17 +547,17 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 <div class="paragraph">
 <p>Running the example is simple. In the <code>simple-jms</code> directory run:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>$ mvn tomee:run</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn tomee:run</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Which should create output like the following.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>31-Mar-2020 20:39:14.341 INFO [main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints REST Application: http://localhost:8080/simple-jms-context-8.0.2-SNAPSHOT/        -&gt; org.apache.openejb.server.rest.InternalApplication@418f890f
+<pre class="highlight"><code class="language-java" data-lang="java">31-Mar-2020 20:39:14.341 INFO [main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints REST Application: http://localhost:8080/simple-jms-context-8.0.2-SNAPSHOT/        -&gt; org.apache.openejb.server.rest.InternalApplication@418f890f
 31-Mar-2020 20:39:14.344 INFO [main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints      Service URI: http://localhost:8080/simple-jms-context-8.0.2-SNAPSHOT/message -&gt;  EJB org.superbiz.jms.CustomJmsService
 31-Mar-2020 20:39:14.344 INFO [main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints               GET http://localhost:8080/simple-jms-context-8.0.2-SNAPSHOT/message -&gt;      String receiveMessage() throws JMSException
 31-Mar-2020 20:39:14.344 INFO [main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints              POST http://localhost:8080/simple-jms-context-8.0.2-SNAPSHOT/message -&gt;      void sendMessage(String)
@@ -567,23 +567,23 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 31-Mar-2020 20:39:14.370 INFO [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesObjectStreamClassCaches] to [true] as the property does not exist.
 31-Mar-2020 20:39:14.370 INFO [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesThreadLocals] to [true] as the property does not exist.
 31-Mar-2020 20:39:14.378 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler ["http-nio-8080"]
-31-Mar-2020 20:39:14.385 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Server startup in [2,986] milliseconds</pre>
+31-Mar-2020 20:39:14.385 INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Server startup in [2,986] milliseconds</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Note: now you can use the <code>CURL</code> command (or a browser-client tool) to send a POST request and then a GET request to the equivalent URL:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>http://localhost:8080/simple-jms-context&lt;-TOMEE-VERSION&gt;/message</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">http://localhost:8080/simple-jms-context&lt;-TOMEE-VERSION&gt;/message</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Finally, you can <code>quit</code>, <code>exit</code>, <code>reload</code> the example, by typing one of the available commands</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>[WARNING] Command '' not understood. Use one of [quit, exit, reload]</pre>
+<pre class="highlight"><code class="language-java" data-lang="java">[WARNING] Command '' not understood. Use one of [quit, exit, reload]</code></pre>
 </div>
 </div>
             </div>
@@ -605,7 +605,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -95,12 +95,37 @@
         <div class="row">
             
             <div class="col-md-12">
-                <blockquote>
-  <p>"Stateless session beans are session beans whose instances have no conversational state.<br/>This means that all bean instances are equivalent when they are not involved in servicing a client-invoked method. The term 'stateless' signifies that an instance has no state for a specific client."</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>``Stateless session beans are session beans whose instances have no
+conversational state. This means that all bean instances are equivalent
+when they are not involved in servicing a client-invoked method. The
+term `stateless' signifies that an instance has no state for a specific
+client.''</p>
+</div>
 </blockquote>
-<p>What this means is quite simply that stateless beans are shared. They do in fact have state as you can assign values to the variables, etc. in the bean instance. The only catch is there are a pool of identical instances and you are not guaranteed to get the exact same instance on every call. For each call, you get whatever instance happens to be available. This is identical to checking out a book from the library or renting a movie from the video store. You are essentially checking out or renting a new bean instance on each method call.</p>
-<h2>CalculatorBean</h2>
-<pre><code>package org.superbiz.stateless.basic;
+</div>
+<div class="paragraph">
+<p>What this means is quite simply that stateless beans are shared. They do
+in fact have state as you can assign values to the variables, etc. in
+the bean instance. The only catch is there are a pool of identical
+instances and you are not guaranteed to get the exact same instance on
+every call. For each call, you get whatever instance happens to be
+available. This is identical to checking out a book from the library or
+renting a movie from the video store. You are essentially checking out
+or renting a new bean instance on each method call.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorbean">CalculatorBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.stateless.basic;
 
 import javax.ejb.Stateless;
 
@@ -126,11 +151,21 @@ public class CalculatorBean {
     public int remainder(int a, int b) {
         return a % b;
     }
-}
-</code></pre>
-<h2>CalculatorTest</h2>
-<p>Our <code>CalculatorBean</code> can be easily tested using the <code>EJBContainer</code> API in EJB 3.1</p>
-<pre><code>package org.superbiz.stateless.basic;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our <code>CalculatorBean</code> can be easily tested using the <code>EJBContainer</code> API
+in EJB 3.1</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.stateless.basic;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -156,7 +191,7 @@ public class CalculatorTest {
 
     @Before
     public void lookupABean() throws NamingException {
-        Object object = ejbContainer.getContext().lookup(&quot;java:global/simple-stateless/CalculatorBean&quot;);
+        Object object = ejbContainer.getContext().lookup("java:global/simple-stateless/CalculatorBean");
 
         assertTrue(object instanceof CalculatorBean);
 
@@ -220,11 +255,20 @@ public class CalculatorTest {
 
     }
 
-}
-</code></pre>
-<h1>Running</h1>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Running the example should generate output similar to the following</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.stateless.basic.CalculatorTest
@@ -240,7 +284,7 @@ Infos - openejb.home = /home/a185558/Development/Apache/openejb-trunk/examples/s
 Infos - openejb.base = /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
 Infos - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@33bb11
 Infos - Succeeded in installing singleton service
-Infos - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+Infos - Using 'javax.ejb.embeddable.EJBContainer=true'
 Infos - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 Infos - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 Infos - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
@@ -256,10 +300,10 @@ Infos - Configuring Service(id=Default Managed Container, type=Container, provid
 Infos - Auto-creating a container for bean org.superbiz.stateless.basic.CalculatorTest: Container(type=MANAGED, id=Default Managed Container)
 Infos - Creating Container(id=Default Managed Container)
 Infos - Using directory /tmp for stateful session passivation
-Infos - Enterprise application &quot;/home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless&quot; loaded.
+Infos - Enterprise application "/home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless" loaded.
 Infos - Assembling app: /home/a185558/Development/Apache/openejb-trunk/examples/simple-stateless
-Infos - Jndi(name=&quot;java:global/simple-stateless/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean&quot;)
-Infos - Jndi(name=&quot;java:global/simple-stateless/CalculatorBean&quot;)
+Infos - Jndi(name="java:global/simple-stateless/CalculatorBean!org.superbiz.stateless.basic.CalculatorBean")
+Infos - Jndi(name="java:global/simple-stateless/CalculatorBean")
 Infos - Existing thread singleton service in SystemInstance() org.apache.openejb.cdi.ThreadSingletonServiceImpl@33bb11
 Infos - OpenWebBeans Container is starting...
 Infos - Adding OpenWebBeansPlugin : [CdiPlugin]
@@ -273,8 +317,11 @@ Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.068 sec
 
 Results :
 
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -294,7 +341,7 @@ Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

@@ -88,63 +88,110 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>null</h1>
+              <h1>JSON-B Custom Serializer</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p>This examples shows how to customize objects serialization/deserialization with jsonb for a JAX-RS Application.</p>
-<h2>Run and test Endpoint</h2>
-<p>the application can be run with 'mvn clean install tomee:run' if port 8080 is available you can invoke the following endpoint: (GET) <a href="http://localhost:8080/jsonb-custom-serializer/api/users">http://localhost:8080/jsonb-custom-serializer/api/users</a> that should respond with the following json:</p>
-<pre><code>[
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This examples shows how to customize objects
+serialization/deserialization with jsonb for a JAX-RS Application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_and_test_endpoint">Run and test Endpoint</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>the application can be run with `mvn clean install tomee:run' if port
+8080 is available you can invoke the following endpoint: (GET)
+<a href="http://localhost:8080/jsonb-custom-serializer/api/users" class="bare">http://localhost:8080/jsonb-custom-serializer/api/users</a> that should
+respond with the following json:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">[
   {
-    &quot;address&quot;:{
-      &quot;addr&quot;:&quot;modified - addr1&quot;
+    "address":{
+      "addr":"modified - addr1"
     },
-    &quot;id&quot;:1,
-    &quot;name&quot;:&quot;user 1&quot;,
-    &quot;registration&quot;:&quot;2018-12-29T18:13:40.028&quot;
+    "id":1,
+    "name":"user 1",
+    "registration":"2018-12-29T18:13:40.028"
   },
   {
-    &quot;address&quot;:{
-      &quot;addr&quot;:&quot;modified - addr2&quot;
+    "address":{
+      "addr":"modified - addr2"
     },
-    &quot;id&quot;:2,
-    &quot;name&quot;:&quot;user 2&quot;,
-    &quot;registration&quot;:&quot;2018-12-29T18:13:40.028&quot;
+    "id":2,
+    "name":"user 2",
+    "registration":"2018-12-29T18:13:40.028"
   }
-]
-</code></pre>
-<p>and the endpoint: (POST) <a href="http://localhost:8080/jsonb-custom-serializer/api/users">http://localhost:8080/jsonb-custom-serializer/api/users</a> with a body like:</p>
-<pre><code>{ 
-    &quot;id&quot;: 1, 
-    &quot;name&quot;: &quot;name1&quot;, 
-    &quot;extra&quot;: &quot;extra1&quot; 
-}
-</code></pre>
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and the endpoint: (POST)
+<a href="http://localhost:8080/jsonb-custom-serializer/api/users" class="bare">http://localhost:8080/jsonb-custom-serializer/api/users</a> with a body
+like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">{
+    "id": 1,
+    "name": "name1",
+    "extra": "extra1"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>which respond with the following json:</p>
-<pre><code>{ 
-    &quot;id&quot;: 1, 
-    &quot;name&quot;: &quot;name1extra1&quot;, 
-    &quot;registration&quot;: &quot;Sat Dec 29 19:48:05 CET 2018&quot;,
-    &quot;address&quot;: null 
-}
-</code></pre>
-<h2>@ApplicationPath</h2>
-<p>JAXRS entry point class, as follows jaxrs will load all the annotated @Path classes and methods without specifying them.</p>
-<pre><code>import javax.ws.rs.ApplicationPath;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">{
+    "id": 1,
+    "name": "name1extra1",
+    "registration": "Sat Dec 29 19:48:05 CET 2018",
+    "address": null
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__applicationpath">@ApplicationPath</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JAXRS entry point class, as follows jaxrs will load all the annotated
+@Path classes and methods without specifying them.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath(&quot;api&quot;)
+@ApplicationPath("api")
 public class JAXRSApplication extends Application {
 
-}
-</code></pre>
-<h2>@Path Rest resource</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__path_rest_resource">@Path Rest resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Simple jaxrs class with a GET and a POST endpoint</p>
-<pre><code>import java.util.ArrayList;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -158,7 +205,7 @@ import javax.ws.rs.core.MediaType;
 import org.superbiz.model.Address;
 import org.superbiz.model.User;
 
-@Path(&quot;users&quot;)
+@Path("users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Stateless
@@ -166,25 +213,36 @@ public class UserService {
 
     @GET
     public List&lt;User&gt; users() {
-       List&lt;User&gt; users = new ArrayList&lt;&gt;();
-       User user1 = new User(1, &quot;user 1&quot;, new Address(&quot;addr1&quot;));
-       User user2 = new User(2, &quot;user 2&quot;, new Address(&quot;addr2&quot;));
-       users.add(user1);
-       users.add(user2);
+        List&lt;User&gt; users = new ArrayList&lt;&gt;();
+        User user1 = new User(1, "user 1", new Address("addr1"));
+        User user2 = new User(2, "user 2", new Address("addr2"));
+        users.add(user1);
+        users.add(user2);
 
-       return users;
+        return users;
     }
 
     @POST
     public User addUser(User u) {
-       // Just to show the deserialization
-       return u;
+        // Just to show the deserialization
+        return u;
     }
-}
-</code></pre>
-<h2>JSONB Configuration</h2>
-<p>Implementing ContextResolver&lt;&gt; you can customize jaxrs defaults, in this example we are going to customize JSONB serialization for all objects of type Address, defined in AddressSerializer class</p>
-<pre><code>import javax.json.bind.Jsonb;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jsonb_configuration">JSONB Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Implementing ContextResolver&lt;&gt; you can customize jaxrs defaults, in this
+example we are going to customize JSONB serialization for all objects of
+type Address, defined in AddressSerializer class</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import javax.ws.rs.ext.ContextResolver;
@@ -196,21 +254,30 @@ public class JSONBConfiguration implements ContextResolver&lt;Jsonb&gt; {
     private Jsonb jsonb;
 
     public JSONBConfiguration() {
-       JsonbConfig config = new JsonbConfig().withFormatting(true).withSerializers(new AddressSerializer());
+        JsonbConfig config = new JsonbConfig().withFormatting(true).withSerializers(new AddressSerializer());
 
-       jsonb = JsonbBuilder.create(config);
+        jsonb = JsonbBuilder.create(config);
     }
 
     @Override
     public Jsonb getContext(Class&lt;?&gt; type) {
-       return jsonb;
+        return jsonb;
     }
 
-}
-</code></pre>
-<h2>Address serializer</h2>
-<p>Simple Object serializer class that add 'modified' during serialization</p>
-<pre><code>import javax.json.bind.serializer.JsonbSerializer;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_address_serializer">Address serializer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Simple Object serializer class that add `modified' during serialization</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.json.bind.serializer.JsonbSerializer;
 import javax.json.bind.serializer.SerializationContext;
 import javax.json.stream.JsonGenerator;
 
@@ -220,18 +287,27 @@ public class AddressSerializer implements JsonbSerializer&lt;Address&gt; {
 
     @Override
     public void serialize(Address obj, JsonGenerator generator, SerializationContext ctx) {
-       if (obj != null) {
-         obj.setAddr(&quot;modified - &quot; + obj.getAddr());
-         ctx.serialize(obj, generator);
-       }
+        if (obj != null) {
+            obj.setAddr("modified - " + obj.getAddr());
+            ctx.serialize(obj, generator);
+        }
 
     }
 
-}
-</code></pre>
-<h2>User Deserializer</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_user_deserializer">User Deserializer</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>Create an object from a json</p>
-<pre><code>import java.lang.reflect.Type;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.lang.reflect.Type;
 
 import javax.json.JsonObject;
 import javax.json.bind.serializer.DeserializationContext;
@@ -244,21 +320,31 @@ public class UserDeserializer implements JsonbDeserializer&lt;User&gt; {
 
     @Override
     public User deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
-       JsonObject jo = parser.getObject();
-       String name = jo.get(&quot;name&quot;).toString().replace(&quot;\&quot;&quot;, &quot;&quot;);
-       if (jo.get(&quot;extra&quot;) != null) {
-         name = name + jo.get(&quot;extra&quot;).toString().replace(&quot;\&quot;&quot;, &quot;&quot;);
-       }
-       User u = new User(Integer.parseInt(jo.get(&quot;id&quot;).toString()), name, null);
+        JsonObject jo = parser.getObject();
+        String name = jo.get("name").toString().replace("\"", "");
+        if (jo.get("extra") != null) {
+            name = name + jo.get("extra").toString().replace("\"", "");
+        }
+        User u = new User(Integer.parseInt(jo.get("id").toString()), name, null);
 
-       return u;
+        return u;
     }
 
-}
-</code></pre>
-<h2>Using the deserializer @JsonbTypeDeserializer @JsonbTypeSerializer</h2>
-<p>With the annotation @JsonbTypeDeserializer or @JsonbTypeSerializer you can notify jsonb to use the custom deserializer </p>
-<pre><code>import java.util.Date;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_deserializer_jsonbtypedeserializer_jsonbtypeserializer">Using the deserializer @JsonbTypeDeserializer @JsonbTypeSerializer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With the annotation @JsonbTypeDeserializer or @JsonbTypeSerializer you
+can notify jsonb to use the custom deserializer</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.Date;
 
 import javax.json.bind.annotation.JsonbTypeDeserializer;
 
@@ -273,23 +359,32 @@ public class User {
     private Address address;
 
     public User(Integer id, String name, Address address) {
-       super();
-       this.id = id;
-       this.name = name;
-       this.address = address;
+        super();
+        this.id = id;
+        this.name = name;
+        this.address = address;
     }
 
     public User() {
-       super();
+        super();
     }
 
     // ... GET/SET
 
-} 
-</code></pre>
-<h2>Accessing the rest endpoint</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_the_rest_endpoint">Accessing the rest endpoint</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The test spin up an openejb webapp and invoke the users endpoint</p>
-<pre><code>import java.io.IOException;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import java.io.IOException;
 
 import javax.ws.rs.core.MediaType;
 
@@ -306,39 +401,51 @@ import org.superbiz.JAXRSApplication;
 import org.superbiz.JSONBConfiguration;
 import org.superbiz.model.User;
 
-@EnableServices(value = &quot;jaxrs&quot;)
+@EnableServices(value = "jaxrs")
 @RunWith(ApplicationComposer.class)
 public class UserServiceTest {
 
     @Module
     @Classes({ UserService.class, JAXRSApplication.class, JSONBConfiguration.class })
     public WebApp app() {
-       return new WebApp().contextRoot(&quot;test&quot;);
+        return new WebApp().contextRoot("test");
     }
 
     @Test
     public void get() throws IOException {
-       final String message = WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/test/api/users&quot;).get(String.class);
+        final String message = WebClient.create("http://localhost:4204").path("/test/api/users").get(String.class);
 
-       Assert.assertTrue(message.contains(&quot;modified - addr1&quot;));
+        Assert.assertTrue(message.contains("modified - addr1"));
     }
 
     @Test
     public void post() throws IOException {
-       final String inputJson = &quot;{ \&quot;id\&quot;: 1, \&quot;name\&quot;: \&quot;user1\&quot;, \&quot;extra\&quot;: \&quot;extraField\&quot;}&quot;;
-       final User responseUser = WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/test/api/users&quot;)
-          .type(MediaType.APPLICATION_JSON).post(inputJson, User.class);
+        final String inputJson = "{ \"id\": 1, \"name\": \"user1\", \"extra\": \"extraField\"}";
+        final User responseUser = WebClient.create("http://localhost:4204").path("/test/api/users")
+                .type(MediaType.APPLICATION_JSON).post(inputJson, User.class);
 
-       Assert.assertTrue(!responseUser.getName().equals(&quot;user1&quot;));
-       Assert.assertTrue(responseUser.getName().equals(&quot;user1&quot; + &quot;extraField&quot;));
+        Assert.assertTrue(!responseUser.getName().equals("user1"));
+        Assert.assertTrue(responseUser.getName().equals("user1" + "extraField"));
     }
 
-}
-</code></pre>
-<h1>Running</h1>
-<p>Running the example can be done from maven with a simple 'mvn clean install' command run from the 'jsonb-custom-serializer' directory.</p>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running the example can be done from maven with a simple `mvn clean
+install' command run from the `jsonb-custom-serializer' directory.</p>
+</div>
+<div class="paragraph">
 <p>When run you should see output similar to the following.</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.rest.UserServiceTest
@@ -352,11 +459,11 @@ INFO - Creating SecurityService(id=Default Security Service)
 INFO - Initializing network services
 INFO - Creating ServerService(id=cxf-rs)
 INFO - Creating ServerService(id=httpejbd)
-INFO - Created ServicePool &#39;httpejbd&#39; with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
 INFO - Initializing network services
 INFO -   ** Bound Services **
-INFO -   NAME                 IP              PORT  
-INFO -   httpejbd             127.0.0.1       4204  
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       4204
 INFO - -------
 INFO - Ready!
 INFO - Configuring enterprise application: /home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest
@@ -368,7 +475,7 @@ INFO - Using directory /tmp for stateful session passivation
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean UserService: Container(type=STATELESS, id=Default Stateless Container)
 INFO - Creating Container(id=Default Stateless Container)
-INFO - Enterprise application &quot;/home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest&quot; loaded.
+INFO - Enterprise application "/home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest" loaded.
 INFO - Creating dedicated application classloader for UserServiceTest
 INFO - Assembling app: /home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest
 INFO - Jndi(name=UserServiceLocalBean) --&gt; Ejb(deployment-id=UserService)
@@ -425,11 +532,11 @@ INFO - Creating SecurityService(id=Default Security Service)
 INFO - Initializing network services
 INFO - Creating ServerService(id=cxf-rs)
 INFO - Creating ServerService(id=httpejbd)
-INFO - Created ServicePool &#39;httpejbd&#39; with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
 INFO - Initializing network services
 INFO -   ** Bound Services **
-INFO -   NAME                 IP              PORT  
-INFO -   httpejbd             127.0.0.1       4204  
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       4204
 INFO - -------
 INFO - Ready!
 INFO - Configuring enterprise application: /home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest
@@ -441,7 +548,7 @@ INFO - Using directory /tmp for stateful session passivation
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean UserService: Container(type=STATELESS, id=Default Stateless Container)
 INFO - Creating Container(id=Default Stateless Container)
-INFO - Enterprise application &quot;/home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest&quot; loaded.
+INFO - Enterprise application "/home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest" loaded.
 INFO - Creating dedicated application classloader for UserServiceTest
 INFO - Assembling app: /home/federico/Documents/PRIVATO/Apache/tomee/examples/jsonb-custom-serializer/UserServiceTest
 INFO - Jndi(name=UserServiceLocalBean) --&gt; Ejb(deployment-id=UserService)
@@ -492,12 +599,22 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.31 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
-<h2>Inside the jar</h2>
-<p>javaee-api:8.0 brings in all the dependencies needed to spin up a working REST application. </p>
-<p>If we look at the jar built by maven, we'll see the application itself is quite small:</p>
-<pre><code>$ jar tvf target/jsonb-custom-serializer-8.0.0-SNAPSHOT.war 
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inside_the_jar">Inside the jar</h3>
+<div class="paragraph">
+<p>javaee-api:8.0 brings in all the dependencies needed to spin up a
+working REST application.</p>
+</div>
+<div class="paragraph">
+<p>If we look at the jar built by maven, we’ll see the application itself
+is quite small:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ jar tvf target/jsonb-custom-serializer-8.0.0-SNAPSHOT.war
      0 Sat Dec 29 19:10:44 CET 2018 META-INF/
    134 Sat Dec 29 19:10:42 CET 2018 META-INF/MANIFEST.MF
      0 Sat Dec 29 19:10:42 CET 2018 WEB-INF/
@@ -518,9 +635,17 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
      0 Sat Dec 29 19:10:44 CET 2018 META-INF/maven/org.superbiz/
      0 Sat Dec 29 19:10:44 CET 2018 META-INF/maven/org.superbiz/jsonb-custom-serializer/
   1811 Sat Dec 29 17:53:36 CET 2018 META-INF/maven/org.superbiz/jsonb-custom-serializer/pom.xml
-   132 Sat Dec 29 19:10:42 CET 2018 META-INF/maven/org.superbiz/jsonb-custom-serializer/pom.properties
-</code></pre>
-<p>This single jar could be deployed any any compliant Java EE implementation. In TomEE you'd simply place it in the <code>tomee.home/webapps/</code> directory.</p>
+   132 Sat Dec 29 19:10:42 CET 2018 META-INF/maven/org.superbiz/jsonb-custom-serializer/pom.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This single jar could be deployed any any compliant Java EE
+implementation. In TomEE you’d simply place it in the
+<code>tomee.home/webapps/</code> directory.</p>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -540,7 +665,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

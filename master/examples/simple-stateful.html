@@ -95,14 +95,42 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example demonstrates a simple deployment of a Stateful session bean.</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example demonstrates a simple deployment of a Stateful session
+bean.</p>
+</div>
+<div class="quoteblock">
 <blockquote>
-  <p>"As its name suggests, a stateful session bean is similar to an interactive session. A stateful session bean is not shared;<br/>it can have only one client, in the same way that an interactive session can have only one user. When the client terminates, its stateful session bean appears to terminate and is no longer associated with the client."</p>
+<div class="paragraph">
+<p>``As its name suggests, a stateful session bean is similar to an
+interactive session. A stateful session bean is not shared; it can have
+only one client, in the same way that an interactive session can have
+only one user. When the client terminates, its stateful session bean
+appears to terminate and is no longer associated with the client.''</p>
+</div>
 </blockquote>
-<p>The <code>Counter</code> class is a Stateful session bean that maintains a state in a form of a <code>count</code> integer field. It exposes three methods: <code>count()</code>, <code>increment()</code> and <code>reset()</code> to manipulate and view its state.</p>
-<p>Typically, Stateful and Stateless beans implement Local and/or Remote interfaces to determine which methods should be exposed. In this case, the bean is using a no-interface view, which means that all public methods are exposed as a local view. </p>
-<h2>Counter</h2>
-<pre><code>package org.superbiz.counter;
+</div>
+<div class="paragraph">
+<p>The <code>Counter</code> class is a Stateful session bean that maintains a state in
+a form of a <code>count</code> integer field. It exposes three methods: <code>count()</code>,
+<code>increment()</code> and <code>reset()</code> to manipulate and view its state.</p>
+</div>
+<div class="paragraph">
+<p>Typically, Stateful and Stateless beans implement Local and/or Remote
+interfaces to determine which methods should be exposed. In this case,
+the bean is using a no-interface view, which means that all public
+methods are exposed as a local view.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_counter">Counter</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import javax.ejb.Stateful;
 
@@ -113,10 +141,10 @@ import javax.ejb.Stateful;
  * This EJB has 2 business interfaces: CounterRemote, a remote business
  * interface, and CounterLocal, a local business interface
  * &lt;p/&gt;
- * Per EJB3 rules when the @Remote or @Local annotation isn&#39;t present
+ * Per EJB3 rules when the @Remote or @Local annotation isn't present
  * in the bean class (this class), all interfaces are considered
  * local unless explicitly annotated otherwise.  If you look
- * in the CounterRemote interface, you&#39;ll notice it uses the @Remote
+ * in the CounterRemote interface, you'll notice it uses the @Remote
  * annotation while the CounterLocal interface is not annotated relying
  * on the EJB3 default rules to make it a local interface.
  */
@@ -137,11 +165,23 @@ public class Counter {
     public int reset() {
         return (count = 0);
     }
-}
-</code></pre>
-<h2>CounterTest</h2>
-<p>The <code>Counter</code> class is tested by obtaining a <code>Context</code> object and performing a JNDI lookup on it, to retrieve an instance of the <code>Counter</code> bean. After some state manipulation, a new instance is fetched from the container and we can see that it's a new instance.</p>
-<pre><code>package org.superbiz.counter;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_countertest">CounterTest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>Counter</code> class is tested by obtaining a <code>Context</code> object and
+performing a JNDI lookup on it, to retrieve an instance of the <code>Counter</code>
+bean. After some state manipulation, a new instance is fetched from the
+container and we can see that it’s a new instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.counter;
 
 import junit.framework.TestCase;
 
@@ -155,7 +195,7 @@ public class CounterTest extends TestCase {
 
         final Context context = EJBContainer.createEJBContainer().getContext();
 
-        Counter counterA = (Counter) context.lookup(&quot;java:global/simple-stateful/Counter&quot;);
+        Counter counterA = (Counter) context.lookup("java:global/simple-stateful/Counter");
 
         assertEquals(0, counterA.count());
         assertEquals(0, counterA.reset());
@@ -171,16 +211,23 @@ public class CounterTest extends TestCase {
         assertEquals(4, counterA.count());
 
         // Get a new counter
-        Counter counterB = (Counter) context.lookup(&quot;java:global/simple-stateful/Counter&quot;);
+        Counter counterB = (Counter) context.lookup("java:global/simple-stateful/Counter");
 
         // The new bean instance starts out at 0
         assertEquals(0, counterB.count());
     }
     //END SNIPPET: local
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.counter.CounterTest
@@ -188,7 +235,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/simple-stateful
 INFO - openejb.base = /Users/dblevins/examples/simple-stateful
-INFO - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Found EjbModule in classpath: /Users/dblevins/examples/simple-stateful/target/classes
@@ -198,12 +245,12 @@ INFO - Configuring Service(id=Default Stateful Container, type=Container, provid
 INFO - Auto-creating a container for bean Counter: Container(type=STATEFUL, id=Default Stateful Container)
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.counter.CounterTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/simple-stateful&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/simple-stateful" loaded.
 INFO - Assembling app: /Users/dblevins/examples/simple-stateful
-INFO - Jndi(name=&quot;java:global/simple-stateful/Counter!org.superbiz.counter.Counter&quot;)
-INFO - Jndi(name=&quot;java:global/simple-stateful/Counter&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule309142400/org.superbiz.counter.CounterTest!org.superbiz.counter.CounterTest&quot;)
-INFO - Jndi(name=&quot;java:global/EjbModule309142400/org.superbiz.counter.CounterTest&quot;)
+INFO - Jndi(name="java:global/simple-stateful/Counter!org.superbiz.counter.Counter")
+INFO - Jndi(name="java:global/simple-stateful/Counter")
+INFO - Jndi(name="java:global/EjbModule309142400/org.superbiz.counter.CounterTest!org.superbiz.counter.CounterTest")
+INFO - Jndi(name="java:global/EjbModule309142400/org.superbiz.counter.CounterTest")
 INFO - Created Ejb(deployment-id=Counter, ejb-name=Counter, container=Default Stateful Container)
 INFO - Created Ejb(deployment-id=org.superbiz.counter.CounterTest, ejb-name=org.superbiz.counter.CounterTest, container=Default Managed Container)
 INFO - Started Ejb(deployment-id=Counter, ejb-name=Counter, container=Default Stateful Container)
@@ -213,8 +260,11 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.098 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -234,7 +284,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

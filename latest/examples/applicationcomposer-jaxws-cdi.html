@@ -124,36 +124,36 @@ started application and that the JAX-WS service is up and running.</p>
 <div class="paragraph">
 <p>The business logic that checks if a request is bookable is defined by the following interface:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import java.util.Date;
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.Date;
 
 public interface Agenda {
     boolean isBookable(Date d);
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The implementation is a simple one, without distracting details:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import java.util.Date;
+<pre class="highlight"><code class="language-java" data-lang="java">import java.util.Date;
 
 public class LazyAgenda implements Agenda {
     @Override
     public boolean isBookable(final Date d) {
         return d.after(new Date());
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The JAX-WS service is defined by the following interface:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import javax.jws.WebMethod;
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.Date;
 
@@ -162,15 +162,15 @@ public interface MeetingPlanner {
 
     @WebMethod(operationName = "book", exclude = false)
     boolean book(final Date date);
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The class implementing this interface is:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import javax.inject.Inject;
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.inject.Inject;
 import javax.jws.WebService;
 import java.util.Date;
 
@@ -183,7 +183,7 @@ public class MeetingPlannerImpl implements MeetingPlanner {
     public boolean book(final Date date) {
         return agenda.isBookable(date);
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -195,9 +195,9 @@ public class MeetingPlannerImpl implements MeetingPlanner {
 <p>Now, that the application is completed, it&#8217;s time to test it. For this, we will add a unit test that will use Application Composer to start and deploy our application in a full JEE environment.
 The full test:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>import org.apache.openejb.jee.WebApp;
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.openejb.jee.WebApp;
 import org.apache.openejb.junit.ApplicationComposer;
 import org.apache.openejb.testing.Classes;
 import org.apache.openejb.testing.Configuration;
@@ -244,7 +244,7 @@ public class MeetingPlannerTest {
         final MeetingPlanner planner = service.getPort(MeetingPlanner.class);
         assertTrue(planner.book(new Date(System.currentTimeMillis() + 1000000)));
     }
-}</pre>
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -264,9 +264,9 @@ public class MeetingPlannerTest {
 <div class="paragraph">
 <p>Running the test we can see that the application was successfully started, that the JAX-WS service is running and that it fulfills incoming requests correctly.</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>-------------------------------------------------------
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.example.jaxws.MeetingPlannerTest
@@ -348,7 +348,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.076 sec
 
 Results :
 
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -375,7 +375,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</pre>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

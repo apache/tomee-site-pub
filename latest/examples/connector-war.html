@@ -271,48 +271,42 @@ public class ReadInterceptor {
         return context.proceed();
     }
 }
-....
-
-== persistence.xml
-
-[source,xml]</code></pre>
+[source,java]</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;</p>
 </div>
-<div class="literalblock">
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
 <div class="content">
-<pre>&lt;persistence-unit name="movie-unit"&gt;
-  &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
-  &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
-  &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    &lt;properties&gt;
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+
+  &lt;persistence-unit name="movie-unit"&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+    &lt;class&gt;org.superbiz.injection.tx.Movie&lt;/class&gt;
+
+    &lt;properties&gt;
       &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;</pre>
+&lt;/persistence&gt;</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>== MoviesTest
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.tx;
 
-[source,java]</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>package org.superbiz.injection.tx;</p>
-</div>
-<div class="paragraph">
-<p>import junit.framework.TestCase;</p>
-</div>
-<div class="paragraph">
-<p>import javax.annotation.security.RunAs;
+import junit.framework.TestCase;
+
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -320,169 +314,118 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.embeddable.EJBContainer;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.Callable;</p>
-</div>
-<div class="paragraph">
-<p>import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;</p>
-</div>
-<div class="paragraph">
-<p>/**
+import java.util.concurrent.Callable;
+
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+
+/**
  * See the transaction-rollback example as it does the same thing
  * via UserTransaction and shows more techniques for rollback
  */
-public class MoviesTest extends TestCase {</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@EJB
-private Movies movies;</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@EJB(beanName = "TransactionBean")
-private Caller transactionalCaller;</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@EJB(beanName = "NoTransactionBean")
-private Caller nonTransactionalCaller;</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>protected void setUp() throws Exception {
-    final Properties p = new Properties();
-    p.put("movieDatabase", "new://Resource?type=DataSource");
-    p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
-    p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>private void doWork() throws Exception {</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
-movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
-movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>List&lt;Movie&gt; list = movies.getMovies();
-assertEquals("List.size()", 3, list.size());</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>for (Movie movie : list) {
-    movies.deleteMovie(movie);
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>public void testWithTransaction() throws Exception {
-    transactionalCaller.call(new Callable() {
-        public Object call() throws Exception {
-            doWork();
-            return null;
+//START SNIPPET: code
+public class MoviesTest extends TestCase {
+
+    @EJB
+    private Movies movies;
+
+    @EJB(beanName = "TransactionBean")
+    private Caller transactionalCaller;
+
+    @EJB(beanName = "NoTransactionBean")
+    private Caller nonTransactionalCaller;
+
+    protected void setUp() throws Exception {
+        final Properties p = new Properties();
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+
+        EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
+    }
+
+    private void doWork() throws Exception {
+
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
+
+        List&lt;Movie&gt; list = movies.getMovies();
+        assertEquals("List.size()", 3, list.size());
+
+        for (Movie movie : list) {
+            movies.deleteMovie(movie);
         }
-    });
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>public void testWithoutTransaction() throws Exception {
-    try {
-        nonTransactionalCaller.call(new Callable() {
+
+        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+    }
+
+    public void testWithTransaction() throws Exception {
+        transactionalCaller.call(new Callable() {
             public Object call() throws Exception {
                 doWork();
                 return null;
             }
         });
-        fail("The Movies bean should be using TransactionAttributeType.MANDATORY");
-    } catch (javax.ejb.EJBException e) {
-        // good, our Movies bean is using TransactionAttributeType.MANDATORY as we want
     }
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>public static interface Caller {
-    public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception;
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>/**
- * This little bit of magic allows our test code to execute in
- * the scope of a container controlled transaction.
- */
-@Stateless
-@RunAs("Manager")
-@TransactionAttribute(REQUIRES_NEW)
-public static class TransactionBean implements Caller {</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
-        return callable.call();
+
+    public void testWithoutTransaction() throws Exception {
+        try {
+            nonTransactionalCaller.call(new Callable() {
+                public Object call() throws Exception {
+                    doWork();
+                    return null;
+                }
+            });
+            fail("The Movies bean should be using TransactionAttributeType.MANDATORY");
+        } catch (javax.ejb.EJBException e) {
+            // good, our Movies bean is using TransactionAttributeType.MANDATORY as we want
+        }
     }
-}</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@Stateless
-@RunAs("Manager")
-@TransactionAttribute(TransactionAttributeType.NEVER)
-public static class NoTransactionBean implements Caller {</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
+
+
+    public static interface Caller {
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception;
+    }
+
+    /**
+     * This little bit of magic allows our test code to execute in
+     * the scope of a container controlled transaction.
+     */
+    @Stateless
+    @RunAs("Manager")
+    @TransactionAttribute(REQUIRES_NEW)
+    public static class TransactionBean implements Caller {
+
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
             return callable.call();
         }
     }
-}</pre>
+
+    @Stateless
+    @RunAs("Manager")
+    @TransactionAttribute(TransactionAttributeType.NEVER)
+    public static class NoTransactionBean implements Caller {
+
+        public &lt;V&gt; V call(Callable&lt;V&gt; callable) throws Exception {
+            return callable.call();
+        }
+    }
+}</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>== Running</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre> T E S T S</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Running org.superbiz.injection.tx.MoviesTest
+<pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.tx.MoviesTest
 Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
-<a href="http://tomee.apache.org/" class="bare">http://tomee.apache.org/</a>
+http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/movies-complete
 INFO - openejb.base = /Users/dblevins/examples/movies-complete
 INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
@@ -525,17 +468,11 @@ INFO - Started Ejb(deployment-id=TransactionBean, ejb-name=TransactionBean, cont
 INFO - Started Ejb(deployment-id=org.superbiz.injection.tx.MoviesTest, ejb-name=org.superbiz.injection.tx.MoviesTest, container=Default Managed Container)
 INFO - Deployed Application(path=/Users/dblevins/examples/movies-complete)
 INFO - EJBContainer already initialized.  Call ejbContainer.close() to allow reinitialization
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.418 sec</p>
-</div>
-<div class="paragraph">
-<p>Results :</p>
-</div>
-<div class="paragraph">
-<p>Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre></pre>
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.418 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</pre>
 </div>
 </div>
 </div>
@@ -559,7 +496,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.418 sec</p>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

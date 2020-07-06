@@ -95,9 +95,20 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>CommentDAO</h2>
-<pre><code>package org.superbiz.rest.dao;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commentdao">CommentDAO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.dao;
 
 import org.superbiz.rest.model.Comment;
 import org.superbiz.rest.model.Post;
@@ -115,7 +126,7 @@ public class CommentDAO extends DAO {
     public List&lt;Comment&gt; list(long postId) {
         Post post = dao.find(Post.class, postId);
         if (post == null) {
-            throw new IllegalArgumentException(&quot;post with id &quot; + postId + &quot; not found&quot;);
+            throw new IllegalArgumentException("post with id " + postId + " not found");
         }
         return Collections.unmodifiableList(post.getComments());
     }
@@ -123,7 +134,7 @@ public class CommentDAO extends DAO {
     public Comment create(String author, String content, long postId) {
         Post post = dao.find(Post.class, postId);
         if (post == null) {
-            throw new IllegalArgumentException(&quot;post with id &quot; + postId + &quot; not found&quot;);
+            throw new IllegalArgumentException("post with id " + postId + " not found");
         }
 
         Comment comment = new Comment();
@@ -141,17 +152,24 @@ public class CommentDAO extends DAO {
     public Comment update(long id, String author, String content) {
         Comment comment = dao.find(Comment.class, id);
         if (comment == null) {
-            throw new IllegalArgumentException(&quot;comment with id &quot; + id + &quot; not found&quot;);
+            throw new IllegalArgumentException("comment with id " + id + " not found");
         }
 
         comment.setAuthor(author);
         comment.setContent(content);
         return dao.update(comment);
     }
-}
-</code></pre>
-<h2>DAO</h2>
-<pre><code>package org.superbiz.rest.dao;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dao">DAO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.dao;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -166,7 +184,7 @@ import java.util.List;
  */
 @Stateless
 public class DAO {
-    @PersistenceContext(unitName = &quot;blog&quot;)
+    @PersistenceContext(unitName = "blog")
     private EntityManager em;
 
     public &lt;E&gt; E create(E e) {
@@ -203,10 +221,17 @@ public class DAO {
         }
         return query;
     }
-}
-</code></pre>
-<h2>PostDAO</h2>
-<pre><code>package org.superbiz.rest.dao;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postdao">PostDAO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.dao;
 
 import org.superbiz.rest.model.Post;
 import org.superbiz.rest.model.User;
@@ -234,7 +259,7 @@ public class PostDAO {
     }
 
     public List&lt;Post&gt; list(int first, int max) {
-        return dao.namedFind(Post.class, &quot;post.list&quot;, first, max);
+        return dao.namedFind(Post.class, "post.list", first, max);
     }
 
     public void delete(long id) {
@@ -244,12 +269,12 @@ public class PostDAO {
     public Post update(long id, long userId, String title, String content) {
         User user = dao.find(User.class, userId);
         if (user == null) {
-            throw new IllegalArgumentException(&quot;user id &quot; + id + &quot; not found&quot;);
+            throw new IllegalArgumentException("user id " + id + " not found");
         }
 
         Post post = dao.find(Post.class, id);
         if (post == null) {
-            throw new IllegalArgumentException(&quot;post id &quot; + id + &quot; not found&quot;);
+            throw new IllegalArgumentException("post id " + id + " not found");
         }
 
         post.setTitle(title);
@@ -257,10 +282,17 @@ public class PostDAO {
         post.setUser(user);
         return dao.update(post);
     }
-}
-</code></pre>
-<h2>UserDAO</h2>
-<pre><code>package org.superbiz.rest.dao;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userdao">UserDAO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.dao;
 
 import org.superbiz.rest.model.User;
 
@@ -282,7 +314,7 @@ public class UserDAO {
     }
 
     public List&lt;User&gt; list(int first, int max) {
-        return dao.namedFind(User.class, &quot;user.list&quot;, first, max);
+        return dao.namedFind(User.class, "user.list", first, max);
     }
 
     public User find(long id) {
@@ -296,7 +328,7 @@ public class UserDAO {
     public User update(long id, String name, String pwd, String mail) {
         User user = dao.find(User.class, id);
         if (user == null) {
-            throw new IllegalArgumentException(&quot;setUser id &quot; + id + &quot; not found&quot;);
+            throw new IllegalArgumentException("setUser id " + id + " not found");
         }
 
         user.setFullname(name);
@@ -304,10 +336,17 @@ public class UserDAO {
         user.setEmail(mail);
         return dao.update(user);
     }
-}
-</code></pre>
-<h2>Comment</h2>
-<pre><code>package org.superbiz.rest.model;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comment">Comment</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.model;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -323,11 +362,18 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = &quot;comment.list&quot;, query = &quot;select c from Comment c&quot;)
-}
-</code></pre>
-<h2>DatedModel</h2>
-<pre><code>package org.superbiz.rest.model;
+        @NamedQuery(name = "comment.list", query = "select c from Comment c")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datedmodel">DatedModel</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.model;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
@@ -349,10 +395,17 @@ public abstract class DatedModel extends Model {
     public void setCreated(Date created) {
         this.created = created;
     }
-}
-</code></pre>
-<h2>Model</h2>
-<pre><code>package org.superbiz.rest.model;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_model">Model</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.model;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -378,10 +431,17 @@ public abstract class Model {
     public void setId(long id) {
         this.id = id;
     }
-}
-</code></pre>
-<h2>Post</h2>
-<pre><code>package org.superbiz.rest.model;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_post">Post</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -399,11 +459,18 @@ import java.util.List;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = &quot;post.list&quot;, query = &quot;select p from Post p&quot;)
-}
-</code></pre>
-<h2>User</h2>
-<pre><code>package org.superbiz.rest.model;
+        @NamedQuery(name = "post.list", query = "select p from Post p")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_user">User</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.model;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -415,11 +482,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = &quot;user.list&quot;, query = &quot;select u from User u&quot;)
-}
-</code></pre>
-<h2>CommentService</h2>
-<pre><code>package org.superbiz.rest.service;
+        @NamedQuery(name = "user.list", query = "select u from User u")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commentservice">CommentService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.service;
 
 import org.superbiz.rest.dao.CommentDAO;
 import org.superbiz.rest.model.Comment;
@@ -435,43 +509,50 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
-@Path(&quot;/api/comment&quot;)
-@Produces({&quot;text/xml&quot;, &quot;application/json&quot;})
+@Path("/api/comment")
+@Produces({"text/xml", "application/json"})
 public class CommentService {
     @EJB
     private CommentDAO commentDao;
 
-    @Path(&quot;/create&quot;)
+    @Path("/create")
     @PUT
-    public Comment create(@QueryParam(&quot;author&quot;) String author,
-                          @QueryParam(&quot;content&quot;) String content,
-                          @QueryParam(&quot;postId&quot;) long postId) {
+    public Comment create(@QueryParam("author") String author,
+                          @QueryParam("content") String content,
+                          @QueryParam("postId") long postId) {
         return commentDao.create(author, content, postId);
     }
 
-    @Path(&quot;/list/{postId}&quot;)
+    @Path("/list/{postId}")
     @GET
-    public List&lt;Comment&gt; list(@PathParam(&quot;postId&quot;) long postId) {
+    public List&lt;Comment&gt; list(@PathParam("postId") long postId) {
         return commentDao.list(postId);
     }
 
-    @Path(&quot;/delete/{id}&quot;)
+    @Path("/delete/{id}")
     @DELETE
-    public void delete(@PathParam(&quot;id&quot;) long id) {
+    public void delete(@PathParam("id") long id) {
         commentDao.delete(id);
     }
 
-    @Path(&quot;/update/{id}&quot;)
+    @Path("/update/{id}")
     @POST
-    public Comment update(@PathParam(&quot;id&quot;) long id,
-                          @QueryParam(&quot;author&quot;) String author,
-                          @QueryParam(&quot;content&quot;) String content) {
+    public Comment update(@PathParam("id") long id,
+                          @QueryParam("author") String author,
+                          @QueryParam("content") String content) {
         return commentDao.update(id, author, content);
     }
-}
-</code></pre>
-<h2>PostService</h2>
-<pre><code>package org.superbiz.rest.service;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postservice">PostService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.service;
 
 import org.superbiz.rest.dao.PostDAO;
 import org.superbiz.rest.model.Post;
@@ -488,51 +569,58 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
-@Path(&quot;/api/post&quot;)
-@Produces({&quot;text/xml&quot;, &quot;application/json&quot;})
+@Path("/api/post")
+@Produces({"text/xml", "application/json"})
 public class PostService {
     @EJB
     private PostDAO dao;
 
-    @Path(&quot;/create&quot;)
+    @Path("/create")
     @PUT
-    public Post create(@QueryParam(&quot;title&quot;) String title,
-                       @QueryParam(&quot;content&quot;) String content,
-                       @QueryParam(&quot;userId&quot;) long userId) {
+    public Post create(@QueryParam("title") String title,
+                       @QueryParam("content") String content,
+                       @QueryParam("userId") long userId) {
         return dao.create(title, content, userId);
     }
 
-    @Path(&quot;/list&quot;)
+    @Path("/list")
     @GET
-    public List&lt;Post&gt; list(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) int first,
-                           @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) int max) {
+    public List&lt;Post&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
         return dao.list(first, max);
     }
 
-    @Path(&quot;/show/{id}&quot;)
+    @Path("/show/{id}")
     @GET
-    public Post show(@PathParam(&quot;id&quot;) long id) {
+    public Post show(@PathParam("id") long id) {
         return dao.find(id);
     }
 
-    @Path(&quot;/delete/{id}&quot;)
+    @Path("/delete/{id}")
     @DELETE
-    public void delete(@PathParam(&quot;id&quot;) long id) {
+    public void delete(@PathParam("id") long id) {
         dao.delete(id);
     }
 
-    @Path(&quot;/update/{id}&quot;)
+    @Path("/update/{id}")
     @POST
-    public Post update(@PathParam(&quot;id&quot;) long id,
-                       @QueryParam(&quot;userId&quot;) long userId,
-                       @QueryParam(&quot;title&quot;) String title,
-                       @QueryParam(&quot;content&quot;) String content) {
+    public Post update(@PathParam("id") long id,
+                       @QueryParam("userId") long userId,
+                       @QueryParam("title") String title,
+                       @QueryParam("content") String content) {
         return dao.update(id, userId, title, content);
     }
-}
-</code></pre>
-<h2>UserService</h2>
-<pre><code>package org.superbiz.rest.service;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userservice">UserService</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest.service;
 
 import org.superbiz.rest.dao.UserDAO;
 import org.superbiz.rest.model.User;
@@ -549,56 +637,63 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
-@Path(&quot;/api/user&quot;)
-@Produces({&quot;text/xml&quot;, &quot;application/json&quot;})
+@Path("/api/user")
+@Produces({"text/xml", "application/json"})
 public class UserService {
     @EJB
     private UserDAO dao;
 
-    @Path(&quot;/create&quot;)
+    @Path("/create")
     @PUT
-    public User create(@QueryParam(&quot;name&quot;) String name,
-                       @QueryParam(&quot;pwd&quot;) String pwd,
-                       @QueryParam(&quot;mail&quot;) String mail) {
+    public User create(@QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
         return dao.create(name, pwd, mail);
     }
 
-    @Path(&quot;/list&quot;)
+    @Path("/list")
     @GET
-    public List&lt;User&gt; list(@QueryParam(&quot;first&quot;) @DefaultValue(&quot;0&quot;) int first,
-                           @QueryParam(&quot;max&quot;) @DefaultValue(&quot;20&quot;) int max) {
+    public List&lt;User&gt; list(@QueryParam("first") @DefaultValue("0") int first,
+                           @QueryParam("max") @DefaultValue("20") int max) {
         return dao.list(first, max);
     }
 
-    @Path(&quot;/show/{id}&quot;)
+    @Path("/show/{id}")
     @GET
-    public User show(@PathParam(&quot;id&quot;) long id) {
+    public User show(@PathParam("id") long id) {
         return dao.find(id);
     }
 
-    @Path(&quot;/delete/{id}&quot;)
+    @Path("/delete/{id}")
     @DELETE
-    public void delete(@PathParam(&quot;id&quot;) long id) {
+    public void delete(@PathParam("id") long id) {
         dao.delete(id);
     }
 
-    @Path(&quot;/update/{id}&quot;)
+    @Path("/update/{id}")
     @POST
-    public User update(@PathParam(&quot;id&quot;) long id,
-                       @QueryParam(&quot;name&quot;) String name,
-                       @QueryParam(&quot;pwd&quot;) String pwd,
-                       @QueryParam(&quot;mail&quot;) String mail) {
+    public User update(@PathParam("id") long id,
+                       @QueryParam("name") String name,
+                       @QueryParam("pwd") String pwd,
+                       @QueryParam("mail") String mail) {
         return dao.update(id, name, pwd, mail);
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence version=&quot;2.0&quot;
-             xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot;
-             xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence
-                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot;&gt;
-  &lt;persistence-unit name=&quot;blog&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"&gt;
+  &lt;persistence-unit name="blog"&gt;
     &lt;jta-data-source&gt;My DataSource&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;My Unmanaged DataSource&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.rest.model.User&lt;/class&gt;
@@ -607,29 +702,53 @@ public class UserService {
     &lt;class&gt;org.superbiz.rest.model.Model&lt;/class&gt;
     &lt;class&gt;org.superbiz.rest.model.DatedModel&lt;/class&gt;
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>web.xml</h2>
-<pre><code>&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;
-         metadata-complete=&quot;false&quot;
-         version=&quot;2.5&quot;&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_xml">web.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         metadata-complete="false"
+         version="2.5"&gt;
 
   &lt;display-name&gt;OpenEJB REST Example&lt;/display-name&gt;
-&lt;/web-app&gt;
-</code></pre>
-<h2>UserDaoTest</h2>
-<pre><code>packagenull
-}
-</code></pre>
-<h2>UserServiceTest</h2>
-<pre><code>packagenull
-}
-</code></pre>
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userdaotest">UserDaoTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">packagenull
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_userservicetest">UserServiceTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">packagenull
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -649,7 +768,7 @@ public class UserService {
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

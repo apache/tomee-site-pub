@@ -95,21 +95,43 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>TomEE allows you to define your own resources within your application, and declare them in <code>META-INF/resources.xml</code>. This allows you do inject these resource into any managed component within your application.</p>
-<p>In addition to this, you can also define a <code>create</code> method on either the resource itself, or on a POJO that acts as a factory. This example demonstrates using the <code>create</code> method to additionally register the resource as a JMX MBean, as well as make it available for injection.</p>
-<h2>Resource</h2>
-<p>Custom resources can be defined using very simple Java classes. In this particular instance, as the application also wants to register this resource as an MBean, the resource class needs to follow the MBean specification.</p>
-<pre><code>public class Hello implements HelloMBean {
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE allows you to define your own resources within your application,
+and declare them in <code>META-INF/resources.xml</code>. This allows you do inject
+these resource into any managed component within your application.</p>
+</div>
+<div class="paragraph">
+<p>In addition to this, you can also define a <code>create</code> method on either the
+resource itself, or on a POJO that acts as a factory. This example
+demonstrates using the <code>create</code> method to additionally register the
+resource as a JMX MBean, as well as make it available for injection.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resource">Resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Custom resources can be defined using very simple Java classes. In this
+particular instance, as the application also wants to register this
+resource as an MBean, the resource class needs to follow the MBean
+specification.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Hello implements HelloMBean {
 
     private AtomicInteger count = new AtomicInteger(0);
 
     @Override
     public String greet(String name) {
         if (name == null) {
-            throw new NullPointerException(&quot;Name cannot be null&quot;);
+            throw new NullPointerException("Name cannot be null");
         }
 
-        return &quot;Hello, &quot; + name;
+        return "Hello, " + name;
     }
 
     @Override
@@ -138,11 +160,22 @@ public interface HelloMBean {
 
     public void increment();
 
-}
-</code></pre>
-<h2>Create method</h2>
-<p>To avoid adding the logic to register the resource as an MBean in every resource, the application provides a single class with a create() method that takes care of this logic for us.</p>
-<pre><code>public class JMXBeanCreator {
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_create_method">Create method</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To avoid adding the logic to register the resource as an MBean in every
+resource, the application provides a single class with a create() method
+that takes care of this logic for us.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class JMXBeanCreator {
 
     private static Logger LOGGER = Logger.getLogger(JMXBeanCreator.class.getName());
     private Properties properties;
@@ -150,8 +183,8 @@ public interface HelloMBean {
     public Object create() throws MBeanRegistrationException {
         // instantiate the bean
 
-        final String code = properties.getProperty(&quot;code&quot;);
-        final String name = properties.getProperty(&quot;name&quot;);
+        final String code = properties.getProperty("code");
+        final String name = properties.getProperty("name");
 
         requireNotNull(code);
         requireNotNull(name);
@@ -172,7 +205,7 @@ public interface HelloMBean {
                     field.setAccessible(true);
                     field.set(instance, Converter.convert(property, field.getType(), field.getName()));
                 } catch (Exception e) {
-                    LOGGER.info(String.format(&quot;Unable to set value %s on field %s&quot;, property, field.getName()));
+                    LOGGER.info(String.format("Unable to set value %s on field %s", property, field.getName()));
                 }
             }
 
@@ -183,32 +216,32 @@ public interface HelloMBean {
             return instance;
 
         } catch (final ClassNotFoundException e) {
-            LOGGER.severe(&quot;Unable to find class &quot; + code);
+            LOGGER.severe("Unable to find class " + code);
             throw new MBeanRegistrationException(e);
         } catch (final InstantiationException e) {
-            LOGGER.severe(&quot;Unable to create instance of class &quot; + code);
+            LOGGER.severe("Unable to create instance of class " + code);
             throw new MBeanRegistrationException(e);
         } catch (final IllegalAccessException e) {
-            LOGGER.severe(&quot;Illegal access: &quot; + code);
+            LOGGER.severe("Illegal access: " + code);
             throw new MBeanRegistrationException(e);
         } catch (final MalformedObjectNameException e) {
-            LOGGER.severe(&quot;Malformed MBean name: &quot; + name);
+            LOGGER.severe("Malformed MBean name: " + name);
             throw new MBeanRegistrationException(e);
         } catch (final InstanceAlreadyExistsException e) {
-            LOGGER.severe(&quot;Instance already exists: &quot; + name);
+            LOGGER.severe("Instance already exists: " + name);
             throw new MBeanRegistrationException(e);
         } catch (final NotCompliantMBeanException e) {
-            LOGGER.severe(&quot;Class is not a valid MBean: &quot; + code);
+            LOGGER.severe("Class is not a valid MBean: " + code);
             throw new MBeanRegistrationException(e);
         } catch (final javax.management.MBeanRegistrationException e) {
-            LOGGER.severe(&quot;Error registering &quot; + name + &quot;, &quot; + code);
+            LOGGER.severe("Error registering " + name + ", " + code);
             throw new MBeanRegistrationException(e);
         }
     }
 
     private void requireNotNull(final String object) throws MBeanRegistrationException {
         if (object == null) {
-            throw new MBeanRegistrationException(&quot;code property not specified, stopping&quot;);
+            throw new MBeanRegistrationException("code property not specified, stopping");
         }
     }
 
@@ -219,23 +252,52 @@ public interface HelloMBean {
     public void setProperties(final Properties properties) {
         this.properties = properties;
     }
-}
-</code></pre>
-<p>Note that this class uses the properties defined in the <Resource> configuration (below), combined with reflection, to instantiate the resource, and set its attributes. The code above requires two properties <code>code</code> and <code>name</code> in order to know what class to create, and the JMX name to register it under.</p>
-<h2>Resource</h2>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that this class uses the properties defined in the configuration
+(below), combined with reflection, to instantiate the resource, and set
+its attributes. The code above requires two properties <code>code</code> and <code>name</code>
+in order to know what class to create, and the JMX name to register it
+under.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resource_2">Resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The resource can be defined in <code>META-INF/resources.xml</code> as follows:</p>
-<pre><code>&lt;Resources&gt;
-  &lt;Resource id=&quot;Hello&quot; class-name=&quot;org.superbiz.resource.jmx.factory.JMXBeanCreator&quot; factory-name=&quot;create&quot;&gt;
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resources&gt;
+  &lt;Resource id="Hello" class-name="org.superbiz.resource.jmx.factory.JMXBeanCreator" factory-name="create"&gt;
     code org.superbiz.resource.jmx.resources.Hello
     name superbiz.test:name=Hello
     count 12345
   &lt;/Resource&gt;
-&lt;/Resources&gt;
-</code></pre>
-<p>Note that the class-name attribute refers to the factory class, and not the resource. Once the resource has been created and bound in TomEE's JNDI tree the factory is no longer used.</p>
-<h2>Using @Resource for injection</h2>
-<p>The test case for this example demonstrates injection into an EJB as one way of accessing the resource, and also accessing the resource via JMX.</p>
-<pre><code>@RunWith(Arquillian.class)
+&lt;/Resources&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the class-name attribute refers to the factory class, and not
+the resource. Once the resource has been created and bound in TomEE’s
+JNDI tree the factory is no longer used.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_resource_for_injection">Using @Resource for injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The test case for this example demonstrates injection into an EJB as one
+way of accessing the resource, and also accessing the resource via JMX.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
 public class JMXTest {
 
     @EJB
@@ -245,12 +307,12 @@ public class JMXTest {
     public static EnterpriseArchive createDeployment() {
 
         final JavaArchive ejbJar = new Mvn.Builder()
-                .name(&quot;jmx-ejb.jar&quot;)
+                .name("jmx-ejb.jar")
                 .build(JavaArchive.class)
                 .addClass(JMXTest.class)
                 .addClass(TestEjb.class);
 
-        final EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, &quot;jmx.ear&quot;)
+        final EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "jmx.ear")
                 .addAsModule(ejbJar);
 
         return ear;
@@ -259,39 +321,39 @@ public class JMXTest {
     @Test
     public void test() throws Exception {
         final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        final ObjectName objectName = new ObjectName(&quot;superbiz.test:name=Hello&quot;);
+        final ObjectName objectName = new ObjectName("superbiz.test:name=Hello");
 
         Assert.assertNotNull(ejb);
 
-        Assert.assertEquals(0, mbs.getAttribute(objectName, &quot;Count&quot;));
+        Assert.assertEquals(0, mbs.getAttribute(objectName, "Count"));
         Assert.assertEquals(0, ejb.getCount());
 
-        mbs.invoke(objectName, &quot;increment&quot;, new Object[0], new String[0]);
-        Assert.assertEquals(1, mbs.getAttribute(objectName, &quot;Count&quot;));
+        mbs.invoke(objectName, "increment", new Object[0], new String[0]);
+        Assert.assertEquals(1, mbs.getAttribute(objectName, "Count"));
         Assert.assertEquals(1, ejb.getCount());
 
         ejb.increment();
-        Assert.assertEquals(2, mbs.getAttribute(objectName, &quot;Count&quot;));
+        Assert.assertEquals(2, mbs.getAttribute(objectName, "Count"));
         Assert.assertEquals(2, ejb.getCount());
 
-        Attribute attribute = new Attribute(&quot;Count&quot;, 12345);
+        Attribute attribute = new Attribute("Count", 12345);
         mbs.setAttribute(objectName, attribute);
-        Assert.assertEquals(12345, mbs.getAttribute(objectName, &quot;Count&quot;));
+        Assert.assertEquals(12345, mbs.getAttribute(objectName, "Count"));
         Assert.assertEquals(12345, ejb.getCount());
 
         ejb.setCount(23456);
-        Assert.assertEquals(23456, mbs.getAttribute(objectName, &quot;Count&quot;));
+        Assert.assertEquals(23456, mbs.getAttribute(objectName, "Count"));
         Assert.assertEquals(23456, ejb.getCount());
 
-        Assert.assertEquals(&quot;Hello, world&quot;, mbs.invoke(objectName, &quot;greet&quot;, new Object[] { &quot;world&quot; }, new String[] { String.class.getName() }));
-        Assert.assertEquals(&quot;Hello, world&quot;, ejb.greet(&quot;world&quot;));
+        Assert.assertEquals("Hello, world", mbs.invoke(objectName, "greet", new Object[] { "world" }, new String[] { String.class.getName() }));
+        Assert.assertEquals("Hello, world", ejb.greet("world"));
     }
 
     @Singleton
     @Lock(LockType.READ)
     public static class TestEjb {
 
-        @Resource(name=&quot;jmx/Hello&quot;)
+        @Resource(name="jmx/Hello")
         private HelloMBean helloMBean;
 
         public String greet(String name) {
@@ -310,29 +372,98 @@ public class JMXTest {
             return helloMBean.getCount();
         }
     }
-}
-</code></pre>
-<p>The name <code>&lt;appname&gt;/&lt;resource-id&gt;</code> attribute is used on the <code>@Resource</code> annotation to perform the injection. No further configuration is needed to inject the resource.</p>
-<h1>Additional properties</h1>
-<p>In addition to the <code>code</code> and <code>name</code> properties that the code above uses to instantiate the resource, TomEE itself provides some properties to provide more control over the creation of resources.</p>
-<p>Resources are typically discovered, created, and bound to JNDI very early on in the deployment process, as other components depend on them. This may lead to problems where the final classpath for the application has not yet been determined, and therefore TomEE is unable to load your custom resource. </p>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The name <code>&lt;appname&gt;/&lt;resource-id&gt;</code> attribute is used on the <code>@Resource</code>
+annotation to perform the injection. No further configuration is needed
+to inject the resource.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_properties">Additional properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition to the <code>code</code> and <code>name</code> properties that the code above uses
+to instantiate the resource, TomEE itself provides some properties to
+provide more control over the creation of resources.</p>
+</div>
+<div class="paragraph">
+<p>Resources are typically discovered, created, and bound to JNDI very
+early on in the deployment process, as other components depend on them.
+This may lead to problems where the final classpath for the application
+has not yet been determined, and therefore TomEE is unable to load your
+custom resource.</p>
+</div>
+<div class="paragraph">
 <p>The following properties can be used to change this behavior.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>Lazy</li>
+<li>
+<p>Lazy</p>
+</li>
 </ul>
-<p>This is a boolean value, which when true, creates a proxy that defers the actual instantiation of the resource until the first time it is looked up from JNDI. This can be useful if the resource requires the application classpath, or to improve startup time by not fully initializing resources that might not be used.</p>
+</div>
+<div class="paragraph">
+<p>This is a boolean value, which when true, creates a proxy that defers
+the actual instantiation of the resource until the first time it is
+looked up from JNDI. This can be useful if the resource requires the
+application classpath, or to improve startup time by not fully
+initializing resources that might not be used.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>UseAppClassLoader</li>
+<li>
+<p>UseAppClassLoader</p>
+</li>
 </ul>
-<p>This boolean value forces a lazily instantiated resource to use the application classloader, instead of the classloader available when the resources were first processed.</p>
+</div>
+<div class="paragraph">
+<p>This boolean value forces a lazily instantiated resource to use the
+application classloader, instead of the classloader available when the
+resources were first processed.</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>InitializeAfterDeployment</li>
+<li>
+<p>InitializeAfterDeployment</p>
+</li>
 </ul>
-<p>This boolean setting forces a resource created with the Lazy property to be instantiated once the application has started, as opposed to waiting for it to be looked up. Use this flag if you require the resource to be loaded, irrespective of whether it is injected into a managed component or manually looked up.</p>
-<p>By default, all of these settings are <code>false</code>, unless TomEE encounters a custom application resource that cannot be instantiated until the application has started. In this case, it will set these three flags to <code>true</code>, unless the <code>Lazy</code> flag has been explicitly set.</p>
-<h1>PostConstruct / PreDestroy</h1>
-<p>As an alternative to using a factory method, you can use @PostConstruct and @PreDestroy methods within your resource class (note that you cannot use this within a factory class) to manage any additional creation or cleanup activities. TomEE will automatically call these methods when the application is started and destroyed. Using @PostConstruct will effectively force a lazily loaded resource to be instantiated when the application is starting - in the same way that the <code>InitializeAfterDeployment</code> property does.</p>
-<pre><code>public class Alternative implements AlternativeMBean {
+</div>
+<div class="paragraph">
+<p>This boolean setting forces a resource created with the Lazy property to
+be instantiated once the application has started, as opposed to waiting
+for it to be looked up. Use this flag if you require the resource to be
+loaded, irrespective of whether it is injected into a managed component
+or manually looked up.</p>
+</div>
+<div class="paragraph">
+<p>By default, all of these settings are <code>false</code>, unless TomEE encounters a
+custom application resource that cannot be instantiated until the
+application has started. In this case, it will set these three flags to
+<code>true</code>, unless the <code>Lazy</code> flag has been explicitly set.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postconstruct_predestroy">PostConstruct / PreDestroy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an alternative to using a factory method, you can use @PostConstruct
+and @PreDestroy methods within your resource class (note that you cannot
+use this within a factory class) to manage any additional creation or
+cleanup activities. TomEE will automatically call these methods when the
+application is started and destroyed. Using @PostConstruct will
+effectively force a lazily loaded resource to be instantiated when the
+application is starting - in the same way that the
+<code>InitializeAfterDeployment</code> property does.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class Alternative implements AlternativeMBean {
 
     private static Logger LOGGER = Logger.getLogger(Alternative.class.getName());
     private Properties properties;
@@ -341,8 +472,8 @@ public class JMXTest {
     public void postConstruct() throws MBeanRegistrationException {
         // initialize the bean
 
-        final String code = properties.getProperty(&quot;code&quot;);
-        final String name = properties.getProperty(&quot;name&quot;);
+        final String code = properties.getProperty("code");
+        final String name = properties.getProperty("name");
 
         requireNotNull(code);
         requireNotNull(name);
@@ -352,23 +483,23 @@ public class JMXTest {
             final ObjectName objectName = new ObjectName(name);
             mbs.registerMBean(this, objectName);
         } catch (final MalformedObjectNameException e) {
-            LOGGER.severe(&quot;Malformed MBean name: &quot; + name);
+            LOGGER.severe("Malformed MBean name: " + name);
             throw new MBeanRegistrationException(e);
         } catch (final InstanceAlreadyExistsException e) {
-            LOGGER.severe(&quot;Instance already exists: &quot; + name);
+            LOGGER.severe("Instance already exists: " + name);
             throw new MBeanRegistrationException(e);
         } catch (final NotCompliantMBeanException e) {
-            LOGGER.severe(&quot;Class is not a valid MBean: &quot; + code);
+            LOGGER.severe("Class is not a valid MBean: " + code);
             throw new MBeanRegistrationException(e);
         } catch (final javax.management.MBeanRegistrationException e) {
-            LOGGER.severe(&quot;Error registering &quot; + name + &quot;, &quot; + code);
+            LOGGER.severe("Error registering " + name + ", " + code);
             throw new MBeanRegistrationException(e);
         }
     }
 
     @PreDestroy
     public void preDestroy() throws MBeanRegistrationException {
-        final String name = properties.getProperty(&quot;name&quot;);
+        final String name = properties.getProperty("name");
         requireNotNull(name);
 
         try {
@@ -376,20 +507,20 @@ public class JMXTest {
             final ObjectName objectName = new ObjectName(name);
             mbs.unregisterMBean(objectName);
         } catch (final MalformedObjectNameException e) {
-            LOGGER.severe(&quot;Malformed MBean name: &quot; + name);
+            LOGGER.severe("Malformed MBean name: " + name);
             throw new MBeanRegistrationException(e);
         } catch (final javax.management.MBeanRegistrationException e) {
-            LOGGER.severe(&quot;Error unregistering &quot; + name);
+            LOGGER.severe("Error unregistering " + name);
             throw new MBeanRegistrationException(e);
         } catch (InstanceNotFoundException e) {
-            LOGGER.severe(&quot;Error unregistering &quot; + name);
+            LOGGER.severe("Error unregistering " + name);
             throw new MBeanRegistrationException(e);
         }
     }
 
     private void requireNotNull(final String object) throws MBeanRegistrationException {
         if (object == null) {
-            throw new MBeanRegistrationException(&quot;code property not specified, stopping&quot;);
+            throw new MBeanRegistrationException("code property not specified, stopping");
         }
     }
 
@@ -406,10 +537,10 @@ public class JMXTest {
     @Override
     public String greet(String name) {
         if (name == null) {
-            throw new NullPointerException(&quot;Name cannot be null&quot;);
+            throw new NullPointerException("Name cannot be null");
         }
 
-        return &quot;Hello, &quot; + name;
+        return "Hello, " + name;
     }
 
     @Override
@@ -426,12 +557,24 @@ public class JMXTest {
     public void increment() {
         count++;
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>Running the example can be done from maven with a simple 'mvn clean install' command run from the 'resources-jmx-example' directory.</p>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running the example can be done from maven with a simple `mvn clean
+install' command run from the `resources-jmx-example' directory.</p>
+</div>
+<div class="paragraph">
 <p>When run you should see output similar to the following.</p>
-<pre><code>-------------------------------------------------------
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.resource.jmx.JMXTest
@@ -444,7 +587,7 @@ INFO: Unable to find home in: /Users/jgallimore/tmp/tomee-1.7.x/examples/resourc
 Apr 15, 2015 12:40:09 PM org.apache.openejb.arquillian.common.MavenCache getArtifact
 INFO: Downloading org.apache.openejb:apache-tomee:7.0.0-SNAPSHOT:zip:plus please wait...
 Apr 15, 2015 12:40:10 PM org.apache.openejb.arquillian.common.Zips unzip
-INFO: Extracting &#39;/Users/jgallimore/.m2/repository/org/apache/openejb/apache-tomee/7.0.0-SNAPSHOT/apache-tomee-7.0.0-SNAPSHOT-plus.zip&#39; to &#39;/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote&#39;
+INFO: Extracting '/Users/jgallimore/.m2/repository/org/apache/openejb/apache-tomee/7.0.0-SNAPSHOT/apache-tomee-7.0.0-SNAPSHOT-plus.zip' to '/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote'
 Apr 15, 2015 12:40:12 PM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
 INFO: Downloaded container to: /Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote/apache-tomee-plus-7.0.0-SNAPSHOT
 Started server process on port: 61309
@@ -512,11 +655,11 @@ INFO: Command line argument: -ea
 Apr 15, 2015 12:40:14 PM org.apache.catalina.core.AprLifecycleListener lifecycleEvent
 INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /Users/jgallimore/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
 Apr 15, 2015 12:40:14 PM org.apache.coyote.AbstractProtocol init
-INFO: Initializing ProtocolHandler [&quot;http-bio-61309&quot;]
+INFO: Initializing ProtocolHandler ["http-bio-61309"]
 Apr 15, 2015 12:40:14 PM org.apache.coyote.AbstractProtocol init
-INFO: Initializing ProtocolHandler [&quot;ajp-bio-8009&quot;]
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
 Apr 15, 2015 12:40:16 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator&#39;
+INFO: Using 'openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator'
 Apr 15, 2015 12:40:16 PM org.apache.openejb.OpenEJB$Instance &lt;init&gt;
 INFO: ********************************************************************************
 Apr 15, 2015 12:40:16 PM org.apache.openejb.OpenEJB$Instance &lt;init&gt;
@@ -542,17 +685,17 @@ INFO: Created new singletonService org.apache.openejb.cdi.ThreadSingletonService
 Apr 15, 2015 12:40:16 PM org.apache.openejb.cdi.CdiBuilder initializeOWB
 INFO: Succeeded in installing singleton service
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.ConfigurationFactory init
-INFO: openejb configuration file is &#39;/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote/apache-tomee-plus-7.0.0-SNAPSHOT/conf/tomee.xml&#39;
+INFO: openejb configuration file is '/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote/apache-tomee-plus-7.0.0-SNAPSHOT/conf/tomee.xml'
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.ConfigurationFactory configureService
 INFO: Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.ConfigurationFactory configureService
 INFO: Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 Apr 15, 2015 12:40:17 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.system.apps=true&#39;
+INFO: Using 'openejb.system.apps=true'
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.ConfigurationFactory configureApplication
 INFO: Configuring enterprise application: openejb
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.InitEjbDeployments deploy
-INFO: Using openejb.deploymentId.format &#39;{ejbName}&#39;
+INFO: Using openejb.deploymentId.format '{ejbName}'
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.InitEjbDeployments deploy
 INFO: Auto-deploying ejb openejb/Deployer: EjbDeployment(deployment-id=openejb/Deployer)
 Apr 15, 2015 12:40:17 PM org.apache.openejb.config.InitEjbDeployments deploy
@@ -564,7 +707,7 @@ INFO: Configuring Service(id=Default Stateless Container, type=Container, provid
 Apr 15, 2015 12:40:18 PM org.apache.openejb.config.AutoConfig createContainer
 INFO: Auto-creating a container for bean openejb/Deployer: Container(type=STATELESS, id=Default Stateless Container)
 Apr 15, 2015 12:40:18 PM org.apache.openejb.config.AppInfoBuilder build
-INFO: Enterprise application &quot;openejb&quot; loaded.
+INFO: Enterprise application "openejb" loaded.
 Apr 15, 2015 12:40:18 PM org.apache.openejb.assembler.classic.Assembler createRecipe
 INFO: Creating TransactionManager(id=Default Transaction Manager)
 Apr 15, 2015 12:40:18 PM org.apache.openejb.assembler.classic.Assembler createRecipe
@@ -576,7 +719,7 @@ INFO: Not creating another application classloader for openejb
 Apr 15, 2015 12:40:18 PM org.apache.openejb.assembler.classic.Assembler createApplication
 INFO: Assembling app: openejb
 Apr 15, 2015 12:40:18 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}&#39;
+INFO: Using 'openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}'
 Apr 15, 2015 12:40:18 PM org.apache.openejb.assembler.classic.JndiBuilder bind
 INFO: Jndi(name=openejb/DeployerBusinessRemote) --&gt; Ejb(deployment-id=openejb/Deployer)
 Apr 15, 2015 12:40:18 PM org.apache.openejb.assembler.classic.JndiBuilder bind
@@ -618,7 +761,7 @@ INFO: Creating ServerService(id=cxf-rs)
 Apr 15, 2015 12:40:20 PM org.apache.openejb.server.SimpleServiceManager start
 INFO:   ** Bound Services **
 Apr 15, 2015 12:40:20 PM org.apache.openejb.server.SimpleServiceManager printRow
-INFO:   NAME                 IP              PORT  
+INFO:   NAME                 IP              PORT
 Apr 15, 2015 12:40:20 PM org.apache.openejb.server.SimpleServiceManager start
 INFO: -------
 Apr 15, 2015 12:40:20 PM org.apache.openejb.server.SimpleServiceManager start
@@ -626,7 +769,7 @@ INFO: Ready!
 Apr 15, 2015 12:40:20 PM org.apache.catalina.startup.Catalina load
 INFO: Initialization processed in 7621 ms
 Apr 15, 2015 12:40:20 PM org.apache.tomee.catalina.OpenEJBNamingContextListener bindResource
-INFO: Importing a Tomcat Resource with id &#39;UserDatabase&#39; of type &#39;org.apache.catalina.UserDatabase&#39;.
+INFO: Importing a Tomcat Resource with id 'UserDatabase' of type 'org.apache.catalina.UserDatabase'.
 Apr 15, 2015 12:40:20 PM org.apache.openejb.assembler.classic.Assembler createRecipe
 INFO: Creating Resource(id=UserDatabase)
 Apr 15, 2015 12:40:20 PM org.apache.catalina.core.StandardService startInternal
@@ -634,9 +777,9 @@ INFO: Starting service Catalina
 Apr 15, 2015 12:40:20 PM org.apache.catalina.core.StandardEngine startInternal
 INFO: Starting Servlet Engine: Apache Tomcat (TomEE)/7.0.61 (7.0.0-SNAPSHOT)
 Apr 15, 2015 12:40:21 PM org.apache.coyote.AbstractProtocol start
-INFO: Starting ProtocolHandler [&quot;http-bio-61309&quot;]
+INFO: Starting ProtocolHandler ["http-bio-61309"]
 Apr 15, 2015 12:40:21 PM org.apache.coyote.AbstractProtocol start
-INFO: Starting ProtocolHandler [&quot;ajp-bio-8009&quot;]
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
 Apr 15, 2015 12:40:21 PM org.apache.catalina.startup.Catalina start
 INFO: Server startup in 247 ms
 Apr 15, 2015 12:40:21 PM org.apache.openejb.client.EventLogger log
@@ -650,19 +793,19 @@ INFO: Extracting jar: /Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-e
 Apr 15, 2015 12:40:21 PM org.apache.openejb.util.JarExtractor extract
 INFO: Extracted path: /Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/arquillian-test-working-dir/0/jmx/arquillian-protocol
 Apr 15, 2015 12:40:21 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.deployments.classpath.filter.systemapps=false&#39;
+INFO: Using 'openejb.deployments.classpath.filter.systemapps=false'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.default.deployment-module=org.apache.openejb.config.WebModule&#39;
+INFO: Using 'openejb.default.deployment-module=org.apache.openejb.config.WebModule'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.default.deployment-module=org.apache.openejb.config.WebModule&#39;
+INFO: Using 'openejb.default.deployment-module=org.apache.openejb.config.WebModule'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.config.DeploymentsResolver processUrls
 INFO: Found EjbModule in classpath: /Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/arquillian-test-working-dir/0/jmx/jmx-ejb.jar
 Apr 15, 2015 12:40:23 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.default.deployment-module=org.apache.openejb.config.WebModule&#39;
+INFO: Using 'openejb.default.deployment-module=org.apache.openejb.config.WebModule'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.default.deployment-module=org.apache.openejb.config.WebModule&#39;
+INFO: Using 'openejb.default.deployment-module=org.apache.openejb.config.WebModule'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.default.deployment-module=org.apache.openejb.config.WebModule&#39;
+INFO: Using 'openejb.default.deployment-module=org.apache.openejb.config.WebModule'
 Apr 15, 2015 12:40:23 PM org.apache.openejb.config.DeploymentsResolver loadFromClasspath
 INFO: Searched 6 classpath urls in 1605 milliseconds.  Average 267 milliseconds per url.
 Apr 15, 2015 12:40:23 PM org.apache.openejb.config.ConfigurationFactory configureApplication
@@ -680,11 +823,11 @@ INFO: Creating Container(id=Default Managed Container)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.core.managed.SimplePassivater init
 INFO: Using directory /Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/apache-tomee-remote/apache-tomee-plus-7.0.0-SNAPSHOT/temp for stateful session passivation
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;java:comp/env/jmx/Hello&#39; in bean jmx-ejb.Comp1256115069 to Resource(id=jmx/Hello)
+INFO: Auto-linking resource-ref 'java:comp/env/jmx/Hello' in bean jmx-ejb.Comp1256115069 to Resource(id=jmx/Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/jmx/Hello&#39; in bean jmx-ejb.Comp1256115069 to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/jmx/Hello' in bean jmx-ejb.Comp1256115069 to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/Hello&#39; in bean jmx-ejb.Comp1256115069 to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/Hello' in bean jmx-ejb.Comp1256115069 to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.ConfigurationFactory configureService
 INFO: Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig createContainer
@@ -692,17 +835,17 @@ INFO: Auto-creating a container for bean TestEjb: Container(type=SINGLETON, id=D
 Apr 15, 2015 12:40:24 PM org.apache.openejb.assembler.classic.Assembler createRecipe
 INFO: Creating Container(id=Default Singleton Container)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;java:comp/env/jmx/Hello&#39; in bean TestEjb to Resource(id=jmx/Hello)
+INFO: Auto-linking resource-ref 'java:comp/env/jmx/Hello' in bean TestEjb to Resource(id=jmx/Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/jmx/Hello&#39; in bean TestEjb to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/jmx/Hello' in bean TestEjb to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/Hello&#39; in bean TestEjb to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/Hello' in bean TestEjb to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/jmx/Hello&#39; in bean jmx_org.superbiz.resource.jmx.JMXTest to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/jmx/Hello' in bean jmx_org.superbiz.resource.jmx.JMXTest to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AutoConfig processResourceRef
-INFO: Auto-linking resource-ref &#39;openejb/Resource/Hello&#39; in bean jmx_org.superbiz.resource.jmx.JMXTest to Resource(id=Hello)
+INFO: Auto-linking resource-ref 'openejb/Resource/Hello' in bean jmx_org.superbiz.resource.jmx.JMXTest to Resource(id=Hello)
 Apr 15, 2015 12:40:24 PM org.apache.openejb.config.AppInfoBuilder build
-INFO: Enterprise application &quot;/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/arquillian-test-working-dir/0/jmx&quot; loaded.
+INFO: Enterprise application "/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/arquillian-test-working-dir/0/jmx" loaded.
 Apr 15, 2015 12:40:24 PM org.apache.openejb.assembler.classic.Assembler createAppClassLoader
 INFO: Creating dedicated application classloader for jmx
 Apr 15, 2015 12:40:24 PM org.apache.openejb.assembler.classic.Assembler createApplication
@@ -733,7 +876,7 @@ INFO: using default host: localhost
 Apr 15, 2015 12:40:25 PM org.apache.tomee.catalina.TomcatWebAppBuilder init
 INFO: ------------------------- localhost -&gt; /arquillian-protocol
 Apr 15, 2015 12:40:25 PM org.apache.openejb.util.OptionsLog info
-INFO: Using &#39;openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager&#39;
+INFO: Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
 Apr 15, 2015 12:40:25 PM org.apache.openejb.cdi.CdiBuilder initSingleton
 INFO: Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@4a00b74b
 Apr 15, 2015 12:40:25 PM org.apache.openejb.cdi.OpenEJBLifecycle startApplication
@@ -750,11 +893,11 @@ INFO: Creating Resource(id=jmx/Hello, aliases=Hello)
 Apr 15, 2015 12:40:25 PM org.superbiz.resource.jmx.factory.JMXBeanCreator create
 INFO: Unable to set value 12345 on field count
 Apr 15, 2015 12:40:25 PM org.apache.openejb.assembler.classic.Assembler logUnusedProperties
-WARNING: Property &quot;code&quot; not supported by &quot;jmx/Hello&quot;
+WARNING: Property "code" not supported by "jmx/Hello"
 Apr 15, 2015 12:40:25 PM org.apache.openejb.assembler.classic.Assembler logUnusedProperties
-WARNING: Property &quot;name&quot; not supported by &quot;jmx/Hello&quot;
+WARNING: Property "name" not supported by "jmx/Hello"
 Apr 15, 2015 12:40:25 PM org.apache.openejb.assembler.classic.Assembler logUnusedProperties
-WARNING: Property &quot;count&quot; not supported by &quot;jmx/Hello&quot;
+WARNING: Property "count" not supported by "jmx/Hello"
 Apr 15, 2015 12:40:25 PM org.apache.openejb.assembler.classic.Assembler createApplication
 INFO: Deployed Application(path=/Users/jgallimore/tmp/tomee-1.7.x/examples/resources-jmx-example/resources-jmx-ejb/target/arquillian-test-working-dir/0/jmx)
 Apr 15, 2015 12:40:26 PM org.apache.openejb.client.EventLogger log
@@ -769,32 +912,40 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.464 sec
 Apr 15, 2015 12:40:27 PM org.apache.catalina.core.StandardServer await
 INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol pause
-INFO: Pausing ProtocolHandler [&quot;http-bio-61309&quot;]
+INFO: Pausing ProtocolHandler ["http-bio-61309"]
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol pause
-INFO: Pausing ProtocolHandler [&quot;ajp-bio-8009&quot;]
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
 Apr 15, 2015 12:40:27 PM org.apache.catalina.core.StandardService stopInternal
 INFO: Stopping service Catalina
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol stop
-INFO: Stopping ProtocolHandler [&quot;http-bio-61309&quot;]
+INFO: Stopping ProtocolHandler ["http-bio-61309"]
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol stop
-INFO: Stopping ProtocolHandler [&quot;ajp-bio-8009&quot;]
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
 Apr 15, 2015 12:40:27 PM org.apache.openejb.server.SimpleServiceManager stop
 INFO: Stopping server services
 Apr 15, 2015 12:40:27 PM org.apache.openejb.assembler.classic.Assembler destroyApplication
 INFO: Undeploying app: openejb
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol destroy
-INFO: Destroying ProtocolHandler [&quot;http-bio-61309&quot;]
+INFO: Destroying ProtocolHandler ["http-bio-61309"]
 Apr 15, 2015 12:40:27 PM org.apache.coyote.AbstractProtocol destroy
-INFO: Destroying ProtocolHandler [&quot;ajp-bio-8009&quot;]
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Note the following lines showing the creation of the resource.</p>
-<pre><code>Apr 15, 2015 12:40:24 PM org.apache.openejb.config.ConfigurationFactory configureService
-INFO: Configuring Service(id=jmx/Hello, type=Resource, provider-id=jmx/Hello)
-</code></pre>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Apr 15, 2015 12:40:24 PM org.apache.openejb.config.ConfigurationFactory configureService
+INFO: Configuring Service(id=jmx/Hello, type=Resource, provider-id=jmx/Hello)</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -814,7 +965,7 @@ INFO: Configuring Service(id=jmx/Hello, type=Resource, provider-id=jmx/Hello)
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

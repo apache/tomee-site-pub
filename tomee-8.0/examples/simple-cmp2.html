@@ -95,30 +95,96 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>OpenEJB, the EJB Container for TomEE and Geronimo, does support all of EJB 1.1 to 3.1, including CMP2.</p>
-<p>The CMP2 implementation is actually done by adapting the CMP2 bean into a JPA Entity dynamically at deploy time.</p>
-<p>Appropriate subclasses, a JPA persistence.xml file and a mapping.xml file are generated at deployment time for the CMP2 EntityBeans and all the Entities will be then run on OpenJPA. This innovative code has been used as the sole CMP2 implementation in Geronimo for its J2EE 1.4, JavaEE 5 and JavaEE 6 certifications.</p>
-<p>The persistence.xml and mapping.xml files generated at deploy time can be saved to disk and included in the application, allowing you to:</p>
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenEJB, the EJB Container for TomEE and Geronimo, does support all of
+EJB 1.1 to 3.1, including CMP2.</p>
+</div>
+<div class="paragraph">
+<p>The CMP2 implementation is actually done by adapting the CMP2 bean into
+a JPA Entity dynamically at deploy time.</p>
+</div>
+<div class="paragraph">
+<p>Appropriate subclasses, a JPA persistence.xml file and a mapping.xml
+file are generated at deployment time for the CMP2 EntityBeans and all
+the Entities will be then run on OpenJPA. This innovative code has been
+used as the sole CMP2 implementation in Geronimo for its J2EE 1.4,
+JavaEE 5 and JavaEE 6 certifications.</p>
+</div>
+<div class="paragraph">
+<p>The persistence.xml and mapping.xml files generated at deploy time can
+be saved to disk and included in the application, allowing you to:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>gain finer control over persistence options</li>
-  <li>slowly convert individual entities from CMP2 to JPA</li>
+<li>
+<p>gain finer control over persistence options</p>
+</li>
+<li>
+<p>slowly convert individual entities from CMP2 to JPA</p>
+</li>
 </ul>
-<p>Let's see an example.</p>
-<h1>Movies application</h1>
-<p>The following is a basic EJB 2.1 application consisting of one CMP2 Entity. For those that are reading this example out of curiosity and are not familiar with CMP2 or EJB 2.x, each CMP2 Entity is composed of two parts</p>
+</div>
+<div class="paragraph">
+<p>Let’s see an example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies_application">Movies application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following is a basic EJB 2.1 application consisting of one CMP2
+Entity. For those that are reading this example out of curiosity and are
+not familiar with CMP2 or EJB 2.x, each CMP2 Entity is composed of two
+parts</p>
+</div>
+<div class="ulist">
 <ul>
-  <li>
-  <p><strong>A Home interface</strong> which has data access methods like "find", "create", and "remove". This is essentially<br/> what people use <code>@Stateless</code> beans for today, but with difference that you do not need to supply<br/> the implementation of the interface -- the container will generate one for you. This is partly what inspired<br/> the creation of the OpenEJB-specific <a href="../dynamic-dao-implementation/README.html">Dynamic DAO</a> feature.</p></li>
-  <li>
-  <p><strong>An abstract EntityBean class</strong> which declares the persistent "properties" of the entity without actually<br/>declaring any fields. It is the container's job to implement the actual methods and create the appropriate fields. OpenEJB will implement this bean as a JPA <code>@Entity</code> bean.</p></li>
+<li>
+<p><strong>A Home interface</strong> which has data access methods like <code>find'',
+</code>create'', and <code>`remove''. This is essentially what people use
+`@Stateless</code> beans for today, but with difference that you do not need
+to supply the implementation of the interface – the container will
+generate one for you. This is partly what inspired the creation of the
+OpenEJB-specific <a href="../dynamic-dao-implementation/README.html">Dynamic
+DAO</a> feature.</p>
+</li>
+<li>
+<p><strong>An abstract EntityBean class</strong> which declares the persistent
+<code>`properties'' of the entity without actually declaring any fields. It
+is the container’s job to implement the actual methods and create the
+appropriate fields. OpenEJB will implement this bean as a JPA `@Entity</code>
+bean.</p>
+</li>
 </ul>
-<p>As such a CMP2 EntityBean is really just the description of a persistent object and the description of a data-access object. There is no actual code to write.</p>
+</div>
+<div class="paragraph">
+<p>As such a CMP2 EntityBean is really just the description of a persistent
+object and the description of a data-access object. There is no actual
+code to write.</p>
+</div>
+<div class="paragraph">
 <p>The majority of work in CMP2 is done in the xml:</p>
+</div>
+<div class="ulist">
 <ul>
-  <li><strong>ejb-jar.xml</strong> mapping information, which describes the persistent properties of the entity and the queries<br/> for all <em>Home</em> find, create and remove methods. This information will be converted by OpenEJB into<br/> a JPA mapping.xml file. All queries in the cmp2 part of the ejb-jar.xml are converted<br/> into named queries in JPA and generally everything is converted to its JPA equivalent.</li>
+<li>
+<p><strong>ejb-jar.xml</strong> mapping information, which describes the persistent
+properties of the entity and the queries for all <em>Home</em> find, create and
+remove methods. This information will be converted by OpenEJB into a JPA
+mapping.xml file. All queries in the cmp2 part of the ejb-jar.xml are
+converted into named queries in JPA and generally everything is
+converted to its JPA equivalent.</p>
+</li>
 </ul>
-<h2>CMP2 EntityBean, MovieBean</h2>
-<pre><code>package org.superbiz.cmp2;
+</div>
+<div class="sect2">
+<h3 id="_cmp2_entitybean_moviebean">CMP2 EntityBean, MovieBean</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cmp2;
 
 import javax.ejb.EntityBean;
 
@@ -150,10 +216,15 @@ public abstract class MovieBean implements EntityBean {
 
     public abstract void setYear(int year);
 
-}
-</code></pre>
-<h2>CMP2 Home interface, Movies</h2>
-<pre><code>package org.superbiz.cmp2;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp2_home_interface_movies">CMP2 Home interface, Movies</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cmp2;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
@@ -170,10 +241,15 @@ interface Movies extends javax.ejb.EJBLocalHome {
     Collection&lt;Movie&gt; findAll() throws FinderException;
 
     Collection&lt;Movie&gt; findByDirector(String director) throws FinderException;
-}
-</code></pre>
-<h2>CMP2 mapping in ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp2_mapping_in_ejb_jar_xml">CMP2 mapping in ejb-jar.xml</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar&gt;
   &lt;enterprise-beans&gt;
     &lt;entity&gt;
       &lt;ejb-name&gt;MovieBean&lt;/ejb-name&gt;
@@ -216,22 +292,32 @@ interface Movies extends javax.ejb.EJBLocalHome {
       &lt;/query&gt;
     &lt;/entity&gt;
   &lt;/enterprise-beans&gt;
-&lt;/ejb-jar&gt;
-</code></pre>
-<h2>openejb-jar.xml</h2>
-<pre><code>&lt;openejb-jar xmlns=&quot;http://www.openejb.org/xml/ns/openejb-jar-2.1&quot;&gt;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_openejb_jar_xml">openejb-jar.xml</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb-jar xmlns="http://www.openejb.org/xml/ns/openejb-jar-2.1"&gt;
   &lt;enterprise-beans&gt;
     &lt;entity&gt;
       &lt;ejb-name&gt;MovieBean&lt;/ejb-name&gt;
-      &lt;key-generator xmlns=&quot;http://www.openejb.org/xml/ns/pkgen-2.1&quot;&gt;
+      &lt;key-generator xmlns="http://www.openejb.org/xml/ns/pkgen-2.1"&gt;
         &lt;uuid/&gt;
       &lt;/key-generator&gt;
     &lt;/entity&gt;
   &lt;/enterprise-beans&gt;
-&lt;/openejb-jar&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.cmp2;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_moviestest">MoviesTest</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.cmp2;
 
 import junit.framework.TestCase;
 
@@ -247,37 +333,45 @@ public class MoviesTest extends TestCase {
 
     public void test() throws Exception {
         Properties p = new Properties();
-        p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabase.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
 
-        p.put(&quot;movieDatabaseUnmanaged&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JdbcUrl&quot;, &quot;jdbc:hsqldb:mem:moviedb&quot;);
-        p.put(&quot;movieDatabaseUnmanaged.JtaManaged&quot;, &quot;false&quot;);
+        p.put("movieDatabaseUnmanaged", "new://Resource?type=DataSource");
+        p.put("movieDatabaseUnmanaged.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabaseUnmanaged.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        p.put("movieDatabaseUnmanaged.JtaManaged", "false");
 
         Context context = new InitialContext(p);
 
-        Movies movies = (Movies) context.lookup(&quot;MovieBeanLocalHome&quot;);
+        Movies movies = (Movies) context.lookup("MovieBeanLocalHome");
 
-        movies.create(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992);
-        movies.create(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996);
-        movies.create(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998);
+        movies.create("Quentin Tarantino", "Reservoir Dogs", 1992);
+        movies.create("Joel Coen", "Fargo", 1996);
+        movies.create("Joel Coen", "The Big Lebowski", 1998);
 
         Collection&lt;Movie&gt; list = movies.findAll();
-        assertEquals(&quot;Collection.size()&quot;, 3, list.size());
+        assertEquals("Collection.size()", 3, list.size());
 
         for (Movie movie : list) {
             movies.remove(movie.getPrimaryKey());
         }
 
-        assertEquals(&quot;Movies.findAll()&quot;, 0, movies.findAll().size());
+        assertEquals("Movies.findAll()", 0, movies.findAll().size());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.cmp2.MoviesTest
@@ -295,9 +389,9 @@ INFO - Configuring enterprise application: /Users/dblevins/examples/simple-cmp2/
 INFO - Configuring Service(id=Default CMP Container, type=Container, provider-id=Default CMP Container)
 INFO - Auto-creating a container for bean MovieBean: Container(type=CMP_ENTITY, id=Default CMP Container)
 INFO - Configuring PersistenceUnit(name=cmp)
-INFO - Adjusting PersistenceUnit cmp &lt;jta-data-source&gt; to Resource ID &#39;movieDatabase&#39; from &#39;null&#39;
-INFO - Adjusting PersistenceUnit cmp &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseUnmanaged&#39; from &#39;null&#39;
-INFO - Enterprise application &quot;/Users/dblevins/examples/simple-cmp2/target/classpath.ear&quot; loaded.
+INFO - Adjusting PersistenceUnit cmp &lt;jta-data-source&gt; to Resource ID 'movieDatabase' from 'null'
+INFO - Adjusting PersistenceUnit cmp &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseUnmanaged' from 'null'
+INFO - Enterprise application "/Users/dblevins/examples/simple-cmp2/target/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/simple-cmp2/target/classpath.ear
 INFO - PersistenceUnit(name=cmp, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 160ms
 INFO - Jndi(name=MovieBeanLocalHome) --&gt; Ejb(deployment-id=MovieBean)
@@ -310,63 +404,102 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.919 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
-<h1>CMP2 to JPA</h1>
-<p>As mentioned OpenEJB will implement the abstract CMP2 <code>EntityBean</code> as a JPA <code>@Entity</code>, create a <code>persistence.xml</code> file and convert all <code>ejb-jar.xml</code> mapping and queries to a JPA <code>entity-mappings.xml</code> file.</p>
-<p>Both of these files will be written to disk by setting the system property <code>openejb.descriptors.output</code> to <code>true</code>. In the testcase above, this can be done via the <code>InitialContext</code> parameters via code like this:</p>
-<pre><code>Properties p = new Properties();
-p.put(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cmp2_to_jpa">CMP2 to JPA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As mentioned OpenEJB will implement the abstract CMP2 <code>EntityBean</code> as a
+JPA <code>@Entity</code>, create a <code>persistence.xml</code> file and convert all
+<code>ejb-jar.xml</code> mapping and queries to a JPA <code>entity-mappings.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>Both of these files will be written to disk by setting the system
+property <code>openejb.descriptors.output</code> to <code>true</code>. In the testcase above,
+this can be done via the <code>InitialContext</code> parameters via code like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
 
 // setup the data sources as usual...
 
 // write the generated descriptors
-p.put(&quot;openejb.descriptors.output&quot;, &quot;true&quot;);
+p.put("openejb.descriptors.output", "true");
 
-Context context = new InitialContext(p);
-</code></pre>
-<p>Below are the generated <code>persistence.xml</code> and <code>mapping.xml</code> files for our CMP2 <code>EntityBean</code></p>
-<h2>CMP2 to JPA generated persistence.xml file</h2>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
-&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
-    &lt;persistence-unit name=&quot;cmp&quot; transaction-type=&quot;JTA&quot;&gt;
+Context context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Below are the generated <code>persistence.xml</code> and <code>mapping.xml</code> files for
+our CMP2 <code>EntityBean</code></p>
+</div>
+<div class="sect2">
+<h3 id="_cmp2_to_jpa_generated_persistence_xml_file">CMP2 to JPA generated persistence.xml file</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+    &lt;persistence-unit name="cmp" transaction-type="JTA"&gt;
         &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
         &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
         &lt;mapping-file&gt;META-INF/openejb-cmp-generated-orm.xml&lt;/mapping-file&gt;
         &lt;class&gt;openejb.org.superbiz.cmp2.MovieBean&lt;/class&gt;
         &lt;properties&gt;
-            &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot;
-            value=&quot;buildSchema(ForeignKeys=true, Indexes=false, IgnoreErrors=true)&quot;/&gt;
-            &lt;property name=&quot;openjpa.Log&quot; value=&quot;DefaultLevel=INFO&quot;/&gt;
+            &lt;property name="openjpa.jdbc.SynchronizeMappings"
+            value="buildSchema(ForeignKeys=true, Indexes=false, IgnoreErrors=true)"/&gt;
+            &lt;property name="openjpa.Log" value="DefaultLevel=INFO"/&gt;
         &lt;/properties&gt;
     &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<p>All of this <code>persitence.xml</code> can be changed, however the <code>persistence-unit</code> must have the <code>name</code> fixed to <code>cmp</code>.</p>
-<h2>CMP2 to JPA generated mapping file</h2>
-<p>Note that the <code>persistence.xml</code> above refers to this mappings file as <code>META-INF/openejb-cmp-generated-orm.xml</code>. It is possible to rename this file to whatever name you prefer, just make sure to update the <code>&lt;mapping-file&gt;</code> element of the <code>cmp</code> persistence unit accordingly.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
-&lt;entity-mappings xmlns=&quot;http://java.sun.com/xml/ns/persistence/orm&quot; version=&quot;1.0&quot;&gt;
-    &lt;entity class=&quot;openejb.org.superbiz.cmp2.MovieBean&quot; name=&quot;MovieBean&quot;&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of this <code>persitence.xml</code> can be changed, however the
+<code>persistence-unit</code> must have the <code>name</code> fixed to <code>cmp</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cmp2_to_jpa_generated_mapping_file">CMP2 to JPA generated mapping file</h3>
+<div class="paragraph">
+<p>Note that the <code>persistence.xml</code> above refers to this mappings file as
+<code>META-INF/openejb-cmp-generated-orm.xml</code>. It is possible to rename this
+file to whatever name you prefer, just make sure to update the
+<code>&lt;mapping-file&gt;</code> element of the <code>cmp</code> persistence unit accordingly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" version="1.0"&gt;
+    &lt;entity class="openejb.org.superbiz.cmp2.MovieBean" name="MovieBean"&gt;
         &lt;description&gt;simple-cmp2#MovieBean&lt;/description&gt;
         &lt;table/&gt;
-        &lt;named-query name=&quot;MovieBean.findByDirector(java.lang.String)&quot;&gt;
+        &lt;named-query name="MovieBean.findByDirector(java.lang.String)"&gt;
             &lt;query&gt;SELECT m FROM MovieBean m WHERE m.director = ?1&lt;/query&gt;
         &lt;/named-query&gt;
-        &lt;named-query name=&quot;MovieBean.findAll&quot;&gt;
+        &lt;named-query name="MovieBean.findAll"&gt;
             &lt;query&gt;SELECT m FROM MovieBean as m&lt;/query&gt;
         &lt;/named-query&gt;
         &lt;attributes&gt;
-            &lt;id name=&quot;id&quot;&gt;
-                &lt;generated-value strategy=&quot;IDENTITY&quot;/&gt;
+            &lt;id name="id"&gt;
+                &lt;generated-value strategy="IDENTITY"/&gt;
             &lt;/id&gt;
-            &lt;basic name=&quot;director&quot;/&gt;
-            &lt;basic name=&quot;year&quot;/&gt;
-            &lt;basic name=&quot;title&quot;/&gt;
+            &lt;basic name="director"/&gt;
+            &lt;basic name="year"/&gt;
+            &lt;basic name="title"/&gt;
         &lt;/attributes&gt;
     &lt;/entity&gt;
-&lt;/entity-mappings&gt;
-</code></pre>
+&lt;/entity-mappings&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -386,7 +519,7 @@ Context context = new InitialContext(p);
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

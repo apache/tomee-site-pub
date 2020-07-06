@@ -95,16 +95,27 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>Movie</h2>
-<pre><code>package org.superbiz.troubleshooting;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movie">Movie</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.troubleshooting;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name = &quot;Movie&quot;)
+@Entity(name = "Movie")
 public class Movie {
 
     @Id
@@ -148,10 +159,17 @@ public class Movie {
         this.year = year;
     }
 
-}
-</code></pre>
-<h2>Movies</h2>
-<pre><code>package org.superbiz.troubleshooting;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_movies">Movies</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.troubleshooting;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -164,7 +182,7 @@ import java.util.List;
 @Stateless
 public class Movies {
 
-    @PersistenceContext(unitName = &quot;movie-unit&quot;, type = PersistenceContextType.TRANSACTION)
+    @PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.TRANSACTION)
     private EntityManager entityManager;
 
     public void addMovie(Movie movie) throws Exception {
@@ -176,27 +194,41 @@ public class Movies {
     }
 
     public List&lt;Movie&gt; getMovies() throws Exception {
-        Query query = entityManager.createQuery(&quot;SELECT m from Movie as m&quot;);
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
         return query.getResultList();
     }
-}
-</code></pre>
-<h2>persistence.xml</h2>
-<pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistence_xml">persistence.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
 
-  &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
     &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
     &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
     &lt;class&gt;org.superbiz.testinjection.MoviesTest.Movie&lt;/class&gt;
 
     &lt;properties&gt;
-      &lt;property name=&quot;openjpa.jdbc.SynchronizeMappings&quot; value=&quot;buildSchema(ForeignKeys=true)&quot;/&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
     &lt;/properties&gt;
   &lt;/persistence-unit&gt;
-&lt;/persistence&gt;
-</code></pre>
-<h2>MoviesTest</h2>
-<pre><code>package org.superbiz.troubleshooting;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.troubleshooting;
 
 import junit.framework.TestCase;
 
@@ -223,38 +255,38 @@ public class MoviesTest extends TestCase {
 
     public void setUp() throws Exception {
         Properties p = new Properties();
-        p.put(&quot;movieDatabase&quot;, &quot;new://Resource?type=DataSource&quot;);
-        p.put(&quot;movieDatabase.JdbcDriver&quot;, &quot;org.hsqldb.jdbcDriver&quot;);
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
 
         // These two debug levels will get you the basic log information
         // on the deployment of applications. Good first step in troubleshooting.
-        p.put(&quot;log4j.category.OpenEJB.startup&quot;, &quot;debug&quot;);
-        p.put(&quot;log4j.category.OpenEJB.startup.config&quot;, &quot;debug&quot;);
+        p.put("log4j.category.OpenEJB.startup", "debug");
+        p.put("log4j.category.OpenEJB.startup.config", "debug");
 
-        // This log category is a good way to see what &quot;openejb.foo&quot; options
+        // This log category is a good way to see what "openejb.foo" options
         // and flags are available and what their default values are
-        p.put(&quot;log4j.category.OpenEJB.options&quot;, &quot;debug&quot;);
+        p.put("log4j.category.OpenEJB.options", "debug");
 
         // This will output the full configuration of all containers
         // resources and other openejb.xml configurable items.  A good
         // way to see what the final configuration looks like after all
         // overriding has been applied.
-        p.put(&quot;log4j.category.OpenEJB.startup.service&quot;, &quot;debug&quot;);
+        p.put("log4j.category.OpenEJB.startup.service", "debug");
 
         // Will output a generated ejb-jar.xml file that represents
         // 100% of the annotations used in the code.  This is a great
         // way to figure out how to do something in xml for overriding
-        // or just to &quot;see&quot; all your application meta-data in one place.
-        // Look for log lines like this &quot;Dumping Generated ejb-jar.xml to&quot;
-        p.put(&quot;openejb.descriptors.output&quot;, &quot;true&quot;);
+        // or just to "see" all your application meta-data in one place.
+        // Look for log lines like this "Dumping Generated ejb-jar.xml to"
+        p.put("openejb.descriptors.output", "true");
 
         // Setting the validation output level to verbose results in
         // validation messages that attempt to provide explanations
         // and information on what steps can be taken to remedy failures.
         // A great tool for those learning EJB.
-        p.put(&quot;openejb.validation.output.level&quot;, &quot;verbose&quot;);
+        p.put("openejb.validation.output.level", "verbose");
 
-        EJBContainer.createEJBContainer(p).getContext().bind(&quot;inject&quot;, this);
+        EJBContainer.createEJBContainer(p).getContext().bind("inject", this);
     }
 
     public void test() throws Exception {
@@ -262,48 +294,55 @@ public class MoviesTest extends TestCase {
         userTransaction.begin();
 
         try {
-            entityManager.persist(new Movie(&quot;Quentin Tarantino&quot;, &quot;Reservoir Dogs&quot;, 1992));
-            entityManager.persist(new Movie(&quot;Joel Coen&quot;, &quot;Fargo&quot;, 1996));
-            entityManager.persist(new Movie(&quot;Joel Coen&quot;, &quot;The Big Lebowski&quot;, 1998));
+            entityManager.persist(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+            entityManager.persist(new Movie("Joel Coen", "Fargo", 1996));
+            entityManager.persist(new Movie("Joel Coen", "The Big Lebowski", 1998));
 
             List&lt;Movie&gt; list = movies.getMovies();
-            assertEquals(&quot;List.size()&quot;, 3, list.size());
+            assertEquals("List.size()", 3, list.size());
         } finally {
             userTransaction.commit();
         }
 
         // Transaction was committed
         List&lt;Movie&gt; list = movies.getMovies();
-        assertEquals(&quot;List.size()&quot;, 3, list.size());
+        assertEquals("List.size()", 3, list.size());
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.troubleshooting.MoviesTest
-2011-10-29 11:50:19,482 - DEBUG - Using default &#39;openejb.nobanner=true&#39;
+2011-10-29 11:50:19,482 - DEBUG - Using default 'openejb.nobanner=true'
 Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 2011-10-29 11:50:19,482 - INFO  - openejb.home = /Users/dblevins/examples/troubleshooting
 2011-10-29 11:50:19,482 - INFO  - openejb.base = /Users/dblevins/examples/troubleshooting
-2011-10-29 11:50:19,483 - DEBUG - Using default &#39;openejb.assembler=org.apache.openejb.assembler.classic.Assembler&#39;
+2011-10-29 11:50:19,483 - DEBUG - Using default 'openejb.assembler=org.apache.openejb.assembler.classic.Assembler'
 2011-10-29 11:50:19,483 - DEBUG - Instantiating assembler class org.apache.openejb.assembler.classic.Assembler
-2011-10-29 11:50:19,517 - DEBUG - Using default &#39;openejb.jndiname.failoncollision=true&#39;
-2011-10-29 11:50:19,517 - INFO  - Using &#39;javax.ejb.embeddable.EJBContainer=true&#39;
-2011-10-29 11:50:19,520 - DEBUG - Using default &#39;openejb.configurator=org.apache.openejb.config.ConfigurationFactory&#39;
-2011-10-29 11:50:19,588 - DEBUG - Using default &#39;openejb.validation.skip=false&#39;
-2011-10-29 11:50:19,589 - DEBUG - Using default &#39;openejb.deploymentId.format={ejbName}&#39;
-2011-10-29 11:50:19,589 - DEBUG - Using default &#39;openejb.debuggable-vm-hackery=false&#39;
-2011-10-29 11:50:19,589 - DEBUG - Using default &#39;openejb.webservices.enabled=true&#39;
-2011-10-29 11:50:19,594 - DEBUG - Using default &#39;openejb.vendor.config=ALL&#39;  Possible values are: geronimo, glassfish, jboss, weblogic or NONE or ALL
-2011-10-29 11:50:19,612 - DEBUG - Using default &#39;openejb.provider.default=org.apache.openejb.embedded&#39;
+2011-10-29 11:50:19,517 - DEBUG - Using default 'openejb.jndiname.failoncollision=true'
+2011-10-29 11:50:19,517 - INFO  - Using 'javax.ejb.embeddable.EJBContainer=true'
+2011-10-29 11:50:19,520 - DEBUG - Using default 'openejb.configurator=org.apache.openejb.config.ConfigurationFactory'
+2011-10-29 11:50:19,588 - DEBUG - Using default 'openejb.validation.skip=false'
+2011-10-29 11:50:19,589 - DEBUG - Using default 'openejb.deploymentId.format={ejbName}'
+2011-10-29 11:50:19,589 - DEBUG - Using default 'openejb.debuggable-vm-hackery=false'
+2011-10-29 11:50:19,589 - DEBUG - Using default 'openejb.webservices.enabled=true'
+2011-10-29 11:50:19,594 - DEBUG - Using default 'openejb.vendor.config=ALL'  Possible values are: geronimo, glassfish, jboss, weblogic or NONE or ALL
+2011-10-29 11:50:19,612 - DEBUG - Using default 'openejb.provider.default=org.apache.openejb.embedded'
 2011-10-29 11:50:19,658 - INFO  - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 2011-10-29 11:50:19,662 - INFO  - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 2011-10-29 11:50:19,665 - INFO  - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
 2011-10-29 11:50:19,665 - DEBUG - Override [JdbcDriver=org.hsqldb.jdbcDriver]
-2011-10-29 11:50:19,666 - DEBUG - Using default &#39;openejb.deployments.classpath=false&#39;
+2011-10-29 11:50:19,666 - DEBUG - Using default 'openejb.deployments.classpath=false'
 2011-10-29 11:50:19,666 - INFO  - Creating TransactionManager(id=Default Transaction Manager)
 2011-10-29 11:50:19,676 - DEBUG - defaultTransactionTimeoutSeconds=600
 2011-10-29 11:50:19,676 - DEBUG - TxRecovery=false
@@ -353,16 +392,16 @@ http://tomee.apache.org/
 2011-10-29 11:50:19,785 - DEBUG - SecurityService   : org.apache.openejb.core.security.SecurityServiceImpl
 2011-10-29 11:50:19,786 - DEBUG - TransactionManager: org.apache.geronimo.transaction.manager.GeronimoTransactionManager
 2011-10-29 11:50:19,786 - DEBUG - OpenEJB Container System ready.
-2011-10-29 11:50:19,786 - DEBUG - Using default &#39;openejb.validation.skip=false&#39;
-2011-10-29 11:50:19,786 - DEBUG - Using default &#39;openejb.deploymentId.format={ejbName}&#39;
-2011-10-29 11:50:19,786 - DEBUG - Using default &#39;openejb.debuggable-vm-hackery=false&#39;
-2011-10-29 11:50:19,786 - DEBUG - Using default &#39;openejb.webservices.enabled=true&#39;
-2011-10-29 11:50:19,786 - DEBUG - Using default &#39;openejb.vendor.config=ALL&#39;  Possible values are: geronimo, glassfish, jboss, weblogic or NONE or ALL
-2011-10-29 11:50:19,789 - DEBUG - Using default &#39;openejb.deployments.classpath.include=.*&#39;
-2011-10-29 11:50:19,789 - DEBUG - Using default &#39;openejb.deployments.classpath.exclude=&#39;
-2011-10-29 11:50:19,789 - DEBUG - Using default &#39;openejb.deployments.classpath.require.descriptor=client&#39;  Possible values are: ejb, client or NONE or ALL
-2011-10-29 11:50:19,789 - DEBUG - Using default &#39;openejb.deployments.classpath.filter.descriptors=false&#39;
-2011-10-29 11:50:19,789 - DEBUG - Using default &#39;openejb.deployments.classpath.filter.systemapps=true&#39;
+2011-10-29 11:50:19,786 - DEBUG - Using default 'openejb.validation.skip=false'
+2011-10-29 11:50:19,786 - DEBUG - Using default 'openejb.deploymentId.format={ejbName}'
+2011-10-29 11:50:19,786 - DEBUG - Using default 'openejb.debuggable-vm-hackery=false'
+2011-10-29 11:50:19,786 - DEBUG - Using default 'openejb.webservices.enabled=true'
+2011-10-29 11:50:19,786 - DEBUG - Using default 'openejb.vendor.config=ALL'  Possible values are: geronimo, glassfish, jboss, weblogic or NONE or ALL
+2011-10-29 11:50:19,789 - DEBUG - Using default 'openejb.deployments.classpath.include=.*'
+2011-10-29 11:50:19,789 - DEBUG - Using default 'openejb.deployments.classpath.exclude='
+2011-10-29 11:50:19,789 - DEBUG - Using default 'openejb.deployments.classpath.require.descriptor=client'  Possible values are: ejb, client or NONE or ALL
+2011-10-29 11:50:19,789 - DEBUG - Using default 'openejb.deployments.classpath.filter.descriptors=false'
+2011-10-29 11:50:19,789 - DEBUG - Using default 'openejb.deployments.classpath.filter.systemapps=true'
 2011-10-29 11:50:19,828 - DEBUG - Inspecting classpath for applications: 5 urls.
 2011-10-29 11:50:19,846 - INFO  - Found EjbModule in classpath: /Users/dblevins/examples/troubleshooting/target/classes
 2011-10-29 11:50:20,011 - DEBUG - URLs after filtering: 55
@@ -423,15 +462,15 @@ http://tomee.apache.org/
 2011-10-29 11:50:20,017 - DEBUG - Descriptors path: jar:file:/Users/dblevins/.m2/repository/org/apache/geronimo/javamail/geronimo-javamail_1.4_mail/1.8.2/geronimo-javamail_1.4_mail-1.8.2.jar!/
 2011-10-29 11:50:20,017 - DEBUG - Searched 5 classpath urls in 80 milliseconds.  Average 16 milliseconds per url.
 2011-10-29 11:50:20,023 - INFO  - Beginning load: /Users/dblevins/examples/troubleshooting/target/classes
-2011-10-29 11:50:20,028 - DEBUG - Using default &#39;openejb.tempclassloader.skip=none&#39;  Possible values are: none, annotations, enums or NONE or ALL
-2011-10-29 11:50:20,030 - DEBUG - Using default &#39;openejb.tempclassloader.skip=none&#39;  Possible values are: none, annotations, enums or NONE or ALL
+2011-10-29 11:50:20,028 - DEBUG - Using default 'openejb.tempclassloader.skip=none'  Possible values are: none, annotations, enums or NONE or ALL
+2011-10-29 11:50:20,030 - DEBUG - Using default 'openejb.tempclassloader.skip=none'  Possible values are: none, annotations, enums or NONE or ALL
 2011-10-29 11:50:20,099 - INFO  - Configuring enterprise application: /Users/dblevins/examples/troubleshooting
 2011-10-29 11:50:20,099 - DEBUG - No ejb-jar.xml found assuming annotated beans present: /Users/dblevins/examples/troubleshooting, module: troubleshooting
 2011-10-29 11:50:20,213 - DEBUG - Searching for annotated application exceptions (see OPENEJB-980)
 2011-10-29 11:50:20,214 - DEBUG - Searching for annotated application exceptions (see OPENEJB-980)
-2011-10-29 11:50:20,248 - WARN  - Method &#39;lookup&#39; is not available for &#39;javax.annotation.Resource&#39;. Probably using an older Runtime.
-2011-10-29 11:50:20,249 - DEBUG - looking for annotated MBeans in 
-2011-10-29 11:50:20,249 - DEBUG - registered 0 annotated MBeans in 
+2011-10-29 11:50:20,248 - WARN  - Method 'lookup' is not available for 'javax.annotation.Resource'. Probably using an older Runtime.
+2011-10-29 11:50:20,249 - DEBUG - looking for annotated MBeans in
+2011-10-29 11:50:20,249 - DEBUG - registered 0 annotated MBeans in
 2011-10-29 11:50:20,278 - INFO  - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 2011-10-29 11:50:20,278 - INFO  - Auto-creating a container for bean Movies: Container(type=STATELESS, id=Default Stateless Container)
 2011-10-29 11:50:20,278 - INFO  - Creating Container(id=Default Stateless Container)
@@ -460,7 +499,7 @@ http://tomee.apache.org/
 2011-10-29 11:50:20,310 - DEBUG - normalized &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-datasource&gt;
 2011-10-29 11:50:20,310 - DEBUG - Available DataSources
 2011-10-29 11:50:20,310 - DEBUG - DataSource(name=movieDatabase, JtaManaged=true)
-2011-10-29 11:50:20,311 - INFO  - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+2011-10-29 11:50:20,311 - INFO  - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 2011-10-29 11:50:20,311 - INFO  - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
 2011-10-29 11:50:20,311 - INFO  - Creating Resource(id=movieDatabaseNonJta)
 2011-10-29 11:50:20,311 - DEBUG - Definition=
@@ -487,53 +526,56 @@ http://tomee.apache.org/
 2011-10-29 11:50:20,312 - DEBUG - MaxOpenPreparedStatements=0
 2011-10-29 11:50:20,312 - DEBUG - AccessToUnderlyingConnectionAllowed=false
 2011-10-29 11:50:20,316 - DEBUG - createService.success
-2011-10-29 11:50:20,316 - INFO  - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
-2011-10-29 11:50:20,317 - INFO  - Using &#39;openejb.descriptors.output=true&#39;
-2011-10-29 11:50:20,317 - INFO  - Using &#39;openejb.descriptors.output=true&#39;
+2011-10-29 11:50:20,316 - INFO  - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+2011-10-29 11:50:20,317 - INFO  - Using 'openejb.descriptors.output=true'
+2011-10-29 11:50:20,317 - INFO  - Using 'openejb.descriptors.output=true'
 2011-10-29 11:50:20,642 - INFO  - Dumping Generated ejb-jar.xml to: /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T/ejb-jar-4107959830671443055troubleshooting.xml
 2011-10-29 11:50:20,657 - INFO  - Dumping Generated openejb-jar.xml to: /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T/openejb-jar-5369342778223971127troubleshooting.xml
-2011-10-29 11:50:20,657 - INFO  - Using &#39;openejb.descriptors.output=true&#39;
+2011-10-29 11:50:20,657 - INFO  - Using 'openejb.descriptors.output=true'
 2011-10-29 11:50:20,658 - INFO  - Dumping Generated ejb-jar.xml to: /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T/ejb-jar-5569422837673302173EjbModule837053032.xml
 2011-10-29 11:50:20,659 - INFO  - Dumping Generated openejb-jar.xml to: /var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T/openejb-jar-560959152015048895EjbModule837053032.xml
 2011-10-29 11:50:20,665 - DEBUG - Adding persistence-unit movie-unit property openjpa.Log=log4j
 2011-10-29 11:50:20,665 - DEBUG - Adjusting PersistenceUnit(name=movie-unit) property to openjpa.RuntimeUnenhancedClasses=supported
-2011-10-29 11:50:20,674 - INFO  - Using &#39;openejb.validation.output.level=VERBOSE&#39;
-2011-10-29 11:50:20,674 - INFO  - Enterprise application &quot;/Users/dblevins/examples/troubleshooting&quot; loaded.
+2011-10-29 11:50:20,674 - INFO  - Using 'openejb.validation.output.level=VERBOSE'
+2011-10-29 11:50:20,674 - INFO  - Enterprise application "/Users/dblevins/examples/troubleshooting" loaded.
 2011-10-29 11:50:20,674 - INFO  - Assembling app: /Users/dblevins/examples/troubleshooting
-2011-10-29 11:50:20,678 - DEBUG - Using default &#39;openejb.tempclassloader.skip=none&#39;  Possible values are: none, annotations, enums or NONE or ALL
-2011-10-29 11:50:20,757 - DEBUG - Using default &#39;openejb.tempclassloader.skip=none&#39;  Possible values are: none, annotations, enums or NONE or ALL
+2011-10-29 11:50:20,678 - DEBUG - Using default 'openejb.tempclassloader.skip=none'  Possible values are: none, annotations, enums or NONE or ALL
+2011-10-29 11:50:20,757 - DEBUG - Using default 'openejb.tempclassloader.skip=none'  Possible values are: none, annotations, enums or NONE or ALL
 2011-10-29 11:50:21,137 - INFO  - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 407ms
 2011-10-29 11:50:21,138 - DEBUG - openjpa.jdbc.SynchronizeMappings=buildSchema(ForeignKeys=true)
 2011-10-29 11:50:21,138 - DEBUG - openjpa.Log=log4j
 2011-10-29 11:50:21,138 - DEBUG - openjpa.RuntimeUnenhancedClasses=supported
-2011-10-29 11:50:21,262 - DEBUG - Using default &#39;openejb.jndiname.strategy.class=org.apache.openejb.assembler.classic.JndiBuilder$TemplatedStrategy&#39;
-2011-10-29 11:50:21,262 - DEBUG - Using default &#39;openejb.jndiname.format={deploymentId}{interfaceType.annotationName}&#39;
-2011-10-29 11:50:21,267 - DEBUG - Using default &#39;openejb.localcopy=true&#39;
+2011-10-29 11:50:21,262 - DEBUG - Using default 'openejb.jndiname.strategy.class=org.apache.openejb.assembler.classic.JndiBuilder$TemplatedStrategy'
+2011-10-29 11:50:21,262 - DEBUG - Using default 'openejb.jndiname.format={deploymentId}{interfaceType.annotationName}'
+2011-10-29 11:50:21,267 - DEBUG - Using default 'openejb.localcopy=true'
 2011-10-29 11:50:21,270 - DEBUG - bound ejb at name: openejb/Deployment/Movies/org.superbiz.troubleshooting.Movies!LocalBean, ref: org.apache.openejb.core.ivm.naming.BusinessLocalBeanReference@2569a1c5
 2011-10-29 11:50:21,270 - DEBUG - bound ejb at name: openejb/Deployment/Movies/org.superbiz.troubleshooting.Movies!LocalBeanHome, ref: org.apache.openejb.core.ivm.naming.BusinessLocalBeanReference@2569a1c5
-2011-10-29 11:50:21,272 - INFO  - Jndi(name=&quot;java:global/troubleshooting/Movies!org.superbiz.troubleshooting.Movies&quot;)
-2011-10-29 11:50:21,272 - INFO  - Jndi(name=&quot;java:global/troubleshooting/Movies&quot;)
-2011-10-29 11:50:21,277 - DEBUG - Using default &#39;openejb.jndiname.strategy.class=org.apache.openejb.assembler.classic.JndiBuilder$TemplatedStrategy&#39;
-2011-10-29 11:50:21,277 - DEBUG - Using default &#39;openejb.jndiname.format={deploymentId}{interfaceType.annotationName}&#39;
+2011-10-29 11:50:21,272 - INFO  - Jndi(name="java:global/troubleshooting/Movies!org.superbiz.troubleshooting.Movies")
+2011-10-29 11:50:21,272 - INFO  - Jndi(name="java:global/troubleshooting/Movies")
+2011-10-29 11:50:21,277 - DEBUG - Using default 'openejb.jndiname.strategy.class=org.apache.openejb.assembler.classic.JndiBuilder$TemplatedStrategy'
+2011-10-29 11:50:21,277 - DEBUG - Using default 'openejb.jndiname.format={deploymentId}{interfaceType.annotationName}'
 2011-10-29 11:50:21,277 - DEBUG - bound ejb at name: openejb/Deployment/org.superbiz.troubleshooting.MoviesTest/org.superbiz.troubleshooting.MoviesTest!LocalBean, ref: org.apache.openejb.core.ivm.naming.BusinessLocalBeanReference@3f78e13f
 2011-10-29 11:50:21,277 - DEBUG - bound ejb at name: openejb/Deployment/org.superbiz.troubleshooting.MoviesTest/org.superbiz.troubleshooting.MoviesTest!LocalBeanHome, ref: org.apache.openejb.core.ivm.naming.BusinessLocalBeanReference@3f78e13f
-2011-10-29 11:50:21,277 - INFO  - Jndi(name=&quot;java:global/EjbModule837053032/org.superbiz.troubleshooting.MoviesTest!org.superbiz.troubleshooting.MoviesTest&quot;)
-2011-10-29 11:50:21,277 - INFO  - Jndi(name=&quot;java:global/EjbModule837053032/org.superbiz.troubleshooting.MoviesTest&quot;)
+2011-10-29 11:50:21,277 - INFO  - Jndi(name="java:global/EjbModule837053032/org.superbiz.troubleshooting.MoviesTest!org.superbiz.troubleshooting.MoviesTest")
+2011-10-29 11:50:21,277 - INFO  - Jndi(name="java:global/EjbModule837053032/org.superbiz.troubleshooting.MoviesTest")
 2011-10-29 11:50:21,291 - DEBUG - CDI Service not installed: org.apache.webbeans.spi.ConversationService
 2011-10-29 11:50:21,399 - INFO  - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateless Container)
 2011-10-29 11:50:21,428 - INFO  - Created Ejb(deployment-id=org.superbiz.troubleshooting.MoviesTest, ejb-name=org.superbiz.troubleshooting.MoviesTest, container=Default Managed Container)
 2011-10-29 11:50:21,463 - INFO  - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateless Container)
 2011-10-29 11:50:21,463 - INFO  - Started Ejb(deployment-id=org.superbiz.troubleshooting.MoviesTest, ejb-name=org.superbiz.troubleshooting.MoviesTest, container=Default Managed Container)
 2011-10-29 11:50:21,463 - INFO  - Deployed Application(path=/Users/dblevins/examples/troubleshooting)
-2011-10-29 11:50:21,728 - WARN  - The class &quot;org.superbiz.testinjection.MoviesTest.Movie&quot; listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
-2011-10-29 11:50:21,834 - WARN  - The class &quot;org.superbiz.testinjection.MoviesTest.Movie&quot; listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
-2011-10-29 11:50:21,846 - WARN  - The class &quot;org.superbiz.testinjection.MoviesTest.Movie&quot; listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
+2011-10-29 11:50:21,728 - WARN  - The class "org.superbiz.testinjection.MoviesTest.Movie" listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
+2011-10-29 11:50:21,834 - WARN  - The class "org.superbiz.testinjection.MoviesTest.Movie" listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
+2011-10-29 11:50:21,846 - WARN  - The class "org.superbiz.testinjection.MoviesTest.Movie" listed in the openjpa.MetaDataFactory configuration property could not be loaded by sun.misc.Launcher$AppClassLoader@27a8c4e7; ignoring.
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.642 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -553,7 +595,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>

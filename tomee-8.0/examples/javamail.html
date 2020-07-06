@@ -95,11 +95,33 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This is just a simple example to demonstrate a very basic usage of the API. It should be enough to get you started using the java mail packages.</p>
-<h1>The Code</h1>
-<h2>A simple REST service using the Javamail API</h2>
-<p>Here we see a very simple RESTful endpoint that can be called with a message to send by Email. It would not be hard to modify the application to provide more useful configuration options. As is, this will not send anything, but if you change the parameters to match your mail server then you'll see the message being sent. You can find much more detailed information on the <a href="https://java.net/projects/javamail/pages/Home#Samples">Javamail API here</a></p>
-<pre><code>package org.superbiz.rest;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is just a simple example to demonstrate a very basic usage of the
+API. It should be enough to get you started using the java mail
+packages.</p>
+</div>
+<div class="paragraph">
+<p>#The Code</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_simple_rest_service_using_the_javamail_api">A simple REST service using the Javamail API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we see a very simple RESTful endpoint that can be called with a
+message to send by Email. It would not be hard to modify the application
+to provide more useful configuration options. As is, this will not send
+anything, but if you change the parameters to match your mail server
+then you’ll see the message being sent. You can find much more detailed
+information on the
+<a href="https://java.net/projects/javamail/pages/Home#Samples">Javamail API here</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -114,7 +136,7 @@ import javax.ws.rs.Path;
 import java.util.Date;
 import java.util.Properties;
 
-@Path(&quot;/email&quot;)
+@Path("/email")
 public class EmailService {
 
     @POST
@@ -124,13 +146,13 @@ public class EmailService {
 
             //Create some properties and get the default Session
             final Properties props = new Properties();
-            props.put(&quot;mail.smtp.host&quot;, &quot;your.mailserver.host&quot;);
-            props.put(&quot;mail.debug&quot;, &quot;true&quot;);
+            props.put("mail.smtp.host", "your.mailserver.host");
+            props.put("mail.debug", "true");
 
             final Session session = Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(&quot;MyUsername&quot;, &quot;MyPassword&quot;);
+                    return new PasswordAuthentication("MyUsername", "MyPassword");
                 }
             });
 
@@ -139,30 +161,52 @@ public class EmailService {
 
             //Create a message
             final MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(&quot;your@email.address&quot;));
-            final InternetAddress[] address = {new InternetAddress(&quot;general@email.com&quot;)};
+            msg.setFrom(new InternetAddress("your@email.address"));
+            final InternetAddress[] address = {new InternetAddress("general@email.com")};
             msg.setRecipients(Message.RecipientType.TO, address);
-            msg.setSubject(&quot;JavaMail API test&quot;);
+            msg.setSubject("JavaMail API test");
             msg.setSentDate(new Date());
-            msg.setText(message, &quot;UTF-8&quot;);
+            msg.setText(message, "UTF-8");
 
 
             Transport.send(msg);
         } catch (MessagingException e) {
-            return &quot;Failed to send message: &quot; + e.getMessage();
+            return "Failed to send message: " + e.getMessage();
         }
 
-        return &quot;Sent&quot;;
+        return "Sent";
     }
-}
-</code></pre>
-<h1>Testing</h1>
-<h2>Test for the JAXRS service</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_test_for_the_jaxrs_service">Test for the JAXRS service</h3>
+<div class="paragraph">
 <p>The test uses the OpenEJB ApplicationComposer to make it trivial.</p>
-<p>The idea is first to activate the jaxrs services. This is done using @EnableServices annotation.</p>
-<p>Then we create on the fly the application simply returning an object representing the web.xml. Here we simply use it to define the context root but you can use it to define your REST Application too. And to complete the application definition we add @Classes annotation to define the set of classes to use in this app.</p>
-<p>Finally to test it we use cxf client API to call the REST service post() method.</p>
-<pre><code>package org.superbiz.rest;
+</div>
+<div class="paragraph">
+<p>The idea is first to activate the jaxrs services. This is done using
+@EnableServices annotation.</p>
+</div>
+<div class="paragraph">
+<p>Then we create on the fly the application simply returning an object
+representing the web.xml. Here we simply use it to define the context
+root but you can use it to define your REST Application too. And to
+complete the application definition we add @Classes annotation to define
+the set of classes to use in this app.</p>
+</div>
+<div class="paragraph">
+<p>Finally to test it we use cxf client API to call the REST service post()
+method.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.openejb.jee.WebApp;
@@ -177,29 +221,42 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-@EnableServices(value = &quot;jaxrs&quot;)
+@EnableServices(value = "jaxrs")
 @RunWith(ApplicationComposer.class)
 public class EmailServiceTest {
 
     @Module
     @Classes(EmailService.class)
     public WebApp app() {
-        return new WebApp().contextRoot(&quot;test&quot;);
+        return new WebApp().contextRoot("test");
     }
 
     @Test
     public void post() throws IOException {
-        final String message = WebClient.create(&quot;http://localhost:4204&quot;).path(&quot;/test/email/&quot;).post(&quot;Hello General&quot;, String.class);
-        assertEquals(&quot;Failed to send message: Unknown SMTP host: your.mailserver.host&quot;, message);
+        final String message = WebClient.create("http://localhost:4204").path("/test/email/").post("Hello General", String.class);
+        assertEquals("Failed to send message: Unknown SMTP host: your.mailserver.host", message);
     }
-}
-</code></pre>
-<h1>Running</h1>
-<p>Running the example is fairly simple. In the "javamail-api" directory run:</p>
-<pre><code>$ mvn clean install
-</code></pre>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>#Running</p>
+</div>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the ``javamail-api'' directory
+run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Which should create output like the following.</p>
-<pre><code>INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Creating TransactionManager(id=Default Transaction Manager)
@@ -207,7 +264,7 @@ INFO - Creating SecurityService(id=Default Security Service)
 INFO - Initializing network services
 INFO - Creating ServerService(id=cxf-rs)
 INFO - Creating ServerService(id=httpejbd)
-INFO - Created ServicePool &#39;httpejbd&#39; with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
 INFO - Initializing network services
 INFO -   ** Bound Services **
 INFO -   NAME                 IP              PORT
@@ -220,12 +277,12 @@ INFO - Auto-creating a container for bean org.superbiz.rest.EmailServiceTest: Co
 INFO - Creating Container(id=Default Managed Container)
 INFO - Using directory D:\windows\tmp for stateful session passivation
 INFO - Configuring Service(id=comp/DefaultManagedExecutorService, type=Resource, provider-id=Default Executor Service)
-INFO - Auto-creating a Resource with id &#39;comp/DefaultManagedExecutorService&#39; of type &#39;javax.enterprise.concurrent.ManagedExecutorService for &#39;test&#39;.
+INFO - Auto-creating a Resource with id 'comp/DefaultManagedExecutorService' of type 'javax.enterprise.concurrent.ManagedExecutorService for 'test'.
 INFO - Configuring Service(id=comp/DefaultManagedScheduledExecutorService, type=Resource, provider-id=Default Scheduled Executor Service)
-INFO - Auto-creating a Resource with id &#39;comp/DefaultManagedScheduledExecutorService&#39; of type &#39;javax.enterprise.concurrent.ManagedScheduledExecutorService for &#39;test&#39;.
+INFO - Auto-creating a Resource with id 'comp/DefaultManagedScheduledExecutorService' of type 'javax.enterprise.concurrent.ManagedScheduledExecutorService for 'test'.
 INFO - Configuring Service(id=comp/DefaultManagedThreadFactory, type=Resource, provider-id=Default Managed Thread Factory)
-INFO - Auto-creating a Resource with id &#39;comp/DefaultManagedThreadFactory&#39; of type &#39;javax.enterprise.concurrent.ManagedThreadFactory for &#39;test&#39;.
-INFO - Enterprise application &quot;D:\github\tomee\examples\javamail\EmailServiceTest&quot; loaded.
+INFO - Auto-creating a Resource with id 'comp/DefaultManagedThreadFactory' of type 'javax.enterprise.concurrent.ManagedThreadFactory for 'test'.
+INFO - Enterprise application "D:\github\tomee\examples\javamail\EmailServiceTest" loaded.
 INFO - Creating dedicated application classloader for EmailServiceTest
 INFO - Assembling app: D:\github\tomee\examples\javamail\EmailServiceTest
 INFO - Using providers:
@@ -254,11 +311,15 @@ DEBUG: java.io.FileNotFoundException: D:\java\jdk8\jre\lib\javamail.address.map 
 DEBUG: setDebug: JavaMail version 1.4ea
 DEBUG: getProvider() returning javax.mail.Provider[TRANSPORT,smtp,com.sun.mail.smtp.SMTPTransport,Sun Microsystems, Inc]
 DEBUG SMTP: useEhlo true, useAuth false
-DEBUG SMTP: trying to connect to host &quot;your.mailserver.host&quot;, port 25, isSSL false
+DEBUG SMTP: trying to connect to host "your.mailserver.host", port 25, isSSL false
 INFO - Undeploying app: D:\github\tomee\examples\javamail\EmailServiceTest
 INFO - Stopping network services
-INFO - Stopping server services
-</code></pre>
+INFO - Stopping server services</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
@@ -278,7 +339,7 @@ INFO - Stopping server services
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
