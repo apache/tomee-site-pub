@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>MP REST JWT com Public key do MP Config</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este é um exemplo de como configurar e usar o MicroProfile JWT 1.1 no TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executando_o_teste">Executando o teste</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este projeto inclui uma aplicação de exemplo e um teste do Arquillian para mostrar o controle de acesso baseado em função (RBAC) com JWT no MicroProfile.
+Para executar o cenário, você pode executar o seguinte comando:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A aplicação representa um recurso REST de livraria com alguns endpoints.
+Todos esperam que o cliente forneça um JSON Web Token (JWT) válido, representando um usuário com determinadas funções.
+O teste do Arquillian é responsável por gerar os JWTs e anexá-los os requests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuração_no_tomee">Configuração no TomEE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para ativar o JWT, você precisa anotar sua classe de aplicação REST com a anotação <code>org.eclipse.microprofile.auth.LoginConfig</code>.
+Neste exemplo, a classe é <code>ApplicationConfig</code>.</p>
+</div>
+<div class="paragraph">
+<p>Outra coisa que precisa ser feita é configurar a <code>public key</code> para verificar a assinatura do JWT anexada no cabeçalho <code>Authorization'.
+É assinado na criação com a `private key</code> do issuer.
+Isso é feito para evitar adulteração do token enquanto ele trafega do chamador até o endpoint.
+Geralmente, a emissão do JWT ocorre em um módulo ou microsserviço especial responsável pela autenticação dos usuários.
+Neste projeto de exemplo, isso acontece no <code>BookstoreTest</code>.</p>
+</div>
+<div class="paragraph">
+<p>Cada ambiente de execução que suporta o MicroProfile JWT deveria ser capaz de verificar se a assinatura está correta e se o conteúdo assinado não é alterado ao longo do caminho.
+Para fazer isso, ele precisa ter acesso a uma <code>public key</code>.
+Essa <code>public key</code> pode estar no formato <code>PKCS#8 PEM, JWK ou JWKS</code>.
+Desde o MP JWT 1.1 (que é suportado pelo TomEE), a chave pode ser fornecida como uma string na propriedade de configuração <code>mp.jwt.verify.publickey</code> ou como um local ou URL de arquivo especificado em <code>mp.jwt.verify.publickey.location</code> na propriedade de configuração.</p>
+</div>
+<div class="paragraph">
+<p>Neste projeto de exemplo, você pode ver a primeira opção.
+O arquivo <code>src/main/resource/META-INF/microprofile-config.properties</code> contém a seguinte entrada:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">mp.jwt.verify.publickey=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlivFI8qB4D0y2jy0CfEqFyy46R0o7S8TKpsx5xbHKoU1VWg6QkQm+ntyIv1p4kE1sPEQO73+HY8+Bzs75XwRTYL1BmR1w8J5hmjVWjc6R2BTBGAYRPFRhor3kpM6ni2SPmNNhurEAHw7TaqszP5eUF/F9+KEBWkwVta+PZ37bwqSE4sCb1soZFrVz/UT/LF4tYpuVYt3YbqToZ3pZOZ9AX2o1GCG3xwOjkc4x0W7ezbQZdC9iftPxVHR8irOijJRRjcPDtA6vPKpzLl6CyYnsIYPd99ltwxTHjr3npfv/3Lw50bAkbT4HeLFxTx4flEoZLKO/g0bAoV2uqBhkA9xnQIDAQAB</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_trabalhando_com_jwt">Trabalhando com JWT</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A classe <code>BookResource</code> neste projeto de exemplo mostra dois casos em que você pode usar a especificação MP JWT: obter o valor de uma declaração JWT e o controle de acesso baseado em função dos endpoints REST.</p>
+</div>
+<div class="sect2">
+<h3 id="_obtenção_de_valores_de_claim">Obtenção de valores de claim</h3>
+<div class="paragraph">
+<p>O JSON Web Token (JWT) anexado no cabeçalho HTTP <code>Authorization</code> é essencialmente um objeto JSON que contém vários atributos.
+Esses atributos são chamados <em>claims</em>.
+Você pode obter o valor de cada claim dentro de um bean CDI injetando-o e qualificando-o com a anotação <code>@Claim</code>.</p>
+</div>
+<div class="paragraph">
+<p>Por exemplo, se você deseja recuperar a claim de nome de usuário preferida, fazendo o seguinte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @Inject
+    @Claim(standard = Claims.preferred_username)
+    private String userName;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Observe que você não pode injetar claims dessa maneira em uma classe de recurso REST que também contém endpoints não autenticados.
+No entanto, o TomEE tentará extrair a claim do JWT.
+Portanto, se não houver JWT ou se a claim não estiver lá, o request falhará.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_controle_de_acesso_baseado_em_função_rbac">Controle de acesso baseado em função (RBAC)</h3>
+<div class="paragraph">
+<p>Uma das claims padrão definidas na especificação MP JWT é <code>groups</code>.
+Ele contém uma lista de Strings, que representam os grupos aos quais o chamador pertence.
+A especificação não distingue funções e grupos de usuários.
+Portanto, a declaração <code>groups</code> também pode conter as funções atribuídas a um determinado usuário.</p>
+</div>
+<div class="paragraph">
+<p>Nesse sentido, o MP JWT possui grande integração com os mecanismos de segurança Java EE existentes, como a anotação <code>@RolesAllowed</code>.
+Portanto, o seguinte método <code>BookResource</code> pode ser chamado pelos usuários que estão na função <code>reader</code> ou <code>manager</code> (ou em ambos):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @GET
+    @Path("/{id}")
+    @RolesAllowed({"manager", "reader"})
+    public Book getBook(@PathParam("id") int id) {
+        return booksBean.getBook(id);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No entanto, o método abaixo resultará no código HTTP 403 se chamado por um usuário que não possui a função <code>manager</code> em sua declaração <code>groups</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @POST
+    @RolesAllowed("manager")
+    public void addBook(Book newBook) {
+        booksBean.addBook(newBook);
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_o_teste_do_bookstore">O teste do bookstore</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>O projeto de exemplo contém um teste Arquillian (<code>org.superbiz.bookstore.BookstoreTest</code>) usado por alguns motivos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Geração do JSON Web Token (JWT)</p>
+</li>
+<li>
+<p>Apresentação do comportamento do TomEE em diferentes situações</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Recuperando um valor de Claim</p>
+</li>
+<li>
+<p>Chamando endpoints REST com funções apropriadas</p>
+</li>
+<li>
+<p>Chamando um endpoint REST com uma função incorreta (resultando no código de status HTTP 403)</p>
+</li>
+<li>
+<p>Chamando um endpoint REST sem JWT (resultando no código de status HTTP 401)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../microprofile-2.0/javadoc/org/eclipse/microprofile/auth/LoginConfig.html">org.eclipse.microprofile.auth.LoginConfig</a></p>
+</li>
+<li>
+<p><a href="../../../microprofile-2.0/javadoc/org/eclipse/microprofile/jwt/Claim.html">org.eclipse.microprofile.jwt.Claim</a></p>
+</li>
+<li>
+<p><a href="../../../microprofile-2.0/javadoc/org/eclipse/microprofile/jwt/Claims.html">org.eclipse.microprofile.jwt.Claims</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/annotation/security/RolesAllowed.html">javax.annotation.security.RolesAllowed</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

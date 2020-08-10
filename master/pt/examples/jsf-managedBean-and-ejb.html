@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Aplicação JSF que usa managed-bean e ejb</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este é um aplicativo Web simples, que mostra como usar a injeção de dependência nos managed beans do JSF usando o TomEE.</p>
+</div>
+<div class="paragraph">
+<p>Ele contém um bean de sessão Stateless local <code>CalculatorImpl</code>, que adiciona dois números e retorna o resultado. O aplicativo também contém um managed beans do JSF <code>CalculatorBean</code>, que usa o EJB para adicionar dois números e exibir os resultados ao usuário. O EJB é injetado no managed beans usando a anotação <code>@ EJB</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_uma_pequena_nota_sobre_a_configuração">Uma pequena nota sobre a configuração:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Você pode executar isso no Apache TomEE mais recente
+<a href="https://repository.apache.org/content/repositories/snapshots/org/apache/tomee/apache-tomee/">snapshot</a></p>
+</div>
+<div class="paragraph">
+<p>Quanto às bibliotecas, myfaces-api e myfaces-impl são fornecidos em tomee/lib e portanto, não devem fazer parte do war. Em termos práticos, eles estariam com o escopo <code>provided</code></p>
+</div>
+<div class="paragraph">
+<p>Observe também que usamos a declaração do servlet 2.5 no web.xml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+version="2.5"&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>E usamos a versão 2.0 do faces-config</p>
+</div>
+<div class="paragraph">
+<p>O código fonte completo é fornecido abaixo, mas vamos analisar alguns trechos menores e ver como ele funciona.</p>
+</div>
+<div class="paragraph">
+<p>Primeiro declararemos o <code>FacesServlet</code> no <code>web.xml</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  &lt;servlet&gt;
+    &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O <code>FacesServlet</code> atua como o controlador mestre.</p>
+</div>
+<div class="paragraph">
+<p>Em seguida, criaremos o arquivo <code>calculator.xhtml</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">       &lt;h:outputText value='Enter first number'/&gt;
+       &lt;h:inputText value='#{calculatorBean.x}'/&gt;
+       &lt;h:outputText value='Enter second number'/&gt;
+       &lt;h:inputText value='#{calculatorBean.y}'/&gt;
+       &lt;h:commandButton action="#{calculatorBean.add}" value="Add"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Observe como usamos o bean aqui. Por padrão, o nome do Managed Bean é o nome da classe.</p>
+</div>
+<div class="paragraph">
+<p>Quando uma requisição é recebida, o bean é instanciado e colocado no escopo apropriado. Por padrão, o bean é colocado no escopo request.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">        &lt;h:inputText value='#{calculatorBean.x}'/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Aqui, o método <code>getX()</code> de calculatorBean é chamado e o valor resultante é exibido. <code>x</code> sendo um double, corretamente duplo, com razão, devemos ver 0.0 exibidos.</p>
+</div>
+<div class="paragraph">
+<p>Quando você altera o valor e envia o formulário, esses valores inseridos são vinculados usando os setters no bean e, em seguida, o método commandButton-action é chamado.</p>
+</div>
+<div class="paragraph">
+<p>Nesse caso, <code>CalculatorBean#add()</code> é chamado.</p>
+</div>
+<div class="paragraph">
+<p><code>Calculator#add()</code> delega o trabalho para o ejb, obtém o resultado,
+armazena e depois instrui qual visualização deve ser renderizada.</p>
+</div>
+<div class="paragraph">
+<p>Você está certo. O valor de retorno <code>success</code> é verificado nas regras de navegação faces-config e a respectiva página é renderizada.</p>
+</div>
+<div class="paragraph">
+<p>No nosso caso, a página <code>result.xhtml</code> é renderizada.</p>
+</div>
+<div class="paragraph">
+<p>O bean com escopo de request <code>calculatorBean</code> está disponível aqui e usamos EL para exibir os valores.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fonte">Fonte</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculator">Calculator</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.jsf;
+
+import javax.ejb.Local;
+
+@Local
+public interface Calculator {
+    public double add(double x, double y);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorbean">CalculatorBean</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.jsf;
+
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+
+@ManagedBean
+public class CalculatorBean {
+    @EJB
+    Calculator calculator;
+    private double x;
+    private double y;
+    private double result;
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
+    }
+
+    public String add() {
+        result = calculator.add(x, y);
+        return "success";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorimpl">CalculatorImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.jsf;
+
+import javax.ejb.Stateless;
+
+@Stateless
+public class CalculatorImpl implements Calculator {
+
+    public double add(double x, double y) {
+        return x + y;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_xml">web.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+
+    &lt;web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+    http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    version="2.5"&gt;
+
+    &lt;description&gt;MyProject web.xml&lt;/description&gt;
+
+    &lt;!-- Faces Servlet --&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;javax.faces.webapp.FacesServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+    &lt;!-- Faces Servlet Mapping --&gt;
+    &lt;servlet-mapping&gt;
+       &lt;servlet-name&gt;Faces Servlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;*.jsf&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;!-- Welcome files --&gt;
+    &lt;welcome-file-list&gt;
+       &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+       &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+    &lt;/welcome-file-list&gt;
+    &lt;/web-app&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculator_xhtml">Calculator.xhtml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"&gt;
+
+
+&lt;h:body bgcolor="white"&gt;
+    &lt;f:view&gt;
+        &lt;h:form&gt;
+            &lt;h:panelGrid columns="2"&gt;
+            &lt;h:outputText value='Enter first number'/&gt;
+           &lt;h:inputText value='#{calculatorBean.x}'/&gt;
+            &lt;h:outputText value='Enter second number'/&gt;
+            &lt;h:inputText value='#{calculatorBean.y}'/&gt;
+           &lt;h:commandButton action="#{calculatorBean.add}" value="Add"/&gt;
+            &lt;/h:panelGrid&gt;
+        &lt;/h:form&gt;
+   &lt;/f:view&gt;
+&lt;/h:body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_result_xhtml">Result.xhtml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"&gt;
+
+&lt;h:body&gt;
+    &lt;f:view&gt;
+        &lt;h:form id="mainForm"&gt;
+            &lt;h2&gt;&lt;h:outputText value="Result of adding #{calculatorBean.x} and #{calculatorBean.y} is #{calculatorBean.result }"/&gt;&lt;/h2&gt;
+            &lt;h:commandLink action="back"&gt;
+            &lt;h:outputText value="Home"/&gt;
+            &lt;/h:commandLink&gt;
+        &lt;/h:form&gt;
+    &lt;/f:view&gt;
+&lt;/h:body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_faces_config_xml">faces-config.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+version="2.0"&gt;
+
+&lt;navigation-rule&gt;
+    &lt;from-view-id&gt;/calculator.xhtml&lt;/from-view-id&gt;
+    &lt;navigation-case&gt;
+        &lt;from-outcome&gt;success&lt;/from-outcome&gt;
+        &lt;to-view-id&gt;/result.xhtml&lt;/to-view-id&gt;
+    &lt;/navigation-case&gt;
+&lt;/navigation-rule&gt;
+
+&lt;navigation-rule&gt;
+    &lt;from-view-id&gt;/result.xhtml&lt;/from-view-id&gt;
+    &lt;navigation-case&gt;
+        &lt;from-outcome&gt;back&lt;/from-outcome&gt;
+        &lt;to-view-id&gt;/calculator.xhtml&lt;/to-view-id&gt;
+    &lt;/navigation-case&gt;
+&lt;/navigation-rule&gt;
+&lt;/faces-config&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/EJB.html">javax.ejb.EJB</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Local.html">javax.ejb.Local</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Stateless.html">javax.ejb.Stateless</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+
