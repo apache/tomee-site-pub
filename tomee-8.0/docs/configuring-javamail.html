@@ -141,6 +141,77 @@ override of the above example mail session, you could do so like this:</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_imap_sasl_xoauth2_mechanism_configuration">IMAP SASL XOAUTH2 mechanism configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_code_example_for_gmail_xoauth2">Code example for gmail XOAUTH2</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">Properties props = new Properties();
+props.setProperty("mail.imap.port", "993");
+props.setProperty("mail.debug", String.valueOf(true));
+props.setProperty("mail.debug.auth", String.valueOf(true));
+props.setProperty("mail.imap.sasl.enable", String.valueOf(true));
+props.setProperty("mail.imap.sasl.mechanisms", "XOAUTH2");
+props.setProperty("mail.imap.ssl.enable", "true");
+props.setProperty("mail.imap.starttls.enable", "true");
+props.setProperty("mail.imap.starttls.required", "true");
+props.setProperty("mail.imap.auth.login.disable", "true");
+props.setProperty("mail.imap.auth.plain.disable", "true");
+
+Session session = Session.getInstance(props);
+Store store = session.getStore("imap");
+store.connect("imap.gmail.com", "&lt;username&gt;@gmail.com", "&lt;YourAccesToken&gt;");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_tomee_xml">Using tomee.xml</h3>
+<div class="paragraph">
+<p><code>tomee.xml</code> example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;Resource id="ImapSession" type="javax.mail.Session"&gt;
+mail.imap.ssl.enable=true
+mail.imap.starttls.enable=true
+mail.imap.starttls.required=true
+mail.imap.sasl.enable=true
+mail.imap.sasl.mechanisms=XOAUTH2
+mail.host=imap.gmail.com
+useDefault=false
+accessToken=&lt;YourAccesToken&gt;
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usage example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">private final String from = "&lt;username&gt;@gmail.com";
+
+@Resource(name = "ImapSession")
+Session imapSession;
+
+public class EmailService {
+
+ private void readTheLast5SentEmails(){
+    final Store store = imapSession.getStore("imap");
+    store.connect(from, imapSession.getProperty("accessToken"));
+    final Folder sentFolder = store.getFolder("[Gmail]/Sent Mail");
+    sentFolder.open(Folder.READ_ONLY);
+    final int messageCount = sentFolder.getMessageCount();
+    final Message[] messages = sentFolder.getMessages(messageCount - 5, messageCount);
+ }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>

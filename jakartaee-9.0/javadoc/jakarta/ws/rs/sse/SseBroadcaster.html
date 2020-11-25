@@ -16,7 +16,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -148,20 +148,26 @@ extends java.lang.AutoCloseable</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html#close-boolean-">close</a></span>(boolean&nbsp;cascading)</code>
+<div class="block">Close the broadcaster and release any resources associated with it.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html#onClose-java.util.function.Consumer-">onClose</a></span>(java.util.function.Consumer&lt;<a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse">SseEventSink</a>&gt;&nbsp;onClose)</code>
 <div class="block">Register a listener, which will be called when this SseBroadcaster closes a given event <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> or
  tries to write to a given <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> that is already closed (either by client closing the connection
  or by calling <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html#close--"><code>SseEventSink.close()</code></a> on the server side.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html#onError-java.util.function.BiConsumer-">onError</a></span>(java.util.function.BiConsumer&lt;<a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse">SseEventSink</a>,java.lang.Throwable&gt;&nbsp;onError)</code>
 <div class="block">Register a listener, which will be called when an exception is thrown by a given <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a>
  when this SseBroadcaster tries to write to it or close it.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html#register-jakarta.ws.rs.sse.SseEventSink-">register</a></span>(<a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse">SseEventSink</a>&nbsp;sseEventSink)</code>
 <div class="block">Register provided <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> instance to this <code>SseBroadcaster</code>.</div>
@@ -255,20 +261,36 @@ extends java.lang.AutoCloseable</pre>
 <a name="close--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>close</h4>
 <pre>void&nbsp;close()</pre>
-<div class="block">Close the broadcaster and all registered <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> instances.
+<div class="block">Close the broadcaster and all registered <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> instances. Any other resources associated with the
+ <a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html" title="interface in jakarta.ws.rs.sse"><code>SseBroadcaster</code></a> should be released. This method is equivalent to calling <code>close(true)</code>.
  <p>
- Any other resources associated with the <a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html" title="interface in jakarta.ws.rs.sse"><code>SseBroadcaster</code></a> should be released.
- <p>
- Subsequent calls have no effect and are ignored. Once the <a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html" title="interface in jakarta.ws.rs.sse"><code>SseBroadcaster</code></a> is closed,
- invoking any other method on the broadcaster instance would result in an <code>IllegalStateException</code>
- being thrown.</div>
+ Subsequent calls have no effect and are ignored. Once the <a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html" title="interface in jakarta.ws.rs.sse"><code>SseBroadcaster</code></a> is closed, invoking any other method
+ on the broadcaster instance would result in an <code>IllegalStateException</code> being thrown.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>close</code>&nbsp;in interface&nbsp;<code>java.lang.AutoCloseable</code></dd>
+</dl>
+</li>
+</ul>
+<a name="close-boolean-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>close</h4>
+<pre>void&nbsp;close(boolean&nbsp;cascading)</pre>
+<div class="block">Close the broadcaster and release any resources associated with it. The closing of registered <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> is
+ controlled by the <code>cascading</code> parameter.
+ <p>
+ Subsequent calls have no effect and are ignored. Once the <a href="../../../../jakarta/ws/rs/sse/SseBroadcaster.html" title="interface in jakarta.ws.rs.sse"><code>SseBroadcaster</code></a> is closed, invoking any other method
+ on the broadcaster instance would result in an <code>IllegalStateException</code> being thrown.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>cascading</code> - Boolean value that controls closing of registered <a href="../../../../jakarta/ws/rs/sse/SseEventSink.html" title="interface in jakarta.ws.rs.sse"><code>SseEventSink</code></a> instances.</dd>
 </dl>
 </li>
 </ul>
