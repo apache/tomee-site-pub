@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Elección</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="sect1">
+<h2 id="_ejemplo">Ejemplo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este ejemplo implementa una aplicación de votación simple.</p>
+</div>
+<div class="paragraph">
+<p>Puedes crear encuestas y luego votar (+1 or -1) para cada encuesta (Llamada tema).</p>
+</div>
+<div class="paragraph">
+<p>El front es un front JAX-RS y el backend usa EJB y JPA.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_módulo">Módulo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La aplicación contiene varios módulos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>polling-domain: entidades utilizadas por el lado del cliente también</p>
+</li>
+<li>
+<p>polling-core: la capa media / dao</p>
+</li>
+<li>
+<p>polling-web: capa frontal (servicios REST)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lo_que_se_nota">Lo que se nota</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La capa frontal contiene un MBean administrado por CDI (VoteCounter) que es
+utilizado por los servicios REST para actualizar la información que puede recuperar a través de JMX
+protocolo (el cliente JConsole está bien para verlo;)).</p>
+</div>
+<div class="paragraph">
+<p>También gestiona una fuente de datos dinámica. Gestiona en el ejemplo
+configuración 2 clientes.</p>
+</div>
+<div class="paragraph">
+<p>Es un simple round robin a pedido. Es por eso que del cliente si
+simplemente cree una encuesta y luego búsquela, no encontrará la encuesta persistente,
+tienes que hacerlo una vez más.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cliente">Cliente</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Te permite crear encuestas, recuperarlas, encontrar la mejor encuesta y votar por
+cualquier encuesta.
+Escriba ayuda para obtener más información.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../tomee-8.0/javadoc/org/apache/openejb/OpenEjbContainer.html">org.apache.openejb.OpenEjbContainer</a></p>
+</li>
+<li>
+<p><a href="../../../tomee-8.0/javadoc/org/apache/openejb/loader/IO.html">org.apache.openejb.loader.IO</a></p>
+</li>
+<li>
+<p><a href="../../../tomee-8.0/javadoc/org/apache/openejb/resource/jdbc/router/AbstractRouter.html">org.apache.openejb.resource.jdbc.router.AbstractRouter</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/annotation/Resource.html">javax.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Lock.html">javax.ejb.Lock</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/LockType.html">javax.ejb.LockType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Singleton.html">javax.ejb.Singleton</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/TransactionAttribute.html">javax.ejb.TransactionAttribute</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/TransactionAttributeType.html">javax.ejb.TransactionAttributeType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Entity.html">javax.persistence.Entity</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/EnumType.html">javax.persistence.EnumType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Enumerated.html">javax.persistence.Enumerated</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/FetchType.html">javax.persistence.FetchType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Id.html">javax.persistence.Id</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/NamedQueries.html">javax.persistence.NamedQueries</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/NamedQuery.html">javax.persistence.NamedQuery</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/OneToMany.html">javax.persistence.OneToMany</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/Filter.html">javax.servlet.Filter</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/FilterChain.html">javax.servlet.FilterChain</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/FilterConfig.html">javax.servlet.FilterConfig</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/ServletException.html">javax.servlet.ServletException</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/ServletRequest.html">javax.servlet.ServletRequest</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/ServletResponse.html">javax.servlet.ServletResponse</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/servlet/annotation/WebFilter.html">javax.servlet.annotation.WebFilter</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/xml/bind/annotation/XmlRootElement.html">javax.xml.bind.annotation.XmlRootElement</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/xml/bind/annotation/XmlType.html">javax.xml.bind.annotation.XmlType</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/javax/management/Description.html">javax.management.Description</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/javax/management/MBean.html">javax.management.MBean</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/javax/management/ManagedAttribute.html">javax.management.ManagedAttribute</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/javax/management/ManagedOperation.html">javax.management.ManagedOperation</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/org/apache/ziplock/JarLocation.html">org.apache.ziplock.JarLocation</a></p>
+</li>
+<li>
+<p><a href="../../../latest/javadoc/org/apache/ziplock/WebModule.html">org.apache.ziplock.WebModule</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+
