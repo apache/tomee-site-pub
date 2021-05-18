@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Inyeccion del EntityManager</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>En éste ejemplo y se muestra el uso de <code>@PersistenceContext</code> para tener um <code>EntityManager</code> con un
+persistence context <code>EXTENDED</code>, inyecctado en un bean <code>@Stateful</code>. Un bean del tipo <code>@Entity</code> JPA, se
+utiliza con el <code>EntityManager</code> para crear y actualizar los datos en una base de datos.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_la_creación_de_una_entidad_jpa">La creación de una entidad JPA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La entidad por sí es simplemente un pojo con la anotación <code>@Entity</code>. Nosotros creamos una llamada <code>Movie</code> Lo que podemos usar para mantener registros de películas.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.jpa;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.persistence.Entity;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Entity
+public class Movie {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Id @GeneratedValue
+private long id;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>private String director;
+private String title;
+private int year;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public Movie() {
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public long getId() {
+    return id;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void setId(long id) {
+    this.id = id;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public Movie(String director, String title, int year) {
+    this.director = director;
+    this.title = title;
+    this.year = year;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public String getDirector() {
+    return director;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void setDirector(String director) {
+    this.director = director;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public String getTitle() {
+    return title;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void setTitle(String title) {
+    this.title = title;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public int getYear() {
+    return year;
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    public void setYear(int year) {
+        this.year = year;
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configure_el_entitymanager_a_través_de_un_archivo_persistence_xml">Configure el EntityManager a través de un archivo persistence.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La entidad <code>Movie</code> encima se puede crear, eliminado, actualizado a través de un objeto <code>EntityManager</code>. Lo <code>EntityManager</code> sí mismo es configurado a través de un archivo <code>META-INF/persistence.xml</code> que se coloca en el mismo jar como la entidad <code>Movie</code>.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;persistence-unit name="movie-unit"&gt;
+  &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+  &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+  &lt;class&gt;org.superbiz.injection.jpa.Movie&lt;/class&gt;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note que la entidad <code>Movie</code> aparece a través de un elemento <code>&lt;class&gt;</code>. Esto no es necesario, pero puede ayudar a realizar la prueba o cuando clase <code>Movie</code> se encuentra en un jar diferente que el jar que contiene el archivo <code>persistence.xml</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inyección_vía_persistencecontext">Inyección vía @PersistenceContext</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>El <code>EntityManager</code> en sí mismo es creado por el contenedor utilizando la información en el <code>persistence.xml</code>, así que para usarlo en
+tiempo de ejecución, simplemente necesitamos solicitar que se inyecte en uno de nuestros componentes. Nosotros podemos hacer esto a través de <code>@PersistenceContext</code></p>
+</div>
+<div class="paragraph">
+<p>La anotación <code>@PersistenceContext</code> se puede utilizar en cualquier bean CDI, EJB, Servlet, Servlet Listener, Servlet Filter, o JSF ManagedBean.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.jpa;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
+import java.util.List;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@Stateful
+public class Movies {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>@PersistenceContext(unitName = "movie-unit", type = PersistenceContextType.EXTENDED)
+private EntityManager entityManager;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void addMovie(Movie movie) throws Exception {
+    entityManager.persist(movie);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void deleteMovie(Movie movie) throws Exception {
+    entityManager.remove(movie);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>    public List&lt;Movie&gt; getMovies() throws Exception {
+        Query query = entityManager.createQuery("SELECT m from Movie as m");
+        return query.getResultList();
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Este particular <code>EntityManager</code> se inyecta como un contexto de persistencia <code>EXTENDED</code>, lo que simplemente significa que el <code>EntityManager</code> se crea cuando el <code>@Stateful</code> el bean se crea y destruye cuando el <code>@Stateful</code> bean es destruido. En pocas palabras, el datos en el <code>EntityManager</code> se almacena en caché durante la vida útil del bean <code>@Stateful</code>.</p>
+</div>
+<div class="paragraph">
+<p>El uso de <code>EXTENDED</code> contextos de persistencia es <strong>solamente</strong> disponible para beans <code>@Stateful</code>. Ver el [JPA Concepts](../../jpa-concepts.html)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_moviestest">MoviesTest</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Probar JPA es bastante fácil, simplemente podemos usar el <code>EJBContainer</code> API para crear un contenedor en nuestro caso de prueba.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>package org.superbiz.injection.jpa;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import junit.framework.TestCase;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>import javax.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import java.util.List;
+import java.util.Properties;</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>//START SNIPPET: code
+public class MoviesTest extends TestCase {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>public void test() throws Exception {</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>final Properties p = new Properties();
+p.put("movieDatabase", "new://Resource?type=DataSource");
+p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>final Context context = EJBContainer.createEJBContainer(p).getContext();</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Movies movies = (Movies) context.lookup("java:global/injection-of-entitymanager/Movies");</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>List&lt;Movie&gt; list = movies.getMovies();
+assertEquals("List.size()", 3, list.size());</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>for (Movie movie : list) {
+    movies.deleteMovie(movie);
+}</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+    }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_ejecutar_la_aplicación" class="sect0">Ejecutar la aplicación</h1>
+<div class="paragraph">
+<p>Cuando ejecutamos nuestro caso de prueba, deberíamos ver un resultado similar al siguiente.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.jpa.MoviesTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/injection-of-entitymanager
+INFO - openejb.base = /Users/dblevins/examples/injection-of-entitymanager
+INFO - Using 'javax.ejb.embeddable.EJBContainer=true'
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/injection-of-entitymanager/target/classes
+INFO - Beginning load: /Users/dblevins/examples/injection-of-entitymanager/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/injection-of-entitymanager
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.injection.jpa.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Configuring PersistenceUnit(name=movie-unit)
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
+INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
+INFO - Enterprise application "/Users/dblevins/examples/injection-of-entitymanager" loaded.
+INFO - Assembling app: /Users/dblevins/examples/injection-of-entitymanager
+INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 462ms
+INFO - Jndi(name="java:global/injection-of-entitymanager/Movies!org.superbiz.injection.jpa.Movies")
+INFO - Jndi(name="java:global/injection-of-entitymanager/Movies")
+INFO - Jndi(name="java:global/EjbModule1461341140/org.superbiz.injection.jpa.MoviesTest!org.superbiz.injection.jpa.MoviesTest")
+INFO - Jndi(name="java:global/EjbModule1461341140/org.superbiz.injection.jpa.MoviesTest")
+INFO - Created Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Created Ejb(deployment-id=org.superbiz.injection.jpa.MoviesTest, ejb-name=org.superbiz.injection.jpa.MoviesTest, container=Default Managed Container)
+INFO - Started Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful Container)
+INFO - Started Ejb(deployment-id=org.superbiz.injection.jpa.MoviesTest, ejb-name=org.superbiz.injection.jpa.MoviesTest, container=Default Managed Container)
+INFO - Deployed Application(path=/Users/dblevins/examples/injection-of-entitymanager)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.301 sec</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Results :</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pruebas_de_rendimiento">Pruebas de Rendimiento</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prerrequisitos">Prerrequisitos</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Oralce DB</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Actualiza tu maven archivo <code>setings.xml</code> para contener en el sección <code>&lt;servers&gt;</code> la siguiente entrada:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```xml
+    &lt;server&gt;
+        &lt;id&gt;maven.oracle.com &lt;/id&gt;
+        &lt;username&gt;YourOracleAccountUsername&lt;/username&gt;
+        &lt;password&gt;YourOracleAccountPassword&lt;/password&gt;
+        &lt;configuration&gt;
+            &lt;basicAuthScope&gt;
+            &lt;host&gt;ANY &lt;/host&gt;
+            &lt;port&gt;ANY &lt;/port&gt;
+            &lt;realm&gt;OAM 11g &lt;/realm&gt;
+            &lt;/basicAuthScope&gt;
+            &lt;httpConfiguration&gt;
+            &lt;all&gt;
+            &lt;params&gt;
+            &lt;property&gt;
+            &lt;name&gt;http.protocol.allow-circular-redirects &lt;/name&gt;
+            &lt;value&gt;%b,true &lt;/value&gt;
+            &lt;/property&gt;
+            &lt;/params&gt;
+            &lt;/all&gt;
+            &lt;/httpConfiguration&gt;
+        &lt;/configuration&gt;
+    &lt;/server&gt;
+```</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Actualiza archivo <code>pom.xml</code>, sección <code>&lt;dependency&gt;</code> con lo siguiente:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```xml
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.oracle.jdbc&lt;/groupId&gt;
+      &lt;artifactId&gt;ojdbc8&lt;/artifactId&gt;
+      &lt;version&gt;18.3.0.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+    &lt;/dependency&gt;
+```</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Actualiza archivo <code>pom.xml</code>, sección <code>&lt;repositories&gt;</code> con lo siguiente:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```xml
+    &lt;repository&gt;
+      &lt;id&gt;maven.oracle.com&lt;/id&gt;
+      &lt;name&gt;oracle-maven-repo&lt;/name&gt;
+      &lt;url&gt;https://maven.oracle.com&lt;/url&gt;
+      &lt;layout&gt;default&lt;/layout&gt;
+      &lt;releases&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;updatePolicy&gt;always&lt;/updatePolicy&gt;
+      &lt;/releases&gt;
+    &lt;/repository&gt;
+```</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Actualiza archivo <code>pom.xml</code>, después sección <code>&lt;/repositories&gt;</code>, agregue lo siguiente:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```xml
+    &lt;pluginRepositories&gt;
+        &lt;pluginRepository&gt;
+          &lt;id&gt;maven.oracle.com&lt;/id&gt;
+          &lt;name&gt;oracle-maven-repo&lt;/name&gt;
+          &lt;url&gt;https://maven.oracle.com&lt;/url&gt;
+          &lt;layout&gt;default&lt;/layout&gt;
+          &lt;releases&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;updatePolicy&gt;always&lt;/updatePolicy&gt;
+          &lt;/releases&gt;
+        &lt;/pluginRepository&gt;
+    &lt;/pluginRepositories&gt;
+```</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Actualiza archivo <code>pom.xml</code>, agregue el tipo de jar JDBC para el tomee-maven-plugin:</p>
+<div class="literalblock">
+<div class="content">
+<pre>```xml
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.tomee.maven&lt;/groupId&gt;
+        &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;${tomee.version}&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;tomeeVersion&gt;${tomee.version}&lt;/tomeeVersion&gt;
+          &lt;tomeeClassifier&gt;plume&lt;/tomeeClassifier&gt;
+          &lt;tomeeHttpPort&gt;9080&lt;/tomeeHttpPort&gt;
+          &lt;tomeeShutdownPort&gt;9005&lt;/tomeeShutdownPort&gt;
+          &lt;libs&gt;
+            &lt;lib&gt;com.oracle.jdbc:ojdbc8:18.3.0.0&lt;/lib&gt;
+          &lt;/libs&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+```</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Para más Oracle JDBC Maven configuración que puede comprobar [Artículo Oracle](https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-u</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejecutar_la_aplicación_2">Ejecutar la aplicación</h3>
+<div class="paragraph">
+<p>Desde una terminal</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>mvn clean install tomee:run</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejecutar_la_consola_de_grinder">Ejecutar la consola de Grinder</h3>
+<div class="paragraph">
+<p>En una nueva terminal ejecutar:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>./grinder.sh</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Una vez que la consola UI está disponible, presiona el botón <code>Start the worker processes</code>
+La prueba de carga continuará hasta que presione en la consola el botón <code>Stop the worker processes and the agent processes</code></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/jee/EjbJar.html">org.apache.openejb.jee.EjbJar</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/jee/jpa/unit/PersistenceUnit.html">org.apache.openejb.jee.jpa.unit.PersistenceUnit</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/junit/ApplicationComposer.html">org.apache.openejb.junit.ApplicationComposer</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/loader/Files.html">org.apache.openejb.loader.Files</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/testing/Classes.html">org.apache.openejb.testing.Classes</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/testing/Configuration.html">org.apache.openejb.testing.Configuration</a></p>
+</li>
+<li>
+<p><a href="../../../master/javadoc/org/apache/openejb/testing/Module.html">org.apache.openejb.testing.Module</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/annotation/PostConstruct.html">javax.annotation.PostConstruct</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/annotation/Resource.html">javax.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/EJB.html">javax.ejb.EJB</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/EJBException.html">javax.ejb.EJBException</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Lock.html">javax.ejb.Lock</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/LockType.html">javax.ejb.LockType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Singleton.html">javax.ejb.Singleton</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/Startup.html">javax.ejb.Startup</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/ejb/embeddable/EJBContainer.html">javax.ejb.embeddable.EJBContainer</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Entity.html">javax.persistence.Entity</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Id.html">javax.persistence.Id</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/PersistenceContextType.html">javax.persistence.PersistenceContextType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-8.0/javadoc/javax/persistence/Query.html">javax.persistence.Query</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+				    <span>
+
+				    
+                        <img src="../../../img/logo-active.png">
+                    
+
+                    </span>
+				    Apache TomEE
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a href="../../../download-ng.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Simples JMS</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_código" class="sect0">Código</h1>
+<div class="sect1">
+<h2 id="_os_serviços_jms_code_message_code_code_queue_code_messageproducer_code_code_messageconsumer">Os serviços JMS: <code>Message</code>, <code>Queue</code>, MessageProducer<code>, </code>MessageConsumer``</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui temos um endpoint REST, uma classe com a anotação <code>@Path("/ message")</code> que indica a rota correspondente a classe <code>CustomJmsService</code>. Portanto, definimos <code>sendMessage()</code> como <code>@POST</code> e <code>acceptMessage()</code> como <code>@GET</code> para a rota <code>/message</code>.</p>
+</div>
+<div class="paragraph">
+<p>Além disso, diretamente relacionado a este exemplo, você pode ver 2 elementos: uma fila: <code>Queue'' e uma fábrica de conexão: </code>ConnectionFactory'' anotada com ``@Resource''</p>
+</div>
+<div class="paragraph">
+<p>Finalmente, interagindo com instâncias de <code>Connection'', </code>Session'' e <code>Queue'', você pode ver instâncias de </code>MessageProducer'' e <code>MessageConsumer'', responsáveis ​​por escrever e ler de/para o fila: </code>Queue`` respectivamente.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+@Path("message")
+public class CustomJmsService {
+
+    @Resource(name = "messageQueue")
+    private Queue messageQueue;
+
+    @Resource
+    private ConnectionFactory connectionFactory;
+
+    @POST
+    public void sendMessage(final String message) {
+        sendMessage(messageQueue, message);
+    }
+
+    @GET
+    public String receiveMessage() throws JMSException {
+        final TextMessage textMessage = receiveMessage(messageQueue, 1000);
+        if (textMessage == null) {
+            return null;
+        }
+
+        return textMessage.getText();
+    }
+
+    private void sendMessage(final Queue queue, final String message) {
+        try (final Connection connection = connectionFactory.createConnection();
+             final Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+             final MessageProducer producer = session.createProducer(queue)) {
+
+            connection.start();
+
+            final Message jmsMessage = session.createTextMessage(message);
+
+            // Isso enfileira mensagens com êxito com 8.0.0-M3 e 8.0.0
+            producer.send(jmsMessage);
+        } catch (final Exception e) {
+            throw new RuntimeException("Caught exception from JMS when sending a message", e);
+        }
+    }
+
+    private TextMessage receiveMessage(final Queue queue, final long receiveTimeoutMillis) {
+        try (final Connection connection = connectionFactory.createConnection();
+             final Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+             final MessageConsumer messageConsumer = session.createConsumer(queue)) {
+
+            connection.start();
+
+            final Message jmsMessage = messageConsumer.receive(receiveTimeoutMillis);
+
+            if (jmsMessage == null) {
+                return null;
+            }
+
+            return (TextMessage) jmsMessage;
+        } catch (final Exception e) {
+            throw new RuntimeException("Caught exception from JMS when receiving a message", e);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testando">Testando</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_teste_para_o_serviço_jms">Teste para o serviço JMS</h3>
+<div class="paragraph">
+<p>O teste é trivial. A ideia é primeiro fazer uma solicitação POST que contenha a mensagem do serviço. Isso é feito usando instâncias das classes <code>ClientBuilder'' e </code>WebTarget''.</p>
+</div>
+<div class="paragraph">
+<p>Em seguida, semelhante à solicitação POST, é feita uma solicitação GET que consome a mensagem anterior.</p>
+</div>
+<div class="paragraph">
+<p>Por fim, verifica-se o status HTTP das respostas para que sejam equivalentes aos códigos HTTP esperados (204/200), bem como que o conteúdo da mensagem recebida seja igual ao da mensagem enviada.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
+@RunAsClient
+public class CustomJmsServiceTest {
+
+    @Deployment
+    public static Archive&lt;?&gt; deployment() {
+        return Mvn.war();
+    }
+
+    @ArquillianResource
+    private URL baseUrl;
+
+    @Test
+    public void test() throws Exception {
+        // POST
+        {
+            final WebTarget webTarget = ClientBuilder.newClient().target(baseUrl.toURI());
+            final Response response = webTarget.path("message").request().post(Entity.text("This is a test"));
+
+            assertEquals(204, response.getStatus());
+        }
+
+        // GET
+        {
+            final WebTarget webTarget = ClientBuilder.newClient().target(baseUrl.toURI());
+            final Response response = webTarget.path("message").request().get();
+            assertEquals(200, response.getStatus());
+
+            final String content = response.readEntity(String.class);
+            assertEquals("This is a test", content);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_executando_o_teste_de_serviço_jms">Executando o teste de serviço JMS</h3>
+<div class="paragraph">
+<p>Construir e testar o exemplo é simples. No diretório <code>simple-jms</code> você deve executar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Isso criará uma saída semelhante à seguinte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication Using writers:
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.johnzon.jaxrs.WadlDocumentMessageBodyWriter@7a6a8b01
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.nio.NioMessageBodyWriter@58be749c
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.StringTextProvider@2740b6d6
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@e08fc09
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@139e9988
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.FormEncodingProvider@3cee7c7e
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.MultipartProvider@2513f485
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.SourceProvider@778a8c93
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.JAXBElementProvider@414a7c3a
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@1b4e4173
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@3f1bfc2e
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.BinaryDataProvider@7dc57a14
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.provider.DataSourceProvider@1af0fefd
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication Using exception mappers:
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper@8e6f08b
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.openejb.server.cxf.rs.EJBExceptionMapper@2fcd3c
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.deployApplication      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@1979c922
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints REST Application: http://localhost:6586/test/        -&gt; org.apache.openejb.server.rest.InternalApplication@2653d780
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints      Service URI: http://localhost:6586/test/message -&gt;  EJB org.superbiz.jms.CustomJmsService
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints               GET http://localhost:6586/test/message -&gt;      String receiveMessage() throws JMSException
+INFO [http-nio-6586-exec-2] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints              POST http://localhost:6586/test/message -&gt;      void sendMessage(String)
+INFO [http-nio-6586-exec-5] org.apache.activemq.broker.TransportConnector.start Connector vm://localhost started
+org.apache.openejb.client.EventLogger log
+INFO: RemoteInitialContextCreated{providerUri=http://localhost:6586/tomee/ejb}
+INFO [http-nio-6586-exec-8] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: /tomee/examples/simple-jms/target/arquillian-test-working-dir/0/test
+WARNING [http-nio-6586-exec-8] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads The web application [test] appears to have started a thread named [PoolIdleReleaseTimer]
+WARNING [http-nio-6586-exec-8] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads The web application [test] appears to have started a thread named [ActiveMQ VMTransport: vm://localhost#0-1]
+WARNING [http-nio-6586-exec-8] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads The web application [test] appears to have started a thread named [ActiveMQ VMTransport: vm://localhost#0-2]
+org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /tomee/examples/simple-jms/target/arquillian-test-working-dir/0/test.war
+org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFO: cleaning /tomee/examples/simple-jms/target/arquillian-test-working-dir/0/test
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 27.962 sec
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Pausing ProtocolHandler ["http-nio-6586"]
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Pausing ProtocolHandler ["ajp-nio-8009"]
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping service [Catalina]
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping ProtocolHandler ["http-nio-6586"]
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Stopping ProtocolHandler ["ajp-nio-8009"]
+INFO [main] org.apache.openejb.server.SimpleServiceManager.stop Stopping server services
+INFO [main] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: openejb
+SEVERE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+SEVERE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+INFO [main] org.apache.openejb.assembler.classic.Assembler.doResourceDestruction Closing DataSource: Default Unmanaged JDBC Database
+INFO [main] org.apache.openejb.assembler.classic.Assembler.doResourceDestruction Stopping ResourceAdapter: Default JMS Resource Adapter
+INFO [main] org.apache.openejb.resource.activemq.ActiveMQResourceAdapter.stop Stopping ActiveMQ
+INFO [108] org.apache.openejb.resource.activemq.ActiveMQResourceAdapter.stopImpl Stopped ActiveMQ broker
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Destroying ProtocolHandler ["http-nio-6586"]
+INFO [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Destroying ProtocolHandler ["ajp-nio-8009"]
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] --- maven-war-plugin:2.4:war (default-war) @ simple-jms ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [simple-jms] in [/tomee/examples/simple-jms/target/simple-jms-8.0.1-SNAPSHOT]
+[INFO] Processing war project
+[INFO] Webapp assembled in [2118 msecs]
+[INFO] Building war: /tomee/examples/simple-jms/target/simple-jms-8.0.1-SNAPSHOT.war
+[INFO]
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ simple-jms ---
+[INFO] Installing /tomee/examples/simple-jms/target/simple-jms-8.0.1-SNAPSHOT.war to /.m2/repository/org/superbiz/simple-jms/8.0.1-SNAPSHOT/simple-jms-8.0.1-SNAPSHOT.war
+[INFO] Installing /tomee/examples/simple-jms/pom.xml to /.m2/repository/org/superbiz/simple-jms/8.0.1-SNAPSHOT/simple-jms-8.0.1-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  50.089 s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_executando_a_aplicação">Executando a aplicação</h3>
+<div class="paragraph">
+<p>Executar o exemplo é simples. No diretório <code>simple-jms</code> digite:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn tomee:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Isso criará uma saída semelhante à seguinte.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">[main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints REST Application: http://localhost:8080/simple-jms-8.0.1-SNAPSHOT/        -&gt; org.apache.openejb.server.rest.InternalApplication@3b8b5b40
+[main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints      Service URI: http://localhost:8080/simple-jms-8.0.1-SNAPSHOT/message -&gt;  EJB org.superbiz.jms.CustomJmsService
+[main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints               GET http://localhost:8080/simple-jms-8.0.1-SNAPSHOT/message -&gt;      String receiveMessage() throws JMSException
+[main] org.apache.openejb.server.cxf.rs.CxfRsHttpListener.logEndpoints              POST http://localhost:8080/simple-jms-8.0.1-SNAPSHOT/message -&gt;      void sendMessage(String)
+[main] sun.reflect.DelegatingMethodAccessorImpl.invoke Deployment of web application archive [\tomee\examples\simple-jms\target\apache-tomee\webapps\simple-jms-8.0.1-SNAPSHOT.war] has finished in [8,264] ms
+[main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesRmiTargets] to [true] as the property does not exist.
+[main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesObjectStreamClassCaches] to [true] as the property does not exist.
+[main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesObjectStreamClassCaches] to [true] as the property does not exist.
+[main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Unable to set the web application class loader property [clearReferencesThreadLocals] to [true] as the property does not exist.
+[main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler ["http-nio-8080"]
+[main] sun.reflect.DelegatingMethodAccessorImpl.invoke Starting ProtocolHandler ["ajp-nio-8009"]
+[main] sun.reflect.DelegatingMethodAccessorImpl.invoke Server startup in [8,367] milliseconds</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+É possível usar o comando CURL`` (ou uma ferramenta cliente) para enviar uma solicitação POST e então uma solicitação GET para a URL do serviço equivalente a:
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">http://localhost:8080/simple-jms&lt;-TOMEE-VERSION&gt;/message</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finalmente, você pode sair ou recarregar o exemplo digitando um dos comandos disponíveis:
+<code>quit</code>, <code>exit</code>, <code>reload</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">[WARNING] Command '' not understood. Use one of [quit, exit, reload]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../latest/javadoc/org/apache/ziplock/maven/Mvn.html">org.apache.ziplock.maven.Mvn</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+
