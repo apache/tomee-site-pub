@@ -105,17 +105,17 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
  declaration. Typically, the element factory method is generated
  (and annotated) from a schema into the ObjectFactory class in a
  Java package that represents the binding of the element
- declaration's target namespace. Thus, while the annotation syntax 
+ declaration's target namespace. Thus, while the annotation syntax
  allows &#64;XmlElementDecl to be used on any method, semantically
- its use is restricted to annotation of element factory method. 
+ its use is restricted to annotation of element factory method.
 
  The usage is subject to the following constraints:
- 
+
  <ul>
    <li> The class containing the element factory method annotated
-        with &#64;XmlElementDecl must be marked with <a href="../../../../jakarta/xml/bind/annotation/XmlRegistry.html" title="annotation in jakarta.xml.bind.annotation"><code>XmlRegistry</code></a>. </li> 
+        with &#64;XmlElementDecl must be marked with <a href="../../../../jakarta/xml/bind/annotation/XmlRegistry.html" title="annotation in jakarta.xml.bind.annotation"><code>XmlRegistry</code></a>. </li>
    <li> The element factory method must take one parameter
-        assignable to <code>Object</code>.</li> 
+        assignable to <code>Object</code>.</li>
  </ul>
 
  <p><b>Example 1: </b>Annotation on a factory method
@@ -128,7 +128,7 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
      }
  </pre>
  <pre> <code>
- 
+
      &lt;!-- XML input --&gt;
      &lt;foo&gt;string&lt;/foo&gt;
 
@@ -148,11 +148,11 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
  <p>
  The following example illustrates the use of scope annotation
  parameter in binding of element declaration in schema derived
- code. 
+ code.
  <p>
  The following example may be replaced in a future revision of
  this javadoc.
- 
+
  <pre><code>
      &lt;!-- Example: XML schema definition --&gt;
      &lt;xs:schema&gt;
@@ -164,7 +164,7 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
        &lt;/xs:complexType&gt;
        &lt;xs:element name="foo" type="xs:int"/&gt;
      &lt;/xs:schema&gt;
- </code></pre> 
+ </code></pre>
  <pre>
      // Example: expected default binding
      class Pea {
@@ -174,19 +174,19 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
          })
          List&lt;JAXBElement&lt;String&gt;&gt; fooOrBar;
      }
- 
+
      &#64;XmlRegistry
      class ObjectFactory {
          &#64;XmlElementDecl(scope=Pea.class,name="foo")
          JAXBElement&lt;String&gt; createPeaFoo(String s);
- 
+
          &#64;XmlElementDecl(scope=Pea.class,name="bar")
          JAXBElement&lt;String&gt; createPeaBar(String s);
- 
+
          &#64;XmlElementDecl(name="foo")
          JAXBElement&lt;Integer&gt; createFoo(Integer i);
      }
- 
+
  </pre>
  Without scope createFoo and createPeaFoo would become ambiguous
  since both of them map to a XML schema element with the same local
@@ -249,7 +249,7 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>java.lang.Class</code></td>
+<td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/xml/bind/annotation/XmlElementDecl.html#scope--">scope</a></span></code>
 <div class="block">scope of the mapping.</div>
 </td>
@@ -310,7 +310,7 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>scope</h4>
-<pre>public abstract&nbsp;java.lang.Class&nbsp;scope</pre>
+<pre>public abstract&nbsp;java.lang.Class&lt;?&gt;&nbsp;scope</pre>
 <div class="block">scope of the mapping.
 
  <p>
@@ -360,14 +360,14 @@ public @interface <span class="memberNameLabel">XmlElementDecl</span></pre>
  <p>
  This specifies the namespace name of the XML element whose local
  name is specified by <code>substitutionHeadName()</code>.
- <p> 
+ <p>
  If <code>susbtitutionHeadName()</code> is "", then this
  value can only be "##default". But the value is ignored since
  since this element is not part of susbtitution group when the
  value of <code>susbstitutionHeadName()</code> is "".
  <p>
  If <code>susbtitutionHeadName()</code> is not "" and the value is
- "##default", then the namespace name is the namespace name to 
+ "##default", then the namespace name is the namespace name to
  which the package of the containing class, marked with <a href="../../../../jakarta/xml/bind/annotation/XmlRegistry.html" title="annotation in jakarta.xml.bind.annotation"><code>XmlRegistry</code></a>, is mapped.
  <p>
  If <code>susbtitutionHeadName()</code> is not "" and the value is

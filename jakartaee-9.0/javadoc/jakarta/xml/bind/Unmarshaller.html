@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":38,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":38,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":6,"i27":6,"i28":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],32:["t6","Deprecated Methods"]};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -106,10 +106,10 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">Unmarshaller</span></pre>
 <div class="block">The <code>Unmarshaller</code> class governs the process of deserializing XML
- data into newly created Java content trees, optionally validating the XML 
+ data into newly created Java content trees, optionally validating the XML
  data as it is unmarshalled.  It provides an overloading of unmarshal methods
  for many different input kinds.
-    
+
  <p>
  Unmarshalling from a File:
  <blockquote>
@@ -120,7 +120,7 @@ var activeTableTab = "activeTableTab";
     </pre>
  </blockquote>
 
-  
+
  <p>
  Unmarshalling from an InputStream:
  <blockquote>
@@ -144,7 +144,7 @@ var activeTableTab = "activeTableTab";
  </blockquote>
 
  <p>
- Unmarshalling from a StringBuffer using a 
+ Unmarshalling from a StringBuffer using a
  <code>javax.xml.transform.stream.StreamSource</code>:
  <blockquote>
     <pre><code>
@@ -161,7 +161,7 @@ var activeTableTab = "activeTableTab";
     <pre>
        JAXBContext jc = JAXBContext.newInstance( "com.acme.foo" );
        Unmarshaller u = jc.createUnmarshaller();
- 
+
        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
        dbf.setNamespaceAware(true);
        DocumentBuilder db = dbf.newDocumentBuilder();
@@ -170,7 +170,7 @@ var activeTableTab = "activeTableTab";
        Object o = u.unmarshal( doc );
     </pre>
  </blockquote>
- 
+
  <p>
  Unmarshalling from a <code>javax.xml.transform.sax.SAXSource</code> using a
  client specified validating SAX2.0 parser:
@@ -191,7 +191,7 @@ var activeTableTab = "activeTableTab";
        spf.setNamespaceAware(true);
        spf.setValidating(true);
        SAXParser saxParser = spf.newSAXParser();
-       
+
        try {
            saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
            saxParser.setProperty(JAXP_SCHEMA_LOCATION, "http://....");
@@ -200,7 +200,7 @@ var activeTableTab = "activeTableTab";
        }
 
        XMLReader xmlReader = saxParser.getXMLReader();
-       SAXSource source = 
+       SAXSource source =
            new SAXSource( xmlReader, new InputSource( "http://..." ) );
 
        // Setup Jakarta XML Binding to unmarshal
@@ -208,8 +208,8 @@ var activeTableTab = "activeTableTab";
        Unmarshaller u = jc.createUnmarshaller();
        ValidationEventCollector vec = new ValidationEventCollector();
        u.setEventHandler( vec );
-       
-       // turn off the Jakarta XML Binding provider's default validation mechanism to 
+
+       // turn off the Jakarta XML Binding provider's default validation mechanism to
        // avoid duplicate validation
        u.setValidating( false )
 
@@ -229,10 +229,10 @@ var activeTableTab = "activeTableTab";
     <pre>
        JAXBContext jc = JAXBContext.newInstance( "com.acme.foo" );
        Unmarshaller u = jc.createUnmarshaller();
- 
-       javax.xml.stream.XMLStreamReader xmlStreamReader = 
+
+       javax.xml.stream.XMLStreamReader xmlStreamReader =
            javax.xml.stream.XMLInputFactory().newInstance().createXMLStreamReader( ... );
- 
+
        Object o = u.unmarshal( xmlStreamReader );
     </pre>
  </blockquote>
@@ -243,10 +243,10 @@ var activeTableTab = "activeTableTab";
     <pre>
        JAXBContext jc = JAXBContext.newInstance( "com.acme.foo" );
        Unmarshaller u = jc.createUnmarshaller();
- 
-       javax.xml.stream.XMLEventReader xmlEventReader = 
+
+       javax.xml.stream.XMLEventReader xmlEventReader =
            javax.xml.stream.XMLInputFactory().newInstance().createXMLEventReader( ... );
- 
+
        Object o = u.unmarshal( xmlEventReader );
     </pre>
  </blockquote>
@@ -255,20 +255,20 @@ var activeTableTab = "activeTableTab";
  <a id="unmarshalEx"></a>
  <b>Unmarshalling XML Data</b><br>
  <blockquote>
- Unmarshalling can deserialize XML data that represents either an entire XML document 
+ Unmarshalling can deserialize XML data that represents either an entire XML document
  or a subtree of an XML document. Typically, it is sufficient to use the
- unmarshalling methods described by  
+ unmarshalling methods described by
  <a href="#unmarshalGlobal">Unmarshal root element that is declared globally</a>.
  These unmarshal methods utilize <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>'s mapping of global XML element
- declarations and type definitions to Jakarta XML Binding mapped classes to initiate the 
- unmarshalling of the root element of  XML data.  When the <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>'s 
- mappings are not sufficient to unmarshal the root element of XML data, 
- the application can assist the unmarshalling process by using the 
+ declarations and type definitions to Jakarta XML Binding mapped classes to initiate the
+ unmarshalling of the root element of  XML data.  When the <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>'s
+ mappings are not sufficient to unmarshal the root element of XML data,
+ the application can assist the unmarshalling process by using the
  <a href="#unmarshalByDeclaredType">unmarshal by declaredType methods</a>.
  These methods are useful for unmarshalling XML data where
  the root element corresponds to a local element declaration in the schema.
  </blockquote>
- 
+
  <blockquote>
  An unmarshal method never returns null. If the unmarshal process is unable to unmarshal
  the root of XML content to a Jakarta XML Binding mapped object, a fatal error is reported that
@@ -280,9 +280,9 @@ var activeTableTab = "activeTableTab";
  <b>Unmarshal a root element that is globally declared</b><br>
  <blockquote>
  The unmarshal methods that do not have an <code>declaredType</code> parameter use
- <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> to unmarshal the root element of an XML data. The <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> 
+ <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> to unmarshal the root element of an XML data. The <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>
  instance is the one that was used to create this <code>Unmarshaller</code>. The <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>
- instance maintains a mapping of globally declared XML element and type definition names to 
+ instance maintains a mapping of globally declared XML element and type definition names to
  Jakarta XML Binding mapped classes. The unmarshal method checks if <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> has a mapping
  from the root element's XML name and/or <code>@xsi:type</code> to a Jakarta XML Binding mapped class.  If it does, it umarshalls the
  XML data using the appropriate Jakarta XML Binding mapped class. Note that when the root element name is unknown and the root
@@ -290,10 +290,10 @@ var activeTableTab = "activeTableTab";
  using that Jakarta XML Binding mapped class as the value of a <a href="../../../jakarta/xml/bind/JAXBElement.html" title="class in jakarta.xml.bind"><code>JAXBElement</code></a>.
  When the <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> object does not have a mapping for the root element's name
  nor its <code>@xsi:type</code>, if it exists,
- then the unmarshal operation will abort immediately by throwing a <a href="../../../jakarta/xml/bind/UnmarshalException.html" title="class in jakarta.xml.bind"><code>UnmarshalException</code></a>. This exception scenario can be worked around by using the unmarshal by 
+ then the unmarshal operation will abort immediately by throwing a <a href="../../../jakarta/xml/bind/UnmarshalException.html" title="class in jakarta.xml.bind"><code>UnmarshalException</code></a>. This exception scenario can be worked around by using the unmarshal by
  declaredType methods described in the next subsection.
  </blockquote>
- 
+
  <p>
  <a id="unmarshalByDeclaredType"></a>
  <b>Unmarshal by Declared Type</b><br>
@@ -303,16 +303,16 @@ var activeTableTab = "activeTableTab";
  there is no mapping in <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> of the root element's XML name.
  The unmarshaller unmarshals the root element using the application provided
  mapping specified as the <code>declaredType</code> parameter.
- Note that even when the root element's element name is mapped by <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>, 
+ Note that even when the root element's element name is mapped by <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>,
  the <code>declaredType</code> parameter overrides that mapping for
- deserializing the root element when using these unmarshal methods. 
+ deserializing the root element when using these unmarshal methods.
  Additionally, when the root element of XML data has an <code>xsi:type</code> attribute and
- that attribute's value references a type definition that is mapped 
- to a Jakarta XML Binding mapped class by <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>, that the root 
+ that attribute's value references a type definition that is mapped
+ to a Jakarta XML Binding mapped class by <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>, that the root
  element's <code>xsi:type</code> attribute takes
  precedence over the unmarshal methods <code>declaredType</code> parameter.
  These methods always return a <code>JAXBElement&lt;declaredType&gt;</code>
- instance. The table below shows how the properties of the returned JAXBElement 
+ instance. The table below shows how the properties of the returned JAXBElement
  instance are set.
 
  <a id="unmarshalDeclaredTypeReturn"></a>
@@ -346,12 +346,12 @@ var activeTableTab = "activeTableTab";
  </blockquote>
 
  <p>
- The following is an example of 
+ The following is an example of
  <a href="#unmarshalByDeclaredType">unmarshal by declaredType method</a>.
  <p>
  Unmarshal by declaredType from a <code>org.w3c.dom.Node</code>:
  <blockquote>
-    <pre><code> 
+    <pre><code>
        Schema fragment for example
        &lt;xs:schema&gt;
           &lt;xs:complexType name="FooType"&gt;...&lt;\xs:complexType&gt;
@@ -369,19 +369,19 @@ var activeTableTab = "activeTableTab";
 
        JAXBContext jc = JAXBContext.newInstance( "com.acme.foo" );
        Unmarshaller u = jc.createUnmarshaller();
- 
+
        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
        dbf.setNamespaceAware(true);
        DocumentBuilder db = dbf.newDocumentBuilder();
        Document doc = db.parse(new File( "nosferatu.xml"));
-       Element  fooSubtree = ...; // traverse DOM till reach xml element foo, constrained by a 
+       Element  fooSubtree = ...; // traverse DOM till reach xml element foo, constrained by a
                                   // local element declaration in schema.
- 
+
        // FooType is the Jakarta XML Binding mapping of the type of local element declaration foo.
        JAXBElement&lt;FooType&gt; foo = u.unmarshal( fooSubtree, FooType.class);
     </code></pre>
  </blockquote>
- 
+
  <p>
  <b>Support for SAX2.0 Compliant Parsers</b><br>
  <blockquote>
@@ -391,7 +391,7 @@ var activeTableTab = "activeTableTab";
  is not required to be SAX2.0 compliant, all providers are required to allow
  a client application to specify their own SAX2.0 parser.  Some providers may
  require the client application to specify the SAX2.0 parser at schema compile
- time. See <a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.transform.Source-"><code>unmarshal(Source)</code></a> 
+ time. See <a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.transform.Source-"><code>unmarshal(Source)</code></a>
  for more detail.
  </blockquote>
 
@@ -399,24 +399,24 @@ var activeTableTab = "activeTableTab";
  <b>Validation and Well-Formedness</b><br>
  <blockquote>
  <p>
- A client application can enable or disable JAXP 1.3 validation
+ A client application can enable or disable JAXP validation
  mechanism via the <code>setSchema(javax.xml.validation.Schema)</code> API.
- Sophisticated clients can specify their own validating SAX 2.0 compliant 
- parser and bypass the JAXP 1.3 validation mechanism using the 
+ Sophisticated clients can specify their own validating SAX 2.0 compliant
+ parser and bypass the JAXP validation mechanism using the
  <a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.transform.Source-"><code>unmarshal(Source)</code></a>  API.
- 
+
  <p>
- Since unmarshalling invalid XML content is defined in Jakarta XML Binding, 
+ Since unmarshalling invalid XML content is defined in Jakarta XML Binding,
  the Unmarshaller default validation event handler was made more lenient
  than in JAXB 1.0.  When schema-derived code generated
- by JAXB 1.0 binding compiler is registered with <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>, 
- the default unmarshal validation handler is 
+ by JAXB 1.0 binding compiler is registered with <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>,
+ the default unmarshal validation handler is
  <a href="../../../jakarta/xml/bind/helpers/DefaultValidationEventHandler.html" title="class in jakarta.xml.bind.helpers"><code>DefaultValidationEventHandler</code></a> and it
- terminates the marshal  operation after encountering either a fatal error or an error. 
+ terminates the marshal  operation after encountering either a fatal error or an error.
  For a Jakarta XML Binding client application, there is no explicitly defined default
- validation handler and the default event handling only 
+ validation handler and the default event handling only
  terminates the unmarshal operation after encountering a fatal error.
- 
+
  </blockquote>
 
  <p>
@@ -424,11 +424,11 @@ var activeTableTab = "activeTableTab";
  <b>Supported Properties</b><br>
  <blockquote>
  <p>
- There currently are not any properties required to be supported by all 
- Jakarta XML Binding Providers on Unmarshaller.  However, some providers may support 
+ There currently are not any properties required to be supported by all
+ Jakarta XML Binding Providers on Unmarshaller.  However, some providers may support
  their own set of provider specific properties.
  </blockquote>
- 
+
  <p>
  <a id="unmarshalEventCallback"></a>
  <b>Unmarshal Event Callbacks</b><br>
@@ -440,41 +440,40 @@ var activeTableTab = "activeTableTab";
  unmarshalling.  'External listeners' allow for centralized processing
  of unmarshal events in one callback method rather than by type event callbacks.
  <p>
- 'Class defined' event callback methods allow any Jakarta XML Binding mapped class to specify 
+ 'Class defined' event callback methods allow any Jakarta XML Binding mapped class to specify
  its own specific callback methods by defining methods with the following method signature:
  <blockquote>
  <pre>
-   // This method is called immediately after the object is created and before the unmarshalling of this 
+   // This method is called immediately after the object is created and before the unmarshalling of this
    // object begins. The callback provides an opportunity to initialize JavaBean properties prior to unmarshalling.
    void beforeUnmarshal(Unmarshaller, Object parent);
- 
-   //This method is called after all the properties (except IDREF) are unmarshalled for this object, 
+
+   //This method is called after all the properties (except IDREF) are unmarshalled for this object,
    //but before this object is set to the parent object.
    void afterUnmarshal(Unmarshaller, Object parent);
  </pre>
  </blockquote>
  The class defined callback methods should be used when the callback method requires
- access to non-public methods and/or fields of the class. 
+ access to non-public methods and/or fields of the class.
  <p>
- The external listener callback mechanism enables the registration of a <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind"><code>Unmarshaller.Listener</code></a> 
- instance with an <a href="../../../jakarta/xml/bind/Unmarshaller.html#setListener-jakarta.xml.bind.Unmarshaller.Listener-"><code>setListener(Listener)</code></a>. The external listener receives all callback events, 
- allowing for more centralized processing than per class defined callback methods.  The external listener 
+ The external listener callback mechanism enables the registration of a <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind"><code>Unmarshaller.Listener</code></a>
+ instance with an <a href="../../../jakarta/xml/bind/Unmarshaller.html#setListener-jakarta.xml.bind.Unmarshaller.Listener-"><code>setListener(Listener)</code></a>. The external listener receives all callback events,
+ allowing for more centralized processing than per class defined callback methods.  The external listener
  receives events when unmarshalling process is marshalling to a Jakarta XML Binding element or to Jakarta XML Binding mapped class.
  <p>
  The 'class defined' and external listener event callback methods are independent of each other,
  both can be called for one event.  The invocation ordering when both listener callback methods exist is
- defined in <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html#beforeUnmarshal-java.lang.Object-java.lang.Object-"><code>Unmarshaller.Listener.beforeUnmarshal(Object, Object)</code></a> and <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html#afterUnmarshal-java.lang.Object-java.lang.Object-"><code>Unmarshaller.Listener.afterUnmarshal(Object, Object)</code></a>. 
+ defined in <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html#beforeUnmarshal-java.lang.Object-java.lang.Object-"><code>Unmarshaller.Listener.beforeUnmarshal(Object, Object)</code></a> and <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html#afterUnmarshal-java.lang.Object-java.lang.Object-"><code>Unmarshaller.Listener.afterUnmarshal(Object, Object)</code></a>.
  <p>
  An event callback method throwing an exception terminates the current unmarshal process.
- 
+
  </blockquote></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.6, JAXB 1.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a>, 
-<a href="../../../jakarta/xml/bind/Marshaller.html" title="interface in jakarta.xml.bind"><code>Marshaller</code></a>, 
-<a href="../../../jakarta/xml/bind/Validator.html" title="interface in jakarta.xml.bind"><code>Validator</code></a></dd>
+<a href="../../../jakarta/xml/bind/Marshaller.html" title="interface in jakarta.xml.bind"><code>Marshaller</code></a></dd>
 <dt><span class="simpleTagLabel">Examples (en):</span></dt>
 <dd><a href="../../../../../../tomee-9.0/examples/rest-on-ejb.html">rest-on-ejb</a></dd>
 </dl>
@@ -514,13 +513,13 @@ var activeTableTab = "activeTableTab";
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&gt;<br>A</code></td>
+<td class="colFirst"><code>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;<br>A</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#getAdapter-java.lang.Class-">getAdapter</a></span>(java.lang.Class&lt;A&gt;&nbsp;type)</code>
 <div class="block">Gets the adapter associated with the specified type.</div>
 </td>
@@ -545,14 +544,14 @@ var activeTableTab = "activeTableTab";
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#getProperty-java.lang.String-">getProperty</a></span>(java.lang.String&nbsp;name)</code>
-<div class="block">Get the particular property in the underlying implementation of 
+<div class="block">Get the particular property in the underlying implementation of
  <code>Unmarshaller</code>.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>javax.xml.validation.Schema</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#getSchema--">getSchema</a></span>()</code>
-<div class="block">Get the JAXP 1.3 <code>Schema</code> object
+<div class="block">Get the JAXP <code>Schema</code> object
  being used to perform unmarshal-time validation.</div>
 </td>
 </tr>
@@ -564,15 +563,13 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#isValidating--">isValidating</a></span>()</code>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">since JAXB2.0, please see <a href="../../../jakarta/xml/bind/Unmarshaller.html#getSchema--"><code>getSchema()</code></a></span></div>
-</div>
+<td class="colFirst"><code>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;<br>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setAdapter-A-">setAdapter</a></span>(A&nbsp;adapter)</code>
+<div class="block">Associates a configured instance of <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters"><code>XmlAdapter</code></a> with this unmarshaller.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&gt;<br>void</code></td>
+<td class="colFirst"><code>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;<br>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setAdapter-java.lang.Class-A-">setAdapter</a></span>(java.lang.Class&lt;A&gt;&nbsp;type,
           A&nbsp;adapter)</code>
 <div class="block">Associates a configured instance of <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters"><code>XmlAdapter</code></a> with this unmarshaller.</div>
@@ -580,83 +577,69 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setAdapter-jakarta.xml.bind.annotation.adapters.XmlAdapter-">setAdapter</a></span>(<a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&nbsp;adapter)</code>
-<div class="block">Associates a configured instance of <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters"><code>XmlAdapter</code></a> with this unmarshaller.</div>
-</td>
-</tr>
-<tr id="i10" class="altColor">
-<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setAttachmentUnmarshaller-jakarta.xml.bind.attachment.AttachmentUnmarshaller-">setAttachmentUnmarshaller</a></span>(<a href="../../../jakarta/xml/bind/attachment/AttachmentUnmarshaller.html" title="class in jakarta.xml.bind.attachment">AttachmentUnmarshaller</a>&nbsp;au)</code>
 <div class="block">Associate a context that resolves cid's, content-id URIs, to
  binary data passed as attachments.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setEventHandler-jakarta.xml.bind.ValidationEventHandler-">setEventHandler</a></span>(<a href="../../../jakarta/xml/bind/ValidationEventHandler.html" title="interface in jakarta.xml.bind">ValidationEventHandler</a>&nbsp;handler)</code>
 <div class="block">Allow an application to register a <code>ValidationEventHandler</code>.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setListener-jakarta.xml.bind.Unmarshaller.Listener-">setListener</a></span>(<a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind">Unmarshaller.Listener</a>&nbsp;listener)</code>
 <div class="block">
  Register unmarshal event callback <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind"><code>Unmarshaller.Listener</code></a> with this <a href="../../../jakarta/xml/bind/Unmarshaller.html" title="interface in jakarta.xml.bind"><code>Unmarshaller</code></a>.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setProperty-java.lang.String-java.lang.Object-">setProperty</a></span>(java.lang.String&nbsp;name,
            java.lang.Object&nbsp;value)</code>
-<div class="block">Set the particular property in the underlying implementation of 
+<div class="block">Set the particular property in the underlying implementation of
  <code>Unmarshaller</code>.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setSchema-javax.xml.validation.Schema-">setSchema</a></span>(javax.xml.validation.Schema&nbsp;schema)</code>
-<div class="block">Specify the JAXP 1.3 <code>Schema</code>
+<div class="block">Specify the JAXP <code>Schema</code>
  object that should be used to validate subsequent unmarshal operations
  against.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#setValidating-boolean-">setValidating</a></span>(boolean&nbsp;validating)</code>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
-<div class="block"><span class="deprecationComment">since JAXB2.0, please see <a href="../../../jakarta/xml/bind/Unmarshaller.html#setSchema-javax.xml.validation.Schema-"><code>setSchema(javax.xml.validation.Schema)</code></a></span></div>
-</div>
-</td>
-</tr>
-<tr id="i16" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-java.io.File-">unmarshal</a></span>(java.io.File&nbsp;f)</code>
 <div class="block">Unmarshal XML data from the specified file and return the resulting
  content tree.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-org.xml.sax.InputSource-">unmarshal</a></span>(org.xml.sax.InputSource&nbsp;source)</code>
 <div class="block">Unmarshal XML data from the specified SAX InputSource and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-java.io.InputStream-">unmarshal</a></span>(java.io.InputStream&nbsp;is)</code>
-<div class="block">Unmarshal XML data from the specified InputStream and return the 
+<div class="block">Unmarshal XML data from the specified InputStream and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-org.w3c.dom.Node-">unmarshal</a></span>(org.w3c.dom.Node&nbsp;node)</code>
 <div class="block">Unmarshal global XML data from the specified DOM tree and return the resulting
  content tree.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../../../jakarta/xml/bind/JAXBElement.html" title="class in jakarta.xml.bind">JAXBElement</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-org.w3c.dom.Node-java.lang.Class-">unmarshal</a></span>(org.w3c.dom.Node&nbsp;node,
          java.lang.Class&lt;T&gt;&nbsp;declaredType)</code>
@@ -664,21 +647,21 @@ var activeTableTab = "activeTableTab";
  and return the resulting content tree.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-java.io.Reader-">unmarshal</a></span>(java.io.Reader&nbsp;reader)</code>
 <div class="block">Unmarshal XML data from the specified Reader and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.transform.Source-">unmarshal</a></span>(javax.xml.transform.Source&nbsp;source)</code>
-<div class="block">Unmarshal XML data from the specified XML Source and return the 
+<div class="block">Unmarshal XML data from the specified XML Source and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../../../jakarta/xml/bind/JAXBElement.html" title="class in jakarta.xml.bind">JAXBElement</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.transform.Source-java.lang.Class-">unmarshal</a></span>(javax.xml.transform.Source&nbsp;source,
          java.lang.Class&lt;T&gt;&nbsp;declaredType)</code>
@@ -686,21 +669,21 @@ var activeTableTab = "activeTableTab";
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-java.net.URL-">unmarshal</a></span>(java.net.URL&nbsp;url)</code>
 <div class="block">Unmarshal XML data from the specified URL and return the resulting
  content tree.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.stream.XMLEventReader-">unmarshal</a></span>(javax.xml.stream.XMLEventReader&nbsp;reader)</code>
 <div class="block">Unmarshal XML data from the specified pull parser and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../../../jakarta/xml/bind/JAXBElement.html" title="class in jakarta.xml.bind">JAXBElement</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.stream.XMLEventReader-java.lang.Class-">unmarshal</a></span>(javax.xml.stream.XMLEventReader&nbsp;reader,
          java.lang.Class&lt;T&gt;&nbsp;declaredType)</code>
@@ -708,14 +691,14 @@ var activeTableTab = "activeTableTab";
  and return the resulting content tree.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.stream.XMLStreamReader-">unmarshal</a></span>(javax.xml.stream.XMLStreamReader&nbsp;reader)</code>
 <div class="block">Unmarshal XML data from the specified pull parser and return the
  resulting content tree.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../../../jakarta/xml/bind/JAXBElement.html" title="class in jakarta.xml.bind">JAXBElement</a>&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-javax.xml.stream.XMLStreamReader-java.lang.Class-">unmarshal</a></span>(javax.xml.stream.XMLStreamReader&nbsp;reader,
          java.lang.Class&lt;T&gt;&nbsp;declaredType)</code>
@@ -774,7 +757,7 @@ var activeTableTab = "activeTableTab";
 <h4>unmarshal</h4>
 <pre>java.lang.Object&nbsp;unmarshal(java.io.InputStream&nbsp;is)
                     throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
-<div class="block">Unmarshal XML data from the specified InputStream and return the 
+<div class="block">Unmarshal XML data from the specified InputStream and return the
  resulting content tree.  Validation event location information may
  be incomplete when using this form of the unmarshal API.
 
@@ -955,8 +938,8 @@ var activeTableTab = "activeTableTab";
 <h4>unmarshal</h4>
 <pre>java.lang.Object&nbsp;unmarshal(javax.xml.transform.Source&nbsp;source)
                     throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
-<div class="block">Unmarshal XML data from the specified XML Source and return the 
- resulting content tree.  
+<div class="block">Unmarshal XML data from the specified XML Source and return the
+ resulting content tree.
 
  <p>
  Implements <a href="#unmarshalGlobal">Unmarshal Global Root Element</a>.
@@ -977,22 +960,22 @@ var activeTableTab = "activeTableTab";
  then the Jakarta XML Binding provider's default parser mechanism will be used.
  <p>
  This parser replacement mechanism can also be used to replace the Jakarta XML Binding
- provider's unmarshal-time validation engine.  The client application 
+ provider's unmarshal-time validation engine.  The client application
  must properly configure their SAX 2.0 compliant parser to perform
  validation (as shown in the example above).  Any <code>SAXParserExceptions</code>
  encountered by the parser during the unmarshal operation will be
- processed by the Jakarta XML Binding provider and converted into Jakarta XML Binding 
+ processed by the Jakarta XML Binding provider and converted into Jakarta XML Binding
  <code>ValidationEvent</code> objects which will be reported back to the
  client via the <code>ValidationEventHandler</code> registered with the
  <code>Unmarshaller</code>.  <i>Note:</i> specifying a substitute validating
- SAX 2.0 parser for unmarshalling does not necessarily replace the 
- validation engine used by the Jakarta XML Binding provider for performing on-demand 
+ SAX 2.0 parser for unmarshalling does not necessarily replace the
+ validation engine used by the Jakarta XML Binding provider for performing on-demand
  validation.
  <p>
  The only way for a client application to specify an alternate parser
- mechanism to be used during unmarshal is via the 
+ mechanism to be used during unmarshal is via the
  <code>unmarshal(SAXSource)</code> API.  All other forms of the unmarshal
- method (File, URL, Node, etc) will use the Jakarta XML Binding provider's default 
+ method (File, URL, Node, etc) will use the Jakarta XML Binding provider's default
  parser and validator mechanisms.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1022,7 +1005,7 @@ var activeTableTab = "activeTableTab";
                              java.lang.Class&lt;T&gt;&nbsp;declaredType)
                       throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
 <div class="block">Unmarshal XML data from the specified XML Source by <code>declaredType</code> and return the
- resulting content tree.  
+ resulting content tree.
 
  <p>
  Implements <a href="#unmarshalByDeclaredType">Unmarshal by Declared Type</a>
@@ -1061,11 +1044,11 @@ var activeTableTab = "activeTableTab";
 
  <p>
  Implements <a href="#unmarshalGlobal">Unmarshal Global Root Element</a>.
- 
+
  <p>
  This method assumes that the parser is on a START_DOCUMENT or
- START_ELEMENT event.  Unmarshalling will be done from this 
- start event to the corresponding end event.  If this method 
+ START_ELEMENT event.  Unmarshalling will be done from this
+ start event to the corresponding end event.  If this method
  returns successfully, the <code>reader</code> will be pointing at
  the token right after the end event.</div>
 <dl>
@@ -1100,14 +1083,14 @@ var activeTableTab = "activeTableTab";
                       throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
 <div class="block">Unmarshal root element to Jakarta XML Binding mapped <code>declaredType</code>
  and return the resulting content tree.
- 
+
  <p>
  This method implements <a href="#unmarshalByDeclaredType">unmarshal by declaredType</a>.
  <p>
  This method assumes that the parser is on a START_DOCUMENT or
- START_ELEMENT event. Unmarshalling will be done from this 
- start event to the corresponding end event.  If this method 
- returns successfully, the <code>reader</code> will be pointing at 
+ START_ELEMENT event. Unmarshalling will be done from this
+ start event to the corresponding end event.  If this method
+ returns successfully, the <code>reader</code> will be pointing at
  the token right after the end event.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1143,9 +1126,9 @@ var activeTableTab = "activeTableTab";
 
  <p>
  This method assumes that the parser is on a START_DOCUMENT or
- START_ELEMENT event.  Unmarshalling will be done from this 
- start event to the corresponding end event.  If this method 
- returns successfully, the <code>reader</code> will be pointing at 
+ START_ELEMENT event.  Unmarshalling will be done from this
+ start event to the corresponding end event.  If this method
+ returns successfully, the <code>reader</code> will be pointing at
  the token right after the end event.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1179,15 +1162,15 @@ var activeTableTab = "activeTableTab";
                       throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
 <div class="block">Unmarshal root element to Jakarta XML Binding mapped <code>declaredType</code>
  and return the resulting content tree.
- 
+
  <p>
  This method implements <a href="#unmarshalByDeclaredType">unmarshal by declaredType</a>.
 
  <p>
  This method assumes that the parser is on a START_DOCUMENT or
- START_ELEMENT event. Unmarshalling will be done from this 
- start event to the corresponding end event.  If this method 
- returns successfully, the <code>reader</code> will be pointing at 
+ START_ELEMENT event. Unmarshalling will be done from this
+ start event to the corresponding end event.  If this method
+ returns successfully, the <code>reader</code> will be pointing at
  the token right after the end event.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1216,10 +1199,10 @@ var activeTableTab = "activeTableTab";
 <pre><a href="../../../jakarta/xml/bind/UnmarshallerHandler.html" title="interface in jakarta.xml.bind">UnmarshallerHandler</a>&nbsp;getUnmarshallerHandler()</pre>
 <div class="block">Get an unmarshaller handler object that can be used as a component in
  an XML pipeline.
- 
+
  <p>
- The Jakarta XML Binding Provider can return the same handler object for multiple 
- invocations of this method. In other words, this method does not 
+ The Jakarta XML Binding Provider can return the same handler object for multiple
+ invocations of this method. In other words, this method does not
  necessarily create a new instance of <code>UnmarshallerHandler</code>. If the
  application needs to use more than one <code>UnmarshallerHandler</code>, it
  should create more than one <code>Unmarshaller</code>.</div>
@@ -1228,74 +1211,6 @@ var activeTableTab = "activeTableTab";
 <dd>the unmarshaller handler object</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../jakarta/xml/bind/UnmarshallerHandler.html" title="interface in jakarta.xml.bind"><code>UnmarshallerHandler</code></a></dd>
-</dl>
-</li>
-</ul>
-<a name="setValidating-boolean-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setValidating</h4>
-<pre>void&nbsp;setValidating(boolean&nbsp;validating)
-            throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">since JAXB2.0, please see <a href="../../../jakarta/xml/bind/Unmarshaller.html#setSchema-javax.xml.validation.Schema-"><code>setSchema(javax.xml.validation.Schema)</code></a></span></div>
-<div class="block">Specifies whether or not the default validation mechanism of the
- <code>Unmarshaller</code> should validate during unmarshal operations.
- By default, the <code>Unmarshaller</code> does not validate.
- <p>
- This method may only be invoked before or after calling one of the
- unmarshal methods.
- <p>
- This method only controls the Jakarta XML Binding Provider's default unmarshal-time
- validation mechanism - it has no impact on clients that specify their 
- own validating SAX 2.0 compliant parser.  Clients that specify their
- own unmarshal-time validation mechanism may wish to turn off the Jakarta XML Binding
- Provider's default validation mechanism via this API to avoid "double
- validation".
- <p>
- This method is deprecated as of Jakarta XML Binding - please use the new
- <a href="../../../jakarta/xml/bind/Unmarshaller.html#setSchema-javax.xml.validation.Schema-"><code>setSchema(javax.xml.validation.Schema)</code></a> API.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>validating</code> - true if the Unmarshaller should validate during 
-        unmarshal, false otherwise</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></code> - if an error occurred while enabling or disabling
-         validation at unmarshal time</dd>
-<dd><code>java.lang.UnsupportedOperationException</code> - could be thrown if this method is
-         invoked on an Unmarshaller created from a JAXBContext referencing
-         Jakarta XML Binding mapped classes</dd>
-</dl>
-</li>
-</ul>
-<a name="isValidating--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isValidating</h4>
-<pre>boolean&nbsp;isValidating()
-              throws <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></pre>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;<span class="deprecationComment">since JAXB2.0, please see <a href="../../../jakarta/xml/bind/Unmarshaller.html#getSchema--"><code>getSchema()</code></a></span></div>
-<div class="block">Indicates whether or not the <code>Unmarshaller</code> is configured to
- validate during unmarshal operations.
- <p>
- This API returns the state of the Jakarta XML Binding Provider's default unmarshal-time
- validation mechanism. 
- <p>
- This method is deprecated as of Jakarta XML Binding - please use the new
- <a href="../../../jakarta/xml/bind/Unmarshaller.html#getSchema--"><code>getSchema()</code></a> API.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the Unmarshaller is configured to validate during 
-         unmarshal operations, false otherwise</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></code> - if an error occurs while retrieving the validating
-         flag</dd>
-<dd><code>java.lang.UnsupportedOperationException</code> - could be thrown if this method is
-         invoked on an Unmarshaller created from a JAXBContext referencing
-         Jakarta XML Binding mapped classes</dd>
 </dl>
 </li>
 </ul>
@@ -1310,11 +1225,11 @@ var activeTableTab = "activeTableTab";
 <div class="block">Allow an application to register a <code>ValidationEventHandler</code>.
  <p>
  The <code>ValidationEventHandler</code> will be called by the Jakarta XML Binding Provider
- if any validation errors are encountered during calls to any of the 
- unmarshal methods.  If the client application does not register a 
+ if any validation errors are encountered during calls to any of the
+ unmarshal methods.  If the client application does not register a
  <code>ValidationEventHandler</code> before invoking the unmarshal methods,
  then <code>ValidationEvents</code> will be handled by the default event
- handler which will terminate the unmarshal operation after the first 
+ handler which will terminate the unmarshal operation after the first
  error or fatal error is encountered.
  <p>
  Calling this method with a null parameter will cause the Unmarshaller
@@ -1343,7 +1258,7 @@ var activeTableTab = "activeTableTab";
 <dd>the current ValidationEventHandler or the default event handler
          if it hasn't been set</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></code> - if an error was encountered while getting the 
+<dd><code><a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></code> - if an error was encountered while getting the
          current event handler</dd>
 </dl>
 </li>
@@ -1357,7 +1272,7 @@ var activeTableTab = "activeTableTab";
 <pre>void&nbsp;setProperty(java.lang.String&nbsp;name,
                  java.lang.Object&nbsp;value)
           throws <a href="../../../jakarta/xml/bind/PropertyException.html" title="class in jakarta.xml.bind">PropertyException</a></pre>
-<div class="block">Set the particular property in the underlying implementation of 
+<div class="block">Set the particular property in the underlying implementation of
  <code>Unmarshaller</code>.  This method can only be used to set one of
  the standard Jakarta XML Binding defined properties above or a provider specific
  property.  Attempting to set an undefined property will result in
@@ -1366,7 +1281,7 @@ var activeTableTab = "activeTableTab";
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>name</code> - the name of the property to be set. This value can either
-              be specified using one of the constant fields or a user 
+              be specified using one of the constant fields or a user
               supplied string.</dd>
 <dd><code>value</code> - the value of the property to be set</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -1384,7 +1299,7 @@ var activeTableTab = "activeTableTab";
 <h4>getProperty</h4>
 <pre>java.lang.Object&nbsp;getProperty(java.lang.String&nbsp;name)
                       throws <a href="../../../jakarta/xml/bind/PropertyException.html" title="class in jakarta.xml.bind">PropertyException</a></pre>
-<div class="block">Get the particular property in the underlying implementation of 
+<div class="block">Get the particular property in the underlying implementation of
  <code>Unmarshaller</code>.  This method can only be used to get one of
  the standard Jakarta XML Binding defined properties above or a provider specific
  property.  Attempting to get an undefined property will result in
@@ -1409,12 +1324,9 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>setSchema</h4>
 <pre>void&nbsp;setSchema(javax.xml.validation.Schema&nbsp;schema)</pre>
-<div class="block">Specify the JAXP 1.3 <code>Schema</code>
+<div class="block">Specify the JAXP <code>Schema</code>
  object that should be used to validate subsequent unmarshal operations
  against.  Passing null into this method will disable validation.
- <p>
- This method replaces the deprecated <a href="../../../jakarta/xml/bind/Unmarshaller.html#setValidating-boolean-"><code>setValidating(boolean)</code></a>
- API.
 
  <p>
  Initially this property is set to <code>null</code>.</div>
@@ -1437,18 +1349,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getSchema</h4>
 <pre>javax.xml.validation.Schema&nbsp;getSchema()</pre>
-<div class="block">Get the JAXP 1.3 <code>Schema</code> object
+<div class="block">Get the JAXP <code>Schema</code> object
  being used to perform unmarshal-time validation.  If there is no
  Schema set on the unmarshaller, then this method will return null
- indicating that unmarshal-time validation will not be performed.
- <p>
- This method provides replacement functionality for the deprecated
- <a href="../../../jakarta/xml/bind/Unmarshaller.html#isValidating--"><code>isValidating()</code></a> API as well as access to the Schema object.
- To determine if the Unmarshaller has validation enabled, simply
- test the return type for null:
- <pre><code>
-   boolean isValidating = u.getSchema()!=null;
- </code></pre></div>
+ indicating that unmarshal-time validation will not be performed.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Schema object being used to perform unmarshal-time
@@ -1464,11 +1368,13 @@ var activeTableTab = "activeTableTab";
 </ul>
 <a name="setAdapter-jakarta.xml.bind.annotation.adapters.XmlAdapter-">
 <!--   -->
+</a><a name="setAdapter-A-">
+<!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setAdapter</h4>
-<pre>void&nbsp;setAdapter(<a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&nbsp;adapter)</pre>
+<pre>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;&nbsp;void&nbsp;setAdapter(A&nbsp;adapter)</pre>
 <div class="block">Associates a configured instance of <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters"><code>XmlAdapter</code></a> with this unmarshaller.
 
  <p>
@@ -1492,8 +1398,8 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>setAdapter</h4>
-<pre>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&gt;&nbsp;void&nbsp;setAdapter(java.lang.Class&lt;A&gt;&nbsp;type,
-                                       A&nbsp;adapter)</pre>
+<pre>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;&nbsp;void&nbsp;setAdapter(java.lang.Class&lt;A&gt;&nbsp;type,
+                                            A&nbsp;adapter)</pre>
 <div class="block">Associates a configured instance of <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters"><code>XmlAdapter</code></a> with this unmarshaller.
 
  <p>
@@ -1527,10 +1433,10 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getAdapter</h4>
-<pre>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&gt;&nbsp;A&nbsp;getAdapter(java.lang.Class&lt;A&gt;&nbsp;type)</pre>
+<pre>&lt;A extends <a href="../../../jakarta/xml/bind/annotation/adapters/XmlAdapter.html" title="class in jakarta.xml.bind.annotation.adapters">XmlAdapter</a>&lt;?,?&gt;&gt;&nbsp;A&nbsp;getAdapter(java.lang.Class&lt;A&gt;&nbsp;type)</pre>
 <div class="block">Gets the adapter associated with the specified type.
 
- This is the reverse operation of the <a href="../../../jakarta/xml/bind/Unmarshaller.html#setAdapter-jakarta.xml.bind.annotation.adapters.XmlAdapter-"><code>setAdapter(jakarta.xml.bind.annotation.adapters.XmlAdapter)</code></a> method.</div>
+ This is the reverse operation of the <a href="../../../jakarta/xml/bind/Unmarshaller.html#setAdapter-A-"><code>setAdapter(A)</code></a> method.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - if the type parameter is null.</dd>
@@ -1577,7 +1483,7 @@ var activeTableTab = "activeTableTab";
 <pre>void&nbsp;setListener(<a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind">Unmarshaller.Listener</a>&nbsp;listener)</pre>
 <div class="block"><p>
  Register unmarshal event callback <a href="../../../jakarta/xml/bind/Unmarshaller.Listener.html" title="class in jakarta.xml.bind"><code>Unmarshaller.Listener</code></a> with this <a href="../../../jakarta/xml/bind/Unmarshaller.html" title="interface in jakarta.xml.bind"><code>Unmarshaller</code></a>.
- 
+
  <p>
  There is only one Listener per Unmarshaller. Setting a Listener replaces the previous set Listener.
  One can unregister current Listener by setting listener to <code>null</code>.</div>

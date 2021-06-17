@@ -110,23 +110,23 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public abstract class <span class="typeNameLabel">Binder&lt;XmlNode&gt;</span>
 extends java.lang.Object</pre>
-<div class="block">Enable synchronization between XML infoset nodes and Jakarta XML Binding objects 
+<div class="block">Enable synchronization between XML infoset nodes and Jakarta XML Binding objects
  representing same XML document.
 
  <p>
  An instance of this class maintains the association between XML nodes of
- an infoset preserving view and a Jakarta XML Binding representation of an XML document. 
+ an infoset preserving view and a Jakarta XML Binding representation of an XML document.
  Navigation between the two views is provided by the methods
  <a href="../../../jakarta/xml/bind/Binder.html#getXMLNode-java.lang.Object-"><code>getXMLNode(Object)</code></a> and <a href="../../../jakarta/xml/bind/Binder.html#getJAXBNode-XmlNode-"><code>getJAXBNode(Object)</code></a>.
- 
+
  <p>
- Modifications can be made to either the infoset preserving view or the 
- Jakarta XML Binding representation of the document while the other view remains 
- unmodified. The binder is able to synchronize the changes made in the 
+ Modifications can be made to either the infoset preserving view or the
+ Jakarta XML Binding representation of the document while the other view remains
+ unmodified. The binder is able to synchronize the changes made in the
  modified view back into the other view using the appropriate
- Binder update methods, <a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-XmlNode-"><code>updateXML(Object, Object)</code></a> or 
+ Binder update methods, <a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-XmlNode-"><code>updateXML(Object, Object)</code></a> or
  <a href="../../../jakarta/xml/bind/Binder.html#updateJAXB-XmlNode-"><code>updateJAXB(Object)</code></a>.
- 
+
  <p>
  A typical usage scenario is the following:
  <ul>
@@ -135,21 +135,21 @@ extends java.lang.Object</pre>
        (Note to conserve resources, it is possible to only unmarshal a
        subtree of the XML infoset view to the Jakarta XML Binding view.)</li>
    <li>application access/updates Jakarta XML Binding view of XML document.</li>
-   <li><a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-"><code>updateXML(Object)</code></a> synchronizes modifications to Jakarta XML Binding view 
-       back into the XML infoset view. Update operation preserves as 
+   <li><a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-"><code>updateXML(Object)</code></a> synchronizes modifications to Jakarta XML Binding view
+       back into the XML infoset view. Update operation preserves as
        much of original XML infoset as possible (i.e. comments, PI, ...)</li>
  </ul>
- 
+
  <p>
- A Binder instance is created using the factory method 
+ A Binder instance is created using the factory method
  <a href="../../../jakarta/xml/bind/JAXBContext.html#createBinder--"><code>JAXBContext.createBinder()</code></a> or <a href="../../../jakarta/xml/bind/JAXBContext.html#createBinder-java.lang.Class-"><code>JAXBContext.createBinder(Class)</code></a>.
 
  <p>
  The template parameter, <code>XmlNode</code>, is the
  root interface/class for the XML infoset preserving representation.
  A Binder implementation is required to minimally support
- an <code>XmlNode</code> value of <code>org.w3c.dom.Node.class</code>. 
- A Binder implementation can support alternative XML infoset 
+ an <code>XmlNode</code> value of <code>org.w3c.dom.Node.class</code>.
+ A Binder implementation can support alternative XML infoset
  preserving representations.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -170,10 +170,14 @@ extends java.lang.Object</pre>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
-<th class="colOne" scope="col">Constructor and Description</th>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colLast" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Binder.html#Binder--">Binder</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>protected </code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/xml/bind/Binder.html#Binder--">Binder</a></span>()</code>
+<div class="block">Do-nothing constructor for the derived classes.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -313,7 +317,8 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Binder</h4>
-<pre>public&nbsp;Binder()</pre>
+<pre>protected&nbsp;Binder()</pre>
+<div class="block">Do-nothing constructor for the derived classes.</div>
 </li>
 </ul>
 </li>
@@ -338,7 +343,7 @@ extends java.lang.Object</pre>
 
  <p>
  This method is similar to <a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-org.w3c.dom.Node-"><code>Unmarshaller.unmarshal(Node)</code></a>
- with the addition of maintaining the association between XML nodes 
+ with the addition of maintaining the association between XML nodes
  and the produced Jakarta XML Binding objects, enabling future update operations,
  <a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-XmlNode-"><code>updateXML(Object, Object)</code></a> or <a href="../../../jakarta/xml/bind/Binder.html#updateJAXB-XmlNode-"><code>updateJAXB(Object)</code></a>.
 
@@ -350,7 +355,7 @@ extends java.lang.Object</pre>
  This method throws <a href="../../../jakarta/xml/bind/UnmarshalException.html" title="class in jakarta.xml.bind"><code>UnmarshalException</code></a> when the Binder's
  <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> does not have a mapping for the XML element name
  or the type, specifiable via <code>@xsi:type</code>, of <code>xmlNode</code>
- to a Jakarta XML Binding mapped class. The method <a href="../../../jakarta/xml/bind/Binder.html#unmarshal-XmlNode-java.lang.Class-"><code>unmarshal(Object, Class)</code></a> 
+ to a Jakarta XML Binding mapped class. The method <a href="../../../jakarta/xml/bind/Binder.html#unmarshal-XmlNode-java.lang.Class-"><code>unmarshal(Object, Class)</code></a>
  enables an application to specify the Jakarta XML Binding mapped class that
  the <code>xmlNode</code> should be mapped to.</div>
 <dl>
@@ -384,10 +389,10 @@ extends java.lang.Object</pre>
 
  <p>
  Implements <a href="Unmarshaller.html#unmarshalByDeclaredType">Unmarshal by Declared Type</a>
- 
+
  <p>
  This method is similar to <a href="../../../jakarta/xml/bind/Unmarshaller.html#unmarshal-org.w3c.dom.Node-java.lang.Class-"><code>Unmarshaller.unmarshal(Node, Class)</code></a>
- with the addition of maintaining the association between XML nodes 
+ with the addition of maintaining the association between XML nodes
  and the produced Jakarta XML Binding objects, enabling future update operations,
  <a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-XmlNode-"><code>updateXML(Object, Object)</code></a> or <a href="../../../jakarta/xml/bind/Binder.html#updateJAXB-XmlNode-"><code>updateJAXB(Object)</code></a>.
 
@@ -399,7 +404,7 @@ extends java.lang.Object</pre>
 <dd><code>xmlNode</code> - the document/element to unmarshal XML data from.</dd>
 <dd><code>declaredType</code> - appropriate Jakarta XML Binding mapped class to hold <code>node</code>'s XML data.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd><a href="JAXBElement.html">JAXBElement</a> representation 
+<dd><a href="JAXBElement.html">JAXBElement</a> representation
  of <code>node</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind">JAXBException</a></code> - If any unexpected errors occur while unmarshalling</dd>
@@ -428,9 +433,9 @@ extends java.lang.Object</pre>
 
  <p>
  This method is similar to <a href="../../../jakarta/xml/bind/Marshaller.html#marshal-java.lang.Object-org.w3c.dom.Node-"><code>Marshaller.marshal(Object, Node)</code></a>
- with the addition of maintaining the association between Jakarta XML Binding objects 
+ with the addition of maintaining the association between Jakarta XML Binding objects
  and the produced XML nodes,
- enabling future update operations such as 
+ enabling future update operations such as
  <a href="../../../jakarta/xml/bind/Binder.html#updateXML-java.lang.Object-XmlNode-"><code>updateXML(Object, Object)</code></a> or <a href="../../../jakarta/xml/bind/Binder.html#updateJAXB-XmlNode-"><code>updateJAXB(Object)</code></a>.
 
  <p>
@@ -471,7 +476,7 @@ extends java.lang.Object</pre>
  associated XML elements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>jaxbObject</code> - An instance that is reachable from a prior 
+<dd><code>jaxbObject</code> - An instance that is reachable from a prior
                    call to a bind or update method that returned
                    a Jakarta XML Binding object tree.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -659,8 +664,8 @@ extends java.lang.Object</pre>
  <p>
  The <code>ValidationEventHandler</code> will be called by the Jakarta XML Binding Provider
  if any validation errors are encountered during calls to any of the
- Binder unmarshal, marshal and update methods.  
- 
+ Binder unmarshal, marshal and update methods.
+
  <p>
  Calling this method with a null parameter will cause the Binder
  to revert back to the default default event handler.</div>
@@ -704,10 +709,10 @@ extends java.lang.Object</pre>
                           throws <a href="../../../jakarta/xml/bind/PropertyException.html" title="class in jakarta.xml.bind">PropertyException</a></pre>
 <div class="block">Set the particular property in the underlying implementation of
  <code>Binder</code>.  This method can only be used to set one of
- the standard Jakarta XML Binding defined unmarshal/marshal properties 
+ the standard Jakarta XML Binding defined unmarshal/marshal properties
  or a provider specific property for binder, unmarshal or marshal.
  Attempting to set an undefined property will result in
- a PropertyException being thrown.  See 
+ a PropertyException being thrown.  See
  <a href="Unmarshaller.html#supportedProps">Supported Unmarshal Properties</a>
  and
  <a href="Marshaller.html#supportedProps">Supported Marshal Properties</a>.</div>
@@ -735,10 +740,10 @@ extends java.lang.Object</pre>
 <div class="block">Get the particular property in the underlying implementation of
  <code>Binder</code>.  This method can only
  be used to get one of
- the standard Jakarta XML Binding defined unmarshal/marshal properties 
- or a provider specific property for binder, unmarshal or marshal.  
+ the standard Jakarta XML Binding defined unmarshal/marshal properties
+ or a provider specific property for binder, unmarshal or marshal.
  Attempting to get an undefined property will result in
- a PropertyException being thrown.  See 
+ a PropertyException being thrown.  See
  <a href="Unmarshaller.html#supportedProps">Supported Unmarshal Properties</a>
  and
  <a href="Marshaller.html#supportedProps">Supported Marshal Properties</a>.</div>
