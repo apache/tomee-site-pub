@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2717626-1']);
+      _gaq.push(['_setDomainName', 'apache.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Jakarta Security with a custom identity store</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE has its own independent Jakarta Security implementation <a href="https://eclipse-ee4j.github.io/security-api/" class="bare">https://eclipse-ee4j.github.io/security-api/</a> .</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Jakarta Security defines a standard for creating secure Jakarta EE applications in modern application paradigms. It defines an overarching (end-user targeted) Security API for Jakarta EE Applications.</p>
+</div>
+<div class="paragraph">
+<p>Jakarta Security builds on the lower level Security SPIs defined by Jakarta Authentication and Jakarta Authorization, which are both not end-end targeted.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As the specification requires, TomEE supports by default JDBC and JDAP identity stores. It also has a default support for Tomcat&#8217;s 'tomcat-users.xml' (See security-tomcat-user-identitystore example).</p>
+</div>
+<div class="paragraph">
+<p>This example will show how you can leverage your own identity store to authenticate users.
+This is very often required for integrating your systems.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implement_a_simple_servlet">Implement a simple servlet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This movie servlet, is a very simple example that defines a BasicAuthenticationMechanism, some roles and security constraints.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet("/movies")
+@DeclareRoles({"foo","bar","kaz"})
+@ServletSecurity(@HttpConstraint(rolesAllowed = "foo"))
+@BasicAuthenticationMechanismDefinition
+public class MovieServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void doGet(final HttpServletRequest request, final HttpServletResponse response)
+        throws ServletException, IOException {
+
+        String webName = null;
+        if (request.getUserPrincipal() != null) {
+            webName = request.getUserPrincipal().getName();
+        }
+
+        response.getWriter().write(
+            "&lt;html&gt;&lt;body&gt; Welcome to Movie servlet &lt;br&gt;&lt;br&gt;\n" +
+
+            "web username: " + webName + "&lt;br&gt;&lt;br&gt;\n" +
+
+            "web user has role \"foo\": " + request.isUserInRole("foo") + "&lt;br&gt;\n" +
+            "web user has role \"bar\": " + request.isUserInRole("bar") + "&lt;br&gt;\n" +
+            "web user has role \"kaz\": " + request.isUserInRole("kaz") + "&lt;br&gt;&lt;br&gt;");
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>IMPORTANT:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>In TomEE, Jakarta Security is wired in all layers, you can use</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javax.ws.rs.core.SecurityContext#getUserPrincipal</code> and <code>isUserInRole</code> to get the User Principal and check if the user has a given role</p>
+</li>
+<li>
+<p><code>javax.security.enterprise.SecurityContext#getCallerPrincipal</code> and <code>isCallerInRole</code> to get the Caller Principal (notice the difference in terms of naming) and check if a caller has a given role</p>
+</li>
+<li>
+<p><code>javax.servlet.http.HttpServletRequest#getUserPrincipal</code> and <code>isUserInRole</code></p>
+</li>
+<li>
+<p><code>javax.ejb.SessionContext#getCallerPrincipal</code> and <code>isCallerInRole</code></p>
+</li>
+<li>
+<p>the <code>Subject</code> from the <code>PolicyContext</code> but this is less used</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>A lot of different APIs to retrieve the principal and check whereas it has a given role.
+It&#8217;s all wired in and consistent in TomEE. No special configuration is needed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_create_your_own_identitystore_implementation">Create your own IdentityStore implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the sake of keeping this example as simple as possible, the <code>TestIdentityStore</code> is very simple.</p>
+</div>
+<div class="paragraph">
+<p>It recognizes only 2 users and only one of them has the right roles to call the servlet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@ApplicationScoped
+public class TestIdentityStore implements IdentityStore {
+
+    public CredentialValidationResult validate(Credential credential) {
+
+        if (!(credential instanceof UsernamePasswordCredential)) {
+            return INVALID_RESULT;
+        }
+
+        final UsernamePasswordCredential usernamePasswordCredential = (UsernamePasswordCredential) credential;
+        if (usernamePasswordCredential.compareTo("jon", "doe")) {
+            return new CredentialValidationResult("jon", new HashSet&lt;&gt;(asList("foo", "bar")));
+        }
+
+        if (usernamePasswordCredential.compareTo("iron", "man")) {
+            return new CredentialValidationResult("iron", new HashSet&lt;&gt;(Collections.singletonList("avengers")));
+        }
+
+        return INVALID_RESULT;
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is nothing else to configure or do.
+The identity store must implement the IdentityStore interface.
+It must be a CDI bean and then TomEE will pick it up automatically and delegate user authentication.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Were we to run the above Main class or Test Case we&#8217;d see output like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">....
+INFOS: Starting ProtocolHandler ["http-nio-54313"]
+juin 24, 2021 2:58:42 PM sun.reflect.DelegatingMethodAccessorImpl invoke
+INFOS: Server startup in [4703] milliseconds
+juin 24, 2021 2:58:42 PM sun.reflect.DelegatingMethodAccessorImpl invoke
+INFOS: Full bootstrap in [7638] milliseconds
+
+
+Calling MovieServlet without any credentials provided.
+juin 24, 2021 2:58:43 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: statusCode=[401] contentType=[text/html]
+juin 24, 2021 2:58:43 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: &lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 401 – Unauthorized&lt;/title&gt;&lt;style type="text/css"&gt;body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 401 – Unauthorized&lt;/h1&gt;&lt;hr class="line" /&gt;&lt;p&gt;&lt;b&gt;Type&lt;/b&gt; Status Report&lt;/p&gt;&lt;p&gt;&lt;b&gt;Description&lt;/b&gt; The request has not been applied because it lacks valid authentication credentials for the target resource.&lt;/p&gt;&lt;hr class="line" /&gt;&lt;h3&gt;Apache Tomcat (TomEE)/9.0.45 (8.0.8-SNAPSHOT)&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;
+
+
+Calling MovieServlet with a valid user and valid permissions.
+
+
+Calling MovieServlet with the wrong credentials.
+juin 24, 2021 2:58:44 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: statusCode=[401] contentType=[text/html]
+juin 24, 2021 2:58:44 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: &lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 401 – Unauthorized&lt;/title&gt;&lt;style type="text/css"&gt;body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 401 – Unauthorized&lt;/h1&gt;&lt;hr class="line" /&gt;&lt;p&gt;&lt;b&gt;Type&lt;/b&gt; Status Report&lt;/p&gt;&lt;p&gt;&lt;b&gt;Description&lt;/b&gt; The request has not been applied because it lacks valid authentication credentials for the target resource.&lt;/p&gt;&lt;hr class="line" /&gt;&lt;h3&gt;Apache Tomcat (TomEE)/9.0.45 (8.0.8-SNAPSHOT)&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;
+
+
+Calling MovieServlet with a valid user but without required permissions.
+juin 24, 2021 2:58:44 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: statusCode=[403] contentType=[text/html]
+juin 24, 2021 2:58:44 PM com.gargoylesoftware.htmlunit.WebClient printContentIfNecessary
+INFOS: &lt;!doctype html&gt;&lt;html lang="en"&gt;&lt;head&gt;&lt;title&gt;HTTP Status 403 – Forbidden&lt;/title&gt;&lt;style type="text/css"&gt;body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;HTTP Status 403 – Forbidden&lt;/h1&gt;&lt;hr class="line" /&gt;&lt;p&gt;&lt;b&gt;Type&lt;/b&gt; Status Report&lt;/p&gt;&lt;p&gt;&lt;b&gt;Message&lt;/b&gt; Access to the requested resource has been denied&lt;/p&gt;&lt;p&gt;&lt;b&gt;Description&lt;/b&gt; The server understood the request but refuses to authorize it.&lt;/p&gt;&lt;hr class="line" /&gt;&lt;h3&gt;Apache Tomcat (TomEE)/9.0.45 (8.0.8-SNAPSHOT)&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../latest/javadoc/org/apache/tomee/bootstrap/Archive.html">org.apache.tomee.bootstrap.Archive</a></p>
+</li>
+<li>
+<p><a href="../../latest/javadoc/org/apache/tomee/bootstrap/Server.html">org.apache.tomee.bootstrap.Server</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2021 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
