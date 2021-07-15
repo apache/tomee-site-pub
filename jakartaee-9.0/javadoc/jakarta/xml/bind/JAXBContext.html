@@ -135,21 +135,7 @@ extends java.lang.Object</pre>
  </ul>
 
  <p><i>
- The following JAXB 1.0 requirement is only required for schema to
- java interface/implementation binding. It does not apply to Jakarta XML Binding annotated
- classes. Jakarta XML Binding Providers must generate a <code>jaxb.properties</code> file in
- each package containing schema derived classes.  The property file must
- contain a property named <code>jakarta.xml.bind.context.factory</code> whose
- value is the name of the class that implements the <code>createContext</code>
- APIs.</i>
-
- <p><i>
- The class supplied by the provider does not have to be assignable to
- <code>jakarta.xml.bind.JAXBContext</code>, it simply has to provide a class that
- implements the <code>createContext</code> APIs.</i>
-
- <p><i>
- In addition, the provider must call the
+ The provider must call the
  <a href="../../../jakarta/xml/bind/DatatypeConverter.html#setDatatypeConverter-jakarta.xml.bind.DatatypeConverterInterface-"><code>DatatypeConverter.setDatatypeConverter</code></a> api prior to any client
  invocations of the marshal and unmarshal methods.  This is necessary to
  configure the datatype converter that will be used during these operations.</i>
@@ -281,29 +267,8 @@ extends java.lang.Object</pre>
  <ol>
 
  <li>
- Packages/classes explicitly passed in to the <a href="../../../jakarta/xml/bind/JAXBContext.html#newInstance-java.lang.String-"><code>newInstance(java.lang.String)</code></a> method are processed in the order they are
- specified, until <code>jaxb.properties</code> file is looked up in its package, by using the associated classloader &mdash;
- this is <code>the owner class loader</code> for a <code>Class</code> argument, and for a package
- the specified <code>ClassLoader</code>.
-
- <p>
- If such a resource is discovered, it is <code>loaded</code> as a property file, and
- the value of the <a href="../../../jakarta/xml/bind/JAXBContext.html#JAXB_CONTEXT_FACTORY"><code>JAXB_CONTEXT_FACTORY</code></a> key will be assumed to be the provider factory class. If no value
- found, <code>"jakarta.xml.bind.context.factory"</code> is used as a key for backwards compatibility reasons. This class is
- then loaded by the associated class loader discussed above.
-
- <p>
- This phase of the look up allows some packages to force the use of a certain Jakarta XML Binding implementation.
- (For example, perhaps the schema compiler has generated some vendor extension in the code.)
-
- <p>
- This configuration method is deprecated.
-
- <li>
  If the system property <a href="../../../jakarta/xml/bind/JAXBContext.html#JAXB_CONTEXT_FACTORY"><code>JAXB_CONTEXT_FACTORY</code></a> exists, then its value is assumed to be the provider
- factory class. If no such property exists, properties <code>"jakarta.xml.bind.context.factory"</code> and
- <code>"jakarta.xml.bind.JAXBContext"</code> are checked too (in this order), for backwards compatibility reasons. This phase
- of the look up enables per-JVM override of the Jakarta XML Binding implementation.
+ factory class. This phase of the look up enables per-JVM override of the Jakarta XML Binding implementation.
 
  <li>
  Provider of <a href="../../../jakarta/xml/bind/JAXBContextFactory.html" title="interface in jakarta.xml.bind"><code>JAXBContextFactory</code></a> is loaded using the service-provider loading
@@ -317,46 +282,14 @@ extends java.lang.Object</pre>
  configuration error</code> a <a href="../../../jakarta/xml/bind/JAXBException.html" title="class in jakarta.xml.bind"><code>JAXBException</code></a> will be thrown.
 
  <li>
- Look for resource <code>/META-INF/services/jakarta.xml.bind.JAXBContext</code> using provided class loader.
- Methods without class loader parameter use <code>Thread.currentThread().getContextClassLoader()</code>.
- If such a resource exists, its content is assumed to be the provider factory class.
-
- This configuration method is deprecated.
-
- <li>
  Finally, if all the steps above fail, then the rest of the look up is unspecified. That said,
  the recommended behavior is to simply look for some hard-coded platform default Jakarta XML Binding implementation.
- This phase of the look up is so that Java SE can have its own JAXB implementation as the last resort.
+ This phase of the look up is so that the environment can have its own Jakarta XML Binding implementation as the last resort.
  </ol>
 
  <p>
  Once the provider factory class is discovered, context creation is delegated to one of its
- <code>createContext(...)</code> methods.
-
- For backward compatibility reasons, there are two ways how to implement provider factory class:
- <ol>
-     <li>the class is implementation of <a href="../../../jakarta/xml/bind/JAXBContextFactory.html" title="interface in jakarta.xml.bind"><code>JAXBContextFactory</code></a>. It must also implement no-arg
-     constructor. If discovered in other step then 3, new instance using no-arg constructor is created first.
-     After that, appropriate instance method is invoked on this instance.
-     <li>the class is not implementation of interface above and then it is mandated to implement the following
-     static method signatures:
- <pre>
-
- public static JAXBContext createContext(
-                                      String contextPath,
-                                      ClassLoader classLoader,
-                                      Map&lt;String,Object&gt; properties ) throws JAXBException
-
- public static JAXBContext createContext(
-                                      Class[] classes,
-                                      Map&lt;String,Object&gt; properties ) throws JAXBException
- </pre>
-      In this scenario, appropriate static method is used instead of instance method. This approach is incompatible
-      with <code>ServiceLoader</code> so it can't be used with step 3.
- </ol>
- <p>
- There is no difference in behavior of given method <code>createContext(...)</code> regardless of whether it uses approach
- 1 (JAXBContextFactory) or 2 (no interface, static methods).</div>
+ <code>createContext(...)</code> methods.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.6, JAXB 1.0</dd>
@@ -650,16 +583,6 @@ extends java.lang.Object</pre>
        A qualified class name,relative to current package,
        is only allowed to specify a nested or inner class.</li>
  </ul>
-
- <p>
- To maintain compatibility with JAXB 1.0 schema to java
- interface/implementation binding, enabled by schema customization
- <code>&lt;jaxb:globalBindings valueClass="false"&gt;</code>,
- the Jakarta XML Binding provider will ensure that each package on the context path
- has a <code>jaxb.properties</code> file which contains a value for the
- <code>jakarta.xml.bind.context.factory</code> property and that all values
- resolve to the same provider.  This requirement does not apply to
- Jakarta XML Binding annotated classes.
 
  <p>
  If there are any global XML element name collisions across the various
