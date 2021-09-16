@@ -18,6 +18,12 @@
     catch(err) {
     }
 //-->
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
 </script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -70,13 +76,13 @@
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.top">
@@ -247,7 +253,63 @@ Example:
      // Some account data...
  }
  </pre>
- <p></div>
+
+ <p>ManagedExecutorService provides various methods which correspond to the
+ static methods of <code>CompletableFuture</code> and its
+ constructor/<code>newIncompleteFuture</code> method,
+ enabling you to create completion stages that are backed by the <code>ManagedExecutorService</code>
+ as the default asynchronous execution facility, both for those stages
+ as well as all dependent stages that are created from those, and so on.
+ This allows you to create pipelines of completion stage actions that run
+ with consistent and predictable thread context, regardless of which thread each
+ dependent action ends up running on.</p>
+
+ <p>Example:</p>
+ <pre>
+ <code>ManagedExectorService executor = InitialContext.doLookup("java:comp/DefaultManagedExecutorService");
+ ...
+ CompletableFuture&lt;Integer&gt; future = executor
+    .supplyAsync(supplier)
+    .thenApply(function1)
+    .thenApplyAsync(function2)
+    ...
+ </code>
+ </pre>
+
+ <p>Context propagation to completion stages that are backed by a
+ <code>ManagedExecutorService</code> must be done in a consistent
+ and predictable manner, which is defined as follows,</p>
+
+ <ul>
+ <li>
+ If the supplied action is already contextual, (for example,
+ <code>contextService.createContextualProxy(action, Runnable.class)</code>),
+ then the action runs with the already-captured context.
+ </li>
+ <li>
+ Otherwise, each type of thread context is either propagated from the thread
+ that creates the completion stage or the context is marked to be cleared, according to the
+ configuration of the <code>ManagedExecutorService</code> that is the default asynchronous execution facility
+ for the new stage and its parent stage. In the case that a <code>ManagedExecutorService</code> is supplied
+ as the <code>executor</code> argument to a <code>*Async</code> method, the supplied
+ <code>ManagedExecutorService</code> is used to run the action, but not to determine the thread context
+ propagation and clearing.
+ </li>
+ </ul>
+
+ <p>Each type of thread context is applied (either as cleared or previously captured)
+ to the thread that runs the action. The applied thread context is removed after the action
+ completes, whether successfully or exceptionally, restoring the thread's prior context.</p>
+
+ <p>When dependent stages are created from the completion stage, and likewise from any dependent stages
+ created from those, and so on, thread context is captured or cleared in the same manner.
+ This guarantees that the action performed by each stage always runs under the thread context
+ of the code that creates the completion stage, unless the user explicitly overrides this by supplying a
+ pre-contextualized action.</p>
+
+ <p>Completion stages that are backed by a <code>ManagedExecutorService</code> must raise
+ <code>IllegalArgumentException</code> if supplied with an action that implements
+ <a href="../../../jakarta/enterprise/concurrent/ManagedTask.html" title="interface in jakarta.enterprise.concurrent"><code>ManagedTask</code></a>.</p></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
@@ -268,6 +330,90 @@ Example:
 <!--   -->
 </a>
 <h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#completedFuture-U-">completedFuture</a></span>(U&nbsp;value)</code>
+<div class="block">Returns a new <code>CompletableFuture</code>
+ that is already completed with the specified value.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletionStage&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#completedStage-U-">completedStage</a></span>(U&nbsp;value)</code>
+<div class="block">Returns a new <code>CompletionStage</code>
+ that is already completed with the specified value.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#copy-java.util.concurrent.CompletableFuture-">copy</a></span>(java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;stage)</code>
+<div class="block">
+ Returns a new <code>CompletableFuture</code>
+ that is completed by the completion of the
+ specified stage.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.concurrent.CompletionStage&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#copy-java.util.concurrent.CompletionStage-">copy</a></span>(java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;stage)</code>
+<div class="block">
+ Returns a new <code>CompletionStage</code>
+ that is completed by the completion of the
+ specified stage.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#failedFuture-java.lang.Throwable-">failedFuture</a></span>(java.lang.Throwable&nbsp;ex)</code>
+<div class="block">Returns a new <code>CompletableFuture</code>
+ that is already exceptionally completed with the specified <code>Throwable</code>.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletionStage&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#failedStage-java.lang.Throwable-">failedStage</a></span>(java.lang.Throwable&nbsp;ex)</code>
+<div class="block">Returns a new <code>CompletionStage</code>
+ that is already exceptionally completed with the specified <code>Throwable</code>.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../../jakarta/enterprise/concurrent/ContextService.html" title="interface in jakarta.enterprise.concurrent">ContextService</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#getContextService--">getContextService</a></span>()</code>
+<div class="block">Returns a <a href="../../../jakarta/enterprise/concurrent/ContextService.html" title="interface in jakarta.enterprise.concurrent"><code>ContextService</code></a> which has the same propagation settings as this <code>ManagedExecutorService</code>
+ and uses this <code>ManagedExecutorService</code> as the default asynchronous execution facility for
+ <code>CompletionStage</code> and <code>CompletableFuture</code> instances
+ that it creates via the <code>withContextCapture</code> methods.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#newIncompleteFuture--">newIncompleteFuture</a></span>()</code>
+<div class="block">Returns a new incomplete <code>CompletableFuture</code>.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>java.util.concurrent.CompletableFuture&lt;java.lang.Void&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#runAsync-java.lang.Runnable-">runAsync</a></span>(java.lang.Runnable&nbsp;runnable)</code>
+<div class="block">Returns a new <code>CompletableFuture</code>
+ that is completed by a task running in this executor
+ after it runs the given action.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#supplyAsync-java.util.function.Supplier-">supplyAsync</a></span>(java.util.function.Supplier&lt;U&gt;&nbsp;supplier)</code>
+<div class="block">Returns a new <code>CompletableFuture</code>
+ that is completed by a task running in this executor
+ after it runs the given action.</div>
+</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.util.concurrent.ExecutorService">
 <!--   -->
@@ -281,6 +427,281 @@ Example:
 </a>
 <h3>Methods inherited from interface&nbsp;java.util.concurrent.Executor</h3>
 <code>execute</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="completedFuture-java.lang.Object-">
+<!--   -->
+</a><a name="completedFuture-U-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>completedFuture</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;&nbsp;completedFuture(U&nbsp;value)</pre>
+<div class="block"><p>Returns a new <code>CompletableFuture</code>
+ that is already completed with the specified value.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the completable future.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - result with which the completable future is completed.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
+</ul>
+<a name="completedStage-java.lang.Object-">
+<!--   -->
+</a><a name="completedStage-U-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>completedStage</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletionStage&lt;U&gt;&nbsp;completedStage(U&nbsp;value)</pre>
+<div class="block"><p>Returns a new <code>CompletionStage</code>
+ that is already completed with the specified value.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the completion stage.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - result with which the completion stage is completed.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completion stage.</dd>
+</dl>
+</li>
+</ul>
+<a name="copy-java.util.concurrent.CompletableFuture-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>copy</h4>
+<pre>&lt;T&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;copy(java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;stage)</pre>
+<div class="block"><p>
+ Returns a new <code>CompletableFuture</code>
+ that is completed by the completion of the
+ specified stage.
+ </p>
+
+ <p>
+ The new completable future is backed by the <code>ManagedExecutorService</code> upon which copy is invoked,
+ which serves as the default asynchronous execution facility
+ for the new stage and all dependent stages created from it, and so forth.
+ </p>
+
+ <p>
+ When dependent stages are created from the new completable future, thread context is captured
+ and/or cleared by the <code>ManagedExecutorService</code>. This guarantees that the action
+ performed by each stage always runs under the thread context of the code that creates the stage,
+ unless the user explicitly overrides by supplying a pre-contextualized action.
+ </p>
+
+ <p>
+ Invocation of this method does not impact thread context propagation for the supplied
+ completable future or any other dependent stages directly created from it.
+ </p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - completable future result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>stage</code> - a completable future whose completion triggers completion of the new completable
+        future that is created by this method.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
+</ul>
+<a name="copy-java.util.concurrent.CompletionStage-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>copy</h4>
+<pre>&lt;T&gt;&nbsp;java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;copy(java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;stage)</pre>
+<div class="block"><p>
+ Returns a new <code>CompletionStage</code>
+ that is completed by the completion of the
+ specified stage.
+ </p>
+
+ <p>
+ The new completion stage is backed by the <code>ManagedExecutorService</code> upon which copy is invoked,
+ which serves as the default asynchronous execution facility
+ for the new stage and all dependent stages created from it, and so forth.
+ </p>
+
+ <p>
+ When dependent stages are created from the new completion stage, thread context is captured
+ and/or cleared by the <code>ManagedExecutorService</code>. This guarantees that the action
+ performed by each stage always runs under the thread context of the code that creates the stage,
+ unless the user explicitly overrides by supplying a pre-contextualized action.
+ </p>
+
+ <p>
+ Invocation of this method does not impact thread context propagation for the supplied
+ stage or any other dependent stages directly created from it.
+ </p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - completion stage result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>stage</code> - a completion stage whose completion triggers completion of the new stage
+        that is created by this method.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completion stage.</dd>
+</dl>
+</li>
+</ul>
+<a name="failedFuture-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>failedFuture</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;&nbsp;failedFuture(java.lang.Throwable&nbsp;ex)</pre>
+<div class="block"><p>Returns a new <code>CompletableFuture</code>
+ that is already exceptionally completed with the specified <code>Throwable</code>.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the completable future.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ex</code> - exception or error with which the completable future is completed.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
+</ul>
+<a name="failedStage-java.lang.Throwable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>failedStage</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletionStage&lt;U&gt;&nbsp;failedStage(java.lang.Throwable&nbsp;ex)</pre>
+<div class="block"><p>Returns a new <code>CompletionStage</code>
+ that is already exceptionally completed with the specified <code>Throwable</code>.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the completion stage.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ex</code> - exception or error with which the completion stage is completed.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completion stage.</dd>
+</dl>
+</li>
+</ul>
+<a name="getContextService--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getContextService</h4>
+<pre><a href="../../../jakarta/enterprise/concurrent/ContextService.html" title="interface in jakarta.enterprise.concurrent">ContextService</a>&nbsp;getContextService()</pre>
+<div class="block">Returns a <a href="../../../jakarta/enterprise/concurrent/ContextService.html" title="interface in jakarta.enterprise.concurrent"><code>ContextService</code></a> which has the same propagation settings as this <code>ManagedExecutorService</code>
+ and uses this <code>ManagedExecutorService</code> as the default asynchronous execution facility for
+ <code>CompletionStage</code> and <code>CompletableFuture</code> instances
+ that it creates via the <code>withContextCapture</code> methods.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a <code>ContextService</code> with the same propagation settings as this <code>ManagedExecutorService</code>.</dd>
+</dl>
+</li>
+</ul>
+<a name="newIncompleteFuture--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newIncompleteFuture</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;&nbsp;newIncompleteFuture()</pre>
+<div class="block"><p>Returns a new incomplete <code>CompletableFuture</code>.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the completable future.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
+</ul>
+<a name="runAsync-java.lang.Runnable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>runAsync</h4>
+<pre>java.util.concurrent.CompletableFuture&lt;java.lang.Void&gt;&nbsp;runAsync(java.lang.Runnable&nbsp;runnable)</pre>
+<div class="block"><p>Returns a new <code>CompletableFuture</code>
+ that is completed by a task running in this executor
+ after it runs the given action.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>runnable</code> - the action to run before completing the returned completion stage.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
+</ul>
+<a name="supplyAsync-java.util.function.Supplier-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>supplyAsync</h4>
+<pre>&lt;U&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;U&gt;&nbsp;supplyAsync(java.util.function.Supplier&lt;U&gt;&nbsp;supplier)</pre>
+<div class="block"><p>Returns a new <code>CompletableFuture</code>
+ that is completed by a task running in this executor
+ after it runs the given action.</p>
+
+ <p>This executor is the default asynchronous execution facility for the new completion stage
+ that is returned by this method and all dependent stages that are created from it,
+ and all dependent stages that are created from those, as so forth.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>U</code> - result type of the supplier and returned completable stage.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>supplier</code> - an action returning the value to be used to complete the returned completion stage.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+</dl>
+</li>
 </ul>
 </li>
 </ul>
@@ -337,13 +758,13 @@ Example:
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.bottom">
