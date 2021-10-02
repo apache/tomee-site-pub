@@ -43,7 +43,7 @@
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../jakarta/enterprise/concurrent/ManagedTaskListener.html" title="interface in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../jakarta/enterprise/concurrent/SkippedException.html" title="class in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../jakarta/enterprise/concurrent/ManagedThreadFactoryDefinition.html" title="annotation in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?jakarta/enterprise/concurrent/ManagedThreadFactory.html" target="_top">Frames</a></li>
@@ -94,12 +94,12 @@
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd>java.util.concurrent.ThreadFactory</dd>
+<dd>java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory, java.util.concurrent.ThreadFactory</dd>
 </dl>
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">ManagedThreadFactory</span>
-extends java.util.concurrent.ThreadFactory</pre>
+extends java.util.concurrent.ThreadFactory, java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory</pre>
 <div class="block">A manageable version of a <code>ThreadFactory</code>.<p>
 
  A ManagedThreadFactory extends the Java&trade; SE ThreadFactory to provide 
@@ -121,6 +121,14 @@ extends java.util.concurrent.ThreadFactory</pre>
  <code>ThreadFactory.newThread(Runnable)</code> method
  will run with the application component context of the component instance
  that created (looked-up) this ManagedThreadFactory instance.<p>
+
+ The <code>ForkJoinWorkerThread</code> that is created by the
+ <code>ForkJoinPool.ForkJoinWorkerThreadFactory.newThread(ForkJoinPool)</code> method
+ runs tasks with the application component context of the component instance
+ that created (looked-up) this ManagedThreadFactory instance.
+ The Jakarta EE Product Provider establishes the context once per
+ <code>ForkJoinWorkerThread</code> and does not reset the context
+ between operations that run on the <code>ForkJoinWorkerThread</code>.<p>
 
  The task runs without an explicit transaction (they do not enlist in the application
  component's transaction).  If a transaction is required, use a
@@ -161,6 +169,37 @@ extends java.util.concurrent.ThreadFactory</pre>
        new ArrayBlockingQueue&lt;Runnable&gt;(10), tf);
  }
  </pre>
+ <P>
+
+ ForkJoinPool Example:
+ <pre>
+ ManagedThreadFactory threadFactory =
+   InitialContext.doLookup("java:comp/DefaultManagedThreadFactory");
+
+ ForkJoinPool pool = new ForkJoinPool(
+     Runtime.getRuntime().availableProcessors(), threadFactory, null, false);
+
+ ForkJoinTask&lt;Double&gt; totals = pool.submit(() -&gt; orders
+     .parallelStream()
+     .map(order -&gt; {
+         if (order.total == 0.0) {
+             // lookups require application component namespace:
+             try (Connection con = ((DataSource)
+                     InitialContext.doLookup(
+                             "java:comp/env/jdbc/ds1"))
+                     .getConnection()) {
+                 order.total = ...
+             } catch (NamingException | SQLException x) {
+                 throw new CompletionException(x);
+             }
+         }
+         return order.total;
+      })
+     .reduce(0.0, Double::sum));
+
+ System.out.println("Sum is: " + totals.join());
+ pool.shutdown();
+ </pre>
  <P></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -187,6 +226,13 @@ extends java.util.concurrent.ThreadFactory</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;java.util.concurrent.ThreadFactory</h3>
+<code>newThread</code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory</h3>
 <code>newThread</code></li>
 </ul>
 </li>
@@ -217,7 +263,7 @@ extends java.util.concurrent.ThreadFactory</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../jakarta/enterprise/concurrent/ManagedTaskListener.html" title="interface in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../jakarta/enterprise/concurrent/SkippedException.html" title="class in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../jakarta/enterprise/concurrent/ManagedThreadFactoryDefinition.html" title="annotation in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?jakarta/enterprise/concurrent/ManagedThreadFactory.html" target="_top">Frames</a></li>
