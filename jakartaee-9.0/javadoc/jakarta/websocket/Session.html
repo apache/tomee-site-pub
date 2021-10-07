@@ -806,7 +806,17 @@ extends java.io.Closeable</pre>
  between the opening of the session and during the onClose() method. But outside that time, any information stored
  using this Map may no longer be kept by the container. Web socket applications running on distributed
  implementations of the web container should make any application specific objects stored here
- java.io.Serializable, or the object may not be recreated after a failover.</div>
+ java.io.Serializable, or the object may not be recreated after a failover.
+ <p>
+ For server sessions, the initial contents of this Map must be a shallow copy of the user properties map returned
+ from <a href="../../jakarta/websocket/EndpointConfig.html#getUserProperties--"><code>EndpointConfig.getUserProperties()</code></a> at the point the
+ <a href="../../jakarta/websocket/server/ServerEndpointConfig.Configurator.html#modifyHandshake-jakarta.websocket.server.ServerEndpointConfig-jakarta.websocket.server.HandshakeRequest-jakarta.websocket.HandshakeResponse-"><code>ServerEndpointConfig.Configurator.modifyHandshake(ServerEndpointConfig,
+ jakarta.websocket.server.HandshakeRequest, HandshakeResponse)</code></a> method exits.
+ <p>
+ For client sessions, the initial contents of this Map must be a shallow copy of the user properties map returned
+ from <a href="../../jakarta/websocket/EndpointConfig.html#getUserProperties--"><code>EndpointConfig.getUserProperties()</code></a> for the <a href="../../jakarta/websocket/ClientEndpointConfig.html" title="interface in jakarta.websocket"><code>ClientEndpointConfig</code></a> passed to
+ <a href="../../jakarta/websocket/WebSocketContainer.html#connectToServer-java.lang.Class-jakarta.websocket.ClientEndpointConfig-java.net.URI-"><code>WebSocketContainer.connectToServer(Class, ClientEndpointConfig, URI)</code></a> or
+ <a href="../../jakarta/websocket/WebSocketContainer.html#connectToServer-jakarta.websocket.Endpoint-jakarta.websocket.ClientEndpointConfig-java.net.URI-"><code>WebSocketContainer.connectToServer(Endpoint, ClientEndpointConfig, URI)</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an editable Map of application data.</dd>
