@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6};
+var methods = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -108,12 +108,13 @@ var activeTableTab = "activeTableTab";
 extends <a href="../../../jakarta/websocket/WebSocketContainer.html" title="interface in jakarta.websocket">WebSocketContainer</a></pre>
 <div class="block">The ServerContainer is the specialized view of the WebSocketContainer available in server-side deployments. There is
  one ServerContainer instance per websocket application. The ServerContainer holds the methods to be able to register
- server endpoints during the initialization phase of the application.
+ server endpoints.
  <p>
  For websocket enabled web containers, developers may obtain a reference to the ServerContainer instance by retrieving
  it as an attribute named <code>jakarta.websocket.server.ServerContainer</code> on the ServletContext. This way, the
  registration methods held on this interface may be called to register server endpoints from a ServletContextListener
- during the deployment of the WAR file containing the endpoint.
+ during the deployment of the WAR file containing the endpoint. Server endpoints may also be registered after the web
+ application has started.
  </p>
  <p>
  WebSocket implementations that run outside the web container may have other means by which to provide a
@@ -143,13 +144,24 @@ extends <a href="../../../jakarta/websocket/WebSocketContainer.html" title="inte
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/websocket/server/ServerContainer.html#addEndpoint-java.lang.Class-">addEndpoint</a></span>(java.lang.Class&lt;?&gt;&nbsp;endpointClass)</code>
-<div class="block">Deploys the given annotated endpoint into this ServerContainer during the initialization phase of deploying the
- application.</div>
+<div class="block">Deploys the given annotated endpoint into this ServerContainer.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/websocket/server/ServerContainer.html#addEndpoint-jakarta.websocket.server.ServerEndpointConfig-">addEndpoint</a></span>(<a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server">ServerEndpointConfig</a>&nbsp;serverConfig)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/websocket/server/ServerContainer.html#addEndpoint-jakarta.websocket.server.ServerEndpointConfig-">addEndpoint</a></span>(<a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server">ServerEndpointConfig</a>&nbsp;serverConfig)</code>
+<div class="block">Deploys the given endpoint described by the provided configuration into this ServerContainer.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/websocket/server/ServerContainer.html#upgradeHttpToWebSocket-java.lang.Object-java.lang.Object-jakarta.websocket.server.ServerEndpointConfig-java.util.Map-">upgradeHttpToWebSocket</a></span>(java.lang.Object&nbsp;httpServletRequest,
+                      java.lang.Object&nbsp;httpServletResponse,
+                      <a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server">ServerEndpointConfig</a>&nbsp;sec,
+                      java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;pathParameters)</code>
+<div class="block">Upgrade the HTTP connection represented by the <code>HttpServletRequest</code> and <code>HttpServletResponse</code> to the
+ WebSocket protocol and establish a WebSocket connection as per the provided <a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server"><code>ServerEndpointConfig</code></a>.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -181,8 +193,7 @@ extends <a href="../../../jakarta/websocket/WebSocketContainer.html" title="inte
 <h4>addEndpoint</h4>
 <pre>void&nbsp;addEndpoint(java.lang.Class&lt;?&gt;&nbsp;endpointClass)
           throws <a href="../../../jakarta/websocket/DeploymentException.html" title="class in jakarta.websocket">DeploymentException</a></pre>
-<div class="block">Deploys the given annotated endpoint into this ServerContainer during the initialization phase of deploying the
- application.</div>
+<div class="block">Deploys the given annotated endpoint into this ServerContainer.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>endpointClass</code> - the class of the annotated endpoint</dd>
@@ -195,17 +206,57 @@ extends <a href="../../../jakarta/websocket/WebSocketContainer.html" title="inte
 <a name="addEndpoint-jakarta.websocket.server.ServerEndpointConfig-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>addEndpoint</h4>
 <pre>void&nbsp;addEndpoint(<a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server">ServerEndpointConfig</a>&nbsp;serverConfig)
           throws <a href="../../../jakarta/websocket/DeploymentException.html" title="class in jakarta.websocket">DeploymentException</a></pre>
+<div class="block">Deploys the given endpoint described by the provided configuration into this ServerContainer.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>serverConfig</code> - the configuration instance representing the logical endpoint that will be registered.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../jakarta/websocket/DeploymentException.html" title="class in jakarta.websocket">DeploymentException</a></code> - if the endpoint was badly formed.</dd>
 <dd><code>java.lang.IllegalStateException</code> - if the containing websocket application has already been deployed.</dd>
+</dl>
+</li>
+</ul>
+<a name="upgradeHttpToWebSocket-java.lang.Object-java.lang.Object-jakarta.websocket.server.ServerEndpointConfig-java.util.Map-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>upgradeHttpToWebSocket</h4>
+<pre>void&nbsp;upgradeHttpToWebSocket(java.lang.Object&nbsp;httpServletRequest,
+                            java.lang.Object&nbsp;httpServletResponse,
+                            <a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server">ServerEndpointConfig</a>&nbsp;sec,
+                            java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;pathParameters)
+                     throws java.io.IOException,
+                            <a href="../../../jakarta/websocket/DeploymentException.html" title="class in jakarta.websocket">DeploymentException</a></pre>
+<div class="block">Upgrade the HTTP connection represented by the <code>HttpServletRequest</code> and <code>HttpServletResponse</code> to the
+ WebSocket protocol and establish a WebSocket connection as per the provided <a href="../../../jakarta/websocket/server/ServerEndpointConfig.html" title="interface in jakarta.websocket.server"><code>ServerEndpointConfig</code></a>.
+ <p>
+ This method is primarily intended to be used by frameworks that implement the front-controller pattern. It does
+ not deploy the provided endpoint.
+ <p>
+ If the WebSocket implementation is not deployed as part of a Jakarta Servlet container, this method will throw an
+ <code>UnsupportedOperationException</code>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>httpServletRequest</code> - The <code>HttpServletRequest</code> to be processed as a WebSocket handshake as per
+                              section 4.0 of RFC 6455.</dd>
+<dd><code>httpServletResponse</code> - The <code>HttpServletResponse</code> to be used when processing the
+                              <code>httpServletRequest</code> as a WebSocket handshake as per section 4.0 of RFC 6455.</dd>
+<dd><code>sec</code> - The server endpoint configuration to use to configure the WebSocket endpoint</dd>
+<dd><code>pathParameters</code> - Provides a mapping of path parameter names and values, if any, to be used for the
+                              WebSocket connection established by the call to this method. If no such mapping is
+                              defined, an empty Map must be passed.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalStateException</code> - if the provided request does not meet the requirements of the WebSocket handshake</dd>
+<dd><code>java.lang.UnsupportedOperationException</code> - if the WebSocket implementation is not deployed as part of a Jakarta
+                                       Servlet container</dd>
+<dd><code>java.io.IOException</code> - if an I/O error occurs during the establishment of a WebSocket connection</dd>
+<dd><code><a href="../../../jakarta/websocket/DeploymentException.html" title="class in jakarta.websocket">DeploymentException</a></code> - if a configuration error prevents the establishment of a WebSocket connection</dd>
 </dl>
 </li>
 </ul>
