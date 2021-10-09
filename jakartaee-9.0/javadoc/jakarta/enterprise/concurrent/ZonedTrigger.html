@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>ZonedTrigger</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/jakarta-favicon.ico">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="ZonedTrigger";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var methods = {"i0":18,"i1":6,"i2":18,"i3":18,"i4":18};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../index.html?jakarta/enterprise/concurrent/ZonedTrigger.html" target="_top">Frames</a></li>
+<li><a href="ZonedTrigger.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">jakarta.enterprise.concurrent</div>
+<h2 title="Interface ZonedTrigger" class="title">Interface ZonedTrigger</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<dl>
+<dt>All Superinterfaces:</dt>
+<dd><a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent">Trigger</a></dd>
+</dl>
+<dl>
+<dt>All Known Implementing Classes:</dt>
+<dd><a href="../../../jakarta/enterprise/concurrent/CronTrigger.html" title="class in jakarta.enterprise.concurrent">CronTrigger</a></dd>
+</dl>
+<hr>
+<br>
+<pre>public interface <span class="typeNameLabel">ZonedTrigger</span>
+extends <a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent">Trigger</a></pre>
+<div class="block">Triggers allow application developers to plug in rules for when
+ and how often a task should run. The trigger can be as simple as
+ a single, absolute date-time or can include Jakarta&trade; EE business
+ calendar logic. A trigger implementation is created by the
+ application developer (or may be supplied to the application
+ externally) and is registered with a task when it is submitted
+ to a <a href="../../../jakarta/enterprise/concurrent/ManagedScheduledExecutorService.html" title="interface in jakarta.enterprise.concurrent"><code>ManagedScheduledExecutorService</code></a> using any of the
+ schedule methods. Each method will run with unspecified context.
+ The methods can be made contextual through creating contextual
+ proxy objects using <a href="../../../jakarta/enterprise/concurrent/ContextService.html" title="interface in jakarta.enterprise.concurrent"><code>ContextService</code></a>.
+ <p>
+ Each trigger instance will be invoked within the same process
+ in which it was registered.
+ <p>
+
+ Example:
+ <pre>
+ &#47;**
+  * A trigger that runs on the hour, Mon-Fri from 8am-8pm Central US time.
+  *&#47;
+  public class HourlyDuringBusinessHoursTrigger implements ZonedTrigger {
+      static final ZoneId ZONE = ZoneId.of("America/Chicago");
+
+      public ZoneId getZoneId() {
+          return ZONE;
+      }
+
+      public ZonedDateTime getNextRunTime(LastExecution lastExec, ZonedDateTime taskScheduledTime) {
+          ZonedDateTime prevTime = lastExec == null ? taskScheduledTime : lastExec.getRunEnd(ZONE);
+          ZonedDateTime nextTime = prevTime.truncatedTo(ChronoUnit.HOURS).plusHours(1);
+          DayOfWeek day = nextTime.getDayOfWeek();
+          if (day.equals(DayOfWeek.SATURDAY) || day.equals(DayOfWeek.SUNDAY)) {
+              nextTime = nextTime.truncatedTo(ChronoUnit.DAYS).plusDays(1).withHour(8);
+          } else { // Mon-Fri 8am-8pm
+              int hour = nextTime.getHour();
+              if (hour &lt; 8)
+                  nextTime = nextTime.plusHours(8 - hour);
+              else if (hour &gt; 20)
+                  nextTime = nextTime.truncatedTo(ChronoUnit.DAYS)
+                                     .plusDays(day.equals(DayOfWeek.FRIDAY) ? 3 : 1)
+                                     .withHour(8);
+          }
+          return nextTime;
+      }
+  }
+ </pre>
+ <P></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>default java.util.Date</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">getNextRunTime</a></span>(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+              java.util.Date&nbsp;taskScheduledTime)</code>
+<div class="block">Retrieve the next time that the task should run after.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.time.ZonedDateTime</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-">getNextRunTime</a></span>(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+              java.time.ZonedDateTime&nbsp;taskScheduledTime)</code>
+<div class="block">Retrieve the next time that the task should run after.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>default java.time.ZoneId</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#getZoneId--">getZoneId</a></span>()</code>
+<div class="block">Returns the timezone to use for the
+ <code>ZonedDateTime</code> that is supplied to the
+ <a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-"><code>getNextRunTime</code></a> and
+ <a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#skipRun-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-"><code>skipRun</code></a> methods.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>default boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#skipRun-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">skipRun</a></span>(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+       java.util.Date&nbsp;scheduledRunTime)</code>
+<div class="block">Return true if this run instance should be skipped.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>default boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#skipRun-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-">skipRun</a></span>(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+       java.time.ZonedDateTime&nbsp;scheduledRunTime)</code>
+<div class="block">Return true if this run instance should be skipped.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNextRunTime</h4>
+<pre>java.time.ZonedDateTime&nbsp;getNextRunTime(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+                                       java.time.ZonedDateTime&nbsp;taskScheduledTime)</pre>
+<div class="block">Retrieve the next time that the task should run after.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lastExecutionInfo</code> - information about the last execution of the task.
+                          This value will be null if the task has not yet run.</dd>
+<dd><code>taskScheduledTime</code> - the date/time at which the
+                          <code>ManagedScheduledExecutorService.schedule</code>
+                          method was invoked to schedule the task.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the date/time after which the next execution of the task should start.</dd>
+</dl>
+</li>
+</ul>
+<a name="getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getNextRunTime</h4>
+<pre>default&nbsp;java.util.Date&nbsp;getNextRunTime(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+                                      java.util.Date&nbsp;taskScheduledTime)</pre>
+<div class="block">Retrieve the next time that the task should run after.
+ <P>
+ This method is provided to maintain compatibility with <a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent"><code>Trigger</code></a> and should not be
+ implemented. The default implementation delegates to the method signature that
+ accepts and returns <code>ZonedDateTime</code>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../jakarta/enterprise/concurrent/Trigger.html#getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">getNextRunTime</a></code>&nbsp;in interface&nbsp;<code><a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent">Trigger</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lastExecutionInfo</code> - information about the last execution of the task.
+                          This value will be null if the task has not yet run.</dd>
+<dd><code>taskScheduledTime</code> - the date/time at which the
+                          <code>ManagedScheduledExecutorService.schedule</code>
+                          method was invoked to schedule the task.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the date/time after which the next execution of the task should start.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if the next run time is too large to represent as a <code>Date</code>.</dd>
+</dl>
+</li>
+</ul>
+<a name="getZoneId--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getZoneId</h4>
+<pre>default&nbsp;java.time.ZoneId&nbsp;getZoneId()</pre>
+<div class="block">Returns the timezone to use for the
+ <code>ZonedDateTime</code> that is supplied to the
+ <a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#getNextRunTime-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-"><code>getNextRunTime</code></a> and
+ <a href="../../../jakarta/enterprise/concurrent/ZonedTrigger.html#skipRun-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-"><code>skipRun</code></a> methods.
+ <P>
+ The default implementation returns the system default timezone
+ and should be overridden whenever there is chance that the server
+ might not be running with the same timezone for which the
+ business logic within this trigger is written.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>timezone to use for operations on this trigger.</dd>
+</dl>
+</li>
+</ul>
+<a name="skipRun-jakarta.enterprise.concurrent.LastExecution-java.time.ZonedDateTime-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>skipRun</h4>
+<pre>default&nbsp;boolean&nbsp;skipRun(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+                        java.time.ZonedDateTime&nbsp;scheduledRunTime)</pre>
+<div class="block">Return true if this run instance should be skipped.
+ <p>
+ This is useful if the task shouldn't run because it is late or if the task
+ is paused or suspended.
+ <p>
+ Once this task is skipped, the state of its Future's result will throw a
+ <a href="../../../jakarta/enterprise/concurrent/SkippedException.html" title="class in jakarta.enterprise.concurrent"><code>SkippedException</code></a>. Unchecked exceptions will be wrapped in a
+ <code>SkippedException</code>.
+ <p>
+ The default implementation returns <code>false</code>, making it optional to
+ implement this method if you do not require support for skipped executions.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lastExecutionInfo</code> - information about the last execution of the task.
+                          This value will be null if the task has not yet run.</dd>
+<dd><code>scheduledRunTime</code> - the date/time after which the execution of the task
+                          is scheduled to start.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the task should be skipped and rescheduled.</dd>
+</dl>
+</li>
+</ul>
+<a name="skipRun-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>skipRun</h4>
+<pre>default&nbsp;boolean&nbsp;skipRun(<a href="../../../jakarta/enterprise/concurrent/LastExecution.html" title="interface in jakarta.enterprise.concurrent">LastExecution</a>&nbsp;lastExecutionInfo,
+                        java.util.Date&nbsp;scheduledRunTime)</pre>
+<div class="block">Return true if this run instance should be skipped.
+ <P>
+ This method is provided to maintain compatibility with <a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent"><code>Trigger</code></a> and should not be
+ implemented. The default implementation delegates to the method signature that
+ accepts <code>ZonedDateTime</code>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../jakarta/enterprise/concurrent/Trigger.html#skipRun-jakarta.enterprise.concurrent.LastExecution-java.util.Date-">skipRun</a></code>&nbsp;in interface&nbsp;<code><a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent">Trigger</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lastExecutionInfo</code> - information about the last execution of the task.
+                          This value will be null if the task has not yet run.</dd>
+<dd><code>scheduledRunTime</code> - the date/time after which the execution of the task
+                          is scheduled to start.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the task should be skipped and rescheduled.</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../jakarta/enterprise/concurrent/Trigger.html" title="interface in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../index.html?jakarta/enterprise/concurrent/ZonedTrigger.html" target="_top">Frames</a></li>
+<li><a href="ZonedTrigger.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>
