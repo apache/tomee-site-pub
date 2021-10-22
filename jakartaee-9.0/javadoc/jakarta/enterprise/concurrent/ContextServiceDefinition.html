@@ -140,7 +140,27 @@ public @interface <span class="memberNameLabel">ContextServiceDefinition</span><
  <p>Overlap of the same context type across multiple lists is an error and
  prevents the <code>ContextService</code> instance from being created.
  If <a href="../../../jakarta/enterprise/concurrent/ContextServiceDefinition.html#ALL_REMAINING"><code>ALL_REMAINING</code></a> is not present in any of the lists, it is
- implicitly appended to the <a href="../../../jakarta/enterprise/concurrent/ContextServiceDefinition.html#cleared--"><code>cleared()</code></a> context types.</p></div>
+ implicitly appended to the <a href="../../../jakarta/enterprise/concurrent/ContextServiceDefinition.html#cleared--"><code>cleared()</code></a> context types.</p>
+
+ You can also define a <code>ContextService</code> with the
+ <code>&lt;context-service&gt;</code> deployment descriptor element.
+ For example,
+
+ <pre>
+ &lt;context-service&gt;
+    &lt;name&gt;java:app/concurrent/MyContext&lt;/name&gt;
+    &lt;cleared&gt;Security&lt;/cleared&gt;
+    &lt;cleared&gt;Transaction&lt;/cleared&gt;
+    &lt;propagated&gt;Application&lt;/propagated&gt;
+    &lt;unchanged&gt;Remaining&lt;/unchanged&gt;
+ &lt;/context-service&gt;
+ </pre>
+
+ If a <code>context-service</code> and <code>ContextServiceDefinition</code>
+ have the same name, their attributes are merged to define a single
+ <code>ContextService</code> definition, with each attribute that is specified
+ in the <code>context-service</code> deployment descriptor entry taking
+ precedence over the corresponding attribute of the annotation.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>3.0</dd>
