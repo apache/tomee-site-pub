@@ -103,9 +103,9 @@ var activeTableTab = "activeTableTab";
 <pre>public interface <span class="typeNameLabel">CompletionCallback</span></pre>
 <div class="block">A request processing callback that receives request processing completion events.
  <p>
- A completion callback is invoked when the whole request processing is over, i.e. once a response for the request has
- been processed and sent back to the client or in when an unmapped exception or error is being propagated to the
- container.
+ A completion callback is always invoked when the whole request processing is over, i.e. once a response for the request has
+ been processed and sent back to the client (including processing by a custom exception mapper) or when an unmapped
+ exception or error is being propagated to the default exception mapper.
  </p></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -132,9 +132,7 @@ var activeTableTab = "activeTableTab";
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../jakarta/ws/rs/container/CompletionCallback.html#onComplete-java.lang.Throwable-">onComplete</a></span>(java.lang.Throwable&nbsp;throwable)</code>
-<div class="block">A completion callback notification method that will be invoked when the request processing is finished, after a
- response is processed and is sent back to the client or when an unmapped throwable has been propagated to the hosting
- I/O container.</div>
+<div class="block">An unmapped throwable is propagated to the default exception mapper in case no <a href="../../../../jakarta/ws/rs/ext/ExceptionMapper.html" title="interface in jakarta.ws.rs.ext"><code>exception mapper</code></a> has been found for a request processing failure.</div>
 </td>
 </tr>
 </table>
@@ -159,20 +157,15 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>onComplete</h4>
 <pre>void&nbsp;onComplete(java.lang.Throwable&nbsp;throwable)</pre>
-<div class="block">A completion callback notification method that will be invoked when the request processing is finished, after a
- response is processed and is sent back to the client or when an unmapped throwable has been propagated to the hosting
- I/O container.
- <p>
- An unmapped throwable is propagated to the hosting I/O container in case no <a href="../../../../jakarta/ws/rs/ext/ExceptionMapper.html" title="interface in jakarta.ws.rs.ext"><code>exception mapper</code></a> has been found for a throwable indicating a request processing failure. In this case a
- non-<code>null</code> unmapped throwable instance is passed to the method. Note that the throwable instance represents the
- actual unmapped exception thrown during the request processing, before it has been wrapped into an I/O
- container-specific exception that was used to propagate the throwable to the hosting I/O container.
- </p></div>
+<div class="block">An unmapped throwable is propagated to the default exception mapper in case no <a href="../../../../jakarta/ws/rs/ext/ExceptionMapper.html" title="interface in jakarta.ws.rs.ext"><code>exception mapper</code></a> has been found for a request processing failure. In this case a non-<code>null</code> unmapped throwable
+ instance is passed to the method. Note that the throwable instance represents the actual unmapped exception thrown during
+ the request processing before it has been mapped to the response by the default exception mapper.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>throwable</code> - is <code>null</code>, if the request processing has completed with a response that has been sent to the
- client. In case the request processing resulted in an unmapped exception or error that has been propagated to the
- hosting I/O container, this parameter contains the unmapped exception instance.</dd>
+ client (including processing by a custom exception mapper). In case the request processing resulted in an unmapped
+ exception or error that has yet to be propagated to the default exception mapper, this parameter contains the unmapped
+ exception instance.</dd>
 </dl>
 </li>
 </ul>
