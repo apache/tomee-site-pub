@@ -97,7 +97,7 @@
                 </div>
               </div>
               
-              <h1>Log4j2 Configuration</h1>
+              <h1>Log4j2 Configuration with TomEE</h1>
             </div>
           </div>
         </div>
@@ -107,14 +107,11 @@
                 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Title: Log4j2 with TomEE</p>
-</div>
-<div class="paragraph">
 <p>Out of the box, TomEE is uses a Java-Util-Logging (JUL) based logging system, which is configured using conf/logging.properties.</p>
 </div>
 <div class="paragraph">
-<p>Occassionally, users may wish to swap over to using Log4j2. These instructions detail how to do this with the latest TomEE versions.
-These instructions have been tested with TomEE 7.x and TomEE 8 SNAPSHOT (master) on July 9th, 2019.</p>
+<p>Occasionally, users may wish to swap over to using Log4j2. These instructions detail how to do this with the latest TomEE versions.
+These instructions have been tested with TomEE 7.x and TomEE 8.x (master).</p>
 </div>
 </div>
 </div>
@@ -122,12 +119,12 @@ These instructions have been tested with TomEE 7.x and TomEE 8 SNAPSHOT (master)
 <h2 id="_setup">Setup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You&#8217;ll need to obtain the following jars: log4j-core, log4j-api and log4j-jul. These instructions were tested with the 2.12.0 versions:</p>
+<p>You&#8217;ll need to obtain the following jars: log4j-core, log4j-api and log4j-jul. These instructions were tested with the 2.17.1 versions:</p>
 </div>
 <div class="paragraph">
-<p><a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.12.0/log4j-core-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.12.0/log4j-core-2.12.0.jar</a>
-<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.12.0/log4j-api-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.12.0/log4j-api-2.12.0.jar</a>
-<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.12.0/log4j-jul-2.12.0.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.12.0/log4j-jul-2.12.0.jar</a></p>
+<p><a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.1/log4j-core-2.17.1.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.17.1/log4j-core-2.17.1.jar</a>
+<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.17.1/log4j-api-2.17.1.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.17.1/log4j-api-2.17.1.jar</a>
+<a href="https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.17.1/log4j-jul-2.17.1.jar" class="bare">https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul/2.17.1/log4j-jul-2.17.1.jar</a></p>
 </div>
 <div class="paragraph">
 <p>Add these to the TomEE bin directory. Add the following to setenv.sh on *nix:</p>
@@ -137,7 +134,7 @@ These instructions have been tested with TomEE 7.x and TomEE 8 SNAPSHOT (master)
 <pre class="highlight"><code>    JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
     LOGGING_CONFIG="-DnoOp"
     LOGGING_MANAGER="-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"
-    CLASSPATH=".:$CATALINA_BASE/bin:$CATALINA_BASE/bin/log4j-core-2.12.0.jar:$CATALINA_BASE/bin/log4j-api-2.12.0.jar:$CATALINA_BASE/bin/log4j-jul-2.12.0.jar"</code></pre>
+    CLASSPATH=".:$CATALINA_BASE/bin:$CATALINA_BASE/bin/log4j-core-2.17.1.jar:$CATALINA_BASE/bin/log4j-api-2.17.1.jar:$CATALINA_BASE/bin/log4j-jul-2.17.1.jar"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -149,7 +146,32 @@ These instructions have been tested with TomEE 7.x and TomEE 8 SNAPSHOT (master)
     set "JAVA_OPTS=%JAVA_OPTS% -Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
     set LOGGING_CONFIG=-DnoOpp
     set LOGGING_MANAGER=-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager
-    set "CLASSPATH=.;%CATALINA_BASE%\bin;%CATALINA_BASE%\bin\log4j-core-2.12.0.jar;%CATALINA_BASE%\bin\log4j-api-2.12.0.jar;%CATALINA_BASE%\bin\log4j-jul-2.12.0.jar"</code></pre>
+    set "CLASSPATH=.;%CATALINA_BASE%\bin;%CATALINA_BASE%\bin\log4j-core-2.17.1.jar;%CATALINA_BASE%\bin\log4j-api-2.17.1.jar;%CATALINA_BASE%\bin\log4j-jul-2.17.1.jar"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using the TomEE Maven Plugin, it can be configured as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.tomee.maven&lt;/groupId&gt;
+    &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${tomee.plugin.version}&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;tomeeVersion&gt;${tomee.version}&lt;/tomeeVersion&gt;
+        &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
+        &lt;classpaths&gt;
+            &lt;classpath&gt;org.apache.logging.log4j:log4j-api:2.17.1&lt;/classpath&gt;
+            &lt;classpath&gt;org.apache.logging.log4j:log4j-jul:2.17.1&lt;/classpath&gt;
+            &lt;classpath&gt;org.apache.logging.log4j:log4j-core:2.17.1&lt;/classpath&gt;
+        &lt;/classpaths&gt;
+        &lt;systemVariables&gt;
+            &lt;log4j.configurationFile&gt;${project.basedir}/src/test/tomee/conf/log4j2.xml&lt;/log4j.configurationFile&gt;
+            &lt;java.util.logging.manager&gt;org.apache.logging.log4j.jul.LogManager&lt;/java.util.logging.manager&gt;
+        &lt;/systemVariables&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
