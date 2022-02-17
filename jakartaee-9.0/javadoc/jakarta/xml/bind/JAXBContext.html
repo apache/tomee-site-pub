@@ -271,6 +271,11 @@ extends java.lang.Object</pre>
  factory class. This phase of the look up enables per-JVM override of the Jakarta XML Binding implementation.
 
  <li>
+ If the property <a href="../../../jakarta/xml/bind/JAXBContext.html#JAXB_CONTEXT_FACTORY"><code>JAXB_CONTEXT_FACTORY</code></a> exists in the <code>Map&lt;String, ?&gt;</code> passed to <a href="../../../jakarta/xml/bind/JAXBContext.html#newInstance-java.lang.Class:A-java.util.Map-"><code>newInstance(Class[], Map)</code></a>
+ or to <a href="../../../jakarta/xml/bind/JAXBContext.html#newInstance-java.lang.String-java.lang.ClassLoader-java.util.Map-"><code>newInstance(String, ClassLoader, Map)</code></a>, then its value is assumed to be the fully qualified provider factory class name.
+ This phase of the look up enables context sensitive selection of the Jakarta XML Binding implementation.
+
+ <li>
  Provider of <a href="../../../jakarta/xml/bind/JAXBContextFactory.html" title="interface in jakarta.xml.bind"><code>JAXBContextFactory</code></a> is loaded using the service-provider loading
  facilities, defined by the <code>ServiceLoader</code> class, to attempt
  to locate and load an implementation of the service using the default loading mechanism: the service-provider loading facility
@@ -652,8 +657,8 @@ extends java.lang.Object</pre>
       Packages in <code>contextPath</code> that are in named modules must be
       <code>open</code> to at least the <code>jakarta.xml.bind</code> module.</dd>
 <dd><code>classLoader</code> - This class loader will be used to locate the implementation classes.</dd>
-<dd><code>properties</code> - provider-specific properties. Can be null, which means the same thing as passing
-      in an empty map.</dd>
+<dd><code>properties</code> - provider-specific or provider selection-specific properties.
+      Can be null, which means the same thing as passing in an empty map.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a new instance of a <code>JAXBContext</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -766,8 +771,8 @@ extends java.lang.Object</pre>
       that is <code>open</code> to at least the <code>jakarta.xml.bind</code> module.
       Can be empty, in which case a <a href="../../../jakarta/xml/bind/JAXBContext.html" title="class in jakarta.xml.bind"><code>JAXBContext</code></a> that only knows about
       spec-defined classes will be returned.</dd>
-<dd><code>properties</code> - provider-specific properties. Can be null, which means the same thing as passing
-      in an empty map.</dd>
+<dd><code>properties</code> - provider-specific or provider selection-specific properties.
+      Can be null, which means the same thing as passing in an empty map.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A new instance of a <code>JAXBContext</code>.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
