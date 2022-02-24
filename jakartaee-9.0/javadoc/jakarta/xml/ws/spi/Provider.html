@@ -314,16 +314,16 @@ extends java.lang.Object</pre>
  The algorithm used to locate the provider subclass to use consists
  of the following steps:
  <ul>
+  <li> If a system property with the name <code>jakarta.xml.ws.spi.Provider</code>
+  is defined, then its value is used as the name of the implementation class.
+  This phase of the look up enables per-JVM override of the Jakarta XML Web Services implementation.
   <li> Use the service-provider loading facilities, defined by the <code>ServiceLoader</code> class,
   to attempt to locate and load an implementation of <a href="../../../../jakarta/xml/ws/spi/Provider.html" title="class in jakarta.xml.ws.spi"><code>Provider</code></a> service using
   the default loading mechanism.
-  <li>Use the configuration file "jaxws.properties". The file is in standard
-  <code>Properties</code> format and typically located in the
-  <code>conf</code> directory of the Java installation. It contains the fully qualified
-  name of the implementation class with the key <code>jakarta.xml.ws.spi.Provider</code>.
-  <li> If a system property with the name <code>jakarta.xml.ws.spi.Provider</code>
-  is defined, then its value is used as the name of the implementation class.
-  <li> Finally, a platform default implementation is used.
+  <li>
+  Finally, if all the steps above fail, then the rest of the lookup is unspecified. That said,
+  the recommended behavior is to simply look for some hard-coded platform default Jakarta XML Web Services implementation.
+  This phase of the lookup is so that the environment can have its own Jakarta XML Web Services implementation as the last resort.
  </ul></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
