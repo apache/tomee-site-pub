@@ -734,7 +734,7 @@ extends java.lang.AutoCloseable</pre>
  <li>if the client ID has been administratively configured or
  <li>if the <code>JMSContext</code> is container-managed (injected).
  </ul></dd>
-<dd><code><a href="../../jakarta/jms/JMSRuntimeException.html" title="class in jakarta.jms">JMSRuntimeException</a></code> - if the Jakarta Messaging provider fails to set the client ID for the the JMSContext's connection for
+<dd><code><a href="../../jakarta/jms/JMSRuntimeException.html" title="class in jakarta.jms">JMSRuntimeException</a></code> - if the Jakarta Messaging provider fails to set the client ID for the JMSContext's connection for
  one of the following reasons:
  <ul>
  <li>an internal error has occurred or
@@ -837,7 +837,9 @@ extends java.lang.AutoCloseable</pre>
 <h4>start</h4>
 <pre>void&nbsp;start()</pre>
 <div class="block">Starts (or restarts) delivery of incoming messages by the JMSContext's connection. A call to <code>start</code> on a
- connection that has already been started is ignored.
+ connection that has already been started is ignored. Also, it is normally not necessary for application to call this
+ method, since the underlying connection used by the JMSContext will be started automatically when a
+ consumer is created.
 
  <p>
  This method must not be used if the <code>JMSContext</code> is container-managed (injected). Doing so will cause a
@@ -1404,7 +1406,11 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Creates a <code>JMSConsumer</code> for the specified destination.
 
  <p>
- A client uses a <code>JMSConsumer</code> object to receive messages that have been sent to a destination.</div>
+ A client uses a <code>JMSConsumer</code> object to receive messages that have been sent to a destination.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>destination</code> - the <code>Destination</code> to access.</dd>
@@ -1427,7 +1433,11 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Creates a <code>JMSConsumer</code> for the specified destination, using a message selector.
 
  <p>
- A client uses a <code>JMSConsumer</code> object to receive messages that have been sent to a destination.</div>
+ A client uses a <code>JMSConsumer</code> object to receive messages that have been sent to a destination.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>destination</code> - the <code>Destination</code> to access</dd>
@@ -1461,7 +1471,11 @@ extends java.lang.AutoCloseable</pre>
  The <code>noLocal</code> argument is for use when the destination is a topic and the JMSContext's connection is also being
  used to publish messages to that topic. If <code>noLocal</code> is set to true then the <code>JMSConsumer</code> will not
  receive messages published to the topic by its own connection. The default value of this argument is false. If the
- destination is a queue then the effect of setting <code>noLocal</code> to true is not specified.</div>
+ destination is a queue then the effect of setting <code>noLocal</code> to true is not specified.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>destination</code> - the <code>Destination</code> to access</dd>
@@ -1764,7 +1778,11 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  There is no restriction on durable subscriptions and shared non-durable subscriptions having the same name and
- clientId (which may be unset). Such subscriptions would be completely separate.</div>
+ clientId (which may be unset). Such subscriptions would be completely separate.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>topic</code> - the non-temporary <code>Topic</code> to subscribe to</dd>
@@ -1838,7 +1856,11 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  There is no restriction on durable subscriptions and shared non-durable subscriptions having the same name and
- clientId (which may be unset). Such subscriptions would be completely separate.</div>
+ clientId (which may be unset). Such subscriptions would be completely separate.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>topic</code> - the non-temporary <code>Topic</code> to subscribe to</dd>
@@ -1899,7 +1921,11 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  There is no restriction on durable subscriptions and shared non-durable subscriptions having the same name and
- clientId (which may be unset). Such subscriptions would be completely separate.</div>
+ clientId (which may be unset). Such subscriptions would be completely separate.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>topic</code> - the <code>Topic</code> to subscribe to</dd>
@@ -1951,7 +1977,11 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  There is no restriction on durable subscriptions and shared non-durable subscriptions having the same name and
- clientId (which may be unset). Such subscriptions would be completely separate.</div>
+ clientId (which may be unset). Such subscriptions would be completely separate.
+
+ <p>
+ There is no need to explicitly call the <a href="../../jakarta/jms/JMSContext.html#start--"><code>start()</code></a> method as it is done automatically when the consumer
+ is created, unless the <code>autoStart</code> property is set to <code>false</code> with <a href="../../jakarta/jms/JMSContext.html#setAutoStart-boolean-"><code>setAutoStart(boolean)</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>topic</code> - the <code>Topic</code> to subscribe to</dd>
