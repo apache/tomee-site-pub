@@ -522,8 +522,28 @@ public @interface <span class="memberNameLabel">OpenIdAuthenticationMechanismDef
 <h4>redirectURI</h4>
 <pre>public abstract&nbsp;java.lang.String&nbsp;redirectURI</pre>
 <div class="block">The redirect URI (callback URI) to which the response will be sent by the OpenId
- Connect Provider. This URI must exactly match one of the Redirection URI values
- for the Client pre-registered at the OpenID Provider.</div>
+ Connect Provider. This URI must be absolute and must exactly match one of the Redirection URI values
+ for the Client pre-registered at the OpenID Provider. 
+ <p>
+ The value can be a Jakarta Expression Language 3.0 expression, which can contain 
+ the implicit String variable baseURL. This variable contains the host and context path of the application 
+ for which the OpenID Connect authentication mechanism is installed. This variable makes it easier to compose 
+ an absolute URL as required by the OpenID Connect specification.
+ 
+ <p>
+ Examples:
+ <ul>
+  <li><code>redirectURI = "${baseURL}/Callback"</code> - concatenates the `baseURL` variable and the "/Callback" string 
+    in a composite expression.
+   </li>
+  <li><code>redirectURI = "${baseURL += oidcConfig.redirectCallback}"</code> - concatenates the `baseURL` variable and the 
+   `redirectCallback` property on bean `oidcConfig` in a single expression
+  </li>
+  <li><code>redirectURI = "${baseURL}#{oidcConfig.redirectCallback}"</code> - concatenates the `baseURL` variable and the 
+   `redirectCallback` property on bean `oidcConfig` in a composite expression. The `redirectCallback` property would 
+   be evaluated as a deferred expression during each request.
+  </li>
+ </ul></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 </dl>
