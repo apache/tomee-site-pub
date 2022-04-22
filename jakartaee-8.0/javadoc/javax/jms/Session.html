@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 <pre>public interface <span class="typeNameLabel">Session</span>
 extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <div class="block">A <code>Session</code> object is a single-threaded context for producing and consuming messages. Although it may allocate
- provider resources outside the Java virtual machine (JVM), it is considered a lightweight JMS object.
+ provider resources outside the Java virtual machine (JVM), it is considered a lightweight Jakarta Messaging object.
 
  <p>
  A session serves several purposes:
@@ -174,17 +174,17 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  The Java Transaction Service (JTS) or some other transaction monitor may be used to combine a session's transaction
- with transactions on other resources (databases, other JMS sessions, etc.). Since Java distributed transactions are
+ with transactions on other resources (databases, other Jakarta Messaging sessions, etc.). Since Java distributed transactions are
  controlled via the Java Transaction API (JTA), use of the session's <code>commit</code> and <code>rollback</code> methods in
  this context is prohibited.
 
  <p>
- The JMS API does not require support for JTA; however, it does define how a provider supplies this support.
+ The Jakarta Messaging API does not require support for JTA; however, it does define how a provider supplies this support.
 
  <p>
- Although it is also possible for a JMS client to handle distributed transactions directly, it is unlikely that many
- JMS clients will do this. Support for JTA in the JMS API is targeted at systems vendors who will be integrating the
- JMS API into their application server products.</div>
+ Although it is also possible for a Jakarta Messaging client to handle distributed transactions directly, it is unlikely that many
+ Jakarta Messaging clients will do this. Support for JTA in the Jakarta Messaging API is targeted at systems vendors who will be integrating the
+ Jakarta Messaging API into their application server products.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>JMS 1.0</dd>
@@ -193,7 +193,11 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <a href="../../javax/jms/TopicSession.html" title="interface in javax.jms"><code>TopicSession</code></a>, 
 <a href="../../javax/jms/XASession.html" title="interface in javax.jms"><code>XASession</code></a></dd>
 <dt><span class="simpleTagLabel">Examples (en):</span></dt>
-<dd><a href="../../../../../tomee-7.1/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-7.1/examples/simple-mdb-with-descriptor.html">simple-mdb-with-descriptor</a>, <a href="../../../../../tomee-7.1/examples/simple-mdb-and-cdi.html">simple-mdb-and-cdi</a>, <a href="../../../../../tomee-7.1/examples/polling-parent.html">polling-parent</a>, <a href="../../../../../tomee-7.1/examples/injection-of-connectionfactory.html">injection-of-connectionfactory</a></dd>
+<dd><a href="../../../../../tomee-8.0/examples/tomee-jms-portability.html">tomee-jms-portability</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb-with-descriptor.html">simple-mdb-with-descriptor</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb-and-cdi.html">simple-mdb-and-cdi</a>, <a href="../../../../../tomee-8.0/examples/simple-jms.html">simple-jms</a>, <a href="../../../../../tomee-8.0/examples/injection-of-connectionfactory.html">injection-of-connectionfactory</a>, <a href="../../../../../tomee-7.1/examples/polling-parent.html">polling-parent</a></dd>
+<dt><span class="simpleTagLabel">Examples (es):</span></dt>
+<dd><a href="../../../../../tomee-8.0/es/examples/simple-jms.html">simple-jms</a></dd>
+<dt><span class="simpleTagLabel">Examples (pt):</span></dt>
+<dd><a href="../../../../../tomee-8.0/pt/examples/tomee-jms-portability.html">tomee-jms-portability</a>, <a href="../../../../../tomee-8.0/pt/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-8.0/pt/examples/simple-jms.html">simple-jms</a></dd>
 </dl>
 </li>
 </ul>
@@ -484,7 +488,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../javax/jms/Session.html#run--">run</a></span>()</code>
-<div class="block">Optional operation, intended to be used only by Application Servers, not by ordinary JMS clients.</div>
+<div class="block">Optional operation, intended to be used only by Application Servers, not by ordinary Jakarta Messaging clients.</div>
 </td>
 </tr>
 <tr id="i34" class="altColor">
@@ -542,7 +546,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  When client acknowledgment mode is used, a client may build up a large number of unacknowledged messages while
- attempting to process them. A JMS provider should provide administrators with a way to limit client overrun so that
+ attempting to process them. A Jakarta Messaging provider should provide administrators with a way to limit client overrun so that
  clients are not driven to resource exhaustion and ensuing failure when some resource they are using is temporarily
  blocked.</div>
 <dl>
@@ -560,7 +564,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <h4>DUPS_OK_ACKNOWLEDGE</h4>
 <pre>static final&nbsp;int DUPS_OK_ACKNOWLEDGE</pre>
 <div class="block">This acknowledgment mode instructs the session to lazily acknowledge the delivery of messages. This is likely to
- result in the delivery of some duplicate messages if the JMS provider fails, so it should only be used by consumers
+ result in the delivery of some duplicate messages if the Jakarta Messaging provider fails, so it should only be used by consumers
  that can tolerate duplicate messages. Use of this mode can reduce session overhead by minimizing the work the session
  does to prevent duplicates.</div>
 <dl>
@@ -615,13 +619,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>BytesMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -641,13 +645,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>MapMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -659,7 +663,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <h4>createMessage</h4>
 <pre><a href="../../javax/jms/Message.html" title="interface in javax.jms">Message</a>&nbsp;createMessage()
                throws <a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></pre>
-<div class="block">Creates a <code>Message</code> object. The <code>Message</code> interface is the root interface of all JMS messages. A
+<div class="block">Creates a <code>Message</code> object. The <code>Message</code> interface is the root interface of all Jakarta Messaging messages. A
  <code>Message</code> object holds all the standard message header information. It can be sent when a message containing
  only header information is sufficient.
 
@@ -668,13 +672,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>Message</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -694,13 +698,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>ObjectMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -720,15 +724,15 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>object</code> - the object to use to initialize this message</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>ObjectMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -748,13 +752,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>StreamMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -774,13 +778,13 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>TextMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -800,15 +804,15 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  being sent using the <code>JMSContext</code> used to create it.
 
  <p>
- The message object returned may be optimised for use with the JMS provider used to create it. However it can be sent
- using any JMS provider, not just the JMS provider used to create it.</div>
+ The message object returned may be optimised for use with the Jakarta Messaging provider used to create it. However it can be sent
+ using any Jakarta Messaging provider, not just the Jakarta Messaging provider used to create it.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>text</code> - the string used to initialize this message</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>A <code>TextMessage</code> object.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to create this message due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to create this message due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -825,7 +829,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the session is in transacted mode</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to return the transaction mode due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to return the transaction mode due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -844,7 +848,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <dd>If the session is not transacted, returns the current acknowledgement mode for the session. If the session is
  transacted, returns SESSION_TRANSACTED.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to return the acknowledgment mode due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to return the acknowledgment mode due to some internal error.</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>JMS 1.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -876,7 +880,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  <li>the session is not using a local transaction
  <li>this method has been called by a <tt>CompletionListener</tt> callback method on its own <tt>Session</tt></li>
  </ul></dd>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to commit the transaction due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to commit the transaction due to some internal error.</dd>
 <dd><code><a href="../../javax/jms/TransactionRolledBackException.html" title="class in javax.jms">TransactionRolledBackException</a></code> - if the transaction is rolled back due to some internal error during commit.</dd>
 </dl>
 </li>
@@ -905,7 +909,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  <li>the session is not using a local transaction
  <li>this method has been called by a <tt>CompletionListener</tt> callback method on its own <tt>Session</tt></li>
  </ul></dd>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to roll back the transaction due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to roll back the transaction due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -974,7 +978,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
                 </tt> on its own <tt>Session</tt></li>
  <li>this method has been called by a <tt>CompletionListener</tt> callback method on its own <tt>Session</tt></li>
  </ul></dd>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to close the session due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to close the session due to some internal error.</dd>
 </dl>
 </li>
 </ul>
@@ -1003,7 +1007,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  </ul></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to stop and restart message delivery due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to stop and restart message delivery due to some internal error.</dd>
 <dd><code><a href="../../javax/jms/IllegalStateException.html" title="class in javax.jms">IllegalStateException</a></code> - if the method is called by a transacted session.</dd>
 </dl>
 </li>
@@ -1019,17 +1023,17 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <div class="block">Returns the session's distinguished message listener (optional).
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the distinguished message listener associated with this session</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to get the session's distinguished message listener for one of the
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to get the session's distinguished message listener for one of the
  following reasons:
  <ul>
  <li>an internal error has occurred
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -1054,19 +1058,19 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
  all forms of sending messages are still supported.
 
  <p>
- This is an expert facility not used by ordinary JMS clients.
+ This is an expert facility not used by ordinary Jakarta Messaging clients.
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>listener</code> - the message listener to associate with this session</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to set the session's distinguished message listener for one of the
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to set the session's distinguished message listener for one of the
  following reasons:
  <ul>
  <li>an internal error has occurred
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -1083,16 +1087,16 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 <li class="blockList">
 <h4>run</h4>
 <pre>void&nbsp;run()</pre>
-<div class="block">Optional operation, intended to be used only by Application Servers, not by ordinary JMS clients.
+<div class="block">Optional operation, intended to be used only by Application Servers, not by ordinary Jakarta Messaging clients.
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSRuntimeException</code> to
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSRuntimeException</code> to
  be thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>run</code>&nbsp;in interface&nbsp;<code>java.lang.Runnable</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSRuntimeException.html" title="class in javax.jms">JMSRuntimeException</a></code> - if this method has been called in a Java EE web or EJB application (though it is not
+<dd><code><a href="../../javax/jms/JMSRuntimeException.html" title="class in javax.jms">JMSRuntimeException</a></code> - if this method has been called in a Jakarta EE web or EJB application (though it is not
  guaranteed that an exception is thrown in this case)</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../javax/jms/ServerSession.html" title="interface in javax.jms"><code>ServerSession</code></a></dd>
@@ -1354,8 +1358,8 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  Note that this method simply creates an object that encapsulates the name of a queue. It does not create the physical
- queue in the JMS provider. JMS does not provide a method to create the physical queue, since this would be specific
- to a given JMS provider. Creating a physical queue is provider-specific and is typically an administrative task
+ queue in the Jakarta Messaging provider. Jakarta Messaging does not provide a method to create the physical queue, since this would be specific
+ to a given Jakarta Messaging provider. Creating a physical queue is provider-specific and is typically an administrative task
  performed by an administrator, though some providers may create them automatically when needed. The one exception to
  this is the creation of a temporary queue, which is done using the <code>createTemporaryQueue</code> method.</div>
 <dl>
@@ -1385,8 +1389,8 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  Note that this method simply creates an object that encapsulates the name of a topic. It does not create the physical
- topic in the JMS provider. JMS does not provide a method to create the physical topic, since this would be specific
- to a given JMS provider. Creating a physical topic is provider-specific and is typically an administrative task
+ topic in the Jakarta Messaging provider. Jakarta Messaging does not provide a method to create the physical topic, since this would be specific
+ to a given Jakarta Messaging provider. Creating a physical topic is provider-specific and is typically an administrative task
  performed by an administrator, though some providers may create them automatically when needed. The one exception to
  this is the creation of a temporary topic, which is done using the <code>createTemporaryTopic</code> method.</div>
 <dl>
@@ -1414,7 +1418,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 
@@ -1497,7 +1501,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 
@@ -1589,7 +1593,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 
@@ -1672,7 +1676,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 
@@ -1764,7 +1768,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 
@@ -1839,7 +1843,7 @@ extends java.lang.Runnable, java.lang.AutoCloseable</pre>
 
  <p>
  A durable subscription is used by an application which needs to receive all the messages published on a topic,
- including the ones published when there is no active consumer associated with it. The JMS provider retains a record
+ including the ones published when there is no active consumer associated with it. The Jakarta Messaging provider retains a record
  of this durable subscription and ensures that all messages from the topic's publishers are retained until they are
  delivered to, and acknowledged by, a consumer on this durable subscription or until they have expired.
 

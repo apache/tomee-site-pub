@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Dynamic Datasource</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_openejb_dynamic_datasource" class="sect0">OpenEJB dynamic datasource</h1>
+<div class="sect1">
+<h2 id="_goal">Goal</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The openejb dynamic datasource api aims to allow to use multiple data
+sources as one.</p>
+</div>
+<div class="paragraph">
+<p>It can be useful for technical reasons (load balancing for example) or
+functionnal reasons (filtering, aggregation, enriching&#8230;&#8203;).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_api">The API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The interface Router (<em>org.apache.openejb.resource.jdbc.Router</em>) have
+only one method to get the datasource to use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Router.getDataSource()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>org.apache.openejb.resource.jdbc.RoutedDataSource</em> wraps a
+classical data source. It has to be used to declare your datasource.</p>
+</div>
+<div class="paragraph">
+<p>You can implement all the policy you want in your Router implementation.</p>
+</div>
+<div class="paragraph">
+<p>A class called <em>org.apache.openejb.resource.jdbc.AbstractRouter</em> is
+available to ease router development.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_limitations">Known limitation(s)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have to use the same kind of databases (same version, same
+configuration&#8230;&#8203;).</p>
+</div>
+<div class="paragraph">
+<p>All database have to be created when you use the router. The way to do
+it automatically can depend of your JPA provider.</p>
+</div>
+<div class="sect2">
+<h3 id="_openjpa">OpenJPA</h3>
+<div class="paragraph">
+<p>OpenJPA initializes its database when the entitymanager is called for
+the first time so you need to initialize all your proxied datasource
+before using the other one. It can be done using an Init EJB doing a
+find() on each proxied datasource.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hibernate">Hibernate</h3>
+<div class="paragraph">
+<p>Hibernate initializes the database when it starts so if you declare a
+persistence unit by database all databases will be initialized at the
+start up.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_story_the_unit_test_example">The story (the unit test example)</h3>
+<div class="paragraph">
+<p>You want to use only one datasource in the code but you have a criteria
+to set to choose the real database to use between three.</p>
+</div>
+<div class="paragraph">
+<p>So in your code you want something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class RoutedEJBBean {
+    @PersistenceContext(unitName = "router")
+    private EntityManager em;
+
+    // this router is not automatic, we
+    // need it to select the database to use
+    @Resource(name = "My Router")
+    private DeterminedRouter router;
+
+    public void persist(int id, String name, String clientDatasource) {
+        router.setDataSource(clientDatasource);
+        em.persist(new Person(id, name));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_router_implementation">The router implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The router will simply manage a map to store proxied datasources and a
+field to store the datasource used in the current thread (ThreadLocal).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class DeterminedRouter implements Router {
+    private String dataSourceNames; // used to store configuration (openejb.xml)
+    private String defaultDataSourceName; // defautl data source name
+    private Map&lt;String, DataSource&gt; dataSources = null; // proxied data sources
+    private ThreadLocal&lt;DataSource&gt; currentDataSource = new ThreadLocal&lt;DataSource&gt;(); // the datasource to use or null
+
+    /**
+     * @param datasourceList datasource resource name, separator is a space
+     */
+    public void setDataSourceNames(String datasourceList) {
+        dataSourceNames = datasourceList;
+    }
+
+    /**
+     * lookup datasource in openejb resources
+     */
+    private void init() { // looking up datasources declared as proxied
+        dataSources = new ConcurrentHashMap&lt;String, DataSource&gt;();
+        for (String ds : dataSourceNames.split(" ")) {
+            ContainerSystem containerSystem = SystemInstance.get().getComponent(ContainerSystem.class);
+
+            Object o = null;
+            Context ctx = containerSystem.getJNDIContext();
+            try {
+                o = ctx.lookup("openejb:Resource/" + ds);
+                if (o instanceof DataSource) {
+                    dataSources.put(ds, (DataSource) o);
+                }
+            } catch (NamingException ignore) {
+            }
+        }
+    }
+
+    /**
+     * @return the user selected data source if it is set
+     *         or the default one
+     *  @throws IllegalArgumentException if the data source is not found
+     */
+    public DataSource getDataSource() {
+        // lazy init of routed datasources
+        if (dataSources == null) {
+            init();
+        }
+
+        // if no datasource is selected use the default one
+        if (currentDataSource.get() == null) {
+            if (dataSources.containsKey(defaultDataSourceName)) {
+                return dataSources.get(defaultDataSourceName);
+
+            } else {
+                throw new IllegalArgumentException("you have to specify at least one datasource");
+            }
+        }
+
+        // the developper set the datasource to use
+        return currentDataSource.get();
+    }
+
+    /**
+     *
+     * @param datasourceName data source name
+     */
+    public void setDataSource(String datasourceName) {
+        if (dataSources == null) {
+            init();
+        }
+        if (!dataSources.containsKey(datasourceName)) {
+            throw new IllegalArgumentException("data source called " + datasourceName + " can't be found.");
+        }
+        DataSource ds = dataSources.get(datasourceName);
+        currentDataSource.set(ds);
+    }
+
+    public void setDefaultDataSourceName(String name) {
+        this.defaultDataSourceName = name;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creation_of_the_service_provider_for_the_router">Creation of the service provider for the router</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To be able to use your router add a file called service-jar.xml under
+META-INF/. For example META-INF/org.router.</p>
+</div>
+<div class="paragraph">
+<p>This file will contain something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ServiceJar&gt;
+  &lt;ServiceProvider id="DeterminedRouter" service="Resource"
+           type="org.apache.openejb.resource.jdbc.Router" class-name="implementation class"&gt;
+    Param defaultValue
+    ParamWithNoDefaultValue
+  &lt;/ServiceProvider&gt;
+&lt;/ServiceJar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openejb_xml">openejb.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the openejb.xml file, you have to declare your dynamic database and
+in our example it needs the proxied datasources too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="router" type="&lt;your implementation&gt;" provider="&lt;your provider&gt;"&gt;
+  Param value
+&lt;/Resource&gt;
+
+&lt;Resource id="route db" type="DataSource" provider="RoutedDataSource"&gt;
+  Router router
+&lt;/Resource&gt;
+
+&lt;!–- real databases – for our example --&gt;
+&lt;Resource id="db1" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db1
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;
+&lt;Resource id="db2" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db2
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;
+&lt;Resource id="db3" type="DataSource"&gt;
+  JdbcDriver org.hsqldb.jdbcDriver
+  JdbcUrl jdbc:hsqldb:mem:db3
+  UserName sa
+  Password
+  JtaManaged true
+&lt;/Resource&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

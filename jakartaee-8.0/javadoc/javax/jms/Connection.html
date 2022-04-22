@@ -110,7 +110,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">Connection</span>
 extends java.lang.AutoCloseable</pre>
-<div class="block">A <code>Connection</code> object is a client's active connection to its JMS provider. It typically allocates provider
+<div class="block">A <code>Connection</code> object is a client's active connection to its Jakarta Messaging provider. It typically allocates provider
  resources outside the Java virtual machine (JVM).
 
  <p>
@@ -120,7 +120,7 @@ extends java.lang.AutoCloseable</pre>
  A connection serves several purposes:
 
  <ul>
- <li>It encapsulates an open connection with a JMS provider. It typically represents an open TCP/IP socket between a
+ <li>It encapsulates an open connection with a Jakarta Messaging provider. It typically represents an open TCP/IP socket between a
  client and the service provider software.
  <li>Its creation is where client authentication takes place.
  <li>It can specify a unique client identifier.
@@ -131,11 +131,11 @@ extends java.lang.AutoCloseable</pre>
  <p>
  Because the creation of a connection involves setting up authentication and communication, a connection is a
  relatively heavyweight object. Most clients will do all their messaging with a single connection. Other more advanced
- applications may use several connections. The JMS API does not architect a reason for using multiple connections;
+ applications may use several connections. The Jakarta Messaging API does not architect a reason for using multiple connections;
  however, there may be operational reasons for doing so.
 
  <p>
- A JMS client typically creates a connection, one or more sessions, and a number of message producers and consumers.
+ A Jakarta Messaging client typically creates a connection, one or more sessions, and a number of message producers and consumers.
  When a connection is created, it is in stopped mode. That means that no messages are being delivered.
 
  <p>
@@ -158,7 +158,11 @@ extends java.lang.AutoCloseable</pre>
 <a href="../../javax/jms/QueueConnection.html" title="interface in javax.jms"><code>QueueConnection</code></a>, 
 <a href="../../javax/jms/TopicConnection.html" title="interface in javax.jms"><code>TopicConnection</code></a></dd>
 <dt><span class="simpleTagLabel">Examples (en):</span></dt>
-<dd><a href="../../../../../tomee-7.1/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-7.1/examples/simple-mdb-with-descriptor.html">simple-mdb-with-descriptor</a>, <a href="../../../../../tomee-7.1/examples/simple-mdb-and-cdi.html">simple-mdb-and-cdi</a>, <a href="../../../../../tomee-7.1/examples/polling-parent.html">polling-parent</a>, <a href="../../../../../tomee-7.1/examples/injection-of-connectionfactory.html">injection-of-connectionfactory</a></dd>
+<dd><a href="../../../../../tomee-8.0/examples/tomee-jms-portability.html">tomee-jms-portability</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb-with-descriptor.html">simple-mdb-with-descriptor</a>, <a href="../../../../../tomee-8.0/examples/simple-mdb-and-cdi.html">simple-mdb-and-cdi</a>, <a href="../../../../../tomee-8.0/examples/simple-jms.html">simple-jms</a>, <a href="../../../../../tomee-8.0/examples/injection-of-connectionfactory.html">injection-of-connectionfactory</a>, <a href="../../../../../tomee-7.1/examples/polling-parent.html">polling-parent</a></dd>
+<dt><span class="simpleTagLabel">Examples (es):</span></dt>
+<dd><a href="../../../../../tomee-8.0/es/examples/simple-jms.html">simple-jms</a></dd>
+<dt><span class="simpleTagLabel">Examples (pt):</span></dt>
+<dd><a href="../../../../../tomee-8.0/pt/examples/tomee-jms-portability.html">tomee-jms-portability</a>, <a href="../../../../../tomee-8.0/pt/examples/simple-mdb.html">simple-mdb</a>, <a href="../../../../../tomee-8.0/pt/examples/simple-jms.html">simple-jms</a></dd>
 </dl>
 </li>
 </ul>
@@ -315,17 +319,17 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  This method has been superseded by the method <code>createSession(int sessionMode)</code> which specifies the same
- information using a single argument, and by the method <code>createSession()</code> which is for use in a Java EE JTA
+ information using a single argument, and by the method <code>createSession()</code> which is for use in a Jakarta EE JTA
  transaction. Applications should consider using those methods instead of this one.
 
  <p>
  The effect of setting the <code>transacted</code> and <code>acknowledgeMode</code> arguments depends on whether this method is
- called in a Java SE environment, in the Java EE application client container, or in the Java EE web or EJB container.
- If this method is called in the Java EE web or EJB container then the effect of setting the transacted} and
+ called in a Java SE environment, in the Jakarta EE application client container, or in the Jakarta EE web or EJB container.
+ If this method is called in the Jakarta EE web or EJB container then the effect of setting the transacted} and
  <code>acknowledgeMode</code> arguments also depends on whether or not there is an active JTA transaction in progress.
 
  <p>
- In a <b>Java SE environment</b> or in <b>the Java EE application client container</b>:
+ In a <b>Java SE environment</b> or in <b>the Jakarta EE application client container</b>:
  <ul>
  <li>If <code>transacted</code> is set to <code>true</code> then the session will use a local transaction which may subsequently
  be committed or rolled back by calling the session's <code>commit</code> or <code>rollback</code> methods. The argument
@@ -338,7 +342,7 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- In a <b>Java EE web or EJB container, when there is an active JTA transaction in progress</b>:
+ In a <b>Jakarta EE web or EJB container, when there is an active JTA transaction in progress</b>:
  <ul>
  <li>Both arguments <code>transacted</code> and <code>acknowledgeMode</code> are ignored. The session will participate in the
  JTA transaction and will be committed or rolled back when that transaction is committed or rolled back, not by
@@ -347,17 +351,17 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- In the <b>Java EE web or EJB container, when there is no active JTA transaction in progress</b>:
+ In the <b>Jakarta EE web or EJB container, when there is no active JTA transaction in progress</b>:
  <ul>
  <li>If <code>transacted</code> is set to false and <code>acknowledgeMode</code> is set to <code>JMSContext.AUTO_ACKNOWLEDGE</code>
  or <code>Session.DUPS_OK_ACKNOWLEDGE</code> then the session will be non-transacted and messages will be acknowledged
  according to the value of <code>acknowledgeMode</code>.
  <li>If <code>transacted</code> is set to false and <code>acknowledgeMode</code> is set to <code>JMSContext.CLIENT_ACKNOWLEDGE</code>
- then the JMS provider is recommended to ignore the specified parameters and instead provide a non-transacted,
- auto-acknowledged session. However the JMS provider may alternatively provide a non-transacted session with client
+ then the Jakarta Messaging provider is recommended to ignore the specified parameters and instead provide a non-transacted,
+ auto-acknowledged session. However the Jakarta Messaging provider may alternatively provide a non-transacted session with client
  acknowledgement.
- <li>If <code>transacted</code> is set to true, then the JMS provider is recommended to ignore the specified parameters and
- instead provide a non-transacted, auto-acknowledged session. However the JMS provider may alternatively provide a
+ <li>If <code>transacted</code> is set to true, then the Jakarta Messaging provider is recommended to ignore the specified parameters and
+ instead provide a non-transacted, auto-acknowledged session. However the Jakarta Messaging provider may alternatively provide a
  local transacted session.
  <li>Applications are recommended to set <code>transacted</code> to false and <code>acknowledgeMode</code> to
  <code>JMSContext.AUTO_ACKNOWLEDGE</code> or <code>Session.DUPS_OK_ACKNOWLEDGE</code> since since applications which set
@@ -366,8 +370,8 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- Applications running in the Java EE web and EJB containers must not attempt to create more than one active (not
- closed) <code>Session</code> object per connection. If this method is called in a Java EE web or EJB container when an
+ Applications running in the Jakarta EE web and EJB containers must not attempt to create more than one active (not
+ closed) <code>Session</code> object per connection. If this method is called in a Jakarta EE web or EJB container when an
  active <code>Session</code> object already exists for this connection then a <code>JMSException</code> may be thrown.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -382,7 +386,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>some internal error,
  <li>lack of support for the specific transaction and acknowledgement mode, or
- <li>because this method is being called in a Java EE web or EJB application and an active session already exists for
+ <li>because this method is being called in a Jakarta EE web or EJB application and an active session already exists for
  this connection.
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -408,12 +412,12 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  The effect of setting the <code>sessionMode</code> argument depends on whether this method is called in a Java SE
- environment, in the Java EE application client container, or in the Java EE web or EJB container. If this method is
- called in the Java EE web or EJB container then the effect of setting the <code>sessionMode</code> argument also depends
+ environment, in the Jakarta EE application client container, or in the Jakarta EE web or EJB container. If this method is
+ called in the Jakarta EE web or EJB container then the effect of setting the <code>sessionMode</code> argument also depends
  on whether or not there is an active JTA transaction in progress.
 
  <p>
- In a <b>Java SE environment</b> or in <b>the Java EE application client container</b>:
+ In a <b>Java SE environment</b> or in <b>the Jakarta EE application client container</b>:
  <ul>
  <li>If <code>sessionMode</code> is set to <code>Session.SESSION_TRANSACTED</code> then the session will use a local transaction
  which may subsequently be committed or rolled back by calling the session's <code>commit</code> or <code>rollback</code>
@@ -425,7 +429,7 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- In a <b>Java EE web or EJB container, when there is an active JTA transaction in progress</b>:
+ In a <b>Jakarta EE web or EJB container, when there is an active JTA transaction in progress</b>:
  <ul>
  <li>The argument <code>sessionMode</code> is ignored. The session will participate in the JTA transaction and will be
  committed or rolled back when that transaction is committed or rolled back, not by calling the session's
@@ -434,14 +438,14 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- In the <b>Java EE web or EJB container, when there is no active JTA transaction in progress</b>:
+ In the <b>Jakarta EE web or EJB container, when there is no active JTA transaction in progress</b>:
  <ul>
  <li>If <code>sessionMode</code> is set to <code>Session.AUTO_ACKNOWLEDGE</code> or <code>Session.DUPS_OK_ACKNOWLEDGE</code> then the
  session will be non-transacted and messages will be acknowledged according to the value of <code>sessionMode</code>.
- <li>If <code>sessionMode</code> is set to <code>Session.CLIENT_ACKNOWLEDGE</code> then the JMS provider is recommended to
+ <li>If <code>sessionMode</code> is set to <code>Session.CLIENT_ACKNOWLEDGE</code> then the Jakarta Messaging provider is recommended to
  ignore the specified parameter and instead provide a non-transacted, auto-acknowledged session. However the JMS
  provider may alternatively provide a non-transacted session with client acknowledgement.
- <li>If <code>sessionMode</code> is set to <code>Session.SESSION_TRANSACTED</code>, then the JMS provider is recommended to
+ <li>If <code>sessionMode</code> is set to <code>Session.SESSION_TRANSACTED</code>, then the Jakarta Messaging provider is recommended to
  ignore the specified parameter and instead provide a non-transacted, auto-acknowledged session. However the JMS
  provider may alternatively provide a local transacted session.
  <li>Applications are recommended to use only the values <code>Session.AUTO_ACKNOWLEDGE</code> and
@@ -450,8 +454,8 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- Applications running in the Java EE web and EJB containers must not attempt to create more than one active (not
- closed) <code>Session</code> object per connection. If this method is called in a Java EE web or EJB container when an
+ Applications running in the Jakarta EE web and EJB containers must not attempt to create more than one active (not
+ closed) <code>Session</code> object per connection. If this method is called in a Jakarta EE web or EJB container when an
  active <code>Session</code> object already exists for this connection then a <code>JMSException</code> may be thrown.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -465,7 +469,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>some internal error,
  <li>lack of support for the specific transaction and acknowledgement mode, or
- <li>because this method is being called in a Java EE web or EJB application and an active session already exists for
+ <li>because this method is being called in a Jakarta EE web or EJB application and an active session already exists for
  this connection.
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -492,12 +496,12 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  The behaviour of the session that is created depends on whether this method is called in a Java SE environment, in
- the Java EE application client container, or in the Java EE web or EJB container. If this method is called in the
- Java EE web or EJB container then the behaviour of the session also depends on whether or not there is an active JTA
+ the Jakarta EE application client container, or in the Jakarta EE web or EJB container. If this method is called in the
+ Jakarta EE web or EJB container then the behaviour of the session also depends on whether or not there is an active JTA
  transaction in progress.
 
  <p>
- In a <b>Java SE environment</b> or in <b>the Java EE application client container</b>:
+ In a <b>Java SE environment</b> or in <b>the Jakarta EE application client container</b>:
  <ul>
  <li>The session will be non-transacted and received messages will be acknowledged automatically using an
  acknowledgement mode of <code>Session.AUTO_ACKNOWLEDGE</code> For a definition of the meaning of this acknowledgement mode
@@ -505,13 +509,13 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- In a <b>Java EE web or EJB container, when there is an active JTA transaction in progress</b>:
+ In a <b>Jakarta EE web or EJB container, when there is an active JTA transaction in progress</b>:
  <ul>
  <li>The session will participate in the JTA transaction and will be committed or rolled back when that transaction is
  committed or rolled back, not by calling the session's <code>commit</code> or <code>rollback</code> methods.
  </ul>
  <p>
- In the <b>Java EE web or EJB container, when there is no active JTA transaction in progress</b>:
+ In the <b>Jakarta EE web or EJB container, when there is no active JTA transaction in progress</b>:
  <ul>
  <li>The session will be non-transacted and received messages will be acknowledged automatically using an
  acknowledgement mode of <code>Session.AUTO_ACKNOWLEDGE</code> For a definition of the meaning of this acknowledgement mode
@@ -519,8 +523,8 @@ extends java.lang.AutoCloseable</pre>
  </ul>
 
  <p>
- Applications running in the Java EE web and EJB containers must not attempt to create more than one active (not
- closed) <code>Session</code> object per connection. If this method is called in a Java EE web or EJB container when an
+ Applications running in the Jakarta EE web and EJB containers must not attempt to create more than one active (not
+ closed) <code>Session</code> object per connection. If this method is called in a Jakarta EE web or EJB container when an
  active <code>Session</code> object already exists for this connection then a <code>JMSException</code> may be thrown.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -529,7 +533,7 @@ extends java.lang.AutoCloseable</pre>
 <dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the <code>Connection</code> object fails to create a session due to
  <ul>
  <li>some internal error or
- <li>because this method is being called in a Java EE web or EJB application and an active session already exists for
+ <li>because this method is being called in a Jakarta EE web or EJB application and an active session already exists for
  this connection.
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -552,14 +556,14 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Gets the client identifier for this connection.
 
  <p>
- This value is specific to the JMS provider. It is either preconfigured by an administrator in a
+ This value is specific to the Jakarta Messaging provider. It is either preconfigured by an administrator in a
  <code>ConnectionFactory</code> object or assigned dynamically by the application by calling the <code>setClientID</code>
  method.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the unique client identifier</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to return the client ID for this connection due to some internal
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to return the client ID for this connection due to some internal
  error.</dd>
 </dl>
 </li>
@@ -575,7 +579,7 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Sets the client identifier for this connection.
 
  <p>
- The preferred way to assign a JMS client's client identifier is for it to be configured in a client-specific
+ The preferred way to assign a Jakarta Messaging client's client identifier is for it to be configured in a client-specific
  <code>ConnectionFactory</code> object and transparently assigned to the <code>Connection</code> object it creates.
 
  <p>
@@ -589,28 +593,28 @@ extends java.lang.AutoCloseable</pre>
 
  <p>
  The purpose of the client identifier is to associate a connection and its objects with a state maintained on behalf
- of the client by a provider. The only such state identified by the JMS API is that required to support durable
+ of the client by a provider. The only such state identified by the Jakarta Messaging API is that required to support durable
  subscriptions.
 
  <p>
- If another connection with the same <code>clientID</code> is already running when this method is called, the JMS provider
+ If another connection with the same <code>clientID</code> is already running when this method is called, the Jakarta Messaging provider
  should detect the duplicate ID and throw an <code>InvalidClientIDException</code>.
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clientID</code> - the unique client identifier</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to set the client ID for the the connection for one of the
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to set the client ID for the the connection for one of the
  following reasons:
  <ul>
  <li>an internal error has occurred or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
-<dd><code><a href="../../javax/jms/InvalidClientIDException.html" title="class in javax.jms">InvalidClientIDException</a></code> - if the JMS client specifies an invalid or duplicate client ID.</dd>
-<dd><code><a href="../../javax/jms/IllegalStateException.html" title="class in javax.jms">IllegalStateException</a></code> - if the JMS client attempts to set a connection's client ID at the wrong time or when
+<dd><code><a href="../../javax/jms/InvalidClientIDException.html" title="class in javax.jms">InvalidClientIDException</a></code> - if the Jakarta Messaging client specifies an invalid or duplicate client ID.</dd>
+<dd><code><a href="../../javax/jms/IllegalStateException.html" title="class in javax.jms">IllegalStateException</a></code> - if the Jakarta Messaging client attempts to set a connection's client ID at the wrong time or when
  it has been administratively configured.</dd>
 </dl>
 </li>
@@ -628,7 +632,7 @@ extends java.lang.AutoCloseable</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the connection metadata</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to get the connection metadata for this connection.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to get the connection metadata for this connection.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../javax/jms/ConnectionMetaData.html" title="interface in javax.jms"><code>ConnectionMetaData</code></a></dd>
 </dl>
@@ -649,7 +653,7 @@ extends java.lang.AutoCloseable</pre>
 <dd>the <code>ExceptionListener</code> for this connection, or null. if no <code>ExceptionListener</code> is associated
  with this connection.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to get the <code>ExceptionListener</code> for this connection.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to get the <code>ExceptionListener</code> for this connection.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../javax/jms/Connection.html#setExceptionListener-javax.jms.ExceptionListener-"><code>setExceptionListener(javax.jms.ExceptionListener)</code></a></dd>
 </dl>
@@ -666,7 +670,7 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Sets an exception listener for this connection.
 
  <p>
- If a JMS provider detects a serious problem with a connection, it informs the connection's <code>ExceptionListener</code>,
+ If a Jakarta Messaging provider detects a serious problem with a connection, it informs the connection's <code>ExceptionListener</code>,
  if one has been registered. It does this by calling the listener's <code>onException</code> method, passing it a
  <code>JMSException</code> object describing the problem.
 
@@ -678,18 +682,18 @@ extends java.lang.AutoCloseable</pre>
  A connection serializes execution of its <code>ExceptionListener</code>.
 
  <p>
- A JMS provider should attempt to resolve connection problems itself before it notifies the client of them.
+ A Jakarta Messaging provider should attempt to resolve connection problems itself before it notifies the client of them.
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>listener</code> - the exception listener</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to set the exception listener for one of the following reasons:
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to set the exception listener for one of the following reasons:
  <ul>
  <li>an internal error has occurred or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 </dl>
@@ -707,7 +711,7 @@ extends java.lang.AutoCloseable</pre>
  already been started is ignored.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to start message delivery due to some internal error.</dd>
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to start message delivery due to some internal error.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../javax/jms/Connection.html#stop--"><code>stop()</code></a></dd>
 </dl>
@@ -751,16 +755,16 @@ extends java.lang.AutoCloseable</pre>
  there is no requirement for the <code>stop</code> call to wait until the exception listener has returned before it may
  return.
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../javax/jms/IllegalStateException.html" title="class in javax.jms">IllegalStateException</a></code> - this method has been called by a <tt>MessageListener</tt> on its own
  <tt>Connection</tt></dd>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to stop message delivery for one of the following reasons:
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to stop message delivery for one of the following reasons:
  <ul>
  <li>an internal error has occurred or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -808,7 +812,7 @@ extends java.lang.AutoCloseable</pre>
  a message or with null, depending on whether there was a message available at the time of the close. If one or more
  of the connection's sessions' message listeners is processing a message at the time when connection <code>close</code> is
  invoked, all the facilities of the connection and its sessions must remain available to those listeners until they
- return control to the JMS provider.
+ return control to the Jakarta Messaging provider.
 
  <p>
  This method must not return until any incomplete asynchronous send operations for this <tt>Connection</tt> have been
@@ -841,7 +845,7 @@ extends java.lang.AutoCloseable</pre>
                 </tt> on its own <tt>Connection</tt></li>
  <li>this method has been called by a <tt>CompletionListener</tt> callback method on its own <tt>Connection</tt></li>
  </ul></dd>
-<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the JMS provider fails to close the connection due to some internal error. For example, a
+<dd><code><a href="../../javax/jms/JMSException.html" title="class in javax.jms">JMSException</a></code> - if the Jakarta Messaging provider fails to close the connection due to some internal error. For example, a
  failure to release resources or to close a socket connection can cause this exception to be thrown.</dd>
 </dl>
 </li>
@@ -860,10 +864,10 @@ extends java.lang.AutoCloseable</pre>
 <div class="block">Creates a connection consumer for this connection (optional operation) on the specific destination.
 
  <p>
- This is an expert facility not used by ordinary JMS clients.
+ This is an expert facility not used by ordinary Jakarta Messaging clients.
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or Enterprise Bean application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -882,7 +886,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>an internal error has occurred
  <li>invalid arguments for <code>sessionPool</code> and <code>messageSelector</code> or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -908,10 +912,10 @@ extends java.lang.AutoCloseable</pre>
  non-durable subscription with the specified name.
 
  <p>
- This is an expert facility not used by ordinary JMS clients.
+ This is an expert facility not used by ordinary Jakarta Messaging clients.
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -932,7 +936,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>an internal error has occurred
  <li>invalid arguments for <code>sessionPool</code> and <code>messageSelector</code> or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -958,10 +962,10 @@ extends java.lang.AutoCloseable</pre>
  durable subscription with the specified name.
 
  <p>
- This is an expert facility not used by ordinary JMS clients.
+ This is an expert facility not used by ordinary Jakarta Messaging clients.
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -982,7 +986,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>an internal error has occurred
  <li>invalid arguments for <code>sessionPool</code> and <code>messageSelector</code> or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -1008,10 +1012,10 @@ extends java.lang.AutoCloseable</pre>
  subscription with the specified name.
 
  <p>
- This is an expert facility not used by ordinary JMS clients.
+ This is an expert facility not used by ordinary Jakarta Messaging clients.
 
  <p>
- This method must not be used in a Java EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
+ This method must not be used in a Jakarta EE web or EJB application. Doing so may cause a <code>JMSException</code> to be
  thrown though this is not guaranteed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1032,7 +1036,7 @@ extends java.lang.AutoCloseable</pre>
  <ul>
  <li>an internal error has occurred
  <li>invalid arguments for <code>sessionPool</code> and <code>messageSelector</code> or
- <li>this method has been called in a Java EE web or EJB application (though it is not guaranteed that an exception is
+ <li>this method has been called in a Jakarta EE web or EJB application (though it is not guaranteed that an exception is
  thrown in this case)
  </ul></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>

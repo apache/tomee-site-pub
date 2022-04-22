@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Deploy Tool</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_name" class="sect0">NAME</h1>
+<div class="paragraph">
+<p>openejb deploy - OpenEJB Deploy Tool</p>
+</div>
+<h1 id="_synopsis" class="sect0">SYNOPSIS</h1>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>openejb deploy <a href="#DeployTool-OPTIONS">options</a> &lt;file&gt; [&lt;file&gt; &#8230;&#8203;]</p>
+</div>
+</blockquote>
+</div>
+<h1 id="_note" class="sect0">NOTE</h1>
+<div class="paragraph">
+<p>The OpenEJB Deploy tool is an OPTIONAL tool that allows you to deploy
+into a running server and get feedback as if the app was deployed and
+how it was deployed (deploymentIds, jndi names, etc.).</p>
+</div>
+<div class="paragraph">
+<p>It can be used to deploy into an offline server, however in this
+scenario it simply copies the archive into the deployment directory (by
+default <code>openejb.base/apps</code>) which is something that can be done
+manually with a simple copy command or drag and drop.</p>
+</div>
+<div class="paragraph">
+<p>The OpenEJB Deploy tool can be executed from any directory as long as
+<code>openejb.home/bin</code> is in the system PATH. <code>openejb.home</code> is the
+directory where OpenEJB was installed or unpacked. For for the remainder
+of this document we will assume you unpacked OpenEJB into the directory
+<code>C:\openejb-3.0</code> under Windows.</p>
+</div>
+<div class="paragraph">
+<p>In Windows, the deploy tool can be executed as follows:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>C:-3.0&gt; bindeploy --help</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>In UNIX, Linux, or Mac OS X, the deploy tool can be executed as follows:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>user@host# bin/openejb deploy --help</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Depending on your OpenEJB version, you may need to change execution bits
+to make the scripts executable. You can do this with the following
+command.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>user@host# chmod +x bin/openejb</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>From here on out, it will be assumed that you know how to execute the
+right openejb script for your operating system and commands will appear
+in shorthand as show below.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>openejb deploy --help</p>
+</div>
+</blockquote>
+</div>
+<h1 id="_description" class="sect0">DESCRIPTION</h1>
+<div class="paragraph">
+<p>The files passed to the Deploy Tool can be any combination of the
+following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EJB 1.1, 2.0, 2.1, 3.0 or 3.1 jar</p>
+</li>
+<li>
+<p>application client jar</p>
+</li>
+<li>
+<p>EAR file containing only libraries, EJBs and application clients&#8201;&#8212;&#8201;everything else will be ignored.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The type of the files passed is determined as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Archives ending in <code>.ear</code> or containing a <code>META-INF/application.xml</code>
+are assumed to be EAR files.</p>
+</li>
+<li>
+<p>Archives containing a <code>META-INF/ejb-jar.xml</code> file or any classes
+annotated with <code>@Stateless</code>, <code>@Stateful</code> or <code>@MessageDriven</code>, are
+assumed to be <em>EJB</em> applications. EJB applications older that EJB 3.0
+should contain a complete <code>META-INF/ejb-jar.xml</code> inside the jar, however
+we do not strictly enforce that&#8201;&#8212;&#8201;the act of it being incomplete makes
+it an EJB 3.0 application by nature.</p>
+</li>
+<li>
+<p>Archives containing a <code>META-INF/application-client.xml</code> or with a
+<code>META-INF/MANIFEST.MF</code> containing the <code>Main-Class</code> attribute, are
+assumed to be <em>Application Client</em> archives.</p>
+</li>
+</ul>
+</div>
+<h1 id="_options" class="sect0">OPTIONS</h1>
+<div class="paragraph">
+<p>-d, --debug</p>
+</div>
+<div class="paragraph">
+<p>Increases the level of detail on validation errors and deployment
+summary.</p>
+</div>
+<div class="paragraph">
+<p>--dir</p>
+</div>
+<div class="paragraph">
+<p>Sets the destination directory where the app will be deployed. The
+default is /apps/ directory. Note when changing this setting make sure
+the directory is listed in the openejb.xml via a tag or the app will not
+be picked up again on restart.</p>
+</div>
+<div class="paragraph">
+<p>-conf file</p>
+</div>
+<div class="paragraph">
+<p>Sets the OpenEJB configuration to the specified file.</p>
+</div>
+<div class="paragraph">
+<p>-h, --help</p>
+</div>
+<div class="paragraph">
+<p>Lists these options and exit.</p>
+</div>
+<div class="paragraph">
+<p>-o, --offline</p>
+</div>
+<div class="paragraph">
+<p>Deploys the app to an offline server by copying the archive into the
+server&#8217;s apps/ directory. The app will be deployed when the server is
+started. The default is online.</p>
+</div>
+<div class="paragraph">
+<p>-q, --quiet</p>
+</div>
+<div class="paragraph">
+<p>Decreases the level of detail on validation and skips the deployment
+summary.</p>
+</div>
+<div class="paragraph">
+<p>-s, --server-url &lt;url&gt;</p>
+</div>
+<div class="paragraph">
+<p>Sets the url of the OpenEJB server to which the app will be deployed.
+The value should be the same as the JNDI Provider URL used to lookup
+EJBs. The default is 'ejbd://localhost:4201'.</p>
+</div>
+<div class="paragraph">
+<p>-v, --version</p>
+</div>
+<div class="paragraph">
+<p>Prints the OpenEJB version and exits.</p>
+</div>
+<h1 id="_examples" class="sect0">EXAMPLES</h1>
+<div class="sect1">
+<h2 id="_deploying_multiple_jar_files">Deploying multiple jar files</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>openejb deploy myapp.jar myapp.jar</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Deploys the beans in the fooEjbs.jar first, then deploys the beans in
+the barEjbs.jar. Wildcards can be used as well.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>openejb deploy myapp*.jar</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+<h1 id="_output" class="sect0">OUTPUT</h1>
+<div class="paragraph">
+<p>On running the deploy tool with a valid EJB jar the following output is
+printed on the console</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Application deployed successfully at {0}
+App(id=C:\samples\Calculator-new\hello-addservice.jar)
+    EjbJar(id=hello-addservice.jar, path=C:\samples\Calculator-new\hello-addservice.jar)
+    Ejb(ejb-name=HelloBean, id=HelloBean)
+        Jndi(name=HelloBean)
+        Jndi(name=HelloBeanLocal)
+
+    Ejb(ejb-name=AddServiceBean, id=AddServiceBean)
+        Jndi(name=AddServiceBean)
+        Jndi(name=AddServiceBeanLocal)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note: In the above case the command used is: &gt; openejb deploy
+hello-addservice.jar</p>
+</div>
+<div class="paragraph">
+<p>The JAR file contains two EJBs: AddServiceBean and HelloBean.</p>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

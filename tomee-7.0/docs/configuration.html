@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Configuration</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_short_overview" class="sect0">Short Overview</h1>
+<div class="sect1">
+<h2 id="_configuration_properties">Configuration Properties</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><em>openejb.home</em> - OpenEJB home (installation) directory path. All
+relative paths are resolved against the property unless openejb.base is
+set. Unless set, the value is assigned to the <em>user.dir</em> Java property.</p>
+</li>
+<li>
+<p><em>openejb.base</em> - OpenEJB base directory path. If set, the directory
+pointed by the property is searched for resources before openejb.home.</p>
+</li>
+<li>
+<p><em>openejb.configuration</em> - OpenEJB configuration file path.</p>
+</li>
+<li>
+<p><em>openejb.loader</em> - OpenEJB loader that&#8217;s responsible for loading EJBs.
+There are 3 different loader types:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>tomcat-webapp</em> - set it when inside of Tomcat scoped at just the
+webapp, aka. <a href="collapsed-ear.html">Collapsed EAR</a> <strong> <em>tomcat</em> - set it
+when inside of Tomcat scoped for all webapps to share </strong> <em>system</em> (also:
+bootstrap) ** <em>embedded</em> (also: noload)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><em>openejb.configurator</em> (default:
+<em>org.openejb.alt.config.ConfigurationFactory</em> ) - a class that builds
+org.openejb.alt.assembler.classic.OpenEjbConfiguration object;
+implements the
+org.openejb.alt.assembler.classic.OpenEjbConfigurationFactory interface</p>
+</li>
+<li>
+<p><em>openejb.descriptors.output</em> - possible values: true|false - When set
+OpenEJB saves deployment descriptors - ejb-jar.xml and openejb-jar.xml</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_file">Configuration File</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Show a config file with the elements hyperlinked.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;openejb&gt;
+  &lt;Container id="Default CMP Container" ctype="CMP_ENTITY"&gt;
+    Global_TX_Database  c:/my/app/conf/postgresql.cmp_global_database.xml
+    Local_TX_Database   c:/my/app/conf/postgresql.cmp_local_database.xml
+  &lt;/Container&gt;
+  &lt;Connector id="Default JDBC Database"&gt;
+    JdbcDriver org.postgresql.Driver
+    JdbcUrl jdbc:postgresql://localhost/mydb
+    UserName username
+    Password password
+  &lt;/Connector&gt;
+  &lt;SecurityService id="Default Security Service"/&gt;
+  &lt;TransactionService id="Default Transaction Manager"/&gt;
+  &lt;Deployments jar="c:/my/app/employee.jar"/&gt;
+  &lt;Deployments dir="beans/" /&gt;
+&lt;/openejb&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_layout">Basic Layout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Basically, openejb.base is the source for 100% of all configuration
+information and third party config files (log4j, castor, instantdb,
+whatever). This includes finding where the, possibly many, entries in
+the openejb.conf point. The openejb.home is where the code loading
+OpenEJB will look for all the OpenEJB libraries. Usually openejb.base is
+not explicitly set and defaults to the value of openejb.home, so many
+people are used to only dealing with openejb.home.</p>
+</div>
+<div class="paragraph">
+<p>The point of having and openejb.base and openejb.home was basically to
+allow several independently configured instances of OpenEJB running on a
+system (perhaps embedded in Swing apps, in Tomcat, running as a
+standalone Server, or even in Groovy as Mr. Strachan did!) but without
+the need to copy all the OpenEJB system libraries everywhere.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb.home</em> * can be set explicitly via a system property. * if not
+set it default&#8217;s to user.dir, which is the current working directory.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb.base</em> * can be set explicitly via a system property. * If not
+set it default&#8217;s to openejb.home.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb.configuration</em> * can be set to explicitly point to the file
+containing your configuration. * If set to a relative path, we first
+look in user.dir/your-conf-file, then in openejb.base/your-conf-file *
+If not set we check in openejb.base/conf/openejb.conf * If no conf file
+is found, we create one in openejb.base/conf/openejb.conf</p>
+</div>
+<div class="paragraph">
+<p><em>relative paths in openejb.conf</em> * Deployment entries are resolved
+relative to openejb.base. * Containers use openejb.base to resolve their
+own config files. For example, Castor JDO to loads the database.xml and
+all other files from the openejb.base directory. * Resource adapters
+that are embedded usually have config files of their own and are also
+loaded from the openeb.base.</p>
+</div>
+<div class="paragraph">
+<p><em>log files</em> * The log4.configuration file is resolved relative to
+openejb.base. * The properties in the config file that point to files
+are also resolved relative to openejb.base.</p>
+</div>
+<div class="paragraph">
+<p><em>OpenEJB libraries</em> * The jars in the lib and dist directories under
+openejb.home are added to the classpath.</p>
+</div>
+<div class="sect2">
+<h3 id="_summary">Summary</h3>
+<div class="paragraph">
+<p>A summary of the above in a different notation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">openejb.home = user.dir (can be set explicitly)
+openejb.base = openejb.home (can be set explicitly)
+openejb.conf = openejb.base/conf/openejb.conf (can be set explicitly)
+logging.conf = openejb.base/conf/logging.conf (can be set explicitly)
+deployments  = paths listed in openejb.conf (relative paths resolved from openejb.base)
+Classpath includes openejb.home/lib and openejb.home/dist</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_layout">Example layout</h3>
+<div class="paragraph">
+<p>In this one the openejb.home and openejb.base are set, everything else
+is defaulted. The openejb.conf file as been updated to point to the ejb
+jars by name (abc-ejbs.jar and xyz-ejbs.jar).</p>
+</div>
+<div class="paragraph">
+<p>An example layout:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/usr/local/openejb  (openejb.home)
+/usr/local/openejb/lib  (in classpath)
+/usr/local/openejb/dist (in classpath)
+/home/jsmith/foo_app  (openejb.base)
+/home/jsmith/foo_app/conf/openejb.conf
+/home/jsmith/foo_app/conf/logging.conf
+/home/jsmith/foo_app/abc-ejbs.jar (Deployment entry in openejb.conf)
+/home/jsmith/foo_app/xyz-ejbs.jar (Deployment entry in openejb.conf)
+/home/jsmith/foo_app/logs/</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_another_example_layout">Another Example layout</h3>
+<div class="paragraph">
+<p>In this example openejb.home and openejb.base are setup as well as the
+explicit paths for the openejb and log4j configuration files.</p>
+</div>
+<div class="paragraph">
+<p>An example layout:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/usr/local/openejb  (openejb.home)
+/usr/local/openejb/lib  (in classpath)
+/usr/local/openejb/dist (in classpath)
+/home/jsmith/foo_app  (openejb.base)
+/home/jsmith/foo_app/openejb.xml  (openejb.configuration)
+/home/jsmith/foo_app/abc-ejbs.jar (Deployment entry in openejb.xml)
+/home/jsmith/foo_app/xyz-ejbs.jar (Deployment entry in openejb.xml)
+/home/jsmith/foo_app/log4j.conf  (log4j.configuration)
+/home/jsmith/foo_app/mylogs/  (logging dir as defined in log4j.conf)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

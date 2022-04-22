@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>TomEE Embedded Maven Plugin</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="tomee-maven-plugin.html">TomEE Maven Plugin</a> provides a nice way to
+run "as in production" a server fully configured keeping the
+configuration in the project (easiness of sharing between team members).
+However for modern web development the fact to run the "exploded war"
+prevents to develop web resources in place. TomEE embedded maven plugin
+solves it directly allowing to directly deploy the war project in place
+using "classpath as war" option.</p>
+</div>
+<div class="paragraph">
+<p>It also allows to use a flat classpath deployment which is often use
+with microservices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tomee_embeddedrun">tomee-embedded:run</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Full name:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.apache.tomee.maven:tomee-embedded-maven-plugin:8.0.0-M3:run</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Description:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run an Embedded TomEE.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Attributes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Requires a Maven project to be executed.</p>
+</li>
+<li>
+<p>Requires dependency resolution of artifacts in scope: runtime+system.</p>
+</li>
+<li>
+<p>Requires dependency collection of artifacts in scope: runtime.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optional_parameters">Optional Parameters</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch table table-bordered">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Since</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ajpPort">ajpPort</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>8009</code>.<br>
+User property is: <code>tomee-embedded-plugin.ajp</code>.<br></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#applicationCopyFolder">applicationCopyFolder</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.build.directory}/tomee-embedded/applications</code>.<br>
+User property is: <code>tomee-plugin.application-copy</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#applicationScopes">applicationScopes</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#applications">applications</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#classpathAsWar">classpathAsWar</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-embedded-plugin.classpathAsWar</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#clientAuth">clientAuth</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.clientAuth</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#containerProperties">containerProperties</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#context">context</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.context</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#dir">dir</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.build.directory}/apache-tomee-embedded</code>.<br>
+User property is: <code>tomee-embedded-plugin.lib</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#docBase">docBase</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.basedir}/src/main/webapp</code>.<br>
+User property is: <code>tomee-embedded-plugin.docBase</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#forceJspDevelopment">forceJspDevelopment</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">force webapp to be reloadable.<br>
+Default value is: <code>true</code>.<br>
+User property is: <code>tomee-plugin.jsp-development</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#host">host</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>localhost</code>.<br>
+User property is: <code>tomee-embedded-plugin.host</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#httpPort">httpPort</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>8080</code>.<br>
+User property is: <code>tomee-embedded-plugin.http</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#httpsPort">httpsPort</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>8443</code>.<br>
+User property is: <code>tomee-embedded-plugin.httpsPort</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#inlinedServerXml">inlinedServerXml</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PlexusConfiguration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#inlinedTomEEXml">inlinedTomEEXml</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PlexusConfiguration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#keepServerXmlAsThis">keepServerXmlAsThis</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-embedded-plugin.keepServerXmlAsThis</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#keyAlias">keyAlias</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.keyAlias</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#keystoreFile">keystoreFile</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.keystoreFile</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#keystorePass">keystorePass</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.keystorePass</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#keystoreType">keystoreType</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>JKS</code>.<br>
+User property is: <code>tomee-embedded-plugin.keystoreType</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#mavenLog">mavenLog</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>true</code>.<br>
+User property is: <code>tomee-embedded-plugin.mavenLog</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#modules">modules</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.build.outputDirectory}</code>.<br>
+User property is: <code>tomee-embedded-plugin.modules</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#packaging">packaging</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.packaging}</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#quickSession">quickSession</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>true</code>.<br>
+User property is: <code>tomee-embedded-plugin.quickSession</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#roles">roles</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#serverXml">serverXml</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#skipCurrentProject">skipCurrentProject</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-plugin.skip-current-project</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#skipHttp">skipHttp</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-embedded-plugin.skipHttp</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ssl">ssl</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-embedded-plugin.ssl</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#sslProtocol">sslProtocol</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+User property is: <code>tomee-embedded-plugin.sslProtocol</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#stopPort">stopPort</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>8005</code>.<br>
+User property is: <code>tomee-embedded-plugin.stop</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#useProjectClasspath">useProjectClasspath</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>true</code>.<br>
+User property is: <code>tomee-embedded-plugin.useProjectClasspath</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#users">users</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#warFile">warFile</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.build.directory}/{project.build.finalName}</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#webResourceCached">webResourceCached</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>true</code>.<br>
+User property is: <code>tomee-embedded-plugin.webResourceCached</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#withEjbRemote">withEjbRemote</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>false</code>.<br>
+User property is: <code>tomee-embedded-plugin.withEjbRemote</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#workDir">workDir</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(no description)<br>
+Default value is: <code>${project.build.directory}/tomee-embedded-work</code>.<br>
+User property is: <code>tomee-plugin.work</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parameter_details">Parameter Details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="ajpPort"></a><strong>ajpPort:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: int</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.ajp</code></p>
+</li>
+<li>
+<p>Default: <code>8009</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="applicationCopyFolder"></a><strong>applicationCopyFolder:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.io.File</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-plugin.application-copy</code></p>
+</li>
+<li>
+<p>Default: <code>${project.build.directory}/tomee-embedded/applications</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="applicationScopes"></a><strong>applicationScopes:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.List</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="applications"></a><strong>applications:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.List</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="classpathAsWar"></a><strong>classpathAsWar:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.classpathAsWar</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="clientAuth"></a><strong>clientAuth:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.clientAuth</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="containerProperties"></a><strong>containerProperties:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.Map</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="context"></a><strong>context:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.context</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="dir"></a><strong>dir:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.lib</code></p>
+</li>
+<li>
+<p>Default: <code>${project.build.directory}/apache-tomee-embedded</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="docBase"></a><strong>docBase:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.io.File</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.docBase</code></p>
+</li>
+<li>
+<p>Default: <code>${project.basedir}/src/main/webapp</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="forceJspDevelopment"></a><strong>forceJspDevelopment:</strong><br>
+force webapp to be reloadable</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-plugin.jsp-development</code></p>
+</li>
+<li>
+<p>Default: <code>true</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="host"></a><strong>host:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.host</code></p>
+</li>
+<li>
+<p>Default: <code>localhost</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="httpPort"></a><strong>httpPort:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: int</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.http</code></p>
+</li>
+<li>
+<p>Default: <code>8080</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="httpsPort"></a><strong>httpsPort:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: int</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.httpsPort</code></p>
+</li>
+<li>
+<p>Default: <code>8443</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="inlinedServerXml"></a><strong>inlinedServerXml:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: org.codehaus.plexus.configuration.PlexusConfiguration</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="inlinedTomEEXml"></a><strong>inlinedTomEEXml:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: org.codehaus.plexus.configuration.PlexusConfiguration</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="keepServerXmlAsThis"></a><strong>keepServerXmlAsThis:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.keepServerXmlAsThis</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="keyAlias"></a><strong>keyAlias:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.keyAlias</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="keystoreFile"></a><strong>keystoreFile:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.keystoreFile</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="keystorePass"></a><strong>keystorePass:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.keystorePass</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="keystoreType"></a><strong>keystoreType:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.keystoreType</code></p>
+</li>
+<li>
+<p>Default: <code>JKS</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="mavenLog"></a><strong>mavenLog:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.mavenLog</code></p>
+</li>
+<li>
+<p>Default: <code>true</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="modules"></a><strong>modules:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.List</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.modules</code></p>
+</li>
+<li>
+<p>Default: <code>${project.build.outputDirectory}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="packaging"></a><strong>packaging:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>Default: <code>${project.packaging}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="quickSession"></a><strong>quickSession:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.quickSession</code></p>
+</li>
+<li>
+<p>Default: <code>true</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="roles"></a><strong>roles:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.Map</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="serverXml"></a><strong>serverXml:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.io.File</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="skipCurrentProject"></a><strong>skipCurrentProject:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-plugin.skip-current-project</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="skipHttp"></a><strong>skipHttp:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean
+-Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.skipHttp</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ssl"></a><strong>ssl:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.ssl</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="sslProtocol"></a><strong>sslProtocol:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.lang.String</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.sslProtocol</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="stopPort"></a><strong>stopPort:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: int</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.stop</code></p>
+</li>
+<li>
+<p>Default: <code>8005</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="useProjectClasspath"></a><strong>useProjectClasspath:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.useProjectClasspath</code></p>
+</li>
+<li>
+<p>Default: <code>true</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="users"></a><strong>users:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.util.Map</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="warFile"></a><strong>warFile:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.io.File</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>Default: <code>${project.build.directory}/{project.build.finalName}</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="webResourceCached"></a><strong>webResourceCached:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.webResourceCached</code></p>
+</li>
+<li>
+<p>Default: <code>true</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="withEjbRemote"></a><strong>withEjbRemote:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: boolean</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-embedded-plugin.withEjbRemote</code></p>
+</li>
+<li>
+<p>Default: <code>false</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="workDir"></a><strong>workDir:</strong><br>
+(no description)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Type: java.io.File</p>
+</li>
+<li>
+<p>Required: No</p>
+</li>
+<li>
+<p>User Property: <code>tomee-plugin.work</code></p>
+</li>
+<li>
+<p>Default: <code>${project.build.directory}/tomee-embedded-work</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

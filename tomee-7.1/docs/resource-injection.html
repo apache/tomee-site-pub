@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>@Resource</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example demonstrates the use of the injection of environment
+entries using <strong><code>@Resource</code></strong> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The EJB 3.0 specification (<em>EJB Core Contracts and Requirements</em>)
+section 16.2.2 reads:</p>
+</div>
+<div class="paragraph">
+<p><em>A field or method of a bean class may be annotated to request that an
+entry from the bean&#8217;s environment be injected. Any of the types of
+resources or other environment entries described in this chapter may be
+injected. Injection may also be requested using entries in the
+deployment descriptor corresponding to each of these resource types.</em></p>
+</div>
+<div class="paragraph">
+<p><em>Environment entries may also be injected into the bean through bean
+methods that follow the naming conventions for JavaBeans properties. The
+annotation is applied to the set method for the property, which is the
+method that is called to inject the environment entry. The JavaBeans
+property name (not the method name) is used as the default JNDI name.</em></p>
+</div>
+<div class="paragraph">
+<p>The <em>PurchaseOrderBean</em> class shows use of field-level <strong><code>@Resource</code></strong>
+annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <em>InvoiceBean</em> class shows the use of method-level <strong><code>@Resource</code></strong>
+annotation.</p>
+</div>
+<div class="paragraph">
+<p>The source for this example can be checked out from svn:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ svn co
+<a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/injection-of-env-entry" class="bare">http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/injection-of-env-entry</a></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>To run it change your working directory to the directory
+<em>injection-of-env-entry</em> and run the following maven2 commands:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ cd injection-of-env-entry</p>
+</div>
+</blockquote>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="sect1">
+<h2 id="_injection_through_field_field_level_injection">Injection through field (field-level injection)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>maxLineItem</em> field in <em>PurchaseOrderBean</em> class is annotated with
+<strong>@Resource</strong> annotation to inform the EJB container the location where in
+the code the injection of a simple environment entry should take place.
+The default value of 10 is assigned. You can modify the value of the
+environment entries at deployment time using deployment descriptor
+(<strong>ejb-jar.xml</strong>).</p>
+</div>
+<div class="sect2">
+<h3 id="_resource_annotation_of_a_field">@Resource annotation of a field</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Resource
+int maxLineItems = 10;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_injection_through_a_setter_method_method_level_injection">Injection through a setter method (method-level injection)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <em>setMaxLineItem</em> method in <em>InvoiceBean</em> class is annotated with
+<em>@Resource</em> annotation to inject the simple environment entry. Only
+setters can be used as a way to inject environment entry values.</p>
+</div>
+<div class="paragraph">
+<p>You could look up the env-entry using JNDI lookup() method and the
+following name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">java:comp/env/org.apache.openejb.examples.resource.InvoiceBean/maxLineItems</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The pattern is to combine the fully-qualified class name and the name of
+a instance field (or a name of the setter method without <em>set</em> prefix
+and the first letter lowercased).</p>
+</div>
+<div class="sect2">
+<h3 id="_resource_annotation_of_a_setter_method">@Resource annotation of a setter method</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Resource
+public void setMaxLineItems(int maxLineItems) {
+    this.maxLineItems = maxLineItems;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_env_entry_in_ejb_jar_xml">Using env-entry in ejb-jar.xml</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;env-entry&gt;
+    &lt;description&gt;The maximum number of line items per invoice.&lt;/description&gt;
+    &lt;env-entry-name&gt;org.apache.openejb.examples.injection.InvoiceBean/maxLineItems&lt;/env-entry-name&gt;
+    &lt;env-entry-type&gt;java.lang.Integer&lt;/env-entry-type&gt;
+    &lt;env-entry-value&gt;15&lt;/env-entry-value&gt;
+&lt;/env-entry&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_resource_annotated_env_entry">Using @Resource annotated env-entry</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public void addLineItem(LineItem item) throws TooManyItemsException {
+   if (item == null) {
+      throw new IllegalArgumentException("Line item must not be null");
+   }
+
+   if (itemCount &lt;= maxLineItems) {
+      items.add(item);
+      itemCount++;
+   } else {
+      throw new TooManyItemsException("Number of items exceeded the maximum limit");
+   }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_junit_test" class="sect0">JUnit Test</h1>
+<div class="paragraph">
+<p>Writing an JUnit test for this example is quite simple. We need just to
+write a setup method to create and initialize the InitialContext, and
+then write our test methods.</p>
+</div>
+<div class="sect1">
+<h2 id="_test_fixture">Test fixture</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">protected void setUp() throws Exception {
+    Properties properties = new Properties();
+    properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
+    properties.setProperty("openejb.deployments.classpath.include", ".*resource-injection.*");
+    initialContext = new InitialContext(properties);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_methods">Test methods</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public void testAddLineItem() throws Exception {
+    Invoice order = (Invoice)initialContext.lookup("InvoiceBeanBusinessRemote");
+    assertNotNull(order);
+    LineItem item = new LineItem("ABC-1", "Test Item");
+
+    try {
+    order.addLineItem(item);
+    } catch (TooManyItemsException tmie) {
+    fail("Test failed due to: " + tmie.getMessage());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. Just execute the following
+commands:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ cd injection-of-env-entry</p>
+</div>
+<div class="paragraph">
+<p>$ mvn clean test</p>
+</div>
+</blockquote>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.injection.PurchaseOrderBeanTest
+Apache OpenEJB 3.0.0-SNAPSHOT    build: 20071218-01:41
+http://tomee.apache.org/
+INFO - openejb.home = c:\oss\openejb3\examples\injection-of-env-entry
+INFO - openejb.base = c:\oss\openejb3\examples\injection-of-env-entry
+WARN - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service,type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=Default JDK 1.3 ProxyFactory, type=ProxyFactory, provider-id=Default JDK 1.3 ProxyFactory)
+INFO - Found EjbModule in classpath: c:\oss\openejb3\examples\injection-of-env-entry\target\classes
+INFO - Configuring app: c:\oss\openejb3\examples\injection-of-env-entry\target\classes
+INFO - Configuring Service(id=Default Stateful Container, type=Container, provider-id=Default Stateful Container)
+INFO - Auto-creating a container for bean InvoiceBean: Container(type=STATEFUL, id=Default Stateful Container)
+INFO - Loaded Module: c:\oss\openejb3\examples\injection-of-env-entry\target\classes
+INFO - Assembling app: c:\oss\openejb3\examples\injection-of-env-entry\target\classes
+INFO - Jndi(name=InvoiceBeanRemote) --&gt; Ejb(deployment-id=InvoiceBean)
+INFO - Jndi(name=PurchaseOrderBeanRemote) --&gt; Ejb(deployment-id=PurchaseOrderBean)
+INFO - Created Ejb(deployment-id=InvoiceBean, ejb-name=InvoiceBean, container=Default Stateful Container)
+INFO - Created Ejb(deployment-id=PurchaseOrderBean, ejb-name=PurchaseOrderBean, container=Default Stateful Container)
+INFO - Deployed Application(path=c:\oss\openejb3\examples\injection-of-env-entry\target\classes)
+INFO - OpenEJB ready.
+OpenEJB ready.
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.859 sec
+Running org.superbiz.injection.InvoiceBeanTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 sec
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

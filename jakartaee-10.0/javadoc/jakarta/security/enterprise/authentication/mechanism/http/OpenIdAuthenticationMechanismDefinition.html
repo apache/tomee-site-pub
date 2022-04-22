@@ -1,0 +1,1125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>OpenIdAuthenticationMechanismDefinition</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/jakarta-favicon.ico">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="OpenIdAuthenticationMechanismDefinition";
+        }
+    }
+    catch(err) {
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/LoginToContinue.Literal.html" title="class in jakarta.security.enterprise.authentication.mechanism.http"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/RememberMe.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html" target="_top">Frames</a></li>
+<li><a href="OpenIdAuthenticationMechanismDefinition.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">jakarta.security.enterprise.authentication.mechanism.http</div>
+<h2 title="Annotation Type OpenIdAuthenticationMechanismDefinition" class="title">Annotation Type OpenIdAuthenticationMechanismDefinition</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>@Target(value={TYPE,METHOD})
+ @Retention(value=RUNTIME)
+public @interface <span class="memberNameLabel">OpenIdAuthenticationMechanismDefinition</span></pre>
+<div class="block">Annotation used to define a container authentication mechanism that implements
+ the Authorization Code flow and Refresh tokens as defined by the OpenId Connect specification
+ and make that implementation available as an enabled CDI bean.
+
+ <p>
+ Attributes on this annotation make up the OpenID connect client configuration. Expression Language
+ expressions in attributes of type <code>String</code> are evaluated.
+
+ <p>
+ It can make use of the user endpoint for retrieving claims about the user.
+
+ <p>
+ Note that in the OpenID terminology the authentication mechanism becomes a "Relying Party" (RP)
+ that redirects the "End-User" (caller) to an "OpenId Connect Provider" (Identity Provider).
+ Authentication takes place between the user and the Identity Provider, where the result of this
+ authentication is communicated back to the authentication mechanism.
+
+ <p>
+ This is depicted in the following non-normative diagram:
+
+ <pre>
+  +--------+                                                       +--------+
+  |        |                                                       |        |
+  |        |---------------(1) Authentication Request------------->|        |
+  |        |                                                       |        |
+  |        |       +--------+                                      |        |
+  |        |       |  End-  |&lt;--(2) Authenticates the End-User---->|        |
+  |   RP   |       |  User  |                                      |   OP   |
+  |        |       +--------+                                      |        |
+  |        |                                                       |        |
+  |        |&lt;---------(3) Returns Authorization code---------------|        |
+  |        |                                                       |        |
+  |        |---------(3b)                                          |        |
+  |        |           | Redirect to original resource (if any)    |        |
+  |        |&lt;----------+                                           |        |
+  |        |                                                       |        |
+  |        |------------------------------------------------------>|        |
+  |        |   (4) Request to TokenEndpoint for Access / Id Token  |        |
+  | OpenId |&lt;------------------------------------------------------| OpenId |
+  | Connect|                                                       | Connect|
+  | Client | ----------------------------------------------------->|Provider|
+  |        |   (5) Fetch JWKS to validate ID Token                 |        |
+  |        |&lt;------------------------------------------------------|        |
+  |        |                                                       |        |
+  |        |------------------------------------------------------>|        |
+  |        |   (6) Request to UserInfoEndpoint for End-User Claims |        |
+  |        |&lt;------------------------------------------------------|        |
+  |        |                                                       |        |
+  +--------+                                                       +--------+
+ </pre>
+
+ <p>
+ Because of the way this authentication mechanism and protocol works, there is no
+ requirement to explicitly define an identity store. However, the authentication
+ mechanism MUST validate the token received from the "TokenEndpoint" by calling
+ the <a href="../../../../../../jakarta/security/enterprise/identitystore/IdentityStoreHandler.html" title="interface in jakarta.security.enterprise.identitystore"><code>IdentityStoreHandler</code></a>. This allows for extra identity stores and/or
+ a custom IdentityStoreHandler to participate in the final authentication result
+ (e.g. adding extra groups).</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><code>https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth</code>, 
+<code>https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens</code></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.optional.element.summary">
+<!--   -->
+</a>
+<h3>Optional Element Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Optional Element Summary table, listing optional elements, and an explanation">
+<caption><span>Optional Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Optional Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/ClaimsDefinition.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">ClaimsDefinition</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#claimsDefinition--">claimsDefinition</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#clientId--">clientId</a></span></code>
+<div class="block">Required.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#clientSecret--">clientSecret</a></span></code>
+<div class="block">Required.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/DisplayType.html" title="enum in jakarta.security.enterprise.authentication.mechanism.http.openid">DisplayType</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#display--">display</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#displayExpression--">displayExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#extraParameters--">extraParameters</a></span></code>
+<div class="block">An array of extra options that will be sent to the OAuth provider.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#extraParametersExpression--">extraParametersExpression</a></span></code>
+<div class="block">Allows the extra parameters to be defined as a Jakarta Expression Language expression.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#jwksConnectTimeout--">jwksConnectTimeout</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#jwksConnectTimeoutExpression--">jwksConnectTimeoutExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#jwksReadTimeout--">jwksReadTimeout</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#jwksReadTimeoutExpression--">jwksReadTimeoutExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/LogoutDefinition.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">LogoutDefinition</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#logout--">logout</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/PromptType.html" title="enum in jakarta.security.enterprise.authentication.mechanism.http.openid">PromptType</a>[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#prompt--">prompt</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#promptExpression--">promptExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/OpenIdProviderMetadata.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">OpenIdProviderMetadata</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#providerMetadata--">providerMetadata</a></span></code>
+<div class="block">To override the openid connect provider's metadata property discovered
+ via providerUri.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#providerURI--">providerURI</a></span></code>
+<div class="block">Required, unless providerMetadata is specified.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#redirectToOriginalResource--">redirectToOriginalResource</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#redirectToOriginalResourceExpression--">redirectToOriginalResourceExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#redirectURI--">redirectURI</a></span></code>
+<div class="block">The redirect URI (callback URI) to which the response will be sent by the OpenId
+ Connect Provider.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#responseMode--">responseMode</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#responseType--">responseType</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#scope--">scope</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#scopeExpression--">scopeExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#tokenAutoRefresh--">tokenAutoRefresh</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#tokenAutoRefreshExpression--">tokenAutoRefreshExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#tokenMinValidity--">tokenMinValidity</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#tokenMinValidityExpression--">tokenMinValidityExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#useNonce--">useNonce</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#useNonceExpression--">useNonceExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#useSession--">useSession</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html#useSessionExpression--">useSessionExpression</a></span></code>
+<div class="block">Optional.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.element.detail">
+<!--   -->
+</a>
+<h3>Element Detail</h3>
+<a name="providerURI--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>providerURI</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;providerURI</pre>
+<div class="block">Required, unless providerMetadata is specified.
+ The provider URI to read / discover the metadata of the openid provider.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>provider URI to read from which to read metadata</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><code>http://openid.net/specs/openid-connect-discovery-1_0.html</code></dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="providerMetadata--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>providerMetadata</h4>
+<pre>public abstract&nbsp;<a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/OpenIdProviderMetadata.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">OpenIdProviderMetadata</a>&nbsp;providerMetadata</pre>
+<div class="block">To override the openid connect provider's metadata property discovered
+ via providerUri.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>OpenIdProviderMetadata instance.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>@jakarta.security.enterprise.authentication.mechanism.http.openid.OpenIdProviderMetadata</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="clientId--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clientId</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;clientId</pre>
+<div class="block">Required. The client identifier issued when the application was
+ registered.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the client identifier</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="clientSecret--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clientSecret</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;clientSecret</pre>
+<div class="block">Required. The client secret.
+
+ <p>
+ Note that it is strongly recommended to set this using an Expression so that the value
+ is not hardcoded within the code.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The client secret</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="claimsDefinition--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>claimsDefinition</h4>
+<pre>public abstract&nbsp;<a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/ClaimsDefinition.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">ClaimsDefinition</a>&nbsp;claimsDefinition</pre>
+<div class="block">Optional. The claims definition defines the custom claims mapping of
+ caller name and groups.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>@jakarta.security.enterprise.authentication.mechanism.http.openid.ClaimsDefinition</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="logout--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>logout</h4>
+<pre>public abstract&nbsp;<a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/LogoutDefinition.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http.openid">LogoutDefinition</a>&nbsp;logout</pre>
+<div class="block">Optional. The Logout definition defines the logout and Relaying Party session
+ management configuration.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>@jakarta.security.enterprise.authentication.mechanism.http.openid.LogoutDefinition</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="redirectURI--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>redirectURI</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;redirectURI</pre>
+<div class="block">The redirect URI (callback URI) to which the response will be sent by the OpenId
+ Connect Provider. This URI must exactly match one of the Redirection URI values
+ for the Client pre-registered at the OpenID Provider.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>"${baseURL}/Callback"</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="redirectToOriginalResource--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>redirectToOriginalResource</h4>
+<pre>public abstract&nbsp;boolean&nbsp;redirectToOriginalResource</pre>
+<div class="block">Optional. Automatically redirects the caller (the end-user) from
+ the redirect URI defined by the <code>redirectURI</code> attribute
+ to the resource the end-user originally requested in a "login to continue"
+ scenario.
+
+ <p>
+ After arriving at the original requested resource, the runtime restores
+ the request as it originally happened, including cookies, headers, the
+ request method and the request parameters in the same way as done when
+ using the <a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/LoginToContinue.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http"><code>LoginToContinue</code></a> feature.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>false</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="redirectToOriginalResourceExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>redirectToOriginalResourceExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;redirectToOriginalResourceExpression</pre>
+<div class="block">Optional. Allows the <code>redirectToOriginalResource</code> to be specified as
+ Jakarta Expression Language expression.
+ If set, overrides the value defined by the <code>redirectToOriginalResource</code> value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="scope--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>scope</h4>
+<pre>public abstract&nbsp;java.lang.String[]&nbsp;scope</pre>
+<div class="block">Optional. The scope value defines the access privileges. The basic (and
+ required) scope for OpenID Connect is the openid scope.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>{"openid", "email", "profile"}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="scopeExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>scopeExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;scopeExpression</pre>
+<div class="block">Optional. Allows The scope value to be specified as Jakarta Expression Language expression.
+ If Set, overrides any values set by scope.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="responseType--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>responseType</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;responseType</pre>
+<div class="block">Optional. Response Type value defines the processing flow to be used. By
+ default, the value is code (Authorization Code Flow).</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>"code"</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="responseMode--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>responseMode</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;responseMode</pre>
+<div class="block">Optional. Informs the Authorization Server of the mechanism to be used
+ for returning parameters from the Authorization Endpoint.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="prompt--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>prompt</h4>
+<pre>public abstract&nbsp;<a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/PromptType.html" title="enum in jakarta.security.enterprise.authentication.mechanism.http.openid">PromptType</a>[]&nbsp;prompt</pre>
+<div class="block">Optional. The prompt value specifies whether the authorization server
+ prompts the user for reauthentication and consent. If no value is
+ specified and the user has not previously authorized access, then the
+ user is shown a consent screen.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="promptExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>promptExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;promptExpression</pre>
+<div class="block">Optional. Allows the  prompt value to be specified as Jakarta Expression Language expression.
+ If Set, overirdes the value defined by the prompt value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="display--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>display</h4>
+<pre>public abstract&nbsp;<a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/openid/DisplayType.html" title="enum in jakarta.security.enterprise.authentication.mechanism.http.openid">DisplayType</a>&nbsp;display</pre>
+<div class="block">Optional. The display value specifying how the authorization server
+ displays the authentication and consent user interface pages.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>jakarta.security.enterprise.authentication.mechanism.http.openid.DisplayType.PAGE</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="displayExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>displayExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;displayExpression</pre>
+<div class="block">Optional. Allows the display value to be specified as Jakarta Expression Language expression.
+ If set, overrides the value defined by display.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="useNonce--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>useNonce</h4>
+<pre>public abstract&nbsp;boolean&nbsp;useNonce</pre>
+<div class="block">Optional. Enables string value used to mitigate replay attacks.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>true</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="useNonceExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>useNonceExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;useNonceExpression</pre>
+<div class="block">Optional. Allows the nonce activation to be specified as Jakarta Expression Language expression.
+ If set, overrides the value defined by the useNonce value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="useSession--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>useSession</h4>
+<pre>public abstract&nbsp;boolean&nbsp;useSession</pre>
+<div class="block">Optional. If enabled the state, nonce values and original requested resource data are stored in an HTTP session
+ otherwise in cookies.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>true</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="useSessionExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>useSessionExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;useSessionExpression</pre>
+<div class="block">Optional. Allows the configuration of the session through a Jakarta Expression Language expression.
+ If set, overwrites the value of useSession value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="extraParameters--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>extraParameters</h4>
+<pre>public abstract&nbsp;java.lang.String[]&nbsp;extraParameters</pre>
+<div class="block">An array of extra options that will be sent to the OAuth provider.
+ <p>
+ These must be in the form of <code>"key=value"</code> i.e.
+ <code> extraParameters={"key1=value", "key2=value2"} </code></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="extraParametersExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>extraParametersExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;extraParametersExpression</pre>
+<div class="block">Allows the extra parameters to be defined as a Jakarta Expression Language expression.
+ If set, overrides the extraParameters value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="jwksConnectTimeout--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>jwksConnectTimeout</h4>
+<pre>public abstract&nbsp;int&nbsp;jwksConnectTimeout</pre>
+<div class="block">Optional. Sets the connect timeout(in milliseconds) for Remote JWKS
+ retrieval. Value must not be negative and if value is zero then infinite
+ timeout.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>500</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="jwksConnectTimeoutExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>jwksConnectTimeoutExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;jwksConnectTimeoutExpression</pre>
+<div class="block">Optional. Allows the connect timeout(in milliseconds) for Remote JWKS to be defined as
+ Jakarta Expression Language expression.
+ If set, overwrites the  jwksConnectTimeout value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="jwksReadTimeout--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>jwksReadTimeout</h4>
+<pre>public abstract&nbsp;int&nbsp;jwksReadTimeout</pre>
+<div class="block">Optional. Sets the read timeout(in milliseconds) for Remote JWKS
+ retrieval. Value must not be negative and if value is zero then infinite
+ timeout.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>500</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="jwksReadTimeoutExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>jwksReadTimeoutExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;jwksReadTimeoutExpression</pre>
+<div class="block">Optional. Allows the read timeout(in milliseconds) for Remote JWKS
+ retrieval to be defined as Jakarta Expression Language expression.
+ If set, overwrites the jwksReadTimeout value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="tokenAutoRefresh--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tokenAutoRefresh</h4>
+<pre>public abstract&nbsp;boolean&nbsp;tokenAutoRefresh</pre>
+<div class="block">Optional. Enables or disables the automatically performed refresh of
+ Access and Refresh Token.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code>, if Access and Refresh Token shall be refreshed
+ automatically when they are expired.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>false</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="tokenAutoRefreshExpression--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tokenAutoRefreshExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;tokenAutoRefreshExpression</pre>
+<div class="block">Optional. Allows the automatically performed refresh of
+ Access and Refresh Token to be defined as Jakarta Expression Language expression.
+ If set, overwrites the value of  tokenAutoRefresh.</div>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="tokenMinValidity--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tokenMinValidity</h4>
+<pre>public abstract&nbsp;int&nbsp;tokenMinValidity</pre>
+<div class="block">Optional. Sets the minimum validity time in milliseconds the Access Token
+ must be valid before it is considered expired. Value must not be
+ negative.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>10000</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="tokenMinValidityExpression--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>tokenMinValidityExpression</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;tokenMinValidityExpression</pre>
+<div class="block">Optional. Allows the minimum validity time in milliseconds the Access Token
+ must be valid before it is considered expired to be defined as Jakarta Expression Language expression.
+ If Set, overwrites the tokenMinValidity value.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/LoginToContinue.Literal.html" title="class in jakarta.security.enterprise.authentication.mechanism.http"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../jakarta/security/enterprise/authentication/mechanism/http/RememberMe.html" title="annotation in jakarta.security.enterprise.authentication.mechanism.http"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?jakarta/security/enterprise/authentication/mechanism/http/OpenIdAuthenticationMechanismDefinition.html" target="_top">Frames</a></li>
+<li><a href="OpenIdAuthenticationMechanismDefinition.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

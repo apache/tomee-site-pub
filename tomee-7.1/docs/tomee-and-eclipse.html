@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>TomEE and Eclipse</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Licensed to the Apache Software Foundation (ASF) under
+one or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information regarding
+copyright ownership. The ASF licenses this file to you under the Apache
+License, Version 2.0 (the "License"); you may not use this file except
+in compliance with the License. You may obtain a copy of the License at
+. <a href="http://www.apache.org/licenses/LICENSE-2.0" class="bare">http://www.apache.org/licenses/LICENSE-2.0</a> . Unless required by
+applicable law or agreed to in writing, software distributed under the
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for
+the specific language governing permissions and limitations under the
+License.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Using TomEE in Eclipse is pretty simple since it uses the existing
+Tomcat 7 server adaptor that comes with Eclipse.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick_start">Quick Start</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An excellent instructional video with step-by-step instructions on how
+to install Eclipse, TomEE and create/deploy your first project is
+available on YouTube here:
+<a href="http://www.youtube.com/watch?v=Lr8pxEACVRI">Getting Started with Apache
+TomEE</a> (Remember to select the 'Generate web.xml descriptor' checkbox
+during project setup. Otherwise the ejb does not get injected and you
+will get an error.).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download and install both Apache TomEE and Eclipse.</p>
+</li>
+<li>
+<p>Start Eclipse and from the main menu go to <strong>File</strong> - <strong>New</strong> - <strong>Dynamic
+Web Project</strong></p>
+</li>
+<li>
+<p>Enter a new project name</p>
+</li>
+<li>
+<p>In the <strong>Target Runtime</strong> section click on the <strong>New Runtime</strong> button.</p>
+</li>
+<li>
+<p>Pick <strong>Apache Tomcat v7.0</strong> and click Next</p>
+</li>
+<li>
+<p>Change the <strong>Name</strong> field to <em>TomEE</em> to indicate that this is a TomEE
+server rather than a Tomcat server.</p>
+</li>
+<li>
+<p>Set the <strong>Tomcat installation directory</strong> by clicking the <strong>Browse</strong>
+button and selecting the folder where you extracted TomEE</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong> to return to the New Project dialog</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong> to complete creating your new Project</p>
+</li>
+<li>
+<p>When you&#8217;re ready to deploy your project, right-click your project and
+select Run As - Run On Server</p>
+</li>
+<li>
+<p>Make sure that the <em>TomEE</em> environment is selected in the <strong>Server
+runtime environment</strong></p>
+</li>
+<li>
+<p>On the <strong>Run on Server</strong> dialog, click the <strong>Always use this server when
+running this project</strong> checkbox</p>
+</li>
+<li>
+<p>Click <strong>Finish</strong> - Eclipse will start TomEE and deploy your project</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_advanced_installation">Advanced installation</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In Eclipse, click on the <strong>Servers</strong> tab, right click and select New -
+Server.</p>
+</li>
+<li>
+<p>Select <strong>Apache - Tomcat v7.0 Server</strong> and click <strong>Next</strong></p>
+</li>
+<li>
+<p>Set the <strong>Tomcat installation directory</strong> by clicking the <strong>Browse</strong>
+button and selecting the folder where you extracted TomEE</p>
+</li>
+<li>
+<p>Add your webapp to the server. Click <strong>Finish</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Servers</strong> tab, double click on your server to open up the
+<strong>Overview</strong> page. Click on the <strong>Modules</strong> tab</p>
+</li>
+<li>
+<p>Click <strong>Add External Web Module</strong>. In the <strong>Add Web Module</strong> dialog, for
+document base, browse to <code>&lt;TomEE&gt;/webapps/tomee</code>. Set <strong>Path:</strong> to
+<code>/tomee</code>. Uncheck <strong>Auto reloading enabled</strong>. Click OK.</p>
+</li>
+<li>
+<p>Return to the <strong>Overview</strong> tab for the server.</p>
+</li>
+<li>
+<p>Deselect the <strong>Modules auto reload by default</strong> checkbox.</p>
+</li>
+<li>
+<p>If you do not want Eclipse to take control of your TomEE installation,
+select <strong>Use Workspace Metadata</strong> under <strong>Server Locations</strong>. Please review
+the <em>Workspace Metadata Installation</em> section below for additional steps
+in this scenario. Otherwise, select <strong>Use Tomcat Installation</strong></p>
+</li>
+<li>
+<p>Click the Save button in Eclipse so the server configuration gets
+saved.</p>
+</li>
+<li>
+<p>Click on your webapp project, then select Project - clean. Hit OK.
+This will cause Eclipse to clean and rebuild</p>
+</li>
+<li>
+<p>In the <strong>Servers</strong> tab, right click on the server and select <strong>Publish</strong>.</p>
+</li>
+<li>
+<p>Start the server.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_workspace_metadata_installation">Workspace Metadata Installation</h3>
+<div class="paragraph">
+<p>If you used <strong>Use Workspace Metadata</strong> in the <strong>Server Locations</strong>
+definition of the TomEE server, you will have to add TomEE specific
+configuration files to your Servers project in your workspace in case
+you need to change system properties or add containers / resources and
+have those reflected in the server running under Eclipse.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Locate your TomEE server configuration in Workspace / Servers</p>
+</li>
+<li>
+<p>Right-click the server project and select <strong>Import</strong></p>
+</li>
+<li>
+<p>Select General - File System and click <strong>Next</strong></p>
+</li>
+<li>
+<p>Browse to your <code>&lt;TomEE&gt;/conf</code> folder</p>
+</li>
+<li>
+<p>Select the following files for import: <code>logging.properties</code>,
+<code>system.properties</code> and <code>tomee.xml</code></p>
+</li>
+<li>
+<p>Click <strong>Finish</strong> to import the files.</p>
+</li>
+<li>
+<p>In the <strong>Servers</strong> tab, right-click the TomEE server and select
+<strong>Publish</strong> to publish the files to the Eclipse metadata folder</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you need to modify system properties or change your TomEE resources,
+containers, etc., you now need to make those changes in the Workspace /
+Servers / <code>&lt;`Your Server</code>&gt;` location and publish them to the server for
+the changes to take effect.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jsp_hot_deployment">JSP Hot Deployment</h3>
+<div class="paragraph">
+<p>If jsp changes are not being hot deployed then this is because the jsp
+servlet is set to development=false in the web.xml file. To allow jsp
+hot deployment alter this value to true and restart Tomee.</p>
+</div>
+<div class="paragraph">
+<p>This is the relevant snippet of the web.xml file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;servlet&gt;
+    &lt;servlet-name&gt;jsp&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.apache.jasper.servlet.JspServlet&lt;/servlet-class&gt;
+    ....
+    &lt;init-param&gt;
+        &lt;param-name&gt;development&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    ....
+&lt;/servlet&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_use_juli_for_tomee_in_wtp">How to use JULI for TomEE in WTP?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It seems that WTP doesn&#8217;t manage correctly Tomcat logging configuration
+(which needs to be done through system properties). A quick workaround
+is to add these properties manually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">-Djava.util.logging.config.file="&lt;tomee&gt;/conf/logging.properties"
+-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More information on:
+<a href="http://wiki.eclipse.org/WTP_Tomcat_FAQ#How_do_I_enable_the_JULI_logging_in_a_Tomcat_5.5_Server_instance.3F" class="bare">http://wiki.eclipse.org/WTP_Tomcat_FAQ#How_do_I_enable_the_JULI_logging_in_a_Tomcat_5.5_Server_instance.3F</a></p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

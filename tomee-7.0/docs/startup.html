@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Startup</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_name" class="sect0">NAME</h1>
+<div class="paragraph">
+<p>openejb start - OpenEJB Remote Server</p>
+</div>
+<h1 id="_synopsis" class="sect0">SYNOPSIS</h1>
+<div class="paragraph">
+<p>openejb start <a href="#options.html">#options</a></p>
+</div>
+<h1 id="_note" class="sect0">NOTE</h1>
+<div class="paragraph">
+<p>The OpenEJB Remote Server can be started by running the openejb.bat
+script for windows and the openejb script for Linux and other Unix based
+OSes. Before running these scripts you need to set the environment
+variable <em>OPENEJB_HOME</em> to the path of the directory where you unpacked
+the OpenEJB installation.</p>
+</div>
+<div class="paragraph">
+<p>From now on we will refer to this directory as and assume that you
+unpacked OpenEJB into the directory <em>C:-3.0</em> The startup scripts are
+present in the /bin directory. You can set this directory in the system
+<em>PATH</em> for starting openejb from the command shell.</p>
+</div>
+<div class="paragraph">
+<p>In Windows, the remote server can be executed as follows:</p>
+</div>
+<div class="paragraph">
+<p><em>C:-3.0&gt; binstart</em></p>
+</div>
+<div class="paragraph">
+<p>In UNIX, Linux, or Mac OS X, the deploy tool can be executed as follows:</p>
+</div>
+<div class="paragraph">
+<p><code>\[user@host openejb-3.0](<a href="mailto:user@host-openejb-3.0.html">user@host-openejb-3.0.html</a>) # ./bin/openejb start</code></p>
+</div>
+<div class="paragraph">
+<p>Depending on your OpenEJB version, you may need to change execution bits
+to make the scripts executable. You can do this with the following
+command.</p>
+</div>
+<div class="paragraph">
+<p><code>\[user@host openejb-3.0](<a href="mailto:user@host-openejb-3.0.html">user@host-openejb-3.0.html</a>) # chmod 755 bin/openejb</code></p>
+</div>
+<div class="paragraph">
+<p>From here on out, it will be assumed that you know how to execute the
+right openejb script for your operating system and commands will appear
+in shorthand as show below.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start -help</em></p>
+</div>
+<h1 id="_description" class="sect0">DESCRIPTION</h1>
+<div class="paragraph">
+<p>Starts OpenEJB as an EJB Server that can be accessed by remote clients
+via the OpenEJB Remote Server.</p>
+</div>
+<div class="paragraph">
+<p>ALWAYS check your openejb.log file for warnings immediately after
+starting the Remote Server.</p>
+</div>
+<div class="paragraph">
+<p>OpenEJB issues warnings when it works around a potential problem,
+encounters something it didn&#8217;t expect, or when OpenEJB wants to let you
+know something may not work as you expected it.</p>
+</div>
+<div class="paragraph">
+<p>OpenEJB itself is configured with the OpenEJB configuration file, which
+is extremely simple and self-documenting. This file is located at
+c:-3.0.xml.</p>
+</div>
+<h1 id="_options" class="sect0">OPTIONS</h1>
+<div class="paragraph">
+<p>| <em>-D=</em> | Specifies a system property passed into OpenEJB at startup. |
+| <em>--admin-bind _ | Sets the host to which the admin service should be
+bound.| | _&#8212;&#8203;admin-port _ | Sets the port to which the admin service
+should be bound.| | _&#8212;&#8203;conf _ | Sets the OpenEJB configuration to the
+specified file. | | _&#8212;&#8203;ejbd-bind _ | Sets the host to which the ejbd
+service should be bound. | | _&#8212;&#8203;ejbd-port _ | Sets the port to which the
+ejbd service should be bound. |<br>
+| _&#8212;&#8203;examples</em> | Show examples of how to use the options. | | -h,
+--<em>help</em> | Print this help message. | | <em>--hsql-bind _ | Sets the host
+to which the hsql service should be bound.| | _&#8212;&#8203;hsql-port _ | Sets the
+port to which the hsql service should be bound.| | _&#8212;&#8203;httpejbd-bind _ |
+Sets the host to which the httpejbd service should be bound.| |
+_&#8212;&#8203;httpejbd-port _ | Sets the port to which the httpejbd service should
+be bound.| | _&#8212;&#8203;local-copy _ | Instructs the container system to marshal
+(ie, copy) all calls between beans. | | _&#8212;&#8203;telnet-bind _ | Sets the host
+to which the telnet service should be bound.| | _&#8212;&#8203;telnet-port _ | Sets
+the port to which the telnet service should be bound.| | -v, --_version</em>
+| Print the version. |</p>
+</div>
+<h1 id="_examples" class="sect0">EXAMPLES</h1>
+<div class="sect1">
+<h2 id="_example_simplest_scenario">Example: Simplest scenario</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start</em></p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it. The ejbd will start up and bind to IP 127.0.0.1 and port
+4201.</p>
+</div>
+<div class="paragraph">
+<p>The following properties would then be used to get an InitialContext
+from the Remote Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">java.naming.factory.initial  =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+java.naming.provider.url = ejbd://127.0.0.1:4201
+java.naming.security.principal = myuser java.naming.security.credentials
+= mypass</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_conffile">Example: --conf=file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start --conf=C:-3.0.conf</em></p>
+</div>
+<div class="paragraph">
+<p>Sets the openejb.configuration system variable to the file <em>C:.conf</em>.
+When the server starts up and initializes OpenEJB, this configuration
+will be used to assemble the container system and load beans.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_local_copy">Example: --local-copy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The local-copy option controls whether Remote interface arguments and
+results are always copied.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start --local-copy=true</em> (default)</p>
+</div>
+<div class="paragraph">
+<p>Remote interface business method arguments and results are always copied
+(via serialization), which is compliant with the EJB standard.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start --local-copy=false</em></p>
+</div>
+<div class="paragraph">
+<p>Remote interface business method arguments and results are copied only
+when the client is in a different JVM. Otherwise, they are passed by
+reference - as if it were a Local interface. This is faster, of course,
+but non-compliant with the EJB standard.</p>
+</div>
+<div class="paragraph">
+<p>Local interfaces are not affected; their arguments and results are
+passed by reference and never copied.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_config_override_examples">CONFIG OVERRIDE EXAMPLES</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_d_bind">Example: -D.bind=</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start -Dejbd.bind=10.45.67.8</em></p>
+</div>
+<div class="paragraph">
+<p>This is the most common way to use the EJBd Server Service. The service
+will start up and bind to IP 10.45.67.8 and port 4201. The following
+properties would then be used to get an InitialContext from the EJBd
+Server Service.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">   java.naming.factory.initial      =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+java.naming.provider.url = ejbd://10.45.67.8:4201
+java.naming.security.principal = myuser java.naming.security.credentials
+= mypass</p>
+</div>
+<div class="paragraph">
+<p>DNS names can also be used.</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start -Dejbd.bind=myhost.foo.com</em></p>
+</div>
+<div class="paragraph">
+<p>The following properties would then be used to get an InitialContext
+from the Remote Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">   java.naming.factory.initial      =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+java.naming.provider.url = ejbd://myhost.foo.com:4201
+java.naming.security.principal = myuser java.naming.security.credentials
+= mypass</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start -Dtelnet.bind=myhost.foo.com</em></p>
+</div>
+<div class="paragraph">
+<p>The following properties would then be used to log into the server via a
+telnet client as such:</p>
+</div>
+<div class="paragraph">
+<p><em>telnet myhost.foo.com 4202</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_d_port">Example: -D.port=</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start -Dejbd.port=8765</em></p>
+</div>
+<div class="paragraph">
+<p>The server will start up and bind to IP 127.0.0.1 and port 8765.</p>
+</div>
+<div class="paragraph">
+<p>The following properties would then be used to get an InitialContext
+from the Remote Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">   java.naming.factory.initial      =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+java.naming.provider.url = ejbd://127.0.0.1:8765
+java.naming.security.principal = myuser java.naming.security.credentials
+= mypass</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start -Dhttpejbd.port=8888</em></p>
+</div>
+<div class="paragraph">
+<p>The server will start up and the EJB over HTTP service will bind to IP
+127.0.0.1 and port 8888.</p>
+</div>
+<div class="paragraph">
+<p>The following properties would then be used to get an InitialContext
+from the HTTP/Remote Server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">   java.naming.factory.initial      =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.apache.openejb.client.RemoteInitialContextFactory
+java.naming.provider.url = <a href="http://127.0.0.1:8888/openejb" class="bare">http://127.0.0.1:8888/openejb</a>
+java.naming.security.principal = myuser java.naming.security.credentials
+= mypass</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_d_only_from">Example: -D.only_from=</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start -Dadmin.only_from=192.168.1.12</em></p>
+</div>
+<div class="paragraph">
+<p>Adds 192.168.1.12 to the list of IP addresses that are authorized to
+shutdown the server or access the server via a telnet client. The host
+that this server was started on is always allowed to administer the
+server.</p>
+</div>
+<div class="paragraph">
+<p>Multiple hosts can be given administrative access to this server by
+listing all the host names separated by commas as such:</p>
+</div>
+<div class="paragraph">
+<p><em>openejb start -Dadmin.only_from=192.168.1.12,joe.foo.com,robert</em></p>
+</div>
+<div class="paragraph">
+<p>The first host in the string names the host explicitly using an IP
+address (192.168.1.12).</p>
+</div>
+<div class="paragraph">
+<p>The second host uses a DNS name (joe.foo.com) to refer to the hosts IP
+address. The DNS name will be resolved and the IP will be added to the
+admin list.</p>
+</div>
+<div class="paragraph">
+<p>The third address refers to a the host by a name (robert)that the
+opperating system is able to resolve into a valid IP address. This is
+usually done via a hosts file, interal DNS server, or Windows Domain
+Server.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_d_threads">Example: -D.threads=</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start -Dejbd.threads=200</em></p>
+</div>
+<div class="paragraph">
+<p>Sets the max number of concurrent threads that can enter the EJBd Server
+Service to 200.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_d_disabled">Example: -D.disabled=</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>openejb start -Dtelnet.disabled=true</em></p>
+</div>
+<div class="paragraph">
+<p>Prevents the Telnet Server Service from starting when the OpenEJB Server
+starts.</p>
+</div>
+</div>
+</div>
+<h1 id="_console_output" class="sect0">CONSOLE OUTPUT</h1>
+<div class="paragraph">
+<p>Once you start OpenEJB using the <em>openejb start</em> command the following
+output will be seen on the console</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Apache OpenEJB 3.0    build: 20070825-01:10
+http://tomee.apache.org/
+OpenEJB ready.
+[OPENEJB:init]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenEJB Remote Server <strong> Starting Services </strong> NAME IP PORT httpejbd
+0.0.0.0 4204 telnet 0.0.0.0 4202 ejbd 0.0.0.0 4201 hsql 0.0.0.0 9001
+admin thread 0.0.0.0 4200 ------- Ready!</p>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

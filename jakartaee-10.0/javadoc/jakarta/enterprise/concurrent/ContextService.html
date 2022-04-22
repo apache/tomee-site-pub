@@ -1,0 +1,976 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>ContextService</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/jakarta-favicon.ico">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="ContextService";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../jakarta/enterprise/concurrent/Asynchronous.Result.html" title="class in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../jakarta/enterprise/concurrent/ContextServiceDefinition.html" title="annotation in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../index.html?jakarta/enterprise/concurrent/ContextService.html" target="_top">Frames</a></li>
+<li><a href="ContextService.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">jakarta.enterprise.concurrent</div>
+<h2 title="Interface ContextService" class="title">Interface ContextService</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public interface <span class="typeNameLabel">ContextService</span></pre>
+<div class="block">The ContextService provides methods for creating dynamic proxy objects
+ (as defined by <code>java.lang.reflect.Proxy</code>).
+ ContextService also creates proxy objects for functional interfaces
+ (such as <code>Function</code>) that can be used as
+ completion stage actions. Proxy objects run with
+ the addition of context typically associated with applications executing in a
+ Jakarta&trade; EE environment.
+ Examples of such context are classloading, namespace, security, etc.
+ <p>
+
+ The proxy objects follow the same rules as defined for the
+ <code>java.lang.reflect.Proxy</code> class with the following additions:
+ <ul>
+ <li>The proxy instance will retain the context of the creator's
+     thread.
+ <li>The proxy instance will implement all of the interfaces specified on the
+     <code>createContextualProxy</code> methods.
+ <li>The object to have a proxy instance created for should not be a
+     component managed by the Jakarta EE Product Provider, such as a web
+     component or a Jakarta Enterprise Bean.
+ <li>All interface method invocations on a proxy instance run in the
+     creator's context with the exception of <code>hashCode</code>,
+     <code>equals</code>, <code>toString</code> and all other methods declared in
+     <code>Object</code>.
+ <li>The proxy instance must implement <code>Serializable</code>
+     if the proxied object instance is serializable.
+ <li>The proxied object instance must implement
+     <code>Serializable</code> if the proxy instance is serialized.
+ <li>Execution properties can be stored with the proxy instance. Custom
+     property keys must not begin with "jakarta.enterprise.concurrent.".
+ <li>Execution properties are to be used for controlling how various contextual
+     information is retrieved and applied to the thread. Although application
+     components can store arbitrary property keys and values, it is not
+     recommended. Jakarta EE product providers may impose limits to the
+     size of the keys and values.
+ </ul>
+ <p>
+ For example, to contextualize a single completion stage action
+ such that it is able to access the namespace of the application component,
+ <pre>
+ contextSvc = InitialContext.doLookup("java:comp/DefaultContextService");
+ stage2 = stage1.thenApply(contextSvc.contextualFunction(i -&gt; {
+     DataSource ds = InitialContext.doLookup("java:comp/env/dsRef");
+     try (Connection con = ds.getConnection()) {
+         PreparedStatement stmt = con.prepareStatement(sql);
+         stmt.setInt(1, i);
+         ResultSet result = stmt.executeQuery();
+         return result.next() ? result.getInt(1) : 0;
+     }
+ }));
+ </pre>
+ <p></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.0</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>&lt;R&gt;&nbsp;java.util.concurrent.Callable&lt;R&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualCallable-java.util.concurrent.Callable-">contextualCallable</a></span>(java.util.concurrent.Callable&lt;R&gt;&nbsp;callable)</code>
+<div class="block">Wraps a <code>Callable</code> with context
+ that is captured from the thread that invokes
+ <code>contextualCallable</code>.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>&lt;T,U&gt;&nbsp;java.util.function.BiConsumer&lt;T,U&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualConsumer-java.util.function.BiConsumer-">contextualConsumer</a></span>(java.util.function.BiConsumer&lt;T,U&gt;&nbsp;consumer)</code>
+<div class="block">Wraps a <code>BiConsumer</code> with context
+ that is captured from the thread that invokes
+ <code>contextualConsumer</code>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.function.Consumer&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualConsumer-java.util.function.Consumer-">contextualConsumer</a></span>(java.util.function.Consumer&lt;T&gt;&nbsp;consumer)</code>
+<div class="block">Wraps a <code>Consumer</code> with context
+ that is captured from the thread that invokes
+ <code>contextualConsumer</code>.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>&lt;T,U,R&gt;&nbsp;java.util.function.BiFunction&lt;T,U,R&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualFunction-java.util.function.BiFunction-">contextualFunction</a></span>(java.util.function.BiFunction&lt;T,U,R&gt;&nbsp;function)</code>
+<div class="block">Wraps a <code>BiFunction</code> with context
+ that is captured from the thread that invokes
+ <code>contextualFunction</code>.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>&lt;T,R&gt;&nbsp;java.util.function.Function&lt;T,R&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualFunction-java.util.function.Function-">contextualFunction</a></span>(java.util.function.Function&lt;T,R&gt;&nbsp;function)</code>
+<div class="block">Wraps a <code>BiFunction</code> with context
+ that is captured from the thread that invokes
+ <code>contextualFunction</code>.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>java.lang.Runnable</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualRunnable-java.lang.Runnable-">contextualRunnable</a></span>(java.lang.Runnable&nbsp;runnable)</code>
+<div class="block">Wraps a <code>Runnable</code> with context
+ that is captured from the thread that invokes
+ <code>contextualRunnable</code>.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>&lt;R&gt;&nbsp;java.util.function.Supplier&lt;R&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#contextualSupplier-java.util.function.Supplier-">contextualSupplier</a></span>(java.util.function.Supplier&lt;R&gt;&nbsp;supplier)</code>
+<div class="block">Wraps a <code>Supplier</code> with context captured from the thread that invokes
+ <code>contextualSupplier</code>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>java.lang.Object</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#createContextualProxy-java.lang.Object-java.lang.Class...-">createContextualProxy</a></span>(java.lang.Object&nbsp;instance,
+                     java.lang.Class&lt;?&gt;...&nbsp;interfaces)</code>
+<div class="block">Creates a new contextual object proxy for the input object instance.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>java.lang.Object</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#createContextualProxy-java.lang.Object-java.util.Map-java.lang.Class...-">createContextualProxy</a></span>(java.lang.Object&nbsp;instance,
+                     java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;executionProperties,
+                     java.lang.Class&lt;?&gt;...&nbsp;interfaces)</code>
+<div class="block">Creates a new contextual object proxy for the input object instance.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#createContextualProxy-T-java.lang.Class-">createContextualProxy</a></span>(T&nbsp;instance,
+                     java.lang.Class&lt;T&gt;&nbsp;intf)</code>
+<div class="block">Creates a new contextual object proxy for the input object instance.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#createContextualProxy-T-java.util.Map-java.lang.Class-">createContextualProxy</a></span>(T&nbsp;instance,
+                     java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;executionProperties,
+                     java.lang.Class&lt;T&gt;&nbsp;intf)</code>
+<div class="block">Creates a new contextual object proxy for the input object instance.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>java.util.concurrent.Executor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#currentContextExecutor--">currentContextExecutor</a></span>()</code>
+<div class="block">Captures thread context as an <code>Executor</code>
+ that runs tasks on the same thread from which
+ <code>execute</code>is invoked but with context that is captured from the thread
+ that invokes <code>currentContextExecutor</code>.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#getExecutionProperties-java.lang.Object-">getExecutionProperties</a></span>(java.lang.Object&nbsp;contextualProxy)</code>
+<div class="block">Gets the current execution properties on the context proxy instance.</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#withContextCapture-java.util.concurrent.CompletableFuture-">withContextCapture</a></span>(java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;stage)</code>
+<div class="block">Returns a new <code>CompletableFuture</code> that is completed by the completion of the
+ specified stage.</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.concurrent.CompletionStage&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../jakarta/enterprise/concurrent/ContextService.html#withContextCapture-java.util.concurrent.CompletionStage-">withContextCapture</a></span>(java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;stage)</code>
+<div class="block">Returns a new <code>CompletionStage</code> that is completed by the completion of the
+ specified stage.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="contextualCallable-java.util.concurrent.Callable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualCallable</h4>
+<pre>&lt;R&gt;&nbsp;java.util.concurrent.Callable&lt;R&gt;&nbsp;contextualCallable(java.util.concurrent.Callable&lt;R&gt;&nbsp;callable)</pre>
+<div class="block"><p>Wraps a <code>Callable</code> with context
+ that is captured from the thread that invokes
+ <code>contextualCallable</code>. Context is captured at the time <code>contextualCallable</code> is invoked.</p>
+
+ <p>When <code>call</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>call</code> method,
+ then the <code>call</code> method of the provided <code>Callable</code> is invoked.
+ Finally, the previous context is restored on the thread, and the result of the
+ <code>Callable</code> is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>R</code> - callable result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>callable</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>call</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>Callable</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualConsumer-java.util.function.BiConsumer-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualConsumer</h4>
+<pre>&lt;T,U&gt;&nbsp;java.util.function.BiConsumer&lt;T,U&gt;&nbsp;contextualConsumer(java.util.function.BiConsumer&lt;T,U&gt;&nbsp;consumer)</pre>
+<div class="block"><p>Wraps a <code>BiConsumer</code> with context
+ that is captured from the thread that invokes
+ <code>contextualConsumer</code>. Context is captured at the time <code>contextualConsumer</code> is invoked.</p>
+
+ <p>When <code>accept</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>accept</code> method,
+ then the <code>accept</code> method of the provided <code>BiConsumer</code> is invoked.
+ Finally, the previous context is restored on the thread, and control is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - type of first parameter to consumer.</dd>
+<dd><code>U</code> - type of second parameter to consumer.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>consumer</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>accept</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>BiConsumer</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualConsumer-java.util.function.Consumer-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualConsumer</h4>
+<pre>&lt;T&gt;&nbsp;java.util.function.Consumer&lt;T&gt;&nbsp;contextualConsumer(java.util.function.Consumer&lt;T&gt;&nbsp;consumer)</pre>
+<div class="block"><p>Wraps a <code>Consumer</code> with context
+ that is captured from the thread that invokes
+ <code>contextualConsumer</code>. Context is captured at the time <code>contextualConsumer</code> is invoked.</p>
+
+ <p>When <code>accept</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>accept</code> method,
+ then the <code>accept</code> method of the provided <code>Consumer</code> is invoked.
+ Finally, the previous context is restored on the thread, and control is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - type of parameter to consumer.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>consumer</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>accept</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>Consumer</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualFunction-java.util.function.BiFunction-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualFunction</h4>
+<pre>&lt;T,U,R&gt;&nbsp;java.util.function.BiFunction&lt;T,U,R&gt;&nbsp;contextualFunction(java.util.function.BiFunction&lt;T,U,R&gt;&nbsp;function)</pre>
+<div class="block"><p>Wraps a <code>BiFunction</code> with context
+ that is captured from the thread that invokes
+ <code>contextualFunction</code>. Context is captured at the time <code>contextualFunction</code> is invoked.</p>
+
+ <p>When <code>apply</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>apply</code> method,
+ then the <code>apply</code> method of the provided <code>BiFunction</code> is invoked.
+ Finally, the previous context is restored on the thread, and the result of the
+ <code>BiFunction</code> is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - type of first parameter to function.</dd>
+<dd><code>U</code> - type of second parameter to function.</dd>
+<dd><code>R</code> - function result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>function</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>apply</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>BiFunction</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualFunction-java.util.function.Function-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualFunction</h4>
+<pre>&lt;T,R&gt;&nbsp;java.util.function.Function&lt;T,R&gt;&nbsp;contextualFunction(java.util.function.Function&lt;T,R&gt;&nbsp;function)</pre>
+<div class="block"><p>Wraps a <code>BiFunction</code> with context
+ that is captured from the thread that invokes
+ <code>contextualFunction</code>. Context is captured at the time <code>contextualFunction</code> is invoked.</p>
+
+ <p>When <code>apply</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>apply</code> method,
+ then the <code>apply</code> method of the provided <code>Function</code> is invoked.
+ Finally, the previous context is restored on the thread, and the result of the
+ <code>Function</code> is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - type of parameter to function.</dd>
+<dd><code>R</code> - function result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>function</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>apply</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>Function</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualRunnable-java.lang.Runnable-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualRunnable</h4>
+<pre>java.lang.Runnable&nbsp;contextualRunnable(java.lang.Runnable&nbsp;runnable)</pre>
+<div class="block"><p>Wraps a <code>Runnable</code> with context
+ that is captured from the thread that invokes
+ <code>contextualRunnable</code>. Context is captured at the time <code>contextualRunnable</code> is invoked.</p>
+
+ <p>When <code>run</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>run</code> method,
+ then the <code>run</code> method of the provided <code>Runnable</code> is invoked.
+ Finally, the previous context is restored on the thread, and control is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>runnable</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>run</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>Runnable</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="contextualSupplier-java.util.function.Supplier-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>contextualSupplier</h4>
+<pre>&lt;R&gt;&nbsp;java.util.function.Supplier&lt;R&gt;&nbsp;contextualSupplier(java.util.function.Supplier&lt;R&gt;&nbsp;supplier)</pre>
+<div class="block"><p>Wraps a <code>Supplier</code> with context captured from the thread that invokes
+ <code>contextualSupplier</code>. Context is captured at the time <code>contextualSupplier</code> is invoked.</p>
+
+ <p>When <code>supply</code> is invoked on the proxy instance,
+ context is first established on the thread that will run the <code>supply</code> method,
+ then the <code>supply</code> method of the provided <code>Supplier</code> is invoked.
+ Finally, the previous context is restored on the thread, and the result of the
+ <code>Supplier</code> is returned to the invoker.</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>R</code> - supplier result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>supplier</code> - instance to contextualize.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>contextualized proxy instance that wraps execution of the <code>supply</code> method with context.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if an already-contextualized <code>Supplier</code> is supplied to this method.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="createContextualProxy-java.lang.Object-java.lang.Class-">
+<!--   -->
+</a><a name="createContextualProxy-T-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createContextualProxy</h4>
+<pre>&lt;T&gt;&nbsp;T&nbsp;createContextualProxy(T&nbsp;instance,
+                            java.lang.Class&lt;T&gt;&nbsp;intf)</pre>
+<div class="block">Creates a new contextual object proxy for the input object instance.
+ <p>
+ Each method invocation will have the context of the application component
+ instance that created the contextual object proxy.
+ <p>
+ The contextual object is useful when developing or using Java&trade; SE
+ threading mechanisms propagating events to other component instances.
+ <p>
+ If the application component that created the proxy is not started or
+ deployed, all methods on reflected interfaces may throw an
+ <code>IllegalStateException</code>.
+  <p>
+ For example, to execute a Runnable which is contextualized with the
+ creator's context using a Java&trade; SE ExecutorService:
+
+ <pre>
+  public class MyRunnable implements Runnable {
+      public void run() {
+          System.out.println(&quot;MyRunnable.run with Jakarta EE Context available.&quot;);
+      }
+  }
+
+  InitialContext ctx = new InitialContext();
+  ThreadFactory threadFactory = (ThreadFactory) ctx
+           .lookup(&quot;java:comp/env/concurrent/ThreadFactory&quot;);
+
+  ContextService ctxService = (ContextService) ctx
+           .lookup(&quot;java:comp/env/concurrent/ContextService&quot;);
+
+  MyRunnable myRunnableInstance = ...;
+
+  Runnable rProxy = ctxService.createContextualProxy(myRunnableInstance, Runnable.class);
+
+  ExecutorService exSvc = Executors.newThreadPool(10, threadFactory);
+
+  Future f = exSvc.submit(rProxy);
+ </pre>
+ <p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the instance to proxy</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>instance</code> - the instance of the object to proxy.</dd>
+<dd><code>intf</code> - the interface that the proxy should implement.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a proxy for the input object that implements the specified interface.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - - if the <code>intf</code> argument
+ is null or the instance does not implement the specified
+ interface.</dd>
+<dd><code>java.lang.UnsupportedOperationException</code> - - if the <code>intf</code>
+ interface is <code>serializable</code>
+ but a thread context type does not support serialization.</dd>
+</dl>
+</li>
+</ul>
+<a name="createContextualProxy-java.lang.Object-java.lang.Class...-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createContextualProxy</h4>
+<pre>java.lang.Object&nbsp;createContextualProxy(java.lang.Object&nbsp;instance,
+                                       java.lang.Class&lt;?&gt;...&nbsp;interfaces)</pre>
+<div class="block">Creates a new contextual object proxy for the input object instance.
+ <p>
+ This method is similar to <code>&lt;T&gt; T createContextualProxy(T instance, Class&lt;T&gt; intf)</code>
+ except that this method can be used if the proxy has to support multiple
+ interfaces.
+  </p>
+ Example:
+
+ <pre>
+  public class MyRunnableWork implements Runnable, SomeWorkInterface {
+      public void run() {
+          System.out.println(&quot;MyRunnableWork.run with Jakarta EE Context available.&quot;);
+      }
+      public void someWorkInterfaceMethod() {
+          ...
+      }
+  }
+
+  ThreadFactory threadFactory = ...;
+
+  ContextService ctxService = ...;
+
+  MyRunnableWork myRunnableWorkInstance = ...;
+
+  Object proxy = ctxService.createContextualProxy(myRunnableWorkInstance,
+                                   Runnable.class, SomeWorkInterface.class);
+
+  // call SomeWorkInterface method on the proxy
+  ((SomeWorkInterface) proxy).someWorkInterfaceMethod();
+
+  ExecutorService exSvc = Executors.newThreadPool(10, threadFactory);
+
+  // submit the proxy as a Runnable to the ExecutorService
+  Future f = exSvc.submit( (Runnable)proxy);
+ </pre></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>instance</code> - the instance of the object to proxy.</dd>
+<dd><code>interfaces</code> - the interfaces that the proxy should implement.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a proxy for the input object that implements all of the specified
+         interfaces.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - - if the <code>interfaces</code>
+ argument is null or the instance does not implement
+ all the specified interfaces.</dd>
+<dd><code>java.lang.UnsupportedOperationException</code> - - if any of the <code>interfaces</code>
+ are <code>serializable</code> but a thread context type
+ does not support serialization.</dd>
+</dl>
+</li>
+</ul>
+<a name="createContextualProxy-java.lang.Object-java.util.Map-java.lang.Class-">
+<!--   -->
+</a><a name="createContextualProxy-T-java.util.Map-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createContextualProxy</h4>
+<pre>&lt;T&gt;&nbsp;T&nbsp;createContextualProxy(T&nbsp;instance,
+                            java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;executionProperties,
+                            java.lang.Class&lt;T&gt;&nbsp;intf)</pre>
+<div class="block">Creates a new contextual object proxy for the input object instance.
+ <p>
+ The contextual object is useful when developing or using Java&trade; SE
+ threading mechanisms propagating events to other component instances.
+ <p>
+ If the application component that created the proxy is not started or
+ deployed, all methods on reflected interfaces may throw an
+ <code>IllegalStateException</code>.
+ <p>
+ This method accepts a <code>Map</code> object which allows the
+ contextual object creator to define what contexts or behaviors to capture
+ when creating the contextual object. The specified properties will remain
+ with the contextual object.
+ <p>
+
+ For example, to call a Message Driven Bean (MDB) with the sender's
+ context, but within the MDB's transaction:
+
+ <pre>
+ public class MyServlet ... {
+     public void doPost() throws NamingException, JMSException {
+        InitialContext ctx = new InitialContext();
+
+        // Get the ContextService that only propagates
+        // security context.
+        ContextService ctxSvc = (ContextService)
+            ctx.lookup(&quot;java:comp/env/SecurityContext&quot;);
+
+        // Set any custom context data through execution properties
+        Map&lt;String, String&gt; execProps = new HashMap&lt;&gt;();
+        execProps.put(&quot;vendor_a.security.tokenexpiration&quot;, &quot;15000&quot;);
+        // Specify that contextual object should run inside the current
+        // transaction.  If we have a failure, we don't want to consume
+        // the message.
+        execProps.put(ManagedTask.TRANSACTION, &quot;USE_TRANSACTION_OF_EXECUTION_THREAD&quot;);
+
+        ProcessMessage msgProcessor =
+            ctxSvc.createContextualProxy(new MessageProcessor(), execProps,
+            ProcessMessage.class);
+
+        ConnectionFactory cf = (ConnectionFactory)
+             ctx.lookup(&quot;java:comp/env/MyTopicConnectionFactory&quot;);
+        Destination dest = (Destination) ctx.lookup(&quot;java:comp/env/MyTopic&quot;);
+        Connection con = cf.createConnection();
+
+        Session session = con.createSession(true, Session.AUTO_ACKNOWLEDGE);
+        MessageProducer producer = session.createProducer(dest);
+
+        Message msg = session.createObjectMessage((Serializable)msgProcessor);
+        producer.send(dest, msg);
+        ...
+
+    }
+
+  public class MyMDB ... {
+    public void onMessage(Message msg) {
+        // Get the ProcessMessage contextual object from the message.
+        ObjectMessage omsg = (ObjectMessage)msg;
+        ProcessMessage msgProcessor = (ProcessMessage)omsg.getObject();
+
+        // Process the message in the specified context.
+        msgProcessor.processMessage(msg);
+    }
+  }
+
+  public interface  ProcessMessage {
+      public void processMessage(Message msg);
+  }
+
+  public class MessageProcessor implements ProcessMessage, Serializable {
+      public void processMessage(Message msg) {
+          // Process the message with the application container
+          // context that sent the message.
+
+      }
+  }
+</pre></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the interface</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>instance</code> - the instance of the object to proxy.</dd>
+<dd><code>executionProperties</code> - the properties to use when creating and running the context
+                          object.</dd>
+<dd><code>intf</code> - the interface that the proxy should implement.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a proxy for the input object that implements the specified interface.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - - if the <code>intf</code> argument
+ null or the instance does not implement the specified interface.</dd>
+<dd><code>java.lang.UnsupportedOperationException</code> - - if the <code>intf</code>
+ interface is <code>serializable</code>
+ but a thread context type does not support serialization.</dd>
+</dl>
+</li>
+</ul>
+<a name="createContextualProxy-java.lang.Object-java.util.Map-java.lang.Class...-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createContextualProxy</h4>
+<pre>java.lang.Object&nbsp;createContextualProxy(java.lang.Object&nbsp;instance,
+                                       java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;executionProperties,
+                                       java.lang.Class&lt;?&gt;...&nbsp;interfaces)</pre>
+<div class="block">Creates a new contextual object proxy for the input object instance.
+ <p>
+ This method is similar to
+ <code>&lt;T&gt; T createContextualProxy(T instance, Map&lt;String, String&gt; executionProperties, Class&lt;T&gt; intf)</code>
+ except that this method can be used if the proxy has to support multiple
+ interfaces.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>instance</code> - the instance of the object to proxy.</dd>
+<dd><code>executionProperties</code> - the properties to use when creating and running the context
+                          object.</dd>
+<dd><code>interfaces</code> - the interfaces that the proxy should implement.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a proxy for the input object that implements all of the specified
+         interfaces.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - - if the <code>interfaces</code>
+ argument is null or the instance does not implement all the specified
+ interfaces.</dd>
+<dd><code>java.lang.UnsupportedOperationException</code> - - if any of the <code>interfaces</code>
+ are <code>serializable</code> but a thread context type
+ does not support serialization.</dd>
+</dl>
+</li>
+</ul>
+<a name="currentContextExecutor--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>currentContextExecutor</h4>
+<pre>java.util.concurrent.Executor&nbsp;currentContextExecutor()</pre>
+<div class="block"><p>Captures thread context as an <code>Executor</code>
+ that runs tasks on the same thread from which
+ <code>execute</code>is invoked but with context that is captured from the thread
+ that invokes <code>currentContextExecutor</code>.</p>
+
+ <p>Example usage:</p>
+ <pre>
+ <code>Executor contextSnapshot = contextSvc.currentContextExecutor();
+ ...
+ // from another thread, or after thread context has changed,
+ contextSnapshot.execute(() -&gt; obj.doSomethingThatNeedsContext());
+ contextSnapshot.execute(() -&gt; doSomethingElseThatNeedsContext(x, y));
+ </code></pre>
+
+ <p>The returned <code>Executor</code> must raise <code>IllegalArgumentException</code>
+ if an already-contextualized <code>Runnable</code> is supplied to its
+ <code>execute</code> method.</p></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an executor that wraps the <code>execute</code> method with context.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="getExecutionProperties-java.lang.Object-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExecutionProperties</h4>
+<pre>java.util.Map&lt;java.lang.String,java.lang.String&gt;&nbsp;getExecutionProperties(java.lang.Object&nbsp;contextualProxy)</pre>
+<div class="block">Gets the current execution properties on the context proxy instance.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contextualProxy</code> - the contextual proxy instance to retrieve the execution properties.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>A copy of the current contextual object execution properties, or null if
+         the contextualProxy is created without specifying any execution properties.</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - thrown if the input contextualProxy is not a valid
+                                            contextual object proxy created with the
+                                            <code>createContextualProxy</code> method.</dd>
+</dl>
+</li>
+</ul>
+<a name="withContextCapture-java.util.concurrent.CompletableFuture-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withContextCapture</h4>
+<pre>&lt;T&gt;&nbsp;java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;withContextCapture(java.util.concurrent.CompletableFuture&lt;T&gt;&nbsp;stage)</pre>
+<div class="block"><p>Returns a new <code>CompletableFuture</code> that is completed by the completion of the
+ specified stage.</p>
+
+ <p>The new completable future gets its default asynchronous execution facility
+ from this <code>ContextService</code>,
+ using the same <a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html" title="interface in jakarta.enterprise.concurrent"><code>ManagedExecutorService</code></a> if this <code>ContextService</code>
+ was obtained by <a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#getContextService--"><code>ManagedExecutorService.getContextService()</code></a>.</p>
+
+ <p>When dependent stages are created from the new completable future,
+ and from the dependent stages of those stages, and so on, thread context is captured
+ and/or cleared by the <code>ContextService</code>. This guarantees that the action
+ performed by each stage always runs under the thread context of the code that creates the stage,
+ unless the user explicitly overrides by supplying a pre-contextualized action.</p>
+
+ <p>Invocation of this method does not impact thread context propagation for the originally supplied
+ completable future or any other dependent stages directly created from it (not using this method).</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - completable future result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>stage</code> - a completable future whose completion triggers completion of the new completable
+        future that is created by this method.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completable future.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+<a name="withContextCapture-java.util.concurrent.CompletionStage-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>withContextCapture</h4>
+<pre>&lt;T&gt;&nbsp;java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;withContextCapture(java.util.concurrent.CompletionStage&lt;T&gt;&nbsp;stage)</pre>
+<div class="block"><p>Returns a new <code>CompletionStage</code> that is completed by the completion of the
+ specified stage.</p>
+
+ <p>The new completion stage gets its default asynchronous execution facility from this <code>ContextService</code>,
+ using the same <a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html" title="interface in jakarta.enterprise.concurrent"><code>ManagedExecutorService</code></a> if this <code>ContextService</code>
+ was obtained by <a href="../../../jakarta/enterprise/concurrent/ManagedExecutorService.html#getContextService--"><code>ManagedExecutorService.getContextService()</code></a>,
+ otherwise using the DefaultManagedExecutorService.</p>
+
+ <p>When dependent stages are created from the new completion stage,
+ and from the dependent stages of those stages, and so on, thread context is captured
+ and/or cleared by the <code>ContextService</code>. This guarantees that the action
+ performed by each stage always runs under the thread context of the code that creates the stage,
+ unless the user explicitly overrides by supplying a pre-contextualized action.</p>
+
+ <p>Invocation of this method does not impact thread context propagation for the originally supplied
+ stage or any other dependent stages directly created from it (not using this method).</p></div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - completion stage result type.</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>stage</code> - a completion stage whose completion triggers completion of the new stage
+        that is created by this method.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new completion stage.</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>3.0</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../index-all.html">Index</a></li>
+<li><a href="../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../jakarta/enterprise/concurrent/Asynchronous.Result.html" title="class in jakarta.enterprise.concurrent"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../jakarta/enterprise/concurrent/ContextServiceDefinition.html" title="annotation in jakarta.enterprise.concurrent"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../index.html?jakarta/enterprise/concurrent/ContextService.html" target="_top">Frames</a></li>
+<li><a href="ContextService.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

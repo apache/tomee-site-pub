@@ -1,0 +1,622 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>Config</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/microprofile-favicon.png">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="Config";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":18,"i5":6,"i6":6,"i7":18,"i8":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../org/eclipse/microprofile/config/ConfigProvider.html" title="class in org.eclipse.microprofile.config"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?org/eclipse/microprofile/config/Config.html" target="_top">Frames</a></li>
+<li><a href="Config.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">org.eclipse.microprofile.config</div>
+<h2 title="Interface Config" class="title">Interface Config</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public interface <span class="typeNameLabel">Config</span></pre>
+<div class="block">Resolves the property value by searching through all configured <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi"><code>ConfigSources</code></a>. If the same
+ property is specified in multiple <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi"><code>ConfigSources</code></a>, the value in the <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi"><code>ConfigSource</code></a> with the
+ highest ordinal will be used.
+ <p>
+ If multiple <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi"><code>ConfigSources</code></a> are specified with the same ordinal, the
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html#getName--"><code>ConfigSource.getName()</code></a> will be used for sorting.
+ <p>
+ The config objects produced via the injection model <code>@Inject Config</code> are guaranteed to be serializable, while
+ the programmatically created ones are not required to be serializable.
+ <p>
+ If one or more converters are registered for a class of a requested value then the registered
+ <a href="../../../../org/eclipse/microprofile/config/spi/Converter.html" title="interface in org.eclipse.microprofile.config.spi"><code>Converter</code></a> which has the highest <code>@jakarta.annotation.Priority</code> is
+ used to convert the string value retrieved from the config sources.
+
+ <h2>Usage</h2>
+
+ <p>
+ For accessing the config you can use the <a href="../../../../org/eclipse/microprofile/config/ConfigProvider.html" title="class in org.eclipse.microprofile.config"><code>ConfigProvider</code></a>:
+
+ <pre>
+ public void doSomething() {
+     Config cfg = ConfigProvider.getConfig();
+     String archiveUrl = cfg.getValue("my.project.archive.endpoint", String.class);
+     Integer archivePort = cfg.getValue("my.project.archive.port", Integer.class);
+ }
+ </pre>
+
+ <p>
+ It is also possible to inject the Config if a DI container is available:
+
+ <pre>
+ public class MyService {
+     &#064;Inject
+     private Config config;
+ }
+ </pre>
+
+ <p>
+ See <a href="../../../../org/eclipse/microprofile/config/Config.html#getValue-java.lang.String-java.lang.Class-"><code>getValue(String, Class)</code></a> and <a href="../../../../org/eclipse/microprofile/config/Config.html#getOptionalValue-java.lang.String-java.lang.Class-"><code>getOptionalValue(String, Class)</code></a> for accessing a configured value.
+
+ <p>
+ Configured values can also be accessed via injection. See
+ <a href="../../../../org/eclipse/microprofile/config/inject/ConfigProperty.html" title="annotation in org.eclipse.microprofile.config.inject"><code>ConfigProperty</code></a> for more information.</div>
+<dl>
+<dt><span class="simpleTagLabel">Examples (en):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/examples/mp-config-source-database.html">mp-config-source-database</a>, <a href="../../../../../../../tomee-9.0/examples/mp-config-example.html">mp-config-example</a></dd>
+<dt><span class="simpleTagLabel">Examples (es):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/es/examples/mp-config-source-database.html">mp-config-source-database</a>, <a href="../../../../../../../tomee-9.0/es/examples/mp-config-example.html">mp-config-example</a></dd>
+<dt><span class="simpleTagLabel">Examples (pt):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/pt/examples/mp-config-source-database.html">mp-config-source-database</a>, <a href="../../../../../../../tomee-9.0/pt/examples/mp-config-example.html">mp-config-example</a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Field Summary table, listing fields, and an explanation">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Field and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#PROFILE">PROFILE</a></span></code>
+<div class="block">The value of the property specifies a single active profile.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#PROPERTY_EXPRESSIONS_ENABLED">PROPERTY_EXPRESSIONS_ENABLED</a></span></code>
+<div class="block">The value of the property determines whether the property expression is enabled or disabled.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>java.lang.Iterable&lt;<a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">ConfigSource</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getConfigSources--">getConfigSources</a></span>()</code>
+<div class="block">Return all of the currently registered <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a> for this configuration.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config">ConfigValue</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getConfigValue-java.lang.String-">getConfigValue</a></span>(java.lang.String&nbsp;propertyName)</code>
+<div class="block">Return the <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a> for the specified property name from the underlying <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration source</a>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.Optional&lt;<a href="../../../../org/eclipse/microprofile/config/spi/Converter.html" title="interface in org.eclipse.microprofile.config.spi">Converter</a>&lt;T&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getConverter-java.lang.Class-">getConverter</a></span>(java.lang.Class&lt;T&gt;&nbsp;forType)</code>
+<div class="block">Return the <a href="../../../../org/eclipse/microprofile/config/spi/Converter.html" title="interface in org.eclipse.microprofile.config.spi"><code>Converter</code></a> used by this instance to produce instances of the specified type from string values.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.Optional&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getOptionalValue-java.lang.String-java.lang.Class-">getOptionalValue</a></span>(java.lang.String&nbsp;propertyName,
+                java.lang.Class&lt;T&gt;&nbsp;propertyType)</code>
+<div class="block">Return the resolved property value with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>default &lt;T&gt;&nbsp;java.util.Optional&lt;java.util.List&lt;T&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getOptionalValues-java.lang.String-java.lang.Class-">getOptionalValues</a></span>(java.lang.String&nbsp;propertyName,
+                 java.lang.Class&lt;T&gt;&nbsp;propertyType)</code>
+<div class="block">Return the resolved property values with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>java.lang.Iterable&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getPropertyNames--">getPropertyNames</a></span>()</code>
+<div class="block">Returns a sequence of configuration property names.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getValue-java.lang.String-java.lang.Class-">getValue</a></span>(java.lang.String&nbsp;propertyName,
+        java.lang.Class&lt;T&gt;&nbsp;propertyType)</code>
+<div class="block">Return the resolved property value with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>default &lt;T&gt;&nbsp;java.util.List&lt;T&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#getValues-java.lang.String-java.lang.Class-">getValues</a></span>(java.lang.String&nbsp;propertyName,
+         java.lang.Class&lt;T&gt;&nbsp;propertyType)</code>
+<div class="block">Return the resolved property values with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/config/Config.html#unwrap-java.lang.Class-">unwrap</a></span>(java.lang.Class&lt;T&gt;&nbsp;type)</code>
+<div class="block">Returns an instance of the specific class, to allow access to the provider specific API.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a name="PROFILE">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>PROFILE</h4>
+<pre>static final&nbsp;java.lang.String PROFILE</pre>
+<div class="block">The value of the property specifies a single active profile.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#org.eclipse.microprofile.config.Config.PROFILE">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="PROPERTY_EXPRESSIONS_ENABLED">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>PROPERTY_EXPRESSIONS_ENABLED</h4>
+<pre>static final&nbsp;java.lang.String PROPERTY_EXPRESSIONS_ENABLED</pre>
+<div class="block">The value of the property determines whether the property expression is enabled or disabled. The value
+ <code>false</code> means the property expression is disabled, while <code>true</code> means enabled.
+
+ By default, the value is set to <code>true</code>.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#org.eclipse.microprofile.config.Config.PROPERTY_EXPRESSIONS_ENABLED">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="getValue-java.lang.String-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getValue</h4>
+<pre>&lt;T&gt;&nbsp;T&nbsp;getValue(java.lang.String&nbsp;propertyName,
+               java.lang.Class&lt;T&gt;&nbsp;propertyType)</pre>
+<div class="block">Return the resolved property value with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.
+ <p>
+ The configuration value is not guaranteed to be cached by the implementation, and may be expensive to compute;
+ therefore, if the returned value is intended to be frequently used, callers should consider storing rather than
+ recomputing it.
+ <p>
+ The result of this method is identical to the result of calling
+ <code>getOptionalValue(propertyName, propertyType).get()</code>. In particular, If the given property name or the
+ value element of this property does not exist, the <code>NoSuchElementException</code> is thrown. This
+ method never returns <code>null</code>.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - The property type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyName</code> - The configuration property name</dd>
+<dd><code>propertyType</code> - The type into which the resolved property value should get converted</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the resolved property value as an instance of the requested type (not <code>null</code>)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if the property cannot be converted to the specified type</dd>
+<dd><code>java.util.NoSuchElementException</code> - if the property is not defined or is defined as an empty string or the converter returns <code>null</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getConfigValue-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getConfigValue</h4>
+<pre><a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config">ConfigValue</a>&nbsp;getConfigValue(java.lang.String&nbsp;propertyName)</pre>
+<div class="block">Return the <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a> for the specified property name from the underlying <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration source</a>. The lookup of the configuration is performed immediately, meaning that calls to
+ <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a> will always yield the same results.
+ <p>
+ The configuration value is not guaranteed to be cached by the implementation, and may be expensive to compute;
+ therefore, if the returned value is intended to be frequently used, callers should consider storing rather than
+ recomputing it.
+ <p>
+ A <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a> is always returned even if a property name cannot be found. In this case, every method in
+ <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a> returns <code>null</code> except for <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html#getName--"><code>ConfigValue.getName()</code></a>, which includes the original
+ property name being looked up.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyName</code> - The configuration property name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the resolved property value as a <a href="../../../../org/eclipse/microprofile/config/ConfigValue.html" title="interface in org.eclipse.microprofile.config"><code>ConfigValue</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getValues-java.lang.String-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getValues</h4>
+<pre>default&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getValues(java.lang.String&nbsp;propertyName,
+                                        java.lang.Class&lt;T&gt;&nbsp;propertyType)</pre>
+<div class="block">Return the resolved property values with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.
+ <p>
+ The configuration values are not guaranteed to be cached by the implementation, and may be expensive to compute;
+ therefore, if the returned values are intended to be frequently used, callers should consider storing rather than
+ recomputing them.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - The property type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyName</code> - The configuration property name</dd>
+<dd><code>propertyType</code> - The type into which the resolved property values should get converted</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the resolved property values as a list of instances of the requested type</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if the property values cannot be converted to the specified type</dd>
+<dd><code>java.util.NoSuchElementException</code> - if the property isn't present in the configuration or is defined as an empty string or the converter
+             returns <code>null</code></dd>
+</dl>
+</li>
+</ul>
+<a name="getOptionalValue-java.lang.String-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOptionalValue</h4>
+<pre>&lt;T&gt;&nbsp;java.util.Optional&lt;T&gt;&nbsp;getOptionalValue(java.lang.String&nbsp;propertyName,
+                                           java.lang.Class&lt;T&gt;&nbsp;propertyType)</pre>
+<div class="block">Return the resolved property value with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.
+ <p>
+ The configuration value is not guaranteed to be cached by the implementation, and may be expensive to compute;
+ therefore, if the returned value is intended to be frequently used, callers should consider storing rather than
+ recomputing it.
+ <p>
+ If this method is used very often then consider to locally store the configured value.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - The property type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyName</code> - The configuration property name</dd>
+<dd><code>propertyType</code> - The type into which the resolved property value should be converted</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The resolved property value as an <code>Optional</code> wrapping the requested type</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if the property cannot be converted to the specified type</dd>
+</dl>
+</li>
+</ul>
+<a name="getOptionalValues-java.lang.String-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOptionalValues</h4>
+<pre>default&nbsp;&lt;T&gt;&nbsp;java.util.Optional&lt;java.util.List&lt;T&gt;&gt;&nbsp;getOptionalValues(java.lang.String&nbsp;propertyName,
+                                                                    java.lang.Class&lt;T&gt;&nbsp;propertyType)</pre>
+<div class="block">Return the resolved property values with the specified type for the specified property name from the underlying
+ <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a>.
+ <p>
+ The configuration values are not guaranteed to be cached by the implementation, and may be expensive to compute;
+ therefore, if the returned values are intended to be frequently used, callers should consider storing rather than
+ recomputing them.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - The property type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>propertyName</code> - The configuration property name</dd>
+<dd><code>propertyType</code> - The type into which the resolved property values should be converted</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The resolved property values as an <code>Optional</code> wrapping a list of the requested type</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - if the property cannot be converted to the specified type</dd>
+</dl>
+</li>
+</ul>
+<a name="getPropertyNames--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPropertyNames</h4>
+<pre>java.lang.Iterable&lt;java.lang.String&gt;&nbsp;getPropertyNames()</pre>
+<div class="block">Returns a sequence of configuration property names. The order of the returned property names is unspecified.
+ <p>
+ The returned property names are unique; that is, if a name is returned once by a given iteration, it will not be
+ returned again during that same iteration.
+ <p>
+ There is no guarantee about the completeness or currency of the names returned, nor is there any guarantee that a
+ name that is returned by the iterator will resolve to a non-empty value or be found in any configuration source
+ associated with the configuration; for example, it is allowed for this method to return an empty set always.
+ However, the implementation <em>should</em> return a set of names that is useful to a user that wishes to browse
+ the configuration.
+ <p>
+ It is implementation-defined whether the returned names reflect a point-in-time "snapshot" of names, or an
+ aggregation of multiple point-in-time "snapshots", or a more dynamic view of the available property names.
+ Implementations are not required to return the same sequence of names on each iteration; however, the produced
+ <code>Iterator</code> must adhere to the contract of that class, and must not return any more
+ elements once its <code>hasNext()</code> method returns <code>false</code>.
+ <p>
+ The returned instance is thread safe and may be iterated concurrently. The individual iterators are not
+ thread-safe.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the names of all configured keys of the underlying configuration</dd>
+</dl>
+</li>
+</ul>
+<a name="getConfigSources--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getConfigSources</h4>
+<pre>java.lang.Iterable&lt;<a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">ConfigSource</a>&gt;&nbsp;getConfigSources()</pre>
+<div class="block">Return all of the currently registered <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration sources</a> for this configuration.
+ <p>
+ The returned sources will be sorted by descending ordinal value and name, which can be iterated in a thread-safe
+ manner. The <code>Iterable</code> contains a fixed number of <a href="../../../../org/eclipse/microprofile/config/spi/ConfigSource.html" title="interface in org.eclipse.microprofile.config.spi">configuration
+ sources</a>, determined at application start time, and the config sources themselves may be static or dynamic.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the configuration sources</dd>
+</dl>
+</li>
+</ul>
+<a name="getConverter-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getConverter</h4>
+<pre>&lt;T&gt;&nbsp;java.util.Optional&lt;<a href="../../../../org/eclipse/microprofile/config/spi/Converter.html" title="interface in org.eclipse.microprofile.config.spi">Converter</a>&lt;T&gt;&gt;&nbsp;getConverter(java.lang.Class&lt;T&gt;&nbsp;forType)</pre>
+<div class="block">Return the <a href="../../../../org/eclipse/microprofile/config/spi/Converter.html" title="interface in org.eclipse.microprofile.config.spi"><code>Converter</code></a> used by this instance to produce instances of the specified type from string values.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the conversion type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>forType</code> - the type to be produced by the converter</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an <code>Optional</code> containing the converter, or empty if no converter is available for the specified
+         type</dd>
+</dl>
+</li>
+</ul>
+<a name="unwrap-java.lang.Class-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>unwrap</h4>
+<pre>&lt;T&gt;&nbsp;T&nbsp;unwrap(java.lang.Class&lt;T&gt;&nbsp;type)</pre>
+<div class="block">Returns an instance of the specific class, to allow access to the provider specific API.
+ <p>
+ If the MP Config provider implementation does not support the specified class, a <code>IllegalArgumentException</code>
+ is thrown.
+ <p>
+ Unwrapping to the provider specific API may lead to non-portable behaviour.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - The type to unwrap to</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - Class representing the type to unwrap to</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>An instance of the given type</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code> - If the current provider does not support unwrapping to the given type</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../org/eclipse/microprofile/config/ConfigProvider.html" title="class in org.eclipse.microprofile.config"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?org/eclipse/microprofile/config/Config.html" target="_top">Frames</a></li>
+<li><a href="Config.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

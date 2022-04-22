@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Multipoint Recommendations</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As mentioned the <code>initialServers</code> is only used for bootstrapping the
+multipoint network. Once running, all servers will dynamically establish
+direct connections with each other and there is no single point of
+failure.</p>
+</div>
+<div class="paragraph">
+<p>However to ensure that the bootstrapping process can occur successfully,
+the <code>initialServers</code> property of the <code>conf/multipoint.properties</code> file
+must be set carefully and with a specific server start order in mind.
+Each server consults its <code>initialServers</code> list exactly once in the
+bootstrapping phase at startup, after that time connections are made
+dynamically.</p>
+</div>
+<div class="paragraph">
+<p>This means that at least one of the servers listed in <code>initialServers</code>
+must already be running when the server starts or the server might never
+become introduced and connected to all the other servers in the network.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_failed_scenario_background">Failed scenario background</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an example of a failed scenario, imagine there are three servers;
+<code>server1</code>, <code>server2</code>, <code>server3</code>. They are setup only to point to the
+server in front of them making a chain:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>server1; <code>initialServers = server2</code></p>
+</li>
+<li>
+<p>server2; <code>initialServers = server3</code></p>
+</li>
+<li>
+<p>server3; <code>initialServers = <strong>&lt;blank&gt;</strong></code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Which is essentially <code>server1</code> &#8594; <code>server2</code> &#8594; <code>server3</code>. This scenario
+could work, but they servers would have to be started in exactly the
+opposite order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>server3</code> starts</p>
+</li>
+<li>
+<p><code>server2</code> starts</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>static:</em> connect to <code>server3</code></p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>server1</code> starts</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>static:</em> connect to <code>server2</code></p>
+</li>
+<li>
+<p><em>dynamic:</em> connect to <code>server3</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>At this point all servers would be fully connected. But the above setup
+is flawed and could easily fail. The first flaw is <code>server3</code> lists
+nothing in its <code>initialServers</code> list, so if it were restarted it would
+leave the multipoint network and not know how to get back in.</p>
+</div>
+<div class="paragraph">
+<p>The second flaw is if you started them in any other order, you would
+also not get a fully connected multipoint network. Say the servers were
+started in "front" order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>server1</code> starts</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>static:</em> connect to <code>server2</code> - failed, <code>server2</code> not started.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>server2</code> starts</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>static:</em> connect to <code>server3</code> - failed, <code>server3</code> not started.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><code>server3</code> starts</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>no connection attempts, initialServers list is empty.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After startup completes, all servers will be completely isolated and
+failover will not work. The described setup is weaker than it needs to
+be. Listing just one server means the listed server is a potential point
+of weakness. As a matter of trivia, it is interesting to point out that
+you could bring a fourth server online temporarily that lists all three
+servers. Once it makes the introductions and all servers learn of each
+other, you could shut it down again.</p>
+</div>
+<div class="paragraph">
+<p>The above setup is easily fixable via better configuration. If <code>server3</code>
+listed both <code>server1</code> and <code>server2</code> in its initialServers list, rather
+than listing nothing at all, then all servers would fully discover each
+other regardless of startup order; assuming all three servers did
+eventually start.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bootstrapping_three_servers_or_less">Bootstrapping Three Servers or Less</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In a three sever scenario, we recommend simply having all three servers
+list all three servers.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>server1/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2, server3</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>server2/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2, server3</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>server3/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2, server3</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There&#8217;s no harm to a server listing itself. It gives you one clean list
+to maintain and it will work even if you decide not to start one of the
+three servers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bootstrapping_four_servers_or_more">Bootstrapping Four Servers or More</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In a scenario of four or more, we recommend picking at least to servers
+and focus on always keeping at least one of them running. Lets refer to
+them as "root" servers for simplicity sake.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>server1/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server2</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>server2/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Root <code>server1</code> would list root <code>server2</code> so they would always be linked
+to each other regardless of start order or if one of them went down.
+<code>Server1</code> could be shutdown and reconnect on startup to the full
+multipoint network through <code>server2</code>, and vice versa.</p>
+</div>
+<div class="paragraph">
+<p>All other servers would simply list the root servers (<code>server1</code>,
+<code>server2</code>) in their initialServers list.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>server3/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>server4/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>serverN/conf/multipoint.properties</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialServers = server1, server2</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As long as at least one root server (<code>server1</code> or <code>server2</code>) was
+running, you can bring other servers on and offline at will and always
+have a fully connected graph.</p>
+</div>
+<div class="paragraph">
+<p>Of course all servers once running and connected will have a full list
+of all other servers in the network, so if at any time the "root"
+servers weren&#8217;t around to make initial introductions to new servers it
+would be no trouble. It&#8217;s possible to reconfigure new servers to point
+at any other server in the network as all servers will have the full
+list. So these "root" servers are no real point of failure in function,
+but only of convenience.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_initialservers_overrides">Setting initialServers overrides</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Always remember that any property in a
+<code>conf/&lt;server-service&gt;.properties</code> file can be overridden on the command
+line or via system properties. So it is possible easily set the
+<code>initialServers</code> list in startup scripts.</p>
+</div>
+<div class="paragraph">
+<p>A bash example might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">!/bin/bash
+
+OPENEJB_HOME=/opt/openejb-3.1.3
+INITIAL_LIST=$(cat /some/shared/directory/our_initial_servers.txt)
+
+$OPENEJB_HOME/bin/openejb start -Dmultipoint.initialServers=$INITIAL_LIST</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

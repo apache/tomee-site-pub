@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Ejbd Transport</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Ejbd Transport allows to remotely access EJBs that have a remote
+interface. Nevertheless it is not based on IIOP.</p>
+</div>
+<div class="paragraph">
+<p>Ejbd Transport is different using TomEE or OpenEJB.</p>
+</div>
+<div class="paragraph">
+<p>In OpenEJB it uses openejb http layer and ejbd is configured through
+ejbd service (same for ejbds). So to activate/deactivate them use
+conf/ejbd(s).properties files. You can set property disabled to true if
+you don&#8217;t want them to be started.</p>
+</div>
+<div class="paragraph">
+<p>In TomEE the transport is the Tomcat one. It uses a servlet brought by
+TomEE webapp. Here is the servlet as defined in TomEE webapp:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;servlet&gt;
+    &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.apache.openejb.server.httpd.ServerServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;ServerServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/ejb/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can easily remove it if you don&#8217;t use remote EJBs. Another way is to
+deactivate the servlet using the "activated" init parameter of the
+servlet.</p>
+</div>
+<div class="paragraph">
+<p>Finally you can move this servlet in your own webapp if you want to use
+a provider url containing your webapp context. Simply copy paste the
+servlet definition in your web.xml and set the url mapping to what you
+want (let say /foo/*). Then use the provider url
+<a href="http://&lt;host&gt;:&lt;port&gt;/&lt;webapp" class="bare">http://&lt;host&gt;:&lt;port&gt;/&lt;webapp</a> context name&gt;/foo</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_communication_and_serialization">Remote communication and serialization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Remotely calling EJBs, independent of using Ejbd or other RMI/IIOP based
+protocols, involves serialization and deserialization of objects.
+Deserializing unknown content coming from an untrusted source imposes a
+security risk as the stream could be manipulated. A much publicized
+<a href="http://www.kb.cert.org/vuls/id/576313">vulnerability</a> was found in the
+commons-collections library which allowed to remotely execute arbitrary
+code simply by deserializing instances of the class
+<code>InvokerTransformer</code>.</p>
+</div>
+<div class="paragraph">
+<p>To prevent this risk TomEE and the OpenEJB client since 1.7.4 before
+deserializing every object checks its class against a configurable
+blacklist and a whitelist. The default black list is defined as <code>*</code>,
+meaning that requests cannot be deserialized at all and the Ejbd
+transport in fact cannot be used.</p>
+</div>
+<div class="paragraph">
+<p>The blacklist and whitelist is configured via the system properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tomee.serialization.class.whitelist</code></p>
+</li>
+<li>
+<p><code>tomee.serialization.class.blacklist</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You will also find these properties in
+<a href="properties-listing.html">System Properties Listing</a></p>
+</div>
+<div class="paragraph">
+<p>These rules apply for the whitelist:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The whitelist has a lower priority than the blacklist. That means a
+class that is part of the blacklist cannot be whitelisted and will
+always be refused.</p>
+</li>
+<li>
+<p>If a whitelist is not defined, either by not defining the property at
+all or defining it with an empty value, every class is on the whitelist.
+In this case only the blacklist applies.</p>
+</li>
+<li>
+<p>If a whitelist is defined it must be a comma separated list of
+prefixes of fully qualified class names. Then deserialization of an
+object fails if its class is not part of this whitelist. A class is on
+the whitelist if its fully qualified classname is prefixed by one of the
+values in the whitelist.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These rules apply for the blacklist:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the blacklist should be deactivated it must be configured to the
+value <code>-</code>. This will open your system to the serialization vulnerability
+if you don&#8217;t configure a whitelist!</p>
+</li>
+<li>
+<p>If the blacklist is not configured its default value is
+<code>org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan,java.lang.Process</code>
+so that for example the class
+<code>org.apache.commons.collections.functors.InvokerTransformer</code> cannot be
+deserialized.</p>
+</li>
+<li>
+<p>If the blacklist is configured with an empty value the blacklist is
+effectively <code>*</code>, therefore preventing any Ejbd communication.</p>
+</li>
+<li>
+<p>If you want to blacklist certain classes the property must be
+configured to a comma separated list of prefixes of fully qualified
+class names. A class is on the blacklist if its fully qualified
+classname is prefixed by one of the values in the blacklist.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The default for <code>tomee.serialization.class.whitelist</code> is empty, the
+default for <code>tomee.serialization.class.blacklist</code> is <code>*</code> since TomEE
+1.7.4.</p>
+</div>
+<div class="paragraph">
+<p>If an EJB request fails because a class is not whitelisted you will find
+this log entry:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">WARN - "null OEJP/4.7" FAIL "Security error - foo.Bar is not whitelisted as deserializable, prevented before loading it." - Debug for StackTrace</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you trust this class and want to support serialization in remote
+communication you have to configure these properties appropriately both
+on server side as well as on client side.</p>
+</div>
+<div class="paragraph">
+<p>If you only want to support serialization of the classes <code>foo.Bar</code> and
+<code>foo.Baz</code> you can configure the properties like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">tomee.serialization.class.whitelist = foo.Bar,foo.Baz
+tomee.serialization.class.blacklist = -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you trust all classes in the package <code>foo</code> define the properties like
+this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">tomee.serialization.class.whitelist = foo.
+tomee.serialization.class.blacklist = -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(Don&#8217;t forget the trailing <code>.</code> after foo, as it will also whitelist all
+classes in the package <code>foo2</code> otherwise.)</p>
+</div>
+<div class="paragraph">
+<p>If you trust all classes in the package <code>foo</code> except the class <code>foo.Bar</code>
+you have to configure the properties like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">tomee.serialization.class.whitelist = foo.
+tomee.serialization.class.blacklist = foo.Bar</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_revert_to_behavior_of_tomee_1_7_3">Revert to behavior of TomEE 1.7.3</h3>
+<div class="paragraph">
+<p>TomEE 1.7.3 already contained a fixed blacklist that was not
+configurable and contained the packages org.codehaus.groovy.runtime,
+org.apache.commons.collections.functors and org.apache.xalan including
+subpackages and the class java.lang.Process. If you know that your
+applications runs on TomEE 1.7.3 but does not on TomEE 1.7.4 showing the
+aforementioned log message, you can define the configuration so that the
+serialization will work in the same way as it did with TomEE 1.7.3:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">tomee.serialization.class.whitelist =
+tomee.serialization.class.blacklist = org.codehaus.groovy.runtime.,org.apache.commons.collections.functors.,org.apache.xalan,java.lang.Process</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note that with this configuration your server may be vulnerable
+to Java serialization attacks not yet identified by the Zero Day
+initiative. Also note that the following versions of the affected
+libraries have been patched and approved by the Zero Day initiative and
+<em>may</em> be safe to deserialize.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Groovy 2.4.4</p>
+</li>
+<li>
+<p>Commons Collections 3.2.2</p>
+</li>
+<li>
+<p>Xalan 2.7.2</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As Ejbd transport is tunneled over HTTP please make sure that the
+<code>ServerServlet</code> is not publicly accessible. When the applications
+running on TomEE do not package the <code>ServerServlet</code> themselves ensure
+that the URL <a href="http://&lt;host&gt;:&lt;port&gt;/tomee/ejb" class="bare">http://&lt;host&gt;:&lt;port&gt;/tomee/ejb</a> is not accessible from
+untrusted sources.</p>
+</div>
+<div class="paragraph">
+<p>If your applications package declare it in their own web.xml make sure
+that the respective URL is not accessible from untrusted sources.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_revert_to_behavior_of_tomee_1_7_2">Revert to behavior of TomEE 1.7.2</h3>
+<div class="paragraph">
+<p>TomEE 1.7.2 did not have any kind of blacklist when deserializing
+objects over Ejbd. If you want to revert to this behavior you can simply
+deactivate the blacklist with this configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">tomee.serialization.class.whitelist =
+tomee.serialization.class.blacklist = -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that this configuration makes your system highly vulnerable to
+serialization attacks! Consider your system as unsafe!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_remote_communication_and_arquillian_tests">Remote communication and Arquillian tests</h3>
+<div class="paragraph">
+<p>The mechanism described above principally also works when running
+Arquillian tests. As the Ejbd transport is already used for deploying
+applications all Arquillian tests would fail with the default settings.</p>
+</div>
+<div class="paragraph">
+<p>Therefore the TomEE Arquillian adapter automatically starts the
+container so that all classes except for a set of well-know dangerous
+classes are whitelisted.</p>
+</div>
+<div class="paragraph">
+<p>As Ejbd is by default disabled since TomEE 7.0.0, the TomEE Arquillian
+adapter automatically activates it when starting a remote container.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_remote_communication_and_the_tomee_maven_plugin">Remote communication and the TomEE Maven Plugin</h3>
+<div class="paragraph">
+<p>The same mentioned above on Arquillian and TomEE is also valid when
+using the TomEE Maven Plugin.</p>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

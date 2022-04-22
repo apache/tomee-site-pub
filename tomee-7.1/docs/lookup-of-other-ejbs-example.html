@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Lookup of other EJBs Example</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_overview" class="sect0">Overview</h1>
+<div class="paragraph">
+<p>This example shows how to configure JNDI to lookup other EJBs using
+either the <em>`@EJB</em>` annotation or the <em>ejb-jar.xml</em> deployment descriptor.</p>
+</div>
+<div class="paragraph">
+<p>There are a couple interesting aspects in this example intended to flush
+out some of the more confusing, and perhaps frustrating, aspects of
+referring to EJBs.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>beans themselves do not have JNDI names (this was only recently added
+in Java EE 6)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is the most frustrating and hard to accept. Java EE 5 does not have
+a global namespace and therefore there is no <em>singular</em> name for your
+EJB. It does not matter what you do to your EJB, there is no standard
+way to "give" the bean a name that can be used by the application
+globally.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>each EJB owns its own private <em>java:comp/env</em> namespace
+(<em>java:comp/env</em> is not global and cannot be treated that way)</p>
+</li>
+<li>
+<p>names do not magically appear in <em>java:comp/env</em>, they must be
+explicitly added.</p>
+</li>
+<li>
+<p>to get a reference to bean <em>B</em> in the <em>java:comp/env</em> namespace of
+bean <em>A</em>, bean <em>A</em> must declare a reference to bean <em>B</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You read this right. If you have 10 EJBs and all of them want to refer
+to bean <em>B</em>, then you must declare bean <em>B</em> as a reference 10 times
+(once for each of the 10 beans). There is no standard way in Java EE 5
+to do this just once for all beans. In Java EE 6 there is a
+"<em>java:global</em>" namespace, a "<em>java:app</em>" namespace, and a
+"<em>java:module</em>" namespace where names can be defined with the desired
+scope. Java EE 5 has only <em>java:comp</em>.</p>
+</div>
+<div class="paragraph">
+<p>There are two things which make this even more confusing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Servlets have always defined <em>java:comp/env</em> differently. In a webapp,
+the <em>java:comp/env</em> namespace is shared by all servlets. This is
+essentially equivalent to the <em>java:module</em> namespace in Java EE 6.
+Understand there is a conflict in definition here and that for EJBs,
+<em>java:comp</em> is scoped at the component (the EJB itself) not the module
+as with webapps.</p>
+</li>
+<li>
+<p>All vendors have some proprietary concept of global JNDI. So you may
+be able to lookup "<em>java:/MyBean</em>" or "<em>MyBeanLocal</em>", but these are
+vendor-specific and non-portable.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As well this example shows some other interesting aspects of referring
+to EJBs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Two beans may use the same business interfaces, the interface alone
+does not necessarily identify the exact bean</p>
+</li>
+<li>
+<p>circular references are possible</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To illustrate all of this, we have two simple <code>@Stateless</code> beans,
+<em>RedBean</em> and <em>BlueBean</em>. Both implement the same business local
+interface, <em>Friend</em>. Both <em>RedBean</em> and <em>BlueBean</em> define
+<em>java:comp/env/myFriend</em> differently which is allowed as <em>java:comp</em> is
+a namespace that is private to each bean and not visible to other beans&#8201;&#8212;&#8201;so the names do not have to match.</p>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="paragraph">
+<p>Here we show the code for <em>RedBean</em> and <em>BlueBean</em> and their shared
+business local interface <em>Friend</em>.
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/RedBean.java|lang=java}
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/BlueBean.java|lang=java}
+\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/main/java/org/superbiz/ejblookup/Friend.java|lang=java}</p>
+</div>
+<div class="paragraph">
+<p>The key items in the above are the following: - <em>`@EJB</em>` has been used at
+the <em>class level</em> to declare <em>myFriend</em> in the <em>java:comp/env</em> namespace
+of each EJB - because both beans share the <em>same interface</em>, <em>Friend</em>,
+we need to add <strong>beanName</strong> to the <em>`@EJB</em>` usage to specify the exact EJB
+we want - for <em>BlueBean</em> the <em>java:comp/env/myFriend</em> name has been
+configured to point to <em>RedBean</em> - for <em>RedBean</em> the
+<em>java:comp/env/myFriend</em> name has been configured to point to <em>BlueBean</em></p>
+</div>
+<div class="sect1">
+<h2 id="_alternative_to_annotations">Alternative to annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If there is a desire to not use annotations, the above annotation usage
+is equivalent to the following ejb-jar.xml
+\{snippet:url=openejb3/examples/lookup-of-ejbs-with-descriptor/src/main/resources/META-INF/ejb-jar.xml|lang=xml}</p>
+</div>
+</div>
+</div>
+<h1 id="_writing_a_unit_test_for_the_example" class="sect0">Writing a unit test for the example</h1>
+<div class="paragraph">
+<p>Writing an unit test for this example is quite simple. We need just to
+write a setup method to create and initialize the InitialContext, and
+then write our test methods</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=code|url=openejb3/examples/lookup-of-ejbs/src/test/java/org/superbiz/ejblookup/EjbDependencyTest.java|lang=java}</p>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the "lookup-of-ejbs" directory
+of the openejb:download.html[examples zip] , just run:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Which should create output like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.ejblookup.EjbDependencyTest
+Apache OpenEJB 3.1.5-SNAPSHOT    build: 20101129-09:51
+http://tomee.apache.org/
+INFO - openejb.home =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs INFO -
+openejb.base =
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs INFO -
+Configuring Service(id=Default Security Service, type=SecurityService,
+provider-id=Default Security Service) INFO - Configuring
+Service(id=Default Transaction Manager, type=TransactionManager,
+provider-id=Default Transaction Manager) INFO - Found EjbModule in
+classpath:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+INFO - Beginning load:
+/Users/dblevins/work/openejb-3.1.x/examples/lookup-of-ejbs/target/classes
+INFO - Configuring enterprise application: classpath.ear INFO -
+Configuring Service(id=Default Stateless Container, type=Container,
+provider-id=Default Stateless Container) INFO - Auto-creating a
+container for bean BlueBean: Container(type=STATELESS, id=Default
+Stateless Container) INFO - Enterprise application "classpath.ear"
+loaded. INFO - Assembling app: classpath.ear INFO -
+Jndi(name=BlueBeanLocal) -&#8594; Ejb(deployment-id=BlueBean) INFO -
+Jndi(name=RedBeanLocal) -&#8594; Ejb(deployment-id=RedBean) INFO - Created
+Ejb(deployment-id=RedBean, ejb-name=RedBean, container=Default Stateless
+Container) INFO - Created Ejb(deployment-id=BlueBean, ejb-name=BlueBean,
+container=Default Stateless Container) INFO - Deployed
+Application(path=classpath.ear) Tests run: 2, Failures: 0, Errors: 0,
+Skipped: 0, Time elapsed: 1.244 sec</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

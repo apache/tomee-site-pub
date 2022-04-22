@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>TomEE Maven Plugin</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Inspired by the Jetty Maven Plugin, the TomEE Maven Plugin is a
+feature-rich plugin that allows for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Easy provisioning of a TomEE server</p>
+</li>
+<li>
+<p>Server start and stop</p>
+</li>
+<li>
+<p>Application deployment and undeployment</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Simply add the following to the , and optionally the ), section of your
+<code>pom.xml</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
+      &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+      &lt;version&gt;1.7.1&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;tomeeVersion&gt;1.7.1&lt;/tomeeVersion&gt;
+        &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+&lt;/plugins&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_plugin_goals">Plugin Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Goal</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p>tomee:build</p>
+</div>
+<div class="paragraph">
+<p>Create TomEE, but do not run it.</p>
+</div>
+<div class="paragraph">
+<p>tomee:configtest</p>
+</div>
+<div class="paragraph">
+<p>Run the Apache Tomcat <code>configtest</code> command.</p>
+</div>
+<div class="paragraph">
+<p>tomee:debug</p>
+</div>
+<div class="paragraph">
+<p>Same as <code>run</code> but with debug activated on the default or specified port.</p>
+</div>
+<div class="paragraph">
+<p>tomee:deploy</p>
+</div>
+<div class="paragraph">
+<p>Deploy an application in a running TomEE.</p>
+</div>
+<div class="paragraph">
+<p>tomee:exec</p>
+</div>
+<div class="paragraph">
+<p>Undocumented.</p>
+</div>
+<div class="paragraph">
+<p>tomee:help</p>
+</div>
+<div class="paragraph">
+<p>Display help information on the tomee-maven-plugin. Call mvn tomee:help
+-Ddetail=true -Dgoal=&lt;goal-name&gt; to display parameter details.</p>
+</div>
+<div class="paragraph">
+<p>tomee:list</p>
+</div>
+<div class="paragraph">
+<p>Largely inspired by the OpenEJB command helper, but with some
+differences. List deployed EJB&#8217;s in a running TomEE.</p>
+</div>
+<div class="paragraph">
+<p>tomee:run</p>
+</div>
+<div class="paragraph">
+<p>Start and wait for TomEE.</p>
+</div>
+<div class="paragraph">
+<p>tomee:start</p>
+</div>
+<div class="paragraph">
+<p>Start TomEE and continue.</p>
+</div>
+<div class="paragraph">
+<p>tomee:stop</p>
+</div>
+<div class="paragraph">
+<p>Stop a TomEE started with start command.</p>
+</div>
+<div class="paragraph">
+<p>tomee:undeploy</p>
+</div>
+<div class="paragraph">
+<p>Undeploy an application in a running TomEE</p>
+</div>
+<div class="paragraph">
+<p>Note that for the tomee:deploy and tomee:undeploy goals, the path can
+either be specified within the section of the <code>pom.xml</code> using the
+parameter, or it can be passed via the user property
+tomee-plugin.archive. If a relative path is passed for the deploy path
+archive, this must be relative to the TomEE server.</p>
+</div>
+<div class="paragraph">
+<p>Note 2: running tomee maven plugin you can type 'quit' directly in the
+console to shutdown correctly the server. 'reload' is also available
+when internal openejb application is deployed.</p>
+</div>
+<div class="paragraph">
+<p>###More Tweaks</p>
+</div>
+<div class="paragraph">
+<p>The lib tag allows to enrich the container with some additional
+libraries.</p>
+</div>
+<div class="paragraph">
+<p>Some interesting patterns in addition to the default maven formats are
+supported.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>remove:&lt;some prefix of jar in lib folder&gt;: remove all jar starting
+with the specified prefix</p>
+</li>
+<li>
+<p>unzip:&lt;some maven zip&gt;: extract the zip in lib folder</p>
+</li>
+<li>
+<p>?name=&lt;new-name&gt;: rename the libary once copied in lib folder</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note: the name tweak can be used to rename applications too</p>
+</div>
+<div class="paragraph">
+<p>###Provisioning Example</p>
+</div>
+<div class="paragraph">
+<p>This plugin is also usable in projects which are not war. For instance
+you can use it in a pom project to setup a TomEE install, add libraries,
+deploy apps then run the server.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">  &lt;plugin&gt;
+    &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
+    &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;1.7.1&lt;/version&gt;
+    &lt;configuration&gt;
+      &lt;tomeeVersion&gt;1.7.1&lt;/tomeeVersion&gt;
+      &lt;tomeeClassifier&gt;plus&lt;/tomeeClassifier&gt;
+      &lt;debug&gt;false&lt;/debug&gt;
+      &lt;debugPort&gt;5005&lt;/debugPort&gt;
+      &lt;args&gt;-Dfoo=bar&lt;/args&gt;
+      &lt;config&gt;${project.basedir}/src/test/tomee/conf&lt;/config&gt;
+      &lt;libs&gt;
+        &lt;lib&gt;mysql:mysql-connector-java:5.1.20&lt;/lib&gt;
+      &lt;/libs&gt;
+      &lt;webapps&gt;
+         &lt;webapp&gt;org.superbiz:myapp:4.3?name=ROOT&lt;/webapp&gt;
+         &lt;webapp&gt;org.superbiz:api:1.1&lt;/webapp&gt;
+      &lt;/webapps&gt;
+      &lt;apps&gt;
+          &lt;app&gt;org.superbiz:mybugapp:3.2:ear&lt;/app&gt;
+      &lt;/apps&gt;
+      &lt;libs&gt;
+          &lt;lib&gt;mysql:mysql-connector-java:5.1.21&lt;/lib&gt;
+          &lt;lib&gt;unzip:org.superbiz:hibernate-bundle:4.1.0.Final:zip&lt;/lib&gt;
+          &lt;lib&gt;remove:openjpa-&lt;/lib&gt;
+      &lt;/libs&gt;
+    &lt;/configuration&gt;
+  &lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>###Auto Reloading Example</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.openejb.maven&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;1.7.1&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;synchronization&gt;
+      &lt;extensions&gt;
+        &lt;extension&gt;.class&lt;/extension&gt; &lt;!-- if you want to update each time you build with mvn compile --&gt;
+      &lt;/extensions&gt;
+    &lt;/synchronization&gt;
+    &lt;reloadOnUpdate&gt;true&lt;/reloadOnUpdate&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Synchronization block supports the following configuration options:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>resourcesDir (default src/main/webapp)</p>
+</li>
+<li>
+<p>binariesDir (default target/classes)</p>
+</li>
+<li>
+<p>targetBinariesDir (default tomee/webapps/finalName/WEB-INF/classes)</p>
+</li>
+<li>
+<p>targetResourcesDir (default tomee/webapps/finalName)</p>
+</li>
+<li>
+<p>updateInterval (default 5 - in second)</p>
+</li>
+<li>
+<p>extensions (default html, xhtml, js and css)</p>
+</li>
+<li>
+<p>regex: a regex should match files to take into account when updating</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>reloadOnUpdate means to reload the entire context (webapp). This means
+undeploying/redeploying the application.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

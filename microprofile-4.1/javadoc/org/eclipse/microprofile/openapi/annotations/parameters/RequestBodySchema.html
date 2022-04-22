@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>RequestBodySchema</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/microprofile-favicon.png">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="RequestBodySchema";
+        }
+    }
+    catch(err) {
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/parameters/RequestBody.html" title="annotation in org.eclipse.microprofile.openapi.annotations.parameters"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/openapi/annotations/parameters/RequestBodySchema.html" target="_top">Frames</a></li>
+<li><a href="RequestBodySchema.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Optional</li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">org.eclipse.microprofile.openapi.annotations.parameters</div>
+<h2 title="Annotation Type RequestBodySchema" class="title">Annotation Type RequestBodySchema</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>@Target(value={PARAMETER,METHOD})
+ @Retention(value=RUNTIME)
+ @Inherited
+public @interface <span class="memberNameLabel">RequestBodySchema</span></pre>
+<div class="block">Provides a reference to a class that (after introspection) describes the schema
+ for a single request body. This annotation provides a short-hand way to specify a
+ simple request body that would otherwise be specified using <a href="../../../../../../org/eclipse/microprofile/openapi/annotations/parameters/RequestBody.html" title="annotation in org.eclipse.microprofile.openapi.annotations.parameters"><code>&#64;RequestBody</code></a>
+ and that typically could not be determined by scanning the resource method alone.
+
+ <p>
+ The following annotation usages are equivalent to the OpenAPI annotation scanner runtime.
+
+ <pre>
+ &#64;RequestBody(content = { &#64;Content(schema = &#64;Schema(implementation = MyRequestObject.class)) })
+
+ &#64;RequestBodySchema(MyRequestObject.class)
+ </pre>
+
+ <p>
+ Any media types that apply to the resource method from either a method-level or class-level
+ <code>&#64;Consumes</code> annotation will result in those media types applying to the OpenAPI
+ request body model.
+
+ <p>
+ This annotation is useful in cases when a single request body schema applies to all media types (as
+ given in <code>&#64;Consumes</code>), where it is not possible for class introspection to
+ determine the schema directly.
+
+ <pre>
+ &#64;PUT
+ &#64;Path("{id}")
+ &#64;RequestBodySchema(MyRequestObject.class)
+ public Response updateItem(&#64;PathParam("{id}") long id, InputStream rawData) {
+     MyRequestObject entity = service.deserialize(rawData);
+     service.persist(entity);
+
+     return Response.status(204).build();
+ }
+ </pre></div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/parameters/RequestBody.html" title="annotation in org.eclipse.microprofile.openapi.annotations.parameters"><code>RequestBody</code></a>, 
+<a href="https://github.com/OAI/OpenAPI-Specification/blob/3.0.0-rc2/versions/3.0.md#requestBodyObject">OpenAPI requestBody Object</a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.required.element.summary">
+<!--   -->
+</a>
+<h3>Required Element Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Required Element Summary table, listing required elements, and an explanation">
+<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Required Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/parameters/RequestBodySchema.html#value--">value</a></span></code>
+<div class="block">Provides a Java class as implementation for this schema.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.element.detail">
+<!--   -->
+</a>
+<h3>Element Detail</h3>
+<a name="value--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>value</h4>
+<pre>public abstract&nbsp;java.lang.Class&lt;?&gt;&nbsp;value</pre>
+<div class="block">Provides a Java class as implementation for this schema. The class will
+ undergo introspection to determine any applicable Schema attributes to be
+ applied to the OpenAPI request body model.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a class that implements this schema</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/parameters/RequestBody.html" title="annotation in org.eclipse.microprofile.openapi.annotations.parameters"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/openapi/annotations/parameters/RequestBodySchema.html" target="_top">Frames</a></li>
+<li><a href="RequestBodySchema.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Optional</li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

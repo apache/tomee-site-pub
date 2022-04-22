@@ -124,21 +124,21 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Here we have a class with some details. See the annotation
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/Entity.html">@Entity</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/Entity.html">@Entity</a>
 above the declaration, with it we are saying that this class is an entity (a table in the database). We still have two more annotations above the attribute id, one of them is
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/Id.html">@Id</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/Id.html">@Id</a>
 annotation, it indicates that this attribute is the identifier of the entity and the other annotation
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/GeneratedValue.html">@GeneratedValue</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/GeneratedValue.html">@GeneratedValue</a>
 indicates that the unique identifier value generation of the entity will be managed by the persistence provider.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h5jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h3jpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Movie {
@@ -194,27 +194,27 @@ public class Movie {
 <div class="sectionbody">
 <div class="paragraph">
 <p>Now we have two important things:
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/PersistenceContext.html">@PersistenceContext</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/PersistenceContext.html">@PersistenceContext</a>
 annotation and the
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/EntityManager.html">EntityManager</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
 declaration.
 The
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
 is the interface with the core methods of JPA like persist, remove, merge, find and others&#8230;&#8203;
 We annotate the
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/EntityManager.html">EntityManager</a>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/EntityManager.html">EntityManager</a>
 with
-<a href="https://tomee.apache.org/tomee-9.0/javadoc/jakarta/persistence/PersistenceContext.html">@PersistenceContext</a>, a persistence context is an entity management where  every persistence context associated with a persistence unit, we will create a persistence.xml soon for this.</p>
+<a href="https://tomee.apache.org/tomee-8.0/javadoc/javax/persistence/PersistenceContext.html">@PersistenceContext</a>, a persistence context is an entity management where  every persistence context associated with a persistence unit, we will create a persistence.xml soon for this.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import jakarta.ejb.Stateful;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceContextType;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.*;
-import jakarta.persistence.metamodel.EntityType;
+<pre class="highlight"><code class="language-java" data-lang="java">import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.Query;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.EntityType;
 import java.util.List;
 
 @Stateful
@@ -317,16 +317,13 @@ The property <code>additionalLibs</code> provide to the server the jar files req
             &lt;property name="cleanOnStartUp"&gt;true&lt;/property&gt;
             &lt;property name="additionalLibs"&gt;
                 &lt;!-- add hibernate 5 need it jars to the server--&gt;
-                mvn:org.hibernate:hibernate-entitymanager:5.4.10.Final
-                mvn:org.hibernate:hibernate-core:5.4.10.Final
-                mvn:org.hibernate.common:hibernate-commons-annotations:5.1.0.Final
+                mvn:org.hibernate:hibernate-core:5.6.7.Final
+                mvn:org.hibernate.common:hibernate-commons-annotations:5.1.2.Final
                 mvn:antlr:antlr:2.7.7
-                mvn:org.jboss:jandex:1.1.0.Final
+                mvn:org.jboss:jandex:2.4.2.Final
                 mvn:org.jboss.logging:jboss-logging:3.3.2.Final
-                mvn:dom4j:dom4j:1.6.1
-                mvn:org.javassist:javassist:3.18.1-GA
-                mvn:net.bytebuddy:byte-buddy:1.10.2
-                mvn:com.fasterxml:classmate:1.0.0
+                mvn:net.bytebuddy:byte-buddy:1.12.8
+                mvn:com.fasterxml:classmate:1.5.1
             &lt;/property&gt;
 
         &lt;/configuration&gt;
@@ -363,7 +360,7 @@ The property <code>additionalLibs</code> provide to the server the jar files req
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h5jpa;
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.injection.h3jpa;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -372,7 +369,7 @@ import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import jakarta.ejb.EJB;
+import javax.ejb.EJB;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -476,37 +473,31 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/ejb/EJB.html">jakarta.ejb.EJB</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/Entity.html">javax.persistence.Entity</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/ejb/Stateful.html">jakarta.ejb.Stateful</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/EntityManager.html">javax.persistence.EntityManager</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/Entity.html">jakarta.persistence.Entity</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/GeneratedValue.html">javax.persistence.GeneratedValue</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/EntityManager.html">jakarta.persistence.EntityManager</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/GenerationType.html">javax.persistence.GenerationType</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/GeneratedValue.html">jakarta.persistence.GeneratedValue</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/Id.html">javax.persistence.Id</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/GenerationType.html">jakarta.persistence.GenerationType</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/PersistenceContext.html">javax.persistence.PersistenceContext</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/Id.html">jakarta.persistence.Id</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/PersistenceContextType.html">javax.persistence.PersistenceContextType</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/PersistenceContext.html">jakarta.persistence.PersistenceContext</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/Query.html">javax.persistence.Query</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/PersistenceContextType.html">jakarta.persistence.PersistenceContextType</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/Query.html">jakarta.persistence.Query</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-9.0/javadoc/jakarta/persistence/metamodel/EntityType.html">jakarta.persistence.metamodel.EntityType</a></p>
+<p><a href="../../jakartaee-8.0/javadoc/javax/persistence/metamodel/EntityType.html">javax.persistence.metamodel.EntityType</a></p>
 </li>
 </ul>
 </div>

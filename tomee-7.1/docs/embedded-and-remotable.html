@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Embedded and Remotable</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_overview" class="sect0">Overview</h1>
+<div class="paragraph">
+<p>This example shows how to use OpenEJB3&#8217;s remoting capabilities in an
+embedded scenario. By remoting we mean that you wish to allow <em>clients
+in other vms</em> access your ejbs. <em>Note, you do not need to go to this
+extreme to unit test ejbs with remote interfaces.</em></p>
+</div>
+<div class="paragraph">
+<p>The basic recipe is the same for a standard embedded scenario but with
+these added ingreditents:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>openejb.embedded.remotable</em> property</p>
+</li>
+<li>
+<p><em>openejb-ejbd</em> jar</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>While creating the InitialContext, pass in the
+openejb.embedded.remotable property with the value of "true". When this
+is seen by the LocalInitialContextFactory, it will boot up the Server
+ServiceManager in the VM which will in turn look for ServerServices in
+the classpath.</p>
+</div>
+<div class="paragraph">
+<p>Provided you have the openejb-ejbd jar in your classpath along with it&#8217;s
+dependencies (openejb-server, openejb-client, openejb-core), then those
+services will be brought online and remote clients will be able to
+connect into your vm and invoke beans.</p>
+</div>
+<div class="paragraph">
+<p>If you want to add more ServerServices such as the http version of the
+ejbd protocol you&#8217;d simply add the openejb-httpejbd jar to your
+classpath. A number of ServerServices are available currently:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>openejb-ejbd</p>
+</li>
+<li>
+<p>openejb-http</p>
+</li>
+<li>
+<p>openejb-telnet</p>
+</li>
+<li>
+<p>openejb-derbynet</p>
+</li>
+<li>
+<p>openejb-hsql</p>
+</li>
+<li>
+<p>openejb-activemq</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><em>The source for this example is in the "telephone-stateful" directory
+located in the openejb:download.html[openejb-examples.zip] available on
+the <a href="http://tomee.apache.org/downloads.html">download page</a>.</em></p>
+</div>
+<div class="paragraph">
+<p>{note} If your goal is simply to unit test beans with remote
+interfaces, this is <em>not</em> the right example for you. The
+LocalInitialContextFactory completely supports remote interfaces and all
+spec required pass-by-value (serialization) semantics without the need
+for network sockets. This example shows the use of OpenEJB in an
+embedded environment where connection <em>outside</em> the vm is
+required.{note}</p>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="paragraph">
+<p>For this example we have a simple Stateful bean called TelephoneBean as
+defined below. As a simple way of demonstrating the state we have to
+methods: speak and listen. You call <em>speak</em> and pass in some text, then
+you call <em>listen</em> to get your answer.</p>
+</div>
+<div class="sect1">
+<h2 id="_bean">bean</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>\{snippet:id=code|url=openejb3/examples/telephone-stateful/src/main/java/org/superbiz/telephone/TelephoneBean.java|lang=java}</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_business_interface">business interface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>\{snippet:id=code|url=openejb3/examples/telephone-stateful/src/main/java/org/superbiz/telephone/Telephone.java|lang=java}</p>
+</div>
+<div class="paragraph">
+<p>{title= EJB3 Notes} The bean class uses the annotation <em>`@Remote</em>` but
+does not specify a list of interfaces as is normally required. Per EJB3
+rules, if the bean implements exactly <em>one business interface</em> it may
+use <code>@Remote</code> with no other values and that business interface is then
+implied to be a remote business interface. The same rule applies to
+identical usage of <code>@Local</code>.</p>
+</div>
+<div class="paragraph">
+<p>The critical thing to know is that if you add another interface the
+rules change and require that you specify both interfaces in the <code>@Remote</code>
+annotation as in <code>@Remote</code>(\{Telephone.class, SecondInterface.class}).
+{tip}</p>
+</div>
+</div>
+</div>
+<h1 id="_embedding" class="sect0">Embedding</h1>
+<div class="paragraph">
+<p>We&#8217;re going to embed OpenEJB3 into a plain JUnit TestCase as a simple
+means of demonstrating the remote capabilities. We&#8217;ll do the embedding
+in our test setUp method, then will make two test methods: - one for
+invoking the bean&#8217;s remote interface via the
+<em>LocalInitialContextFactory</em> which goes straight against the embedded
+container system - one for invoking the bean&#8217;s remote interface via the
+<em>RemoteInitialContextFactory</em> which connects to a Socket and
+communicates to the embedded container system over the ejbd protocol.</p>
+</div>
+<div class="sect1">
+<h2 id="_setup">setUp</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>\{snippet:id=setup|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_localinitialcontextfactory_making_in_vm_calls_to_a_remote_business">LocalInitialContextFactory: making in-vm calls to a remote business</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>interface</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=localcontext|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remoteinitialcontextfactory_making_networked_calls_to_a_remote">RemoteInitialContextFactory: making networked calls to a remote</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>business interface</p>
+</div>
+<div class="paragraph">
+<p>This is the part you would want to do in apps that are running a
+different VM than the one in which the ejb container is embedded. These
+"client" VMs need only have the the <em>openejb-client jar</em> in their
+classpath and connect to OpenEJB via the RemoteInitialContextFactory
+like any other remote EJB client.</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=remotecontext|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+</div>
+</div>
+</div>
+<h1 id="_maven_setup" class="sect0">Maven setup</h1>
+<div class="paragraph">
+<p>\{snippet:id=desc|url=openejb3/examples/telephone-stateful/pom.xml}</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=openejbdep|url=openejb3/examples/telephone-stateful/pom.xml|lang=xml}</p>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the "telephone-stateful"
+directory of the openejb:download.html[examples zip] , just run:</p>
+</div>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+<div class="paragraph">
+<p>Which should create output like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.telephone.TelephoneTest
+Apache OpenEJB 3.0    build: 20080408-04:13
+http://tomee.apache.org/
+INFO - openejb.home =</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>/Users/dblevins/work/openejb-3.0/examples/telephone-stateful INFO -
+openejb.base =
+/Users/dblevins/work/openejb-3.0/examples/telephone-stateful INFO -
+Configuring Service(id=Default Security Service, type=SecurityService,
+provider-id=Default Security Service) INFO - Configuring
+Service(id=Default Transaction Manager, type=TransactionManager,
+provider-id=Default Transaction Manager) INFO - Configuring
+Service(id=Default JDK 1.3 ProxyFactory, type=ProxyFactory,
+provider-id=Default JDK 1.3 ProxyFactory) INFO - Found EjbModule in
+classpath:
+/Users/dblevins/work/openejb-3.0/examples/telephone-stateful/target/classes
+INFO - Configuring app:
+/Users/dblevins/work/openejb-3.0/examples/telephone-stateful/target/classes
+INFO - Configuring Service(id=Default Stateful Container,
+type=Container, provider-id=Default Stateful Container) INFO -
+Auto-creating a container for bean TelephoneBean:
+Container(type=STATEFUL, id=Default Stateful Container) INFO - Loaded
+Module:
+/Users/dblevins/work/openejb-3.0/examples/telephone-stateful/target/classes
+INFO - Assembling app:
+/Users/dblevins/work/openejb-3.0/examples/telephone-stateful/target/classes
+INFO - Jndi(name=TelephoneBeanRemote) -&#8594;
+Ejb(deployment-id=TelephoneBean) INFO - Created
+Ejb(deployment-id=TelephoneBean, ejb-name=TelephoneBean,
+container=Default Stateful Container) INFO - Deployed
+Application(path=/Users/dblevins/work/openejb-3.0/examples/telephone-stateful/target/classes)
+<strong> Starting Services </strong> NAME IP PORT<br>
+ejbd 127.0.0.1 4201<br>
+admin thread 127.0.0.1 4200<br>
+------- Ready! Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time
+elapsed: 0.89 sec</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

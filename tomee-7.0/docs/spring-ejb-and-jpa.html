@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Spring EJB and JPA</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>{note}OpenEJB 3.1 or later required{note} This example shows
+how to combine Spring, OpenEJB and Hibernate using the integration code
+provided by OpenEJB. Here, OpenEJB is used as an embeddable EJB
+container inside of Spring. See the <a href="spring.html">Spring</a> page for
+details.</p>
+</div>
+<div class="paragraph">
+<p>We use the basic Movie example and expand it to include more objects to
+demonstrate both Spring beans, EJB Session beans, and JPA persistent
+objects in one application. The premise of the example is a Cineplex
+that has a number of Theaters (viewing screens), each playing a number
+of Movies. The basic object layout is as follows:</p>
+</div>
+<div class="paragraph">
+<p>Object</p>
+</div>
+<div class="paragraph">
+<p>Type</p>
+</div>
+<div class="paragraph">
+<p>Description</p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/CineplexImpl.java">CineplexImpl</a></p>
+</div>
+<div class="paragraph">
+<p>@Stateless</p>
+</div>
+<div class="paragraph">
+<p>Shows the use of <code>@Resource</code> to have Spring beans injected. Specifically,
+the <em>Theaters</em> Spring bean</p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/Theaters.java">Theaters</a></p>
+</div>
+<div class="paragraph">
+<p>Spring bean</p>
+</div>
+<div class="paragraph">
+<p>Simple wrapper object injected into <em>CineplexImpl</em></p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/Theater.java">Theater</a></p>
+</div>
+<div class="paragraph">
+<p>Spring bean</p>
+</div>
+<div class="paragraph">
+<p>Shows that EJBs can be injected into Spring beans. Uses both the
+<em>Movies</em> EJB and the <em>Movie</em> JPA objects</p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/MoviesImpl.java">MoviesImpl</a></p>
+</div>
+<div class="paragraph">
+<p>@Stateful</p>
+</div>
+<div class="paragraph">
+<p>Wraps a JPA EntityManager and provides transactional access to the
+persistent <em>Movie</em> objects</p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/Movie.java">Movie</a></p>
+</div>
+<div class="paragraph">
+<p>@Entity</p>
+</div>
+<div class="paragraph">
+<p>Basic JPA bean that is used both by Spring beans and EJBs. The same
+<em>Movie</em> object as in all the other persistence related examples.</p>
+</div>
+<div class="paragraph">
+<p><a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration/src/main/java/org/superbiz/spring/AvailableMovies.java">AvailableMovies</a></p>
+</div>
+<div class="paragraph">
+<p>Spring bean</p>
+</div>
+<div class="paragraph">
+<p>Simple object used as a clever way to seed the EntityManager (and
+really, the database) with persistent <em>Movie</em> objects</p>
+</div>
+</div>
+</div>
+<h1 id="_required_jars" class="sect0">Required jars</h1>
+<div class="paragraph">
+<p>To setup the integration you&#8217;ll need:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The standard OpenEJB 3.1 libraries</p>
+</li>
+<li>
+<p>The
+<a href="https://repository.apache.org/content/groups/public/org/apache/openejb/openejb-spring/3.1.2/openejb-spring-3.1.2.jar">openejb-spring-3.1.jar</a>
+or later</p>
+</li>
+<li>
+<p>Spring 2.5 or other (any version should work)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In Maven2 this can be done by adding the following dependencies to your
+pom.xml
+\{snippet:id=required|url=openejb3/examples/spring-integration/pom.xml|lang=xml}
+For other environments, you can simply <a href="downloads.html">download an
+openejb-3.1.zip</a> or later and include all the jars under the lib/
+directory in your classpath. Then download and add the</p>
+</div>
+<div class="paragraph 1 jar|http://people apache org/repo/m2-ibiblio-rsync-repository/org/apache/openejb/openejb-spring/3 1/openejb-spring-3 1 jar">
+<p>along with your Spring jars.</p>
+</div>
+<h1 id="_the_spring_xml" class="sect0">The Spring xml</h1>
+<div class="paragraph">
+<p>Bootstrapping and Configuring OpenEJB is fairly simple.
+\{snippet:id=bootstrapping|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+As well, you can optionally declare any resources or containers.
+Anything declarable as a or in the openejb.xml can instead be declared
+in the Spring xml file as shown here.
+\{snippet:id=resources|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+And finally our Spring beans.
+\{snippet:id=pojos|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+{title= Don&#8217;t forget}
+\{snippet:id=annotations|url=openejb3/examples/spring-integration/src/main/resources/movies.xml|lang=xml}
+It allows various annotations to be detected in bean classes: Spring&#8217;s
+@Required and <code>@Autowired</code>, as well as JSR 250&#8217;s <code>@PostConstruct</code>,
+@PreDestroy and <code>@Resource</code> (if available), JAX-WS&#8217;s <code>@WebServiceRef</code> (if
+available), EJB3&#8217;s <code>@EJB</code> (if available), and JPA&#8217;s <code>@PersistenceContext</code>
+and <code>@PersistenceUnit</code> (if available). Alternatively, you may choose to
+activate the individual BeanPostProcessors for those annotations.
+{note}</p>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="paragraph">
+<p>In efforts to keep the example page somewhat short, we&#8217;ll show just
+three beans, each demonstrating a particular relationship.</p>
+</div>
+<div class="paragraph">
+<p>The first is the CineplexImpl EJB which shows EJB &#8594; Spring.
+\{snippet:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/CineplexImpl.java|lang=java}</p>
+</div>
+<div class="paragraph">
+<p>The second is the Theater Spring bean which shows Spring &#8594; EJB.
+\{snippet:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/Theater.java|lang=java}</p>
+</div>
+<div class="paragraph">
+<p>The last is the AvailableMovies Spring bean which Shows Spring &#8594; EJB &#8594;
+JPA
+\{snippet:id=code|url=openejb3/examples/spring-integration/src/main/java/org/superbiz/spring/AvailableMovies.java|lang=java}</p>
+</div>
+<h1 id="_the_testcase" class="sect0">The TestCase</h1>
+<div class="paragraph">
+<p>The JUnit TestCase uses a ClassPathXmlApplicationContext to load the
+Spring ApplicationContext. Anything that loads your Spring xml file
+should work fine. The following code would work a plain java app as
+well.</p>
+</div>
+<div class="paragraph">
+<p>\{snippet:id=code|url=openejb3/examples/spring-integration/src/test/java/org/superbiz/spring/MoviesTest.java|lang=java}</p>
+</div>
+<h1 id="_running" class="sect0">Running</h1>
+<div class="paragraph">
+<p>The source for this example can be downloaded from svn via:</p>
+</div>
+<div class="paragraph">
+<p>$ svn co
+<a href="http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration" class="bare">http://svn.apache.org/repos/asf/tomee/tomee/trunk/examples/spring-integration</a></p>
+</div>
+<div class="paragraph">
+<p>Then, in the "spring-integration" directory, run:</p>
+</div>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+<div class="paragraph">
+<p>Which should create output like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.spring.MoviesTest
+log4j:WARN No appenders could be found for logger</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(org.springframework.context.support.ClassPathXmlApplicationContext).
+log4j:WARN Please initialize the log4j system properly. Apache OpenEJB
+3.1 build: 20081009-03:31 <a href="http://tomee.apache.org/" class="bare">http://tomee.apache.org/</a> INFO - openejb.home =
+/Users/dblevins/work/openejb3/examples/spring-integration INFO -
+openejb.base = /Users/dblevins/work/openejb3/examples/spring-integration
+INFO - Configuring Service(id=Default JDK 1.3 ProxyFactory,
+type=ProxyFactory, provider-id=Default JDK 1.3 ProxyFactory) INFO -
+Configuring Service(id=MovieDatabase, type=Resource, provider-id=Default
+JDBC Database) INFO - Configuring Service(id=MovieDatabaseUnmanaged,
+type=Resource, provider-id=Default JDBC Database) INFO - Found EjbModule
+in classpath:
+/Users/dblevins/work/openejb3/examples/spring-integration/target/classes
+INFO - Beginning load:
+/Users/dblevins/work/openejb3/examples/spring-integration/target/classes
+INFO - Configuring enterprise application: classpath.ear INFO -
+Configuring Service(id=Default Stateless Container, type=Container,
+provider-id=Default Stateless Container) INFO - Auto-creating a
+container for bean CineplexImpl: Container(type=STATELESS, id=Default
+Stateless Container) INFO - Auto-linking resource-ref
+'org.superbiz.spring.CineplexImpl/theaters' in bean CineplexImpl to
+Resource(id=theaters) INFO - Configuring Service(id=Default Stateful
+Container, type=Container, provider-id=Default Stateful Container) INFO
+- Auto-creating a container for bean Movies: Container(type=STATEFUL,
+id=Default Stateful Container) INFO - Configuring
+PersistenceUnit(name=movie-unit,
+provider=org.hibernate.ejb.HibernatePersistence) INFO - Enterprise
+application "classpath.ear" loaded. INFO - Assembling app: classpath.ear
+INFO - PersistenceUnit(name=movie-unit,
+provider=org.hibernate.ejb.HibernatePersistence) INFO -
+Jndi(name=CineplexImplLocal) -&#8594; Ejb(deployment-id=CineplexImpl) INFO -
+Jndi(name=MoviesLocal) -&#8594; Ejb(deployment-id=Movies) INFO - Created
+Ejb(deployment-id=Movies, ejb-name=Movies, container=Default Stateful
+Container) INFO - Created Ejb(deployment-id=CineplexImpl,
+ejb-name=CineplexImpl, container=Default Stateless Container) INFO -
+Deployed Application(path=classpath.ear) INFO - Exported EJB Movies with
+interface org.superbiz.spring.Movies to Spring bean MoviesLocal INFO -
+Exported EJB CineplexImpl with interface org.superbiz.spring.Cineplex to
+Spring bean CineplexImplLocal Tests run: 1, Failures: 0, Errors: 0,
+Skipped: 0, Time elapsed: 3.141 sec</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

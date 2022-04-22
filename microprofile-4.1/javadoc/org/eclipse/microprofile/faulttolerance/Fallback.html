@@ -1,0 +1,350 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>Fallback</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/microprofile-favicon.png">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="Fallback";
+        }
+    }
+    catch(err) {
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../org/eclipse/microprofile/faulttolerance/ExecutionContext.html" title="interface in org.eclipse.microprofile.faulttolerance"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.DEFAULT.html" title="class in org.eclipse.microprofile.faulttolerance"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?org/eclipse/microprofile/faulttolerance/Fallback.html" target="_top">Frames</a></li>
+<li><a href="Fallback.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">org.eclipse.microprofile.faulttolerance</div>
+<h2 title="Annotation Type Fallback" class="title">Annotation Type Fallback</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>@Documented
+ @Retention(value=RUNTIME)
+ @Target(value=METHOD)
+ @Inherited
+public @interface <span class="memberNameLabel">Fallback</span></pre>
+<div class="block">The fallback annotation to define the fallback handler class so that
+ a failure can be handled properly. The criteria are as follows:
+ <ol>
+ <li>If value is specified, use <a href="../../../../org/eclipse/microprofile/faulttolerance/FallbackHandler.html#handle-org.eclipse.microprofile.faulttolerance.ExecutionContext-"><code>FallbackHandler.handle(ExecutionContext)</code></a> on the specified handler to execute the fallback.</li>
+ <li>If fallbackMethod is specified, invoke the method specified by the fallbackMethod on the same class.</li>
+ <li>If both are specified, the <a href="../../../../org/eclipse/microprofile/faulttolerance/exceptions/FaultToleranceDefinitionException.html" title="class in org.eclipse.microprofile.faulttolerance.exceptions"><code>FaultToleranceDefinitionException</code></a> must be thrown.</li>
+ </ol>
+ <p>
+ When a method returns and the fallback policy is present, the following rules are applied:
+ <ol>
+ <li>If the method returns normally (doesn't throw), the result is simply returned.
+ <li>Otherwise, if the thrown object is assignable to any value in the <a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#skipOn--"><code>skipOn()</code></a> parameter, the thrown object will be rethrown.
+ <li>Otherwise, if the thrown object is assignable to any value in the <a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#applyOn--"><code>applyOn()</code></a> parameter,
+ the fallback policy, detailed above, will be applied.
+ <li>Otherwise the thrown object will be rethrown.
+ </ol>
+ If a method throws a <code>Throwable</code> which is not an <code>Error</code> or <code>Exception</code>, non-portable behavior results.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#value--"><code>value()</code></a>, 
+<a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#fallbackMethod--"><code>fallbackMethod()</code></a>, 
+<a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#applyOn--"><code>applyOn()</code></a>, 
+<a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#skipOn--"><code>skipOn()</code></a></dd>
+<dt><span class="simpleTagLabel">Examples (en):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/examples/mp-faulttolerance-timeout.html">mp-faulttolerance-timeout</a>, <a href="../../../../../../../tomee-9.0/examples/mp-faulttolerance-fallback.html">mp-faulttolerance-fallback</a></dd>
+<dt><span class="simpleTagLabel">Examples (es):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/es/examples/mp-faulttolerance-timeout.html">mp-faulttolerance-timeout</a>, <a href="../../../../../../../tomee-9.0/es/examples/mp-faulttolerance-fallback.html">mp-faulttolerance-fallback</a></dd>
+<dt><span class="simpleTagLabel">Examples (pt):</span></dt>
+<dd><a href="../../../../../../../tomee-9.0/pt/examples/mp-faulttolerance-timeout.html">mp-faulttolerance-timeout</a>, <a href="../../../../../../../tomee-9.0/pt/examples/mp-faulttolerance-fallback.html">mp-faulttolerance-fallback</a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.optional.element.summary">
+<!--   -->
+</a>
+<h3>Optional Element Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Optional Element Summary table, listing optional elements, and an explanation">
+<caption><span>Optional Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Optional Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.Class&lt;? extends java.lang.Throwable&gt;[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#applyOn--">applyOn</a></span></code>
+<div class="block">The list of exception types which should trigger Fallback</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#fallbackMethod--">fallbackMethod</a></span></code>
+<div class="block">Specify the method name to fallback to.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.Class&lt;? extends java.lang.Throwable&gt;[]</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#skipOn--">skipOn</a></span></code>
+<div class="block">The list of exception types which should <i>not</i> trigger Fallback</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.Class&lt;? extends <a href="../../../../org/eclipse/microprofile/faulttolerance/FallbackHandler.html" title="interface in org.eclipse.microprofile.faulttolerance">FallbackHandler</a>&lt;?&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#value--">value</a></span></code>
+<div class="block">Specify the fallback class to be used.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.element.detail">
+<!--   -->
+</a>
+<h3>Element Detail</h3>
+<a name="value--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>value</h4>
+<pre>public abstract&nbsp;java.lang.Class&lt;? extends <a href="../../../../org/eclipse/microprofile/faulttolerance/FallbackHandler.html" title="interface in org.eclipse.microprofile.faulttolerance">FallbackHandler</a>&lt;?&gt;&gt;&nbsp;value</pre>
+<div class="block">Specify the fallback class to be used. A new instance of the fallback class
+ is returned. The instance is unmanaged. The type parameter of the fallback class must be assignable to the
+ return type of the annotated method.
+ Otherwise, <a href="../../../../org/eclipse/microprofile/faulttolerance/exceptions/FaultToleranceDefinitionException.html" title="class in org.eclipse.microprofile.faulttolerance.exceptions"><code>FaultToleranceDefinitionException</code></a> occurs.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the fallback class</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>org.eclipse.microprofile.faulttolerance.Fallback.DEFAULT.class</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="fallbackMethod--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>fallbackMethod</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;fallbackMethod</pre>
+<div class="block">Specify the method name to fallback to. This method belongs
+ to the same class as the method to fallback.
+ The method must have the exact same arguments as the method being annotated.
+ The method return type must be assignable to the return type of the method the fallback is for.
+ Otherwise, <a href="../../../../org/eclipse/microprofile/faulttolerance/exceptions/FaultToleranceDefinitionException.html" title="class in org.eclipse.microprofile.faulttolerance.exceptions"><code>FaultToleranceDefinitionException</code></a> must be thrown.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the local method to fallback to</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="applyOn--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>applyOn</h4>
+<pre>public abstract&nbsp;java.lang.Class&lt;? extends java.lang.Throwable&gt;[]&nbsp;applyOn</pre>
+<div class="block">The list of exception types which should trigger Fallback
+ <p>
+ Note that if a method throws a <code>Throwable</code> which is not an <code>Error</code> or <code>Exception</code>,
+ non-portable behavior results.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the exception types which should trigger Fallback</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>java.lang.Throwable.class</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="skipOn--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>skipOn</h4>
+<pre>public abstract&nbsp;java.lang.Class&lt;? extends java.lang.Throwable&gt;[]&nbsp;skipOn</pre>
+<div class="block">The list of exception types which should <i>not</i> trigger Fallback
+ <p>
+ This list takes priority over the types listed in <a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.html#applyOn--"><code>applyOn()</code></a>
+ <p>
+ Note that if a method throws a <code>Throwable</code> which is not an <code>Error</code> or <code>Exception</code>,
+ non-portable behavior results.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the exception types which should not trigger Fallback</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../org/eclipse/microprofile/faulttolerance/ExecutionContext.html" title="interface in org.eclipse.microprofile.faulttolerance"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/eclipse/microprofile/faulttolerance/Fallback.DEFAULT.html" title="class in org.eclipse.microprofile.faulttolerance"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../index.html?org/eclipse/microprofile/faulttolerance/Fallback.html" target="_top">Frames</a></li>
+<li><a href="Fallback.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

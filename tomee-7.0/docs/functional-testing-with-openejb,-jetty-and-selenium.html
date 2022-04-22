@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Functional testing with OpenEJB, Jetty and Selenium</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Obviously, OpenEJB is
+great for unit testing EJBs, but I wondered whether I might also be able
+to use this embedded functionality to functionally test my application.
+You can use tools like Selenium, or HtmlUnit to run functional tests as
+if the user were sat at their browser typing text, and clicking links
+and buttons. This however means you have to have your app running on
+your app server, and you need to have consistent test data - otherwise a
+test might pass on one developers machine, but fail on another. Here&#8217;s
+one approach that you could take to completely deploy your webapp within
+a test, and functionally test it with a tool like Selenium. There&#8217;s also
+some sample code demonstrating this, available
+<a href="http://people.apache.org/~jgallimore/PersonApp.zip">here</a> .</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_an_embedded_server">Creating an embedded server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I created a class to start my embedded OpenEJB and Jetty instances and
+configure them to see the EJB and WAR modules of my application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class EmbeddedServer {
+    private static EmbeddedServer instance = new EmbeddedServer();
+    private Server server;
+
+    private EmbeddedServer() {
+        try {
+            // initialize OpenEJB &amp; add some test data
+            Properties properties = new Properties();
+            properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
+            InitialContext ic = new InitialContext(properties);
+            PeopleFacade facade = (PeopleFacade) ic.lookup("PeopleFacadeEJBRemote");
+            new TestFixture(facade).addTestData();
+
+            // setup web app
+            WebAppContext context = new WebAppContext();
+            context.setWar(computeWarPath());
+            InitialContext initialContext = setupJndi(context);
+
+            // start the server
+            context.setServletHandler(new EmbeddedServerServletHandler(initialContext));
+            context.setContextPath("/");
+            server = new Server(9091);
+            server.addHandler(context);
+
+            server.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private InitialContext setupJndi(WebAppContext context) throws NamingException {
+        // setup local JNDI
+        InitialContext initialContext = new InitialContext();
+        WebApp webApp = getWebApp(context);
+        Collection&lt;EjbRef&gt; refs = webApp.getEjbRef();
+        for (EjbRef ref : refs) {
+            String ejbLink = ref.getEjbLink();
+
+            // get enterprise bean info
+            EnterpriseBeanInfo beanInfo = new EJBHelper().getEJBInfo(ejbLink);
+            if (beanInfo.jndiNames != null &amp;&amp; beanInfo.jndiNames.size() &gt; 0) {
+            String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+            initialContext.bind("java:comp/env/" + ref.getEjbRefName(), new LinkRef(jndiName));
+            }
+        }
+        return initialContext;
+    }
+
+    private String computeWarPath() {
+        String currentPath = new File(".").getAbsolutePath();
+        String warPath;
+
+            String[]  pathParts = currentPath.split("(\\\\|/)+");
+
+        int webPart = Arrays.asList(pathParts).indexOf("PersonWEB");
+        if (webPart == -1) {
+            warPath = "PersonWEB/src/main/webapp";
+        } else {
+            StringBuffer buffer = new StringBuffer();
+
+            for (int i = 0; i &lt; webPart; i++) {
+                    buffer.append(pathParts[i]);
+            buffer.append(File.separator);
+            }
+
+            buffer.append("PersonWEB/src/main/webapp");
+            warPath = buffer.toString();
+        }
+        return warPath;
+    }
+
+    public static EmbeddedServer getInstance() {
+        return instance;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public static void main(String[]  args) {
+        try {
+            EmbeddedServer.getInstance().getServer().join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private WebApp getWebApp(WebAppContext context) {
+        WebApp webApp = null;
+
+        try {
+            FileInputStream is = new FileInputStream(new File(context.getWar() + "/WEB-INF/web.xml").getAbsolutePath());
+            webApp = (WebApp) JaxbJavaee.unmarshal(WebApp.class, is);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return webApp;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This class sets up an embedded instance of Jetty, running on port 9091.
+You&#8217;ll notice the setupJndi() method. This looks through the ejb-ref
+entries in web.xml (which we deserialize using the openejb-jee library),
+and adds relevant LinkRefs to the JNDI tree, so you can lookup beans
+using the java:comp/env/bean format. I&#8217;ve added a main() method here for
+convenience, so you can run this straight from an IDE, and record tests
+using tools like the Selenium Firefox plugin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_supporting_ejb_dependency_injection">Supporting @EJB Dependency injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the last code sample, we also set up a custom ServletHandler in Jetty
+- this is to perform dependency injection. The custom ServletHandler
+looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class EmbeddedServerServletHandler extends ServletHandler {
+    private InitialContext initialContext;
+
+    public EmbeddedServerServletHandler(InitialContext initialContext) {
+        this.initialContext = initialContext;
+    }
+
+    public Servlet customizeServlet(Servlet servlet) throws Exception {
+        Class&lt;? extends Servlet&gt; servletClass = servlet.getClass();
+        Field[] declaredFields = servletClass.getDeclaredFields();
+
+        for (Field declaredField : declaredFields) {
+            Annotation[] annotations = declaredField.getAnnotations();
+
+            for (Annotation annotation : annotations) {
+                if (EJB.class.equals(annotation.annotationType())) {
+                    // inject into this field
+                    Class&lt;?&gt; fieldType = declaredField.getType();
+                    EnterpriseBeanInfo beanInfo = getBeanFor(fieldType);
+                    if (beanInfo == null) {
+                    continue;
+                    }
+
+                    String jndiName = "java:openejb/ejb/" + beanInfo.jndiNames.get(0);
+                    Object o = initialContext.lookup(jndiName);
+
+                    declaredField.setAccessible(true);
+                    declaredField.set(servlet, o);
+                }
+            }
+        }
+
+        return super.customizeServlet(servlet);
+    }
+
+    private EnterpriseBeanInfo getBeanFor(Class&lt;?&gt; fieldType) {
+        return new EJBHelper().getBeanInfo(fieldType);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This looks up deployed beans that match the field type, and uses
+reflection to set the field.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_writing_a_functional_test">Writing a Functional test</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can now write a functional test. I use a base abstract class to make
+sure the Embedded server is running, and start Selenium:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public abstract class FunctionalTestCase extends TestCase {
+    protected DefaultSelenium selenium;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        EmbeddedServer.getInstance();
+        selenium = new DefaultSelenium("localhost", 4444, "*iexplore", "http://localhost:9091/");
+        selenium.start();
+    }
+
+    protected void tearDown() throws Exception {
+        selenium.stop();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and I can then I write a test like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class AddPersonTest extends FunctionalTestCase {
+    public void testShouldAddAPerson() throws Exception {
+        selenium.open("/People");
+        selenium.type("firstname", "Jonathan");
+        selenium.type("lastname", "Gallimore");
+        selenium.click("//input[@name='add' and @value='Add']");
+        selenium.waitForPageToLoad("30000");
+        selenium.type("filter", "gallimore");
+        selenium.click("submit");
+        selenium.waitForPageToLoad("30000");
+        assertEquals(1, selenium.getXpathCount("//div[@id='people']/ul/li").intValue());
+        assertEquals("Jonathan Gallimore", selenium.getText("//div[@id='people']/ul/li[1]"));
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sample_code">Sample code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I&#8217;ve made a sample project which demonstrates this, source is available
+<a href="http://people.apache.org/~jgallimore/PersonApp.zip">here</a> . You&#8217;ll need
+Maven to build it, and you can build it and run the tests by running
+'mvn clean install'. If want to run the tests from your IDE, you&#8217;ll need
+to have a Selenium server running, which you can do by running 'mvn
+selenium:start-server'.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

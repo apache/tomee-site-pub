@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Configuring PersistenceUnits in Tests</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_overriding_the" class="sect0">Overriding the</h1>
+<div class="paragraph">
+<p>persistence.xml</p>
+</div>
+<div class="paragraph">
+<p>The most common situation in EJB related testing by far is the need to
+alter your persistence.xml for a test environment.</p>
+</div>
+<div class="sect1">
+<h2 id="_overriding_the_jta_data_source_and_non_jta_data_source">Overriding the jta-data-source and non-jta-data-source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenEJB will automatically use the DataSources you have setup in your
+test environment, we&#8217;re pretty good at guessing the right DataSources
+you intend even if the names don&#8217;t match exactly&#8201;&#8212;&#8201;or in some cases at
+all. If there is only one DataSource configured, it&#8217;s very easy for us
+to guess the DataSource to use.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to keep your persistence.xml configured for your
+production environment and helps eliminate the need for a "test"
+persistence.xml (though we do have that functionality). A log line will
+be printed saying if we had to adjust the DataSources of your
+persistence.xml.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overriding_the_persistence_unit_properties">Overriding the persistence-unit properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can override any property in your test setup via either system
+properties or the initial context properties. The format is:</p>
+</div>
+<div class="paragraph">
+<p><code>&lt;unit-name&gt;.&lt;property&gt;=&lt;value&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>So for example with the following persistence.xml:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence&gt;
+  &lt;persistence-unit name="movie-unit"&gt;
+    &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+    &lt;properties&gt;
+      &lt;property name="hibernate.hbm2ddl.auto" value="create-drop"/&gt;
+      &lt;property name="hibernate.max_fetch_depth" value="3"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can override and add persistence unit properties in your test case.
+There are currently no facilities for removing them (if you have a need
+for that let us know&#8201;&#8212;&#8201;it hasn&#8217;t really come up so far).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Properties p = new Properties();
+p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
+
+p.put("movie-unit.hibernate.hbm2ddl.auto", "update");
+p.put("movie-unit.hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+
+context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The overriding order is as follows: 1 = highest, 4 = lowest.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>InitialContext properties</p>
+</li>
+<li>
+<p>jndi.properties from the classpath</p>
+</li>
+<li>
+<p>System properties</p>
+</li>
+<li>
+<p>persistence.xml properties</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>By default there are no overrides in 1-3, so #4 is the only source of
+information.</p>
+</div>
+<div class="paragraph">
+<p>In the above example there would be exactly three properties for the
+"movie-unit" persistence unit:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>hibernate.hbm2ddl.auto = update</p>
+</li>
+<li>
+<p>hibernate.max_fetch_depth = 3</p>
+</li>
+<li>
+<p>hibernate.dialect = org.hibernate.dialect.HSQLDialect</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These properties would be passed by OpenEJB directly to the persistence
+provider (in this case Hibernate). With one exception OpenEJB does not
+understand or modify these properties. Details on that one exception
+below.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_common_mistakes">Common mistakes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that you <strong>must</strong> use the <strong>unit name</strong> as the prefix. This will not
+work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    Properties p = new Properties();
+    p.put(Context.INITIAL_CONTEXT_FACTORY,"org.apache.openejb.client.LocalInitialContextFactory");
+
+    p.put("hibernate.hbm2ddl.auto", "update");
+    p.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+
+    context = new InitialContext(p);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Currently, only properties that start with the unit name are search and
+applied.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_no_need_to_specify_a_transaction_lookup_property">No need to specify a "transaction lookup" property</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All vendors have such a property for getting a reference to the
+container&#8217;s TransactionManager and nothing works if this is not set
+correctly to the OpenEJB specific class. To make the lives of users
+easier, OpenEJB will take the liberty of setting it for you.</p>
+</div>
+<div class="paragraph">
+<p>Here are the persistence provider classes we understand and the defaults
+we will set for you:</p>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_hibernate_ejb_hibernatepersistence">Provider org.hibernate.ejb.HibernatePersistence</h3>
+<div class="paragraph">
+<p>When using this provider, the
+<em>hibernate.transaction.manager_lookup_class</em> will be automatically set
+by OpenEJB to <em>org.apache.openejb.hibernate.TransactionManagerLookup</em>.
+If the property is already set in the persistence unit it will be
+overwritten if it starts with the standard "org.hibernate.transaction."
+prefix.</p>
+</div>
+<div class="paragraph">
+<p>Custom lookup implementations will never be overwritten automatically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_oracle_toplink_essentials_persistenceprovider">Provider oracle.toplink.essentials.PersistenceProvider</h3>
+<div class="paragraph">
+<p>Or <em>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</em>.</p>
+</div>
+<div class="paragraph">
+<p>When using this provider, the <em>toplink.target-server</em> will be
+automatically set by OpenEJB to
+<em>org.apache.openejb.toplink.JTATransactionController</em>. If the property
+is already set in the persistence unit it will be overwritten if it
+starts with the standard "oracle.toplink.transaction." prefix.</p>
+</div>
+<div class="paragraph">
+<p>Custom transaction controller implementations will never be overwritten
+automatically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_eclipse_persistence_jpa_persistenceprovider">Provider org.eclipse.persistence.jpa.PersistenceProvider</h3>
+<div class="paragraph">
+<p>Or <em>org.eclipse.persistence.jpa.osgi.PersistenceProvider</em>.</p>
+</div>
+<div class="paragraph">
+<p>When using this provider, the <em>eclipselink.target-server</em> will be
+automatically set by OpenEJB to
+<em>org.apache.openejb.eclipselink.JTATransactionController</em>. If the
+property is already set in the persistence unit it will be overwritten
+if it starts with the standard "org.eclipse.persistence.transaction."
+prefix.</p>
+</div>
+<div class="paragraph">
+<p>Custom transaction controller implementations will never be overwritten
+automatically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provider_org_apache_openjpa_persistence_persistenceproviderimpl">Provider org.apache.openjpa.persistence.PersistenceProviderImpl</h3>
+<div class="paragraph">
+<p>OpenJPA is capable of discovering the correct method for locating the
+TransactionManager without the need for users to specify the specific
+strategy. Therefore no specific "magic" is required.</p>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

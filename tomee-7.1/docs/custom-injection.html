@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Custom Injection</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_overview" class="sect0">Overview</h1>
+<div class="paragraph">
+<p>As noted in the <a href="injection-of-env-entry-example.html">Injection of
+env-entry Example</a> , the EJB 3.0 supported env-entry types are fairly
+limited. Also the use of several tags in an ejb-jar.xml can get a bit
+verbose.</p>
+</div>
+<div class="paragraph">
+<p>OpenEJB does not restrict you to just these data types or require you to
+use an ejb-jar.xml to declare them.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Resource</code> can be used on any type for which there is
+<code>java.beans.PropertyEditor</code></p>
+</li>
+<li>
+<p>You may <code>install your own</code> PropertyEditors and package them with your
+app.</p>
+</li>
+<li>
+<p>Java Generics are supported (e.g. List myURIs)</p>
+</li>
+<li>
+<p>You may use a <code>META-INF/env-entries.properties</code> file as an alternative
+to an ejb-jar.xml</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See <a href="built-in-type-converters.html">Built-in Type Converters</a> for a
+full list of supported env-entry types.</p>
+</div>
+<div class="paragraph">
+<p>The source for this example is the "custom-injection" directory located
+in the <a href="downloads.html">openejb-examples.zip</a> available on the
+<a href="http://tomee.apache.org/downloads.html">download page</a>.</p>
+</div>
+<h1 id="_the_code" class="sect0">The Code</h1>
+<div class="sect1">
+<h2 id="_bean_class">Bean Class</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+public class Stratocaster {
+
+    @Resource(name = "pickups")
+    private List&lt;Pickup&gt; pickups;
+
+    @Resource(name = "style")
+    private Style style;
+
+    @Resource(name = "dateCreated")
+    private Date dateCreated;
+
+    @Resource(name = "guitarStringGuages")
+    private Map&lt;String, Float&gt; guitarStringGuages;
+
+    @Resource(name = "certificateOfAuthenticity")
+    private File certificateOfAuthenticity;
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    /**
+     * Gets the guage of the electric guitar strings
+     * used in this guitar.
+     *
+     * @param string
+     * @return
+     */
+    public float getStringGuage(String string) {
+        return guitarStringGuages.get(string);
+    }
+
+    public List&lt;Pickup&gt; getPickups() {
+        return pickups;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public File getCertificateOfAuthenticity() {
+        return certificateOfAuthenticity;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_meta_infenv_entries_properties_file">The META-INF/env-entries.properties file</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">guitarStringGuages=E1=0.052\nA=0.042\nD=0.030\nG=0.017\nB=0.013\nE=0.010
+certificateOfAuthenticity=/tmp/strat-certificate.txt
+dateCreated=1962-03-01
+pickups=S,S,S
+style=VINTAGE</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_custom_type_and_editor">The Custom Type and Editor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Support for java.lang.Enum types is already built-in, but we&#8217;ve decided
+we&#8217;d like to allow abbreviated versions of the enum constants to be
+usable. We do this by creating a custom PropertyEditor for our Pickup
+enum like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class PickupEditor extends java.beans.PropertyEditorSupport {
+    public void setAsText(String text) throws IllegalArgumentException {
+        text = text.trim();
+
+        if (text.equalsIgnoreCase("H")) setValue(Pickup.HUMBUCKER);
+        else if (text.equalsIgnoreCase("S")) setValue(Pickup.SINGLE_COIL);
+        else throw new IllegalStateException("H and S are the only supported Pickup aliases");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We cleverly install this PropertyEditor in a static block in the Pickup
+class that will be executed should someone actually reference the Pickup
+type.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public enum Pickup {
+
+    HUMBUCKER,
+    SINGLE_COIL;
+
+    // Here's the little magic where we register the PickupEditor
+    // which knows how to create this object from a string.
+    // You can add any of your own Property Editors in the same way.
+    static {
+        PropertyEditorManager.registerEditor(Pickup.class, PickupEditor.class);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_test_case" class="sect0">Test Case</h1>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class StratocasterTest extends TestCase {
+
+    @EJB
+    private Stratocaster strat;
+
+    public void test() throws Exception {
+        EJBContainer.createEJBContainer().getContext().bind("inject", this);
+
+        Date date = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US).parse("Mar 1, 1962");
+        assertEquals("Strat.getDateCreated()", date, strat.getDateCreated());
+
+        List&lt;Pickup&gt; pickups = asList(Pickup.SINGLE_COIL, Pickup.SINGLE_COIL, Pickup.SINGLE_COIL);
+        assertEquals("Strat.getPickups()", pickups, strat.getPickups());
+
+        assertEquals("Strat.getStyle()", Style.VINTAGE, strat.getStyle());
+
+        assertEquals("Strat.getStringGuage(\"E1\")", 0.052F, strat.getStringGuage("E1"));
+        assertEquals("Strat.getStringGuage(\"A\")", 0.042F, strat.getStringGuage("A"));
+        assertEquals("Strat.getStringGuage(\"D\")", 0.030F, strat.getStringGuage("D"));
+        assertEquals("Strat.getStringGuage(\"G\")", 0.017F, strat.getStringGuage("G"));
+        assertEquals("Strat.getStringGuage(\"B\")", 0.013F, strat.getStringGuage("B"));
+        assertEquals("Strat.getStringGuage(\"E\")", 0.010F, strat.getStringGuage("E"));
+
+        File file = new File("/tmp/strat-certificate.txt");
+        assertEquals("Strat.getCertificateOfAuthenticity()", file,strat.getCertificateOfAuthenticity());
+
+
+    }
+}</code></pre>
+</div>
+</div>
+<h1 id="_running_it" class="sect0">Running it</h1>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the "custom-injection"
+directory of the openejb:download.html[examples zip], just run:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>Which should create output like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.enventries.StratocasterTest
+Apache OpenEJB 3.1-SNAPSHOT    build: 20080409-12:05
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/work/openejb3/examples/custom-injection
+INFO - openejb.base = /Users/dblevins/work/openejb3/examples/custom-injection
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Configuring Service(id=Default JDK 1.3 ProxyFactory, type=ProxyFactory, provider-id=Default JDK 1.3 ProxyFactory)
+INFO - Found EjbModule in classpath: /Users/dblevins/work/openejb3/examples/custom-injection/target/classes
+INFO - Configuring app: /Users/dblevins/work/openejb3/examples/custom-injection/target/classes
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean StratocasterImpl: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Loaded Module: /Users/dblevins/work/openejb3/examples/custom-injection/target/classes
+INFO - Assembling app: /Users/dblevins/work/openejb3/examples/custom-injection/target/classes
+INFO - Jndi(name=StratocasterImplLocal) --&gt; Ejb(deployment-id=StratocasterImpl)
+INFO - Created Ejb(deployment-id=StratocasterImpl, ejb-name=StratocasterImpl, container=Default Stateless Container)
+INFO - Deployed Application(path=/Users/dblevins/work/openejb3/examples/custom-injection/target/classes)
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.705 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

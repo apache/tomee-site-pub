@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>AsyncInvocationInterceptor</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/microprofile-favicon.png">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="AsyncInvocationInterceptor";
+        }
+    }
+    catch(err) {
+    }
+//-->
+var methods = {"i0":6,"i1":6,"i2":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../../../org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptorFactory.html" title="interface in org.eclipse.microprofile.rest.client.ext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptor.html" target="_top">Frames</a></li>
+<li><a href="AsyncInvocationInterceptor.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">org.eclipse.microprofile.rest.client.ext</div>
+<h2 title="Interface AsyncInvocationInterceptor" class="title">Interface AsyncInvocationInterceptor</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>public interface <span class="typeNameLabel">AsyncInvocationInterceptor</span></pre>
+<div class="block">Implementations of this interface can intercept asynchronous method
+ invocations.  The MP Rest Client implementation runtime will obtain instances
+ of this interface by invoking the <code>newInterceptor</code> method of all
+ registered <code>AsyncInvocationInterceptorFactory</code> providers.
+
+ The MP Rest Client implementation runtime will invoke the <code>pre</code>
+ method on the main thread prior to returning execution back to the calling
+ method of the client interface.  The runtime will invoke the
+ <code>prepareContext</code> method on the invocation thread before the client
+ request is sent.  The <code>prepareContext</code> method should always be
+ invoked before the <code>applyContext</code> method is invoked, but due to
+ the nature of multithreading, it is possible that <code>applyContext</code>
+ method may be invoked before the <code>prepareContext</code> method has
+ completed.  Care should be taken when implementing this interface to avoid
+ race conditions and deadlocks.
+
+ Note that the order in which instances of the
+ <code>AsyncInvocationInterceptor</code> are invoked are determined by the
+ priority of the <code>AsyncInvocationInterceptorFactory</code> provider.
+
+ Note that the main and secondary threads handling the request/response may
+ be the same. It depends on how the implementation chooses to implement the
+ asynchronous handling.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.1</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========== METHOD SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptor.html#applyContext--">applyContext</a></span>()</code>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "async"
+ thread (i.e.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptor.html#prepareContext--">prepareContext</a></span>()</code>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "main"
+ thread (i.e.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptor.html#removeContext--">removeContext</a></span>()</code>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "async"
+ thread (i.e.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="prepareContext--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>prepareContext</h4>
+<pre>void&nbsp;prepareContext()</pre>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "main"
+ thread (i.e. the thread calling the async Rest Client interface method)
+ prior to returning control to the calling method.</div>
+</li>
+</ul>
+<a name="applyContext--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>applyContext</h4>
+<pre>void&nbsp;applyContext()</pre>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "async"
+ thread (i.e. the thread used to actually invoke the remote service and
+ wait for the response) prior to sending the request.</div>
+</li>
+</ul>
+<a name="removeContext--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>removeContext</h4>
+<pre>void&nbsp;removeContext()</pre>
+<div class="block">This method will be invoked by the MP Rest Client runtime on the "async"
+ thread (i.e. the thread used to actually invoke the remote service and
+ wait for the response) after all providers on the inbound response flow
+ have been invoked.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.2</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li>Prev&nbsp;Class</li>
+<li><a href="../../../../../../org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptorFactory.html" title="interface in org.eclipse.microprofile.rest.client.ext"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/rest/client/ext/AsyncInvocationInterceptor.html" target="_top">Frames</a></li>
+<li><a href="AsyncInvocationInterceptor.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#method.detail">Method</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

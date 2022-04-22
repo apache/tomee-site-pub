@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- NewPage -->
+<html lang="en">
+<head>
+<title>APIResponseSchema</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+<script type="text/javascript" src="../../../../../../script.js"></script>
+
+<link rel="shortcut icon" href="/img/microprofile-favicon.png">
+</head>
+<body>
+<script type="text/javascript"><!--
+    try {
+        if (location.href.indexOf('is-external=true') == -1) {
+            parent.document.title="APIResponseSchema";
+        }
+    }
+    catch(err) {
+    }
+//-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+<!-- ========= START OF TOP NAVBAR ======= -->
+<div class="topNav"><a name="navbar.top">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.top" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.top.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponses.html" title="annotation in org.eclipse.microprofile.openapi.annotations.responses"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html" target="_top">Frames</a></li>
+<li><a href="APIResponseSchema.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.top">
+<!--   -->
+</a></div>
+<!-- ========= END OF TOP NAVBAR ========= -->
+<!-- ======== START OF CLASS DATA ======== -->
+<div class="header">
+<div class="subTitle">org.eclipse.microprofile.openapi.annotations.responses</div>
+<h2 title="Annotation Type APIResponseSchema" class="title">Annotation Type APIResponseSchema</h2>
+</div>
+<div class="contentContainer">
+<div class="description">
+<ul class="blockList">
+<li class="blockList">
+<hr>
+<br>
+<pre>@Target(value=METHOD)
+ @Retention(value=RUNTIME)
+ @Inherited
+public @interface <span class="memberNameLabel">APIResponseSchema</span></pre>
+<div class="block">The APIResponseSchema annotation corresponds to an individual schema in the OpenAPI Response model object which
+ describes a single response from an API Operation. This annotation provides a short-hand way to specify a simple
+ response that would otherwise be specified using <a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponse.html" title="annotation in org.eclipse.microprofile.openapi.annotations.responses"><code>&#64;APIResponse</code></a> and that typically could not be
+ determined by scanning the resource method alone.
+
+ <p>
+ The following annotation usages are equivalent to the OpenAPI annotation scanner runtime.
+
+ <pre>
+ &#64;APIResponse(content = { &#64;Content(schema = &#64;Schema(implementation = MyResponseObject.class)) })
+
+ &#64;APIResponseSchema(MyResponseObject.class)
+ </pre>
+
+ <p>
+ When this annotation is applied to a method the response is added to the responses defined in the corresponding
+ OpenAPI operation with a default response code and description that correspond to the method's HTTP method annotation
+ and return type. Any media types that apply to the resource method from either a method-level or class-level
+ <code>&#64;Produces</code> annotation will result in those media types applying to the OpenAPI response model.
+
+ <p>
+ If not specified, default responseCode and responseDescription values shall be determined according to the
+ <a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#responseCode--"><code>responseCode</code></a> and <a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#responseDescription--"><code>responseDescription</code></a> documentation.
+
+ <pre>
+ &#64;GET
+ &#64;Path("{id}")
+ &#64;APIResponseSchema(value = MyResponseObject.class, responseDescription = "Success", responseCode = "200")
+ public Response getById(&#64;PathParam("{id}") long id) {
+     MyResponseObject entity = service.load(id);
+     return Response.status(200).entity(entity).build();
+ }
+ </pre></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.0</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponse.html" title="annotation in org.eclipse.microprofile.openapi.annotations.responses"><code>APIResponse</code></a>, 
+"https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responseObject"</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.required.element.summary">
+<!--   -->
+</a>
+<h3>Required Element Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Required Element Summary table, listing required elements, and an explanation">
+<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Required Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#value--">value</a></span></code>
+<div class="block">Provides a Java class as implementation for this schema.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+<!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.optional.element.summary">
+<!--   -->
+</a>
+<h3>Optional Element Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Optional Element Summary table, listing optional elements, and an explanation">
+<caption><span>Optional Elements</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Optional Element and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#responseCode--">responseCode</a></span></code>
+<div class="block">The HTTP response code, or 'default', for the supplied response.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#responseDescription--">responseDescription</a></span></code>
+<div class="block">A short description of the response.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="annotation.type.element.detail">
+<!--   -->
+</a>
+<h3>Element Detail</h3>
+<a name="value--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>value</h4>
+<pre>public abstract&nbsp;java.lang.Class&lt;?&gt;&nbsp;value</pre>
+<div class="block">Provides a Java class as implementation for this schema. The class will undergo introspection to determine any
+ applicable Schema attributes to be applied to the OpenAPI response model.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a class that implements this schema</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
+<ul class="blockList">
+<li class="blockList"><a name="responseDescription--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>responseDescription</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;responseDescription</pre>
+<div class="block">A short description of the response. It is a REQUIRED property in the OpenAPI document.
+
+ <p>
+ If no value is specified, the default value will set to the description given by the
+ <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10">HTTP/1.1 documentation</a> for the
+ <a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html#responseCode--"><code>responseCode</code></a> in use.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>description of the response.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="responseCode--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>responseCode</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;responseCode</pre>
+<div class="block">The HTTP response code, or 'default', for the supplied response. May have only one 'default' entry.
+
+ <p>
+ If no value is specified, a default shall be determined using REST conventions as follows:
+
+ <ul>
+ <li>If the method's return type is <code>void</code> and the HTTP method is <code>&#64;POST</code>, the code will
+ be <code>201</code>.
+ <li>Otherwise, if the method's return type is <code>void</code> the method does not list a JAX-RS
+ <code>AsyncResponse</code> parameter, the code will be <code>204</code>.
+ <li>Otherwise, the code will be <code>200</code>.
+ </ul></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>HTTP response code for this response instance or default</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<!-- ========= END OF CLASS DATA ========= -->
+<!-- ======= START OF BOTTOM NAVBAR ====== -->
+<div class="bottomNav"><a name="navbar.bottom">
+<!--   -->
+</a>
+<div class="skipNav"><a href="#skip.navbar.bottom" title="Skip navigation links">Skip navigation links</a></div>
+<a name="navbar.bottom.firstrow">
+<!--   -->
+</a>
+<ul class="navList" title="Navigation">
+<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../../index-all.html">Index</a></li>
+<li><a href="../../../../../../help-doc.html">Help</a></li>
+</ul>
+</div>
+<div class="subNav">
+<ul class="navList">
+<li><a href="../../../../../../org/eclipse/microprofile/openapi/annotations/responses/APIResponses.html" title="annotation in org.eclipse.microprofile.openapi.annotations.responses"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li>Next&nbsp;Class</li>
+</ul>
+<ul class="navList">
+<li><a href="../../../../../../index.html?org/eclipse/microprofile/openapi/annotations/responses/APIResponseSchema.html" target="_top">Frames</a></li>
+<li><a href="APIResponseSchema.html" target="_top">No&nbsp;Frames</a></li>
+</ul>
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
+</div>
+<a name="skip.navbar.bottom">
+<!--   -->
+</a></div>
+<!-- ======== END OF BOTTOM NAVBAR ======= -->
+</body>
+</html>

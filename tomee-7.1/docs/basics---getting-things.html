@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Basics - Getting Things</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_getting_stuff_from_the_container" class="sect0">Getting Stuff from the Container</h1>
+<div class="paragraph">
+<p>Generally speaking the only way to get a
+<a href="container-managed-resource.html">Container-Managed Resource</a> is via
+<em>dependency injection</em> or <em>lookup</em> from within a [Container-Managed
+Component] .</p>
+</div>
+<div class="paragraph">
+<p>The <em>unbreakable rules</em>. Read these over and over again when things
+don&#8217;t work.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>java:comp/env is the spec defined namespace for lookup of any
+<a href="container-managed-resource.html">Container-Managed Resource</a></p>
+</li>
+<li>
+<p>java:comp/env is <em>empty</em> by default</p>
+</li>
+<li>
+<p>java:comp/env is <em>read-only</em> at runtime</p>
+</li>
+<li>
+<p>java:comp/env is populated by <a href="declaring-references.html">Declaring
+References</a> to [Container-Managed Resource] via xml or annotation</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>not</em> their libraries, can [Declare References|Declaring
+References] via xml or annotation</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>not</em> their libraries, can get dependency injection of
+[Container-Managed Resource] s</p>
+</li>
+<li>
+<p>only <a href="container-managed-component.html">Container-Managed
+Component</a> s, <em>and</em> their libraries, may lookup from java:comp/env</p>
+</li>
+<li>
+<p>you <em>must</em> use the <em>no-arg</em> 'new InitialContext()' constructor to
+lookup something from java:comp/env</p>
+</li>
+<li>
+<p>the annotations and xml for <a href="declaring-references.html">Declaring
+References</a> are <em>identical</em> in functionality, both <em>always</em> configure
+lookup with <em>optional</em> dependency injection</p>
+</li>
+</ol>
+</div>
+<div class="sect1">
+<h2 id="_common_mistakes_misunderstandings_and_myths">Common mistakes, misunderstandings, and myths</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I tried it via annotation and it didn&#8217;t work, so I used xml and
+then it did work"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 9. If one form worked and the other didn&#8217;t, it means you simply
+made a mistake in using one versus the other. Use what works for you,
+but understand both annotations or xml will work for either lookup or
+injection if used correctly.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I need to use lookups, so I can&#8217;t use the annotation"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 9. Annotations are not just for injection, that is just how
+they are typically used. Know that when you use an annotation for
+injection, it will <em>always</em> create an entry in java:comp/env. As well
+you can use the annotation at the <em>class level</em> and it will cause no
+dependency injection and only the entry creation in java:comp/env.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I don&#8217;t want injection, so I can&#8217;t use the annotation"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 9 and the above. You can use the annotation at the <em>class
+level</em> and it will cause no dependency injection and only the entry
+creation in java:comp/env.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I tried to list java:comp/env but it&#8217;s empty?!"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 2 and rule 4. There will be nothing in java:comp/env unless you
+<a href="declaring-references.html">Declare a Reference</a> to it. It does not
+matter if is a DataSource configured at the server level, etc. Nothing
+is bound into java:comp/env unless you explicitly declare a reference to
+it. The Java EE 5 TCK (Technology Compatibility Kit) tests for this
+extensively and is a rule we cannot break. Java EE 6 does finally offer
+some new namesaces (java:global, java:app, and java:module) which will
+offer some great new options for more global-style lookups.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I deployed the EJB but can&#8217;t look it up, it&#8217;s name is Foo"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 2 and the above. Just creating an EJB doesn&#8217;t cause it to be
+added to java:comp/env. If a
+<a href="container-managed-component.html">Container-Managed Component</a> wants
+to lookup the EJB they must [Declare a Reference|Declaring References]
+to it via the <code>@EJB</code> annotionation or &lt;ejb-local-ref&gt; or &lt;ejb-ref&gt; in xml.
+In Java EE 6, however, EJBs will be automatically bound to
+"java:global[/&lt;app-name&gt;]/&lt;module-name&gt;/&lt;bean-name&gt;[!&lt;fully-qualified-interface-name&gt;]"
+and can be looked up without declaring a reference first.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"Which InitialContextFactory do I use for java:comp/env?"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 8. You are not allowed to use an InitialContextFactory for
+java:comp/env lookups. Setting an InitialContextFactory via
+'java.naming.factory.initial' in either System properties,
+InitialContext properties, or a jndi.properties file is illegal and will
+cause java:comp/env lookups to fail.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"My Client can&#8217;t lookup the EJB from java:comp/env"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See rule 7. A plain, standalone, Java application cannot use
+java:comp/env. There is the official concept of a Java EE Application
+Client which can be packaged in an ear and deployed into the Container.
+In practice, most people find them restrictive, cumbersome, and hard to
+use and are therefore rarely employed in "real world" projects. Most
+people opt to use the non-standard, vendor-specific, approach to looking
+up EJBs from their plain java clients. In OpenEJB this can be done via
+either the RemoteInitialContextFactory (for remote clients) or the
+LocalInitialContextFactory (for local clients of an embedded container).
+The JNDI names can be configured as <a href="jndi-names.html">shown here</a> .</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"I declared the reference, but still can&#8217;t look it up"</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See all of the above and reread the rules a few times. Always check the
+log output as well.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

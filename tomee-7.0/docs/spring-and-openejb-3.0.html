@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Spring and OpenEJB 3.0</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+OpenEJB 3.1 and later users should refer to the <a href="spring.html">Spring</a>
+page.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<h1 id="_bootstrapping_openejb_in_spring" class="sect0">Bootstrapping OpenEJB in Spring</h1>
+<div class="paragraph">
+<p>If you wish to use OpenEJB inside Spring you can do so pretty easily.
+Include OpenEJB and its dependencies in your classpath as you would in a
+plain embedded scenario then add a custom factory like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class OpenEjbFactoryBean implements org.springframework.beans.factory.FactoryBean {
+
+    private Properties properties = new Properties();
+
+    public OpenEjbFactoryBean() {
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.LocalInitialContextFactory");
+    }
+
+    public Properties getJndiEnvironment() {
+        return properties;
+    }
+
+    public void setJndiEnvironment(Properties properties) {
+        this.properties.putAll(properties);
+    }
+
+    public Object getObject() {
+        try {
+            return new InitialContext(properties);
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Class getObjectType(){
+        return Context.class;
+    }
+
+    boolean isSingleton() {
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And include that at the top of your spring xml file as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;bean id="OpenEjbContext" class="org.acme.OpenEjbFactoryBean"&gt;
+  &lt;property name="jndiEnvironment"&gt;
+    &lt;props&gt;
+      &lt;prop key="myDs"&gt;new://Resource?type=DataSource&lt;/prop&gt;
+      &lt;prop key="myDs.JdbcDriver"&gt;com.mysql.jdbc.Driver&lt;/prop&gt;
+      &lt;prop key="myDs.JdbcUrl"&gt;jdbc:mysql://localhost/midastest?createDatabaseIfNotExist=true&lt;/prop&gt;
+      &lt;prop key="myDs.UserName"&gt;root&lt;/prop&gt;
+      &lt;prop key="myDs.Password"&gt;&lt;/prop&gt;
+    &lt;/props&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The value of is meant to be illustrative of the kinds of properties you
+can pass into OpenEJB. It&#8217;s possible to create any number of
+datasources, topics, queues, containers and more this way.</p>
+</div>
+<div class="paragraph">
+<p>Just as with Unit Testing, OpenEJB will find and automatically deploy
+all the EJB beans it [finds in the classpath|Application discovery via
+the classpath]. You can then expose any of these things to other Spring
+components with custom factory beans.</p>
+</div>
+<div class="sect1">
+<h2 id="_injecting_openejb_created_resources_into_spring_components">Injecting OpenEJB-created resources into Spring components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to have any of the Topics, Queues, DataSources,
+EntityManagers or more that OpenEJB creates injected into components
+that Spring creates, here&#8217;s one technique&#8230;&#8203;.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s say you have a persistence unit called "<em>OrangeUnit</em>" declared in
+a persistence.xml file. One way to get the related <em>EntityManager</em>
+created by OpenEJB is to do as follows. Create an <code>@Stateless</code> bean with
+an <code>@PersistenceContext</code> ref in it, then use a factory bean to look it up,
+pull the EntityManager out and return it</p>
+</div>
+<div class="paragraph">
+<p>OrangeUnitBean.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/*
+ * OpenEJB will automatically find this bean.  Just put it in the same jar
+ * that your META-INF/persistence.xml file is located in and make sure that
+ * that same jar file also has a META-INF/ejb-jar.xml file.  The ejb-jar.xml
+ * need only contain the text "&lt;ejb-jar/&gt;" at minimum.
+ */
+@Stateless
+public class OrangeUnitBean implements OrangeUnitLocal {
+
+    @PersistenceContext(unitName="OrangeUnit")
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OrangeUnitLocal.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * The local interface for the OrangeUnitBean
+ */
+public interface OrangeUnitLocal {
+   public EntityManager getEntityManager();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OrangeUnitFactoryBean.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * This factory bean will lookup the OrangeUnitBean using the javax.naming.Context
+ * that is created via the OpenEjbFactoryBean above.  It will simply grab the EntityManager
+ * from that bean and hand it over to Spring.  Anyone in Spring-land can then easily get
+ * a reference to the EntityManager by simply referencing this factory bean.
+ */
+public class OrangeUnitFactoryBean implements org.springframework.beans.factory.FactoryBean {
+    private Context context;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public Object getObject() {
+        try {
+            ResourceLocal bean = (ResourceLocal) context.lookup("OrangeUnitBeanLocal");
+            return bean.getEntityManager();
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Class getObjectType(){
+        return EntityManager.class;
+    }
+
+    boolean isSingleton() {
+        return true;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The factory bean would then be declared in your spring xml file as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;bean id="OrangeUnit" class="org.acme.OrangeUnitFactoryBean"&gt;
+  &lt;property name="context" ref="OpenEjbContext"&gt;
+&lt;/bean&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The EntityManager can then easily be consumed by a spring bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class SomePojo {
+
+    private EntityManager entityManager;
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the spring xml</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;bean id="SomePojo" class="org.acme.SomePojo"&gt;
+  &lt;property name="entityManager" ref="OrangeUnit"&gt;
+&lt;/bean&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s what all three declarations would look like together in your
+spring xml:</p>
+</div>
+<div class="paragraph">
+<p>Spring bean definitions combined</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;bean id="OpenEjbContext" class="org.acme.OpenEjbFactoryBean"&gt;
+  &lt;property name="jndiEnvironment"&gt;
+    &lt;props&gt;
+      &lt;prop key="myDs"&gt;new://Resource?type=DataSource&lt;/prop&gt;
+      &lt;prop key="myDs.JdbcDriver"&gt;com.mysql.jdbc.Driver&lt;/prop&gt;
+      &lt;prop key="myDs.JdbcUrl"&gt;jdbc:mysql://localhost/midastest?createDatabaseIfNotExist=true&lt;/prop&gt;
+      &lt;prop key="myDs.UserName"&gt;root&lt;/prop&gt;
+      &lt;prop key="myDs.Password"&gt;&lt;/prop&gt;
+    &lt;/props&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;bean id="OrangeUnit" class="org.acme.OrangeUnitFactoryBean"&gt;
+  &lt;property name="context" ref="OpenEjbContext"&gt;
+&lt;/bean&gt;
+
+&lt;bean id="SomePojo" class="org.acme.SomePojo"&gt;
+  &lt;property name="entityManager" ref="OrangeUnit"&gt;
+&lt;/bean&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Here is a bunch of links suggested
+by a user. If anybody has time to go through them and write a doc, that
+would be great. These links explain how to make available spring
+components to openejb.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://twasink.net/blog/archives/2007/01/using_spring_wi.html" class="bare">http://twasink.net/blog/archives/2007/01/using_spring_wi.html</a></p>
+</li>
+<li>
+<p><a href="http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/ejb/interceptor/SpringBeanAutowiringInterceptor.html" class="bare">http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/ejb/interceptor/SpringBeanAutowiringInterceptor.html</a></p>
+</li>
+<li>
+<p><a href="http://wiki.netbeans.org/MavenSpringEJBsOnGlassfish" class="bare">http://wiki.netbeans.org/MavenSpringEJBsOnGlassfish</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

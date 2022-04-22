@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Deployment ID</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <h1 id="_what_is_a_deployment_id" class="sect0">What is a Deployment ID?</h1>
+<div class="paragraph">
+<p>Every bean deployed in OpenEJB has a unique deployment-id that
+identifies it within the scope of the entire container system. The
+server and container system refer beans at run-time using the bean&#8217;s
+deployment id.</p>
+</div>
+<div class="sect1">
+<h2 id="_like_ejb_name">Like ejb-name</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This deployment id is much like the element of the ejb-jar.xml , with
+one very important difference. The is only required to be unique within
+the scope of the ejb-jar.xml in the bean&#8217;s jar. The deployment id is
+required to be unique across all beans and jars in OpenEJB. This is a
+subtle, but important, distinction.</p>
+</div>
+<div class="paragraph">
+<p>Remember that the EJB specification was designed so that enterprise
+beans could be create, packaged, and sold by vendors (EJB Providers).
+Furthermore, users should be able to buy a packaged set of beans (a jar
+with an ejb-jar.xml in it) and deploy it into an EJB Container without
+modification.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_ejb_name_is_not_unique">The ejb-name is not unique</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s consider this, what happens if two vendors each sell a package
+(jar) that contains a bean with the PurchaseOrder? Both are completely
+different in terms functionality and are different beans in every other
+respect. The EJB spec says, this is fine, ejb-names only have to unique
+within the jar and that jar&#8217;s ejb-jar.xml file. It&#8217;s ridiculous to
+expect EJB Providers to call each other up and ask, "Are you already
+using the name 'PurchaseOrder' in your jar?" Remember that the EJB
+specification was designed so that enterprise beans could be create,
+packaged, and sold by vendors (EJB Providers). Furthermore, users should
+be able to buy a packaged set of beans (a jar with an ejb-jar.xml in it)
+and deploy it into an EJB Container without modification. This is all
+fine and dandy, but it still leaves it up to the EJB Container/Server
+providers to settle the difference.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_deployment_id_is_unique">The deployment-id is unique</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenEJB solves this with the OpenEJB-specific deployment id. By
+requiring that each bean deployed into OpenEJB has a unique name, we can
+guarantee that we are always referring to the right bean at all times.
+Furthermore, it allows you to deploy different versions of the same
+package several times in the same container system, each time giving the
+beans new deployment ids.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_ejb_name_as_deployment_id_anyway">Using ejb-name as deployment-id anyway</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you&#8217;re lazy&#8201;&#8212;&#8201;as any truly great programmer should be&#8201;&#8212;&#8201;and don&#8217;t
+want to type a deployment id for each bean every time you deploy a jar,
+you can use the -D option of the Deploy Tool. This will throw caution to
+the wind, and automatically assign the bean&#8217;s ejb-name as the value of
+the bean&#8217;s OpenEJB deployment id. This leaves up to you to guarantee
+that bean&#8217;s ejb-name will be unique across all beans and jars in the
+container system. In other words, be very careful with the -D option!</p>
+</div>
+</div>
+</div>
+<h1 id="_how_is_it_used" class="sect0">How is it used?</h1>
+<div class="sect1">
+<h2 id="_in_the_container_system">In the container system</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the container system, the deployment id is used to index the bean in
+a system-wide registry. This registry is refereed to on every call made
+in the container system. Being able to safely hash and cache bean
+information by id is a must. This stresses the importance of unique ids
+for every bean deployed in OpenEJB.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_in_the_local_server">In the Local Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Local (IntraVM) Server is an integral part of the container system
+and the two are, in many ways, inseparable. The Local Server takes care
+of all bean to bean and client to bean invocations made inside the
+virtual machine. For this reason, it often refered to as the IntraVM
+Server.</p>
+</div>
+<div class="paragraph">
+<p>For bean to bean communications, the Local Server must create a JNDI
+namespace (JNDI ENC) for each bean as defined by the bean&#8217;s , , and
+elements of the bean&#8217;s ejb-jar.xml file. Every bean literally gets its
+very own JNDI namespace. When a bean makes a JNDI call, the Local Server
+intercepts this call and uses the deployment id of the calling bean to
+retrieve that bean&#8217;s private JNDI namespace from the container system&#8217;s
+index. The Local Server then carries out the lookup on that bean&#8217;s
+namespace.</p>
+</div>
+<div class="paragraph">
+<p>All non-bean clients share one big global namespace. Since non-bean
+clients are not deployed and do not have a deployment descriptor like an
+ejb-jar.xml, the Local Server is unable to taylor a namespace for each
+non-bean client as it can for bean clients. The Local server cannot
+identify non-bean clients as they have no deployment id. All JNDI calls
+made by clients that the Local Server cannot identify go to the public,
+global namespace. The public, global JNDI namespace contains all beans
+and resources in the container system. name.</p>
+</div>
+<div class="paragraph">
+<p>Each bean is added to the public, global namespace using it&#8217;s deployment
+id as its JNDI lookup. For example, if a bean had a deployment-id of
+"/my/bean/foo", a non-bean client could lookup that bean as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">...
+Object bean = initialContext.lookup("/my/bean/Foo");
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a bean in the container system made the above JNDI call, the Local
+Server would see the bean&#8217;s identity (deployment id) hidden in the
+Thread, go get the bean&#8217;s private JNDI namespace and finish the lookup
+on that. Since all names in bean&#8217;s JNDI namespace are required start
+with "java:comp/env", the lookup would fail and the bean would receive a
+javax.naming.NameNotFoundException.</p>
+</div>
+<div class="paragraph">
+<p>In short&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>For beans: - Each bean has it&#8217;s own private, personalized JNDI namespace
+- The names in it are the same names it uses in its ejb-jar.xml - Beans
+can only access their private namespace, period</p>
+</div>
+<div class="paragraph">
+<p>For non-beans (everyone else): - Non-bean clients share the public,
+global JNDI namespace - The names in it are the deployment ids of all
+the beans - Non-bean clients can only access the one global namespace</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_in_the_remote_server">In the Remote Server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Remote Server has a public, global namespace just as the Local
+Server does. The difference being that the Remote Server only serves
+clients outside the container system and outside the virtual machine.
+So, all clients from the perspective of the Remote Server are non-bean
+clients. As a result, the Remote Server only has the one public, global
+JNDI namespace. Just as in the Local Server, the names in this namespace
+consist of the deployment ids of the beans in the container system.</p>
+</div>
+<div class="paragraph">
+<p>Just as before, clients can lookup beans from the Remote Server using
+the bean&#8217;s deployment id. For example, if a bean had a deployment-id of
+"/my/bean/foo", a client could lookup that bean as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">...
+Object bean = initialContext.lookup("/my/bean/Foo");
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_in_the_corba_adapter">In the CORBA Adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CORBA Adapter is separate than the Remote Server. It adapts the
+OpenEJB Container System and the Local Server into OpenORB as an
+embedded library. It provides users of OpenORB the ability to lookup and
+execute beans (EJBs) via the RMI-IIOP protocol. All the EJBHome and
+EJBObject interfaces of beans in OpenEJB are implemented by OpenORB as
+CORBA stubs and ties.</p>
+</div>
+<div class="paragraph">
+<p>The beans are exported into OpenORB&#8217;s naming service by deployment id.
+So, just as with the Local Server and Remote Server, clients can lookup
+beans using the bean&#8217;s deployment id. OpenORB has a JNDI implementation
+of their naming service, so lookups can be done just as before.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">...
+String[] args = ...
+
+// The ORB and Object
+org.omg.CORBA.ORB    orb  = null;
+org.omg.CORBA.Object bean = null.
+
+// The Naming Service and Object Name
+org.omg.CosNaming.NamingContext   context = null;
+org.omg.CosNaming.NameComponent[]    name = null;
+
+// Get the ORB
+orb = org.omg.CORBA.ORB.init( args, null );
+
+// Get the Naming Service
+org.omg.CORBA.Object ref = null;
+ref = orb.resolve_initial_references("NameService");
+context = org.omg.CosNaming.NamingContextHelper.narrow( ref );
+
+// Get the Name as a component
+// Note: the string is the bean's deployment id
+name    = new org.omg.CosNaming.NameComponent[ 1 ];
+name[0] = new org.omg.CosNaming.NameComponent("/my/bean/foo","");
+
+// Finally, get the bean as a CORBA object
+// Equvalent to an InitialContext.lookup("/my/bean/foo");
+bean = context.resolve( name );
+...</code></pre>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_what_happens_if_there_is_a_duplicate_deployment_id" class="sect0">What happens if there is a duplicate deployment ID?</h1>
+<div class="paragraph">
+<p>The deployment ID uniquely identifies the bean in the OpenEJB container
+system. Therefore, no two beans can share the same deployment ID.</p>
+</div>
+<div class="paragraph">
+<p>If a bean attempts to use a deployment ID that is already in use by
+another bean, the second bean and all beans in it&#8217;s jar will not be
+loaded. In addition, the system will log a warning like the following
+one asking you to redeploy the jar and choose an different deployment ID
+for the bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">WARN : Jar C:\openejb\beans\fooEjbs.jar cannot be loaded.  The Deployment ID "/my/bean/foo" is already in use.  Please redeploy this jar and assign a different deployment ID to the bean with the ejb-name "FooBean".</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, the acmeEjbs.jar contains a bean with the ejb-name
+"DaffyDuckBean". The disneyEjbs.jar contains contains a bean with the
+ejb-name "DonaldDuckBean".</p>
+</div>
+<div class="paragraph">
+<p>We deploy the acmeEjbs.jar and give the "DaffyDuckBean" the deployment
+ID of "/my/favorite/duck". Sometime afterwards, we deploy the
+disneyEjbs.jar and assign the "DonaldDuckBean" the deployment ID
+"/my/favorite/duck", having forgotten that we already gave that unique
+ID to the "DaffyDuckBean" in the acmeEjbs.jar.</p>
+</div>
+<div class="paragraph">
+<p>When the container system is started, the system will begin loading all
+the beans one jar at a time. It will first load the acmeEjbs.jar and
+index each bean by deployment ID. But, when the system reaches the
+disneyEjbs.jar, it will discover that it cannot index the
+"DonaldDuckBean" using the deployment ID "/my/favorite/duck" because
+that index is already taken.</p>
+</div>
+<div class="paragraph">
+<p>The system cannot load the "DonaldDuckBean" and must also ignore the
+rest of the beans in the disneyEjbs.jar as they may need the
+"DonaldDuckBean" bean to function properly. The disneyEjbs.jar is
+skipped and the following warning is logged.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">WARN : Jar C:\openejb\beans\disneyEjbs.jar cannot be loaded.  The  Deployment ID "/my/favorite/duck" is already in use.  Please redeploy  this jar and assign a different deployment ID to the bean with the ejb-name "DonaldDuckBean".</code></pre>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

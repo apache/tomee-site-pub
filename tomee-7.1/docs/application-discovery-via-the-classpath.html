@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Application discovery via the classpath</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document
+details the various ways to get OpenEJB to detect applications you would
+like deployed while in an embedded mode.</p>
+</div>
+</div>
+</div>
+<h1 id="_empty_ejb_jar_xml_approach_recommended" class="sect0">Empty ejb-jar.xml approach (recommended)</h1>
+<div class="paragraph">
+<p>Simplify the issue of searching for annotated applications by adding an
+ejb-jar.xml like this to your app:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenEJB will find the app in the classpath and deploy it along with any
+annotated beans it may contain.</p>
+</div>
+<div class="paragraph">
+<p>The ejb-jar.xml can contain more than just "" as usual.</p>
+</div>
+<div class="paragraph">
+<p>This is the recommended approach for people using OpenEJB for unit
+testing as it allows OpenEJB to find your application in the classpath
+without the need for you to specify any path information which tends to
+complicate builds.</p>
+</div>
+<div class="sect1">
+<h2 id="_includingexcluding_paths_advanced">Including/Excluding paths (advanced)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you do not like the idea of having the ejb-jar.xml in your app or an
+openejb.xml, we can search the classpath for annotated beans
+(<code>@Stateless</code>, <code>@Stateful</code>, <code>@MessageDriven</code>) and load them automatically just
+as if they contained an ejb-jar.xml.</p>
+</div>
+<div class="paragraph">
+<p>This form of searching, however, is very expensive as it involves
+iterating over every path in the classpath and reading in each class
+definition contained thereunder and checking it for annotations.</p>
+</div>
+<div class="paragraph">
+<p>This approach can only be made faster by helping us trim down or
+pinpoint the paths we should search via the
+<em>openejb.deployments.classpath.include</em> property which can be specified
+as a <em>system property</em> or a property passed into the <em>InitialContext</em>.</p>
+</div>
+<div class="paragraph">
+<p>The value of this property is a regular expression and therefore can be
+absolute or relative. For example the path
+"/Users/dblevins/work/swizzle/swizzle-stream/target/classes" which
+contains the class files of an application you wish to test could be
+included in any of the following values to the
+"openejb.deployments.classpath.include" property:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"file:///Users/dblevins/work/swizzle/swizzle-stream/target/classes/"
+<em>(an absolute path)</em></p>
+</li>
+<li>
+<p>"file:///Users/dblevins/work/swizzle/.*" <em>(relative)</em></p>
+</li>
+<li>
+<p>".<strong>swizzle-stream.</strong>" <em>(very relative)</em></p>
+</li>
+<li>
+<p>".<strong>(swizzle-stream|swizzle-jira|acme-rocket-app).</strong>" <em>(including
+several paths)</em></p>
+</li>
+<li>
+<p>".<strong>(swizzle-stream<sup>|swizzle-jira</sup>|acme-rocket-app).</strong>" <em>(including
+several paths with Win specific escapes)</em></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note the filtering is done on URLs in the classpath, so forward slashes
+should always be used even on OSs using backslash ("").</p>
+</div>
+<div class="paragraph">
+<p>There are also the <em>openejb.deployments.classpath.exclude</em> and
+<em>openejb.exclude-include.order</em> properties if you wish to work in the
+opposite direction or change the processing order. The default values
+for the properties are as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">  openejb.exclude-include.order=include-exclude //Defines the processing order
+   openejb.deployments.classpath.include=""      //Include nothing
+   openejb.deployments.classpath.exclude=".*"    //Exclude everything</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The exclude and the include are applied separately and the results of
+each are combined together to create the list of paths OpenEJB will
+scrape for annotations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">*Note:* by default these settings will only affect which jars OpenEJB will
+ scan for annotated components when no descriptor is found.  If you would
+ like to use these settings to also filter out jars that do contain
+ descriptors, set the *openejb.deployments.classpath.filter.descriptors*
+ property to _true_.  The default is _false_.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the include/exclude is not being processed as you expect first try
+reversing the order to <em>openejb.exclude-include.order</em>=exclude-include
+There are a number internal filters that may result in an unexpected
+exclusion.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re having trouble determining if the META-INF/ejb-jar.xml file
+for your ejb module is in the classpath, a little debug code like this
+in your test setup will help you see what OpenEJB sees (which may be
+nothing):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">Enumeration&lt;URL&gt; ejbJars =
+this.getClass().getClassLoader().getResources("META-INF/ejb-jar.xml");
+while (ejbJars.hasMoreElements()) {
+    URL url = ejbJars.nextElement();
+    System.out.println("app = " + url);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

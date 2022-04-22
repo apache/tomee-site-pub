@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Concepts</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="paragraph">
+<p>OpenEJB was founded on the idea that it would be embedded into
+third-party environments whom would likely already have three things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>their one "server" platform with existing clients and protocols</p>
+</li>
+<li>
+<p>their own way to configure their platform</p>
+</li>
+<li>
+<p>existing services like TransactionManager, Security, and Connector</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Thus the focus of OpenEJB was to create an EJB implementation that would
+be easily embeddible, configurable, and customizable.</p>
+</div>
+<div class="paragraph">
+<p>Part of achieving that is a drive to be as simple as possible as to not
+over-define and therefore restrict the ability to be embeddible,
+configurable and customizable. Smaller third-party environments could
+easily 'downscale' OpenEJB in their integrations by replacing standard
+components with lighter implementations or removing them all together
+and larger environments could 'upscale' OpenEJB by replacing and adding
+heavier implementations of those standard components likely tailored to
+their systems and infrastructure.</p>
+</div>
+<div class="paragraph">
+<p>Container and Server are mentioned in the EJB spec as being separate
+things but are never defined formally. In our world Containers, which
+implement the basic component contract and lifecycle of a bean are not
+coupled to any particular Server, which has the job of providing a
+naming service and providing a way for it&#8217;s clients to reference and
+invoke components (beans) hosted in Containers. Because Containers have
+no dependence at all only Server, you can run OpenEJB without any Server
+at all in an embedded environment for example without any work or any
+extra overhead. Similarly you can add as many new Server components as
+you want without ever having to modify any Containers.</p>
+</div>
+<div class="paragraph">
+<p>There is a very strong pluggability focus in OpenEJB as it was always
+intended to be embedded and customized in other environments. As a
+result all Containers are pluggable, isolated from each other, and no
+one Container is bound to another Container and therefore removing or
+adding a Container has no repercussions on the other Containers in the
+system. TransactionManager, SecurityService and Connector also pluggable
+and are services exposed to Containers. A Container may not be dependent
+on specific implementations of those services. Service Providers define
+what services they are offering (Container, Connector, Security,
+Transaction, etc.) in a file they place in their jar called
+service-jar.xml.</p>
+</div>
+<div class="paragraph">
+<p>The service-jar.xml should be placed not in the META-INF but somewhere
+in your package hierarchy (ours is in
+/org/apache/openejb/service-jar.xml) which allows the services in your
+service-jar.xml to be referenced by name (such as
+DefaultStatefulContainer) or more specifically by package and id (such
+as org.apache.openejb#DefaultStatefulContainer).</p>
+</div>
+<div class="paragraph">
+<p>The same implementation of a service can be declared several times in a
+service-jar.xml with different ids. This allows for you to setup several
+several different profiles or pre-configured versions of the services
+you provide each with a different name and different set of default
+values for its properties.</p>
+</div>
+<div class="paragraph">
+<p>In your openejb.conf file when you declare Containers and Connectors, we
+are actually hooking you up with Service Providers automatically. You
+get what is in the org/apache/openejb/service-jar.xml by default, but
+you are able to point specifically to a specific Service Provider by the
+'provider' attribute on the Container, Connector, TransactionManager,
+SecurityService, etc. elements of the openejb.conf file. When you
+declare a service (Container, Connector, etc.) in your openejb.conf file
+the properties you supply override the properties supplied by the
+Service Provider, thus you only need to specify the properties you&#8217;d
+like to change and can have your openejb.conf file as large or as small
+as you would like it. The act of doing this can be thought of as
+essentially instantiating the Service Provider and configuring that
+instance for inclusion in the runtime system.</p>
+</div>
+<div class="paragraph">
+<p>For example Container(id=NoTimeoutStatefulContainer,
+provider=DefaultStatefulContainer) could be declared with it&#8217;s Timeout
+property set to 0 for never, and a
+Container(id=ShortTimeoutStatefulContainer,
+provider=DefaultStatefulContainer) could be declared with it&#8217;s Timeout
+property set to 15 minutes. Both would be instances of the
+DefaultStatefulContainer Service Provider which is a service of type
+Container.</p>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
