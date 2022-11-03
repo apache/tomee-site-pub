@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../img/apache_tomee-logo.svg"
+							onerror="this.src='../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../docs.html">Documentation</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+					<li><a href="../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Apache TomEE 9.0.0.RC1 Release Notes</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache TomEE 9.0.0.RC1 has been released.</p>
+</div>
+<div class="paragraph">
+<p>This milestone gets us closer to a final 9.0.0 release. The milestone 8 was the first migration from javax to jakarta
+namespace straight in the source code. The release was not production ready and the build was not stable, but the goal
+was to get a base we could build upon.</p>
+</div>
+<div class="paragraph">
+<p>The journey has been long, after working to stabilize the build and achieve a significant TCK coverage for Jakarta EE 9.1,
+we decided to focus on supporting MicroProfile 5.0. We were still stuck on a very old version. The work we started on
+Milestone 8 to migrate to SmallRye is now complete and we are pleased to announced we reached 100% of MicroProfile 5.0.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The MicroProfile JWT implementation is entirely ours and has some great additions such as Bean Validation integration to
+validate JWT tokens.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In terms of Jakarta EE 9.1 TCK, we are 12 failures short, but we are actively working on them so we can have a final release soon.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the previous work, we fixed a couple of bugs and did some dependency upgrades.</p>
+</div>
+<div class="paragraph">
+<p>Thank you to everyone who contributed to this release, including all of our users and the people who submitted bug reports,
+contributed code or documentation enhancements.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependency_upgrade">Dependency upgrade</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4100">TOMEE-4100</a>  XBean 4.22</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4083">TOMEE-4083</a> Commons CLI 1.5.0</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3800">TOMEE-3800</a> DBCP 2.9.0</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4037">TOMEE-4037</a> Eclipse Mojarra 3.0.2</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4036">TOMEE-4036</a> EclipseLink 3.0.3</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3980">TOMEE-3980</a> HSQLDB 2.7.0</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4019">TOMEE-4019</a> HSQLDB 2.7.0</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4086">TOMEE-4086</a> HSQLDB 2.7.1</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4039">TOMEE-4039</a> Hibernate 6.1</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4093">TOMEE-4093</a> Hibernate 6.1.4.Final</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4038">TOMEE-4038</a> Jackson 2.13.4</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4026">TOMEE-4026</a> Johnzon 1.2.19</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4030">TOMEE-4030</a> Log4J2 2.18.0</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4097">TOMEE-4097</a> MicroProfile Fault Tolerance API 4.0.2</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4098">TOMEE-4098</a> MicroProfile Health API 4.0.1</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4099">TOMEE-4099</a> MicroProfile Rest Client API 3.0.1</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3999">TOMEE-3999</a> MyFaces 3.0.2</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4054">TOMEE-4054</a> Snakeyaml 1.33</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3831">TOMEE-3831</a> TomEE should support library asm9.1 support fully Java 17</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4040">TOMEE-4040</a> Tomcat 10.0.23</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4096">TOMEE-4096</a> Tomcat 10.0.27</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4018">TOMEE-4018</a> bcprov-jdk15on 1.70</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4006">TOMEE-4006</a> slf4j 1.7.36</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bug">Bug</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4101">TOMEE-4101</a> Typo with EL22Adaptor implementation in openwebbeans.properties</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4102">TOMEE-4102</a> TomEE logs SEVERE: Expected ContextBinding to have the method getThreadName()</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4032">TOMEE-4032</a> Class cast Exception when undeploying application with @PostConstruct LifeCycle</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3795">TOMEE-3795</a> Proxy class definition does not work in Java 17+</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4014">TOMEE-4014</a> Unable to see TomEE version in Tomcat home page with Java 17</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4041">TOMEE-4041</a> 4 CVE Vulnerabilities in snakeyaml-1.30.jar</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4001">TOMEE-4001</a> CVE-2022-34305 displaying user provided data without filtering, exposing a XSS vulnerability</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_task">Task</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4022">TOMEE-4022</a> Move to Apache Rat</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4028">TOMEE-4028</a> Replace cucumber shading and replace with cucumber-jakarta-openejb</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4035">TOMEE-4035</a> Upgrade SmallRye, Jackson and others</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3914">TOMEE-3914</a> Spring 3 Dependencies in TomEE Root POM</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4088">TOMEE-4088</a> Add workaround for CVE-2022-41853 (hsqldb)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_documentation">Documentation</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4023">TOMEE-4023</a> Comparison pages with wrong specs per profiles</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sub_task">Sub-task</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3890">TOMEE-3890</a> Replace Apache Geronimo Microprofile with Smallrye</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3896">TOMEE-3896</a> SmallRye Metrics integration</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3897">TOMEE-3897</a> SmallRye Health integration</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3898">TOMEE-3898</a> SmallRye Config integration</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3899">TOMEE-3899</a> SmallRye Fault Tolerant integration</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4007">TOMEE-4007</a> Clean up ASM dependency</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3900">TOMEE-3900</a> SmallRye OpenAPI integration</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3947">TOMEE-3947</a> Elliptic Curve ES256 signature algorithm</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3948">TOMEE-3948</a> Decryption of JWTs using RSA-OAEP and A256GCM algorithms</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3949">TOMEE-3949</a> Support for JWT audience aud claim</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3909">TOMEE-3909</a> Pass MicroProfile Rest Client TCK</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3910">TOMEE-3910</a> Pass MicroProfile JWT TCK</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-3955">TOMEE-3955</a> Fix TomEE :: Examples :: Arquillian Persistence Extension Sample</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fixed_common_vulnerabilities_and_exposures_cves">Fixed Common Vulnerabilities and Exposures (CVEs)</h2>
+<div class="sectionbody">
+<div class="ulist compact">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4086">TOMEE-4086</a> HSQLDB 2.7.1</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4041">TOMEE-4041</a> 4 CVE Vulnerabilities in snakeyaml-1.30.jar</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4001">TOMEE-4001</a> CVE-2022-34305 displaying user provided data without filtering, exposing a XSS vulnerability</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/TOMEE-4088">TOMEE-4088</a> Add workaround for CVE-2022-41853 (hsqldb)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+
