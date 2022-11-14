@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="favicon.ico">
+	<link rel="icon"  type="image/png" href="favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/owl.css">
+	<link rel="stylesheet" type="text/css" href="css/animate.css">
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="css/idea.css">
+	<link rel="stylesheet" type="text/css" href="css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="img/apache_tomee-logo.svg"
+							onerror="this.src='img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="docs.html">Documentation</a></li>
+					<li><a href="community/index.html">Community</a></li>
+					<li><a href="security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>From <code>javax</code> to <code>jakarta</code> namespace</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>javax</code> to <code>jakarta</code> namespace switch is one of the biggest change in Java of the latest 20 years. No doubt. The entire ecosystem is impacted.
+Not only Java EE or Jakarta EE Application servers, but also libraries of any kind (Jackson, CXF, Hibernate, Spring to name a few).</p>
+</div>
+<div class="paragraph">
+<p>Apache TomEE has been required to switch to <code>jakarta</code> namespace and we of course tried different options.
+This page aims at sharing some of our findings from the user perspective, because the shift from <code>javax</code> to <code>jakarta</code> is as impacting for application
+providers than it is for libraries or application servers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_byte_code_enhancement_approach">Byte code enhancement approach</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The first legitimate approach that comes to our mind is the byte code approach. The goal is to keep the <code>javax</code> namespace
+as much as possible in the sources and use byte code enhancement to convert binaries.</p>
+</div>
+<div class="sect2">
+<h3 id="_compile_time">Compile time</h3>
+<div class="paragraph">
+<p>It is possible to do a post treatment on the libraries and packages to transform archives such as then are converted to
+<code>jakarta</code> namespace.</p>
+</div>
+<div class="sect3">
+<h4 id="_maven_shade_plugin"><a href="https://maven.apache.org/plugins/maven-shade-plugin/">Maven Shade plugin</a></h4>
+<div class="paragraph">
+<p>The Maven shade plugin has the ability to relocate package. While the primary purpose isn&#8217;t to move from <code>javax</code> to
+<code>jakarta</code> package, it is possible to use it to relocate small libraries when they aren&#8217;t ready yet. We used this approach
+in TomEE itself or in third party libraries such as Apache Johnzon (JSONB/P implementation).</p>
+</div>
+<div class="paragraph">
+<p>This approach is not perfect, especially when you have a multimodule library. For example if you have a project with 2
+modules. A depends on B. You can use the shade plugin to convert the 2 modules and publish them using a classifier.
+The issue then is when you need A, you have to exclude B so that you can include it manually with the right classifier.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;d say it works fine but for simple cases because it breaks the dependency management in Maven, especially with
+transitive dependencies.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_eclipse_transformer"><a href="https://projects.eclipse.org/projects/technology.transformer">Eclipse Transformer</a></h4>
+<div class="paragraph">
+<p>The Eclipse Transformer is also a generic tool, but it&#8217;s been heavily developed for the <code>javax</code> to <code>jakarta</code> namespace
+change. It operates on resources such as</p>
+</div>
+<div class="paragraph">
+<p>Simple resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java class files</p>
+</li>
+<li>
+<p>OSGi feature manifest files</p>
+</li>
+<li>
+<p>Properties files</p>
+</li>
+<li>
+<p>Service loader configuration files</p>
+</li>
+<li>
+<p>Text files (of several types: java source, XML, TLD, HTML, and JSP)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Container resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Directories</p>
+</li>
+<li>
+<p>Java archives (JAR, WAR, RAR, and EAR files)</p>
+</li>
+<li>
+<p>ZIP archives</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_apache_tomcat_migration_tool"><a href="https://github.com/apache/tomcat-jakartaee-migration">Apache Tomcat Migration tool</a></h4>
+<div class="paragraph">
+<p>This tool can operate on a directory or an archive (zip, ear, jar, war), very similar to Eclipse Transformer.
+It can migrate quite easily the set of specifications supported in Tomcat and a few more.
+It has the notion of profile so that you can ask it to convert more, but the configuration is very limited compared to
+the Eclipse Transformer. It is probably easier from the user perspective though.</p>
+</div>
+<div class="paragraph">
+<p>You can run it using the ANT task (with in Maven or not), and there is also a command line interface to run it easily.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploy_time">Deploy time</h3>
+<div class="paragraph">
+<p>When using application server, it is sometimes possible to step in the deployment process and do the conversion of the
+binaries prior to their deployment.</p>
+</div>
+<div class="sect3">
+<h4 id="_apache_tomcattomee_migration_tool"><a href="https://github.com/apache/tomcat-jakartaee-migration">Apache Tomcat/TomEE migration tool</a></h4>
+<div class="paragraph">
+<p>Mind that by default, the tool converts only what&#8217;s being supported by Apache Tomcat and a couple of other APIs. It
+does not convert all specifications supported in TomEE, like JAX RS for example. And Tomcat does not provide yet any
+way to configure it.</p>
+</div>
+<div class="paragraph">
+<p>One benefit compared to other approaches is that Tomcat does keep the converted archive in the <code>webapps/</code> directory
+so it survives after a restart.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_runtime">Runtime</h3>
+<div class="paragraph">
+<p>We haven&#8217;t seen any working solution in this area. Of course, we could imagine a JavaAgent approach that converts the
+bytecode right when it gets loaded by the JVM. The startup time is seriously impacted, and it has to be done everytime
+the JVM restart or loads a class in a classloader. Remember that a class can be loaded multiple times in different classloaders.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_source_code_enhancement_approach">Source code enhancement approach</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This may sound like the most impacting but this is probably also the most secured one.
+We also strongly believe that embracing the change sooner is preferable rather than later.
+As mentioned, this is one of the biggest breaking change in Java of the last 20 years.
+Since Java EE moved to Eclipse to become Jakarta, we have noticed a change in the release cadence.
+Releases are not more frequent and more changes are going to happen. Killing the technical depth as soon as possible is
+probably the best way to go.</p>
+</div>
+<div class="paragraph">
+<p>There are a couple of tools we tried. There are probably more in the ecosystem, and also some in-house developments.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+This is usually a one shoot operation. It won&#8217;t be perfect and no doubt it will require adjustment for edge cases.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_intellij_idea">IntelliJ IDEA</h3>
+<div class="paragraph">
+<p>IntelliJ IDEA added a refactoring capability to its IDE in order to convert sources to the new <code>jakarta</code> namespace.
+I haven’t tested it myself, but it may help to do the first big step when you don’t really master the scripting approach bellow.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scripting_approach">Scripting approach</h3>
+<div class="paragraph">
+<p>For simple case, and we used that approach to do most of the conversion in TomEE, you can create your own simple tool to
+convert sources. For instance, SmallRye does that with their MicroProfile implementations. Here is an example
+<a href="https://github.com/smallrye/smallrye-config/blob/main/to-jakarta.sh" class="bare">https://github.com/smallrye/smallrye-config/blob/main/to-jakarta.sh</a></p>
+</div>
+<div class="paragraph">
+<p>Using basic Linux commands, it converts from <code>javax</code> to <code>jakarta</code> namespace and then the result is pushed to a dedicated
+branch. The benefit is that they have 2 sources trees with different artifacts, the dependency management isn&#8217;t broken.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_eclipse_transformer_2"><a href="https://projects.eclipse.org/projects/technology.transformer">Eclipse Transformer</a></h3>
+<div class="paragraph">
+<p>Because the Eclipse Transformer can operate on text files, it can be easily used to migrate the sources from <code>javax</code> to
+<code>jakarta</code> namespace.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We tried the bytecode approach ourselves in TomEE with the hope we could avoid maintaining 2 source trees, one for <code>javax</code>
+and the other one for <code>jakarta</code> namespace. Unfortunately, as we have seen before the risk is too important and there are
+too many edge cases not covered.
+One very important thing is the testing. No approach is gold and you need a very good test coverage and testing to make sure
+the application works within the new <code>jakarta</code> namespace.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2022 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="latest/docs/developer/index.html">Developers</a>
+          <li><a hef="latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/wow.min.js"></script>
+	<script src="js/typewriter.js"></script>
+	<script src="js/jquery.onepagenav.js"></script>
+	<script src="js/tree.jquery.js"></script>
+	<script src="js/highlight.pack.js"></script>
+    <script src="js/main.js"></script>
+		</body>
+
+</html>
+
