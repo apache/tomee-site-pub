@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":9};
+var methods = {"i0":9,"i1":10,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -110,9 +110,14 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">MicroProfileOpenApiRegistration</span>
 extends java.lang.Object</pre>
-<div class="block">Responsible for adding the filter into the chain and doing all other initialization
+<div class="block">This class is responsible for registering the OpenAPI servlet in each application so /openapi becomes available for
+ applications to consume. This class is created from the
+ <a href="../../../../../org/apache/tomee/microprofile/TomEEMicroProfileListener.html" title="class in org.apache.tomee.microprofile"><code>TomEEMicroProfileListener</code></a>
+ after the application is deployed.
  <p>
- todo do we want to be so restrictive with the HandlesTypes annotation?</div>
+ It will first try to load static openapi files in format JSON, YAML and YML. If not found, it will try to generate
+ the
+ model on the fly for the endpoints according to what the spec requires.</div>
 </li>
 </ul>
 </div>
@@ -154,10 +159,15 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/tomee/microprofile/openapi/MicroProfileOpenApiRegistration.html#onStartup-java.util.Set-ServletContext-">onStartup</a></span>(java.util.Set&lt;java.lang.Class&lt;?&gt;&gt;&nbsp;classes,
-         ServletContext&nbsp;ctx)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/tomee/microprofile/openapi/MicroProfileOpenApiRegistration.html#onStartup-java.util.Set-ServletContext-">onStartup</a></span>(java.util.Set&lt;java.lang.Class&lt;?&gt;&gt;&nbsp;c,
+         ServletContext&nbsp;servletContext)</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/tomee/microprofile/openapi/MicroProfileOpenApiRegistration.html#registerOpenApiServlet-ServletContext-IndexView-">registerOpenApiServlet</a></span>(ServletContext&nbsp;servletContext,
+                      IndexView&nbsp;indexView)</code>&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/apache/tomee/microprofile/openapi/MicroProfileOpenApiRegistration.html#setOpenApi-ServletContext-OpenAPI-">setOpenApi</a></span>(ServletContext&nbsp;servletContext,
           OpenAPI&nbsp;openAPI)</code>&nbsp;</td>
@@ -207,13 +217,23 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>onStartup</h4>
-<pre>public&nbsp;void&nbsp;onStartup(java.util.Set&lt;java.lang.Class&lt;?&gt;&gt;&nbsp;classes,
-                      ServletContext&nbsp;ctx)
+<pre>public&nbsp;void&nbsp;onStartup(java.util.Set&lt;java.lang.Class&lt;?&gt;&gt;&nbsp;c,
+                      ServletContext&nbsp;servletContext)
                throws ServletException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>ServletException</code></dd>
 </dl>
+</li>
+</ul>
+<a name="registerOpenApiServlet-ServletContext-IndexView-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>registerOpenApiServlet</h4>
+<pre>public static&nbsp;void&nbsp;registerOpenApiServlet(ServletContext&nbsp;servletContext,
+                                          IndexView&nbsp;indexView)</pre>
 </li>
 </ul>
 <a name="setOpenApi-ServletContext-OpenAPI-">
