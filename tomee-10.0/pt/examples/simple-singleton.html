@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Simples Singleton</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Como o nome indica, um <code>jakarta.ejb.Singleton</code>, é um bean de sessão com a garantia de que há no máximo uma instância no aplicativo.</p>
+</div>
+<div class="paragraph">
+<p>O que está faltando completamente no EJB 3.0 e anteriores é a capacidade de ter um EJB que é notificado quando o aplicativo é iniciado e quando ele para. Portanto, você pode fazer todos os tipos de coisas que antes só podiam ser feitas com um servlet de carregamento na inicialização. Também oferece um local para armazenar dados que pertencem a todo o aplicativo e a todos os usuários que os utilizam, sem a necessidade de dados estáticos. Além disso, os beans singleton podem ser chamados por vários encadeamentos ao mesmo tempo semelhante a um servlet.</p>
+</div>
+<div class="paragraph">
+<p>Consulte o <a href="../../singleton-beans.html">Singleton Beans</a> para obter uma página inteira da descrição da API jakarta.ejb.Singleton.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_o_codigo">O codigo</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concorrencia_bean_managed_de_propertyregistry">Concorrencia Bean-Managed de PropertyRegistry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui, vemos um bean que usa a opção de concorrencia Bean-Managed, bem como a anotação @Startup que faz com que o bean seja confirmado pelo contêiner quando o aplicativo é iniciado.
+Beans singleton com @ConcurrencyManagement(BEAN) são responsáveis ​​por sua própria segurança de thread. O bean mostrado é um registro de propriedade simples e fornece um local onde todos os beans de aplicativo podem definir e recuperar opções.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.registry;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.ConcurrencyManagement;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import java.util.Properties;
+
+import static jakarta.ejb.ConcurrencyManagementType.BEAN;
+
+@Singleton
+@Startup
+@ConcurrencyManagement(BEAN)
+public class PropertyRegistry {
+
+
+// Observe que o objeto java.util.Properties é um
+// Uma coleção thread-safe que usa sincronização. Se não for assim,
+// Eu teria que usar alguma forma de sincronização para ter certeza
+// Certifique-se de que PropertyRegistryBean é seguro para thread.
+    private final Properties properties = new Properties();
+
+// A anotação @Startup garante que
+// Chame esse método quando o aplicativo for iniciado.
+    @PostConstruct
+    public void applicationStartup() {
+        properties.putAll(System.getProperties());
+    }
+
+    @PreDestroy
+    public void applicationShutdown() {
+        properties.clear();
+    }
+
+    public String getProperty(final String key) {
+        return properties.getProperty(key);
+    }
+
+    public String setProperty(final String key, final String value) {
+        return (String) properties.setProperty(key, value);
+    }
+
+    public String removeProperty(final String key) {
+        return (String) properties.remove(key);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_componentregistry_container_managed_concurrency">ComponentRegistry Container-Managed Concurrency</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui, vemos um bean que usa a opção de concorrencia 'Container-Managed', o padrão. Com <code>@ConcurrencyManagement(CONTAINER)</code> o contêiner controla se deve permitir o acesso multithread ao bean <code>@Lock (READ)</code>) ou se deve forçar o acesso de thread único (<code>@Lock (WRITE)</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.registry;
+
+import jakarta.ejb.Lock;
+import jakarta.ejb.Singleton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import static jakarta.ejb.LockType.READ;
+import static jakarta.ejb.LockType.WRITE;
+
+@Singleton
+@Lock(READ)
+public class ComponentRegistry {
+
+    private final Map&lt;Class, Object&gt; components = new HashMap&lt;Class, Object&gt;();
+
+    public &lt;T&gt; T getComponent(final Class&lt;T&gt; type) {
+        return (T) components.get(type);
+    }
+
+    public Collection&lt;?&gt; getComponents() {
+        return new ArrayList(components.values());
+    }
+
+    @Lock(WRITE)
+    public &lt;T&gt; T setComponent(final Class&lt;T&gt; type, final T value) {
+        return (T) components.put(type, value);
+    }
+
+    @Lock(WRITE)
+    public &lt;T&gt; T removeComponent(final Class&lt;T&gt; type) {
+        return (T) components.remove(type);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A menos que explicitamente especificado na classe de bean ou um método, o padrão <code>@Lock</code> é <code>@Lock(WRITE)</code>. O código acima usa a anotação <code>@Lock(READ)</code> na classe do bean para alterar o valor padrão para que o acesso multithread seja concedido por padrão. Portanto, só precisamos aplicar a anotação <code>@Lock(WRITE)</code> aos métodos que modificam o estado do bean.</p>
+</div>
+<div class="paragraph">
+<p>Essencialmente, <code>@Lock(READ)</code> permite acesso multithread à instância do bean Singleton, a menos que alguém invoque um método <code>@Lock(WRITE)</code>. Usar <code>@Lock(WRITE)</code> garantirá que a thread que invoca o bean terá acesso exclusivo à instância do Singleton bean durante sua invocação. Essa combinação permite que a instância do bean use tipos de dados que normalmente não são seguros para thread. Muito cuidado deve ser tomado.três coisas:</p>
+</div>
+<div class="paragraph">
+<p>No exemplo, vemos <code>ComponentRegistryBean</code> usando um <code>java.util.HashMap</code> que está fora de sincronia. Para acertar, nós fazemos três coisas:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Encapsulamento Não expomos a instância HashMap diretamente; incluindo seus iteradores, conjunto de chaves, conjunto de valores ou conjunto de entrada.</p>
+</li>
+<li>
+<p>Usamos <code>@Lock(WRITE)</code> nos métodos que alteram o mapa, como os métodos <code>put()</code> e <code>remove()</code>.</p>
+</li>
+<li>
+<p>Usamos <code>@Lock(READ)</code> nos métodos <code>get()</code> e <code>values ​()</code>, uma vez que eles não alteram o estado do mapa e têm a garantia de não serem chamados ao mesmo tempo que qualquer um dos <code>@Lock(WRITE)</code>, então sabemos que o estado do HashMap não está sofrendo mutação e, portanto, é seguro para leitura.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>O resultado final, o modelo de encadeamento para este bean mudará de acesso multi-encadeamento para acesso de encadeamento dinâmico conforme necessário, dependendo do método que é chamado. Isso dá aos singletons uma vantagem sobre os servlets para processar solicitações multithread.</p>
+</div>
+<div class="paragraph">
+<p>Consulte o <a href="../../singleton-beans.html">Singleton Beans</a> para obter detalhes mais avançados sobre concorrencia gerenciada por contêiner.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testando">Testando</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_componentregistrytest">ComponentRegistryTest</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.registry;
+
+import org.junit.AfterClass;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import jakarta.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Date;
+
+public class ComponentRegistryTest {
+
+    private final static EJBContainer ejbContainer = EJBContainer.createEJBContainer();
+
+    @Test
+    public void oneInstancePerMultipleReferences() throws Exception {
+
+        final Context context = ejbContainer.getContext();
+
+        // As duas referências abaixo apontam exatamente para a mesma instância
+        final ComponentRegistry one = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+        final ComponentRegistry two = (ComponentRegistry) context.lookup("java:global/simple-singleton/ComponentRegistry");
+
+        final URI expectedUri = new URI("foo://bar/baz");
+        final URI actualUri = two.getComponent(URI.class);
+        Assert.assertSame(expectedUri, actualUri);
+
+        two.removeComponent(URI.class);
+        URI uri = one.getComponent(URI.class);
+        Assert.assertNull(uri);
+
+        one.removeComponent(URI.class);
+        uri = two.getComponent(URI.class);
+        Assert.assertNull(uri);
+
+        final Date expectedDate = new Date();
+        two.setComponent(Date.class, expectedDate);
+        final Date actualDate = one.getComponent(Date.class);
+        Assert.assertSame(expectedDate, actualDate);
+
+        Collection&lt;?&gt; collection = one.getComponents();
+        System.out.println(collection);
+        Assert.assertEquals("Reference 'one' - ComponentRegistry contains one record", collection.size(), 1);
+
+        collection = two.getComponents();
+        Assert.assertEquals("Reference 'two' - ComponentRegistry contains one record", collection.size(), 1);
+    }
+
+    @AfterClass
+    public static void closeEjbContainer() {
+        ejbContainer.close();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_propertiesregistrytest">PropertiesRegistryTest</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.registry;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+
+import org.junit.Test;
+
+import jakarta.ejb.embeddable.EJBContainer;
+import javax.naming.Context;
+
+public class PropertiesRegistryTest {
+
+    private final static EJBContainer ejbContainer = EJBContainer.createEJBContainer();
+
+    @Test
+    public void oneInstancePerMultipleReferences() throws Exception {
+
+        final Context context = ejbContainer.getContext();
+
+        final PropertyRegistry one = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
+        final PropertyRegistry two = (PropertyRegistry) context.lookup("java:global/simple-singleton/PropertyRegistry");
+
+        one.setProperty("url", "http://superbiz.org");
+        String url = two.getProperty("url");
+        Assert.assertSame("http://superbiz.org", url);
+
+        two.removeProperty("url");
+        url = one.getProperty("url");
+        Assert.assertNull(url);
+
+        two.setProperty("version", "1.0.5");
+        String version = one.getProperty("version");
+        Assert.assertSame("1.0.5", version);
+
+        one.removeProperty("version");
+        version = two.getProperty("version");
+        Assert.assertNull(version);
+    }
+
+    @AfterClass
+    public static void closeEjbContainer() {
+        ejbContainer.close();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_executando">Executando</h3>
+<div class="literalblock">
+<div class="content">
+<pre>Executar o exemplo é muito simples. No diretório `simple-singleton` digite o seguinte comando:
+
+[source,console]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>$ mvn clean install</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Que deve criar resultados como o seguinte.
+
+[source,console]</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> T E S T S</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running org.superbiz.registry.ComponentRegistryTest
+INFO - <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong>
+INFO - OpenEJB <a href="http://tomee.apache.org/" class="bare">http://tomee.apache.org/</a>
+INFO - Startup: Sun Jun 09 03:46:51 IDT 2013
+INFO - Copyright 1999-2024 &#169; Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 10.0.0-M1-SNAPSHOT
+INFO - Build date: 20130608
+INFO - Build time: 04:07
+INFO - <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong>
+INFO - openejb.home = C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - openejb.base = C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@448ad367
+INFO - Succeeded in installing singleton service
+INFO - Using 'jakarta.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Found EjbModule in classpath: c:\users\oz\desktop\ee-examples\simple-singleton\target\classes
+INFO - Beginning load: c:\users\oz\desktop\ee-examples\simple-singleton\target\classes
+INFO - Configuring enterprise application: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Auto-deploying ejb PropertyRegistry: EjbDeployment(deployment-id=PropertyRegistry)
+INFO - Auto-deploying ejb ComponentRegistry: EjbDeployment(deployment-id=ComponentRegistry)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean PropertyRegistry: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Creating Container(id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.registry.ComponentRegistryTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory C:\Users\Oz\AppData\Local\Temp for stateful session passivation
+INFO - Enterprise application "C:\Users\Oz\Desktop\ee-examples\simple-singleton" loaded.
+INFO - Assembling app: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Jndi(name="java:global/simple-singleton/PropertyRegistry!org.superbiz.registry.PropertyRegistry")
+INFO - Jndi(name="java:global/simple-singleton/PropertyRegistry")
+INFO - Jndi(name="java:global/simple-singleton/ComponentRegistry!org.superbiz.registry.ComponentRegistry")
+INFO - Jndi(name="java:global/simple-singleton/ComponentRegistry")
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@448ad367
+INFO - OpenWebBeans Container is starting&#8230;&#8203;
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 68 ms.
+INFO - Created Ejb(deployment-id=PropertyRegistry, ejb-name=PropertyRegistry, container=Default Singleton Container)
+INFO - Created Ejb(deployment-id=ComponentRegistry, ejb-name=ComponentRegistry, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=PropertyRegistry, ejb-name=PropertyRegistry, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=ComponentRegistry, ejb-name=ComponentRegistry, container=Default Singleton Container)
+INFO - Deployed Application(path=C:\Users\Oz\Desktop\ee-examples\simple-singleton)</p>
+</div>
+<div class="paragraph">
+<p>INFO - Undeploying app: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Destroying OpenEJB container
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.431 sec
+Running org.superbiz.registry.PropertiesRegistryTest
+INFO - <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong>
+INFO - OpenEJB <a href="http://tomee.apache.org/" class="bare">http://tomee.apache.org/</a>
+INFO - Startup: Sun Jun 09 03:46:52 IDT 2013
+INFO - Copyright 1999-2024 &#169; Apache OpenEJB Project, All Rights Reserved.
+INFO - Version: 10.0.0-M1-SNAPSHOT
+INFO - Build date: 20130608
+INFO - Build time: 04:07
+INFO - <strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong><strong><strong></strong><strong></strong></strong>
+INFO - openejb.home = C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - openejb.base = C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@448ad367
+INFO - Succeeded in installing singleton service
+INFO - Using 'jakarta.ejb.embeddable.EJBContainer=true'
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Using 'java.security.auth.login.config=jar:file:/C:/Users/Oz/.m2/repository/org/apache/openejb/openejb-core/10.0.0-M1-SNAPSHOT/openejb-core-10.0.0-M1-SNAPSHOT.jar!/login.config'
+INFO - Found EjbModule in classpath: c:\users\oz\desktop\ee-examples\simple-singleton\target\classes
+INFO - Beginning load: c:\users\oz\desktop\ee-examples\simple-singleton\target\classes
+INFO - Configuring enterprise application: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Auto-deploying ejb ComponentRegistry: EjbDeployment(deployment-id=ComponentRegistry)
+INFO - Auto-deploying ejb PropertyRegistry: EjbDeployment(deployment-id=PropertyRegistry)
+INFO - Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+INFO - Auto-creating a container for bean ComponentRegistry: Container(type=SINGLETON, id=Default Singleton Container)
+INFO - Creating Container(id=Default Singleton Container)
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.registry.PropertiesRegistryTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory C:\Users\Oz\AppData\Local\Temp for stateful session passivation
+INFO - Enterprise application "C:\Users\Oz\Desktop\ee-examples\simple-singleton" loaded.
+INFO - Assembling app: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Jndi(name="java:global/simple-singleton/ComponentRegistry!org.superbiz.registry.ComponentRegistry")
+INFO - Jndi(name="java:global/simple-singleton/ComponentRegistry")
+INFO - Jndi(name="java:global/simple-singleton/PropertyRegistry!org.superbiz.registry.PropertyRegistry")
+INFO - Jndi(name="java:global/simple-singleton/PropertyRegistry")
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@448ad367
+INFO - OpenWebBeans Container is starting&#8230;&#8203;
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 4 ms.
+INFO - Created Ejb(deployment-id=PropertyRegistry, ejb-name=PropertyRegistry, container=Default Singleton Container)
+INFO - Created Ejb(deployment-id=ComponentRegistry, ejb-name=ComponentRegistry, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=PropertyRegistry, ejb-name=PropertyRegistry, container=Default Singleton Container)
+INFO - Started Ejb(deployment-id=ComponentRegistry, ejb-name=ComponentRegistry, container=Default Singleton Container)
+INFO - Deployed Application(path=C:\Users\Oz\Desktop\ee-examples\simple-singleton)
+INFO - Undeploying app: C:\Users\Oz\Desktop\ee-examples\simple-singleton
+INFO - Destroying OpenEJB container
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 sec</p>
+</div>
+<div class="paragraph">
+<p>Results :</p>
+</div>
+<div class="paragraph">
+<p>Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>== APIs Used
+
+- link:../../../jakartaee-10.0/javadoc/jakarta/annotation/PostConstruct.html[jakarta.annotation.PostConstruct]
+- link:../../../jakartaee-10.0/javadoc/jakarta/annotation/PreDestroy.html[jakarta.annotation.PreDestroy]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/ConcurrencyManagement.html[jakarta.ejb.ConcurrencyManagement]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/ConcurrencyManagementType.html[jakarta.ejb.ConcurrencyManagementType]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/Lock.html[jakarta.ejb.Lock]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/LockType.html[jakarta.ejb.LockType]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/Singleton.html[jakarta.ejb.Singleton]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/Startup.html[jakarta.ejb.Startup]
+- link:../../../jakartaee-10.0/javadoc/jakarta/ejb/embeddable/EJBContainer.html[jakarta.ejb.embeddable.EJBContainer]</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Implantação de TomEE no Azure</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este exemplo usa um aplicativo de echo básico, implantado com o TomEE incorporado na nuvem do Azure.</p>
+</div>
+<div class="paragraph">
+<p>Usamos o plugin do maven do TomEE para empacotar o aplicativo com o TomEE Embedded
+a fim de gerar um fat jar. Este jar é então escolhido e deployado pelo azure-webapp-maven-plugin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuração_do_azure">Configuração do Azure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para que o plug-in do Azure funcione, você precisará ter uma conta do Azure e adicionar uma assinatura a ela.</p>
+</div>
+<div class="paragraph">
+<p>Então, em sua máquina de desenvolvimento, instale a interface da linha de comandos (CLI) do Azure e faça a autenticação com a linha de comando,
+antes que você possa implantar seu aplicativo.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Crie uma conta Azure, se você não tem uma, faça aqui <a href="https://azure.microsoft.com/en-us" class="bare">https://azure.microsoft.com/en-us</a></p>
+</li>
+<li>
+<p>Use a opção free, se disponível ou <a href="https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade">adicione uma assinatura</a>.</p>
+</li>
+<li>
+<p><a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest">Instale</a> o Azure (CLI) de acordo com o sistema operacional do computador que você está usando para desenvolver.</p>
+</li>
+<li>
+<p>Finalmente, você pode configurar seu computador de desenvolvimento.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_fazendo_login_no_azure">Fazendo login no Azure</h3>
+<div class="paragraph">
+<p><code>az login</code></p>
+</div>
+<div class="paragraph">
+<p>O resultado:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[
+   {
+     "cloudName": "AzureCloud",
+     "id": "aaaaaaaa-aaaa-aaaa-aaaaa-aaaaaaaaaa",
+     "isDefault": true,
+     "name": "Pay-As-You-Go",
+     "state": "Enabled",
+     "tenantId": "bbbbbbb-bbbbb-bbbb-bbbbb-bbbbbbbbbbb",
+     "user": {
+       "name": "&lt;o email da sua conta azure&gt;",
+       "type": "user"
+     }
+   }
+ ]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O TenantId é alguém que pode registrar e gerenciar aplicativos por conta própria. Você precisará disso para mais tarde.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_criando_um_service_principal">Criando um service principal</h3>
+<div class="paragraph">
+<p>Um Azure service principal é uma identidade de segurança usada por aplicativos, serviços e ferramentas de automação para acessar recursos específicos do Azure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>az ad sp create-for-rbac --name  http://&lt;seu-sub-domínio&gt; --password &lt;password para este aplicativo&gt;
+
+{
+  "appId": "cccccccc-cccc-cccc-cccc-ccccccccccccccc",
+  "displayName": "cloud-tomee-azure",
+  "name": "http://cloud-tomee-azure",
+  "password": "&lt;password for this app&gt;",
+  "tenant": "bbbbbbb-bbbbb-bbbb-bbbbb-bbbbbbbbbbb"
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O &lt;seu-sub-domínio&gt;, também é chamado de service principal name (nome principal do serviço) na documentação do Azure.
+Neste exemplo "http://cloud-tomee-azure" tem que ser exclusivo no Azure.
+O appId é a identificação do serviço de aplicativo.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configurando_o_maven">Configurando o Maven</h3>
+<div class="paragraph">
+<p>Você pode continuar usando apenas a CLI do Azure para autenticação, mas também podemos fazê-lo permanentemente com o Maven.</p>
+</div>
+<div class="paragraph">
+<p>Nesse caso, precisamos editar o arquivo settings.xml do Maven para que o plugin azure-webapp-maven possa autenticar no Azure:</p>
+</div>
+<div class="paragraph">
+<p>Você pode adicionar um novo servidor em <code>~ / .m2 / settings.xml</code> assim:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;server&gt;
+  &lt;id&gt;azure-auth&lt;/id&gt;
+  &lt;configuration&gt;
+     &lt;client&gt;cccccccc-cccc-cccc-cccc-ccccccccccccccc&lt;/client&gt;
+     &lt;tenant&gt;bbbbbbb-bbbbb-bbbb-bbbbb-bbbbbbbbbbb&lt;/tenant&gt;
+     &lt;key&gt;&lt;password para este aplicativo&gt;&lt;/key&gt;
+     &lt;environment&gt;AZURE&lt;/environment&gt;
+   &lt;/configuration&gt;
+&lt;/server&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>É isso aí. Agora você pode criar o exemplo e implantá-lo no Azure usando o Maven:</p>
+</div>
+<div class="paragraph">
+<p><code>mvn clean install -Pazure-single-jar azure-webapp:deploy</code></p>
+</div>
+<div class="paragraph">
+<p>O azure-webapp é explicitamente chamado porque depende de sua conta do Azure. O build padrão do TomEE não usará uma conta do Azure.</p>
+</div>
+<div class="paragraph">
+<p>O URL final será semelhante a:</p>
+</div>
+<div class="paragraph">
+<p><code><a href="https://&lt;your-sub-domain&gt;.azurewebsites.net/cloud-tomee-azure-10.0.0-M1-SNAPSHOT/echo/send-this-back" class="bare">https://&lt;your-sub-domain&gt;.azurewebsites.net/cloud-tomee-azure-10.0.0-M1-SNAPSHOT/echo/send-this-back</a></code></p>
+</div>
+<div class="sect3">
+<h4 id="_notas">Notas</h4>
+<div class="paragraph">
+<p>No momento da criação deste exemplo, há um erro no azure com o JAVA_HOME que impede a implementação.
+Verificar: <a href="https://github.com/Azure-App-Service/java/issues/11" class="bare">https://github.com/Azure-App-Service/java/issues/11</a>
+A solução é definir a variável de ambiente no console da Web do Azure e reiniciar o aplicativo.</p>
+</div>
+<div class="paragraph">
+<p>Para implantar o aplicativo de echo localmente, você pode executar:</p>
+</div>
+<div class="paragraph">
+<p><code>mvn tomee:run</code></p>
+</div>
+<div class="paragraph">
+<p>Você pode testar o aplicativo chamando <code><a href="http://localhost/cloud-tomee-azure-10.0.0-M1-SNAPSHOT/echo/send-this-back" class="bare">http://localhost/cloud-tomee-azure-10.0.0-M1-SNAPSHOT/echo/send-this-back</a></code></p>
+</div>
+<div class="paragraph">
+<p>Ele retornará send-this-back.</p>
+</div>
+<div class="paragraph">
+<p>O aplicativo echo também está disponível com um arquivo war simples que você pode implantar no TomEE manualmente, para fins de teste.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/PathParam.html">jakarta.ws.rs.PathParam</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

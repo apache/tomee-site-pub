@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Serverless TomEE WebProfile</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache TomEE can be run as a library inside your JVM with no need for separate processes or a standalone server install.  In this approach we include the right libraries in our project and then bootstrap TomEE using the <code>Server.Builder</code> API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include_the_tomee_webprofile_dependency">Include the <code>tomee-webprofile</code> dependency</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To make things as easy as possible there is just one dependency that will give you a classpath that is 100% identical to your favorite Apache TomEE distribution.  The following dependency will pull give you an environment identical to an Apache TomEE WebProfile binary distribution.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee.bom&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-webprofile&lt;/artifactId&gt;
+  &lt;version&gt;${version.tomee}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>org.apache.tomee.bom:tomee-webprofile</code> is actually generated by analyzing the apache-tomee-webprofile-x.y.z.zip, so is guaranteed to be 100% identical making it easy to transition from a zip file to a simple maven dependency.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_write_regular_code">Write Regular Code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we see a simple JAX-RS API for sending/recieving <code>Movie</code> objects as JSON.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Path("/movies")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@RequestScoped
+public class MovieService {
+
+    private Map&lt;Integer, Movie&gt; store = new ConcurrentHashMap&lt;&gt;();
+
+    @PostConstruct
+    public void construct(){
+        this.addMovie(new Movie("Wedding Crashers", "David Dobkin", "Comedy", 1, 2005));
+        this.addMovie(new Movie("Starsky &amp; Hutch", "Todd Phillips", "Action", 2, 2004));
+        this.addMovie(new Movie("Shanghai Knights", "David Dobkin", "Action", 3, 2003));
+        this.addMovie(new Movie("I-Spy", "Betty Thomas", "Adventure", 4, 2002));
+        this.addMovie(new Movie("The Royal Tenenbaums", "Wes Anderson", "Comedy", 5, 2001));
+        this.addMovie(new Movie("Zoolander", "Ben Stiller", "Comedy", 6, 2001));
+    }
+    @GET
+    public List&lt;Movie&gt; getAllMovies() {
+        return new ArrayList&lt;&gt;(store.values());
+    }
+
+    @POST
+    public Movie addMovie(final Movie newMovie) {
+        store.put(newMovie.getId(), newMovie);
+        return newMovie;
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bootstrap_tomee_with_the_server_builder">Bootstrap TomEE with the Server Builder</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A this point we have a Maven project with the right dependencies and some application code in our project.  From here we use the <code>Server.Builder</code> API to construct a <code>Server</code> instance inside our JVM.</p>
+</div>
+<div class="paragraph">
+<p>Here we see a simple Main class that bootstraps a <code>Server</code> instance on port <code>8080</code> and blocks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.tomee.bootstrap.Archive;
+import org.apache.tomee.bootstrap.Server;
+
+import java.util.concurrent.Semaphore;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+
+        final Server server = Server.builder()
+                .httpPort(8080)
+                .add("webapps/ROOT/WEB-INF/classes", Archive.archive()
+                        .add(Api.class)
+                        .add(Movie.class)
+                        .add(MovieService.class))
+                .build();
+
+        System.out.println("Listening for requests at " + server.getURI());
+        new Semaphore(0).acquire();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example below bootstraps a <code>Server</code> instance on random ports inside a test case and exits when the test case is complete:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.tomee.bootstrap.Archive;
+import org.apache.tomee.bootstrap.Server;
+//...
+
+public class MovieServiceTest {
+
+    private static URI serverURI;
+
+    @BeforeClass
+    public static void setup() {
+        // Add any classes you need to an Archive
+        // or add them to a jar via any means
+        final Archive classes = Archive.archive()
+                .add(Api.class)
+                .add(Movie.class)
+                .add(MovieService.class);
+
+        // Place the classes where you would want
+        // them in a Tomcat install
+        final Server server = Server.builder()
+                // This effectively creates a webapp called ROOT
+                .add("webapps/ROOT/WEB-INF/classes", classes)
+                .build();
+
+        serverURI = server.getURI();
+    }
+
+    @Test
+    public void getAllMovies() {
+        final WebTarget target = ClientBuilder.newClient().target(serverURI);
+
+        final Movie[] movies = target.path("/api/movies").request().get(Movie[].class);
+
+        assertEquals(6, movies.length);
+
+        final Movie movie = movies[1];
+        assertEquals("Todd Phillips", movie.getDirector());
+        assertEquals("Starsky &amp; Hutch", movie.getTitle());
+        assertEquals("Action", movie.getGenre());
+        assertEquals(2004, movie.getYear());
+        assertEquals(2, movie.getId());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above code we have assembled the classes <code>Api</code>, <code>Movie</code> and <code>MovieService</code> into a virtual archive, then we add that archive into a virtual Tomcat install at the location <code>webapps/ROOT/WEB-INF/classes</code>.  When we call <code>build()</code> the Tomcat server instance is started in our JVM and will begin serving HTTP requests at the host/port identified by <code>server.getURI()</code></p>
+</div>
+<div class="paragraph">
+<p>In short, we&#8217;ve bootstrapped a Tomcat server in our JVM that has a very tiny disk footprint; three classes and a handful of default configuration files.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Were we to run the above Main class or Test Case we&#8217;d see output like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">Sep 03, 2020 8:41:29 AM org.apache.openejb.server.cxf.rs.CxfRsHttpListener deployApplication
+INFO:      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@2d313c8c
+Sep 03, 2020 8:41:29 AM org.apache.openejb.server.cxf.rs.CxfRsHttpListener logEndpoints
+INFO: REST Application: http://localhost:8080/api        -&gt; org.superbiz.movie.Api@6b2dd3df
+Sep 03, 2020 8:41:29 AM org.apache.openejb.server.cxf.rs.CxfRsHttpListener logEndpoints
+INFO:      Service URI: http://localhost:8080/api/movies -&gt; Pojo org.superbiz.movie.MovieService
+Sep 03, 2020 8:41:29 AM org.apache.openejb.server.cxf.rs.CxfRsHttpListener logEndpoints
+INFO:               GET http://localhost:8080/api/movies -&gt;      List&lt;Movie&gt; getAllMovies()
+Sep 03, 2020 8:41:29 AM org.apache.openejb.server.cxf.rs.CxfRsHttpListener logEndpoints
+INFO:              POST http://localhost:8080/api/movies -&gt;      Movie addMovie(Movie)
+Sep 03, 2020 8:41:29 AM jdk.internal.reflect.DelegatingMethodAccessorImpl invoke
+INFO: Deployment of web application directory [/private/var/folders/bd/f9ntqy1m8xj_fs006s6crtjh0000gn/T/temp14966428831095231081dir/apache-tomee/webapps/ROOT] has finished in [1,798] ms
+Sep 03, 2020 8:41:29 AM jdk.internal.reflect.DelegatingMethodAccessorImpl invoke
+INFO: Starting ProtocolHandler ["http-nio-8080"]
+Sep 03, 2020 8:41:29 AM jdk.internal.reflect.DelegatingMethodAccessorImpl invoke
+INFO: Server startup in [1877] milliseconds
+Sep 03, 2020 8:41:29 AM jdk.internal.reflect.DelegatingMethodAccessorImpl invoke
+INFO: Full bootstrap in [3545] milliseconds
+Listening for requests at http://localhost:8080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/tomee/bootstrap/Archive.html">org.apache.tomee.bootstrap.Archive</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/tomee/bootstrap/Server.html">org.apache.tomee.bootstrap.Server</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/annotation/PostConstruct.html">jakarta.annotation.PostConstruct</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/enterprise/context/RequestScoped.html">jakarta.enterprise.context.RequestScoped</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/ApplicationPath.html">jakarta.ws.rs.ApplicationPath</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Consumes.html">jakarta.ws.rs.Consumes</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/POST.html">jakarta.ws.rs.POST</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Produces.html">jakarta.ws.rs.Produces</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/client/ClientBuilder.html">jakarta.ws.rs.client.ClientBuilder</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/client/Entity.html">jakarta.ws.rs.client.Entity</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/client/WebTarget.html">jakarta.ws.rs.client.WebTarget</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/Application.html">jakarta.ws.rs.core.Application</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/MediaType.html">jakarta.ws.rs.core.MediaType</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

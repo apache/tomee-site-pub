@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Simple REST with CDI</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Defining a REST service is pretty easy, simply ad @Path annotation to a
+class then define on methods the HTTP method to use (@GET, @POST, …).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_rest_service_path_produces_consumes">The REST service: @Path, @Produces, @Consumes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we have a simple REST, we annotate the class with <code>@Path("/greeting")</code> to indicate the route corresponding to the <code>GreetingService</code> class. We define <code>message()</code> as <code>@GET</code> and <code>lowerCase()</code> as <code>@POST</code> for this <code>/greeting</code> route and inject the` Greeting` class using the annotation <code>@Inject</code>. There, we have a service! Simple isn&#8217;t it?</p>
+</div>
+<div class="paragraph">
+<p>Actually lines:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>are optional since it is the default configuration. And these lines can
+be configured by method too if you need to be more precise.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Path("/greeting")
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+public class GreetingService {
+
+    @Inject
+    Greeting greeting;
+
+    @GET
+    public Greet message() {
+        return new Greet("Hi REST!");
+    }
+
+    @POST
+    public Greet lowerCase(final Request message) {
+        return new Greet(greeting.doSomething(message.getValue()));
+    }
+
+    @XmlRootElement // for xml only, useless for json (johnzon is the default)
+    public static class Greet {
+        private String message;
+
+        public Greet(final String message) {
+            this.message = message;
+        }
+
+        public Greet() {
+            this(null);
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(final String message) {
+            this.message = message;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_test_for_the_jaxrs_service">Test for the JAXRS service</h3>
+<div class="paragraph">
+<p>The test uses the OpenEJB ApplicationComposer to make it trivial.</p>
+</div>
+<div class="paragraph">
+<p>The idea is first to activate the jaxrs services. This is done using
+@EnableServices annotation.</p>
+</div>
+<div class="paragraph">
+<p>Then we create on the fly the application simply returning an object
+representing the web.xml. Here we simply use it to define the context
+root but you can use it to define your REST Application too. And to
+complete the application definition we add @Classes annotation to define
+the set of classes to use in this app.</p>
+</div>
+<div class="paragraph">
+<p>Finally to test it we use cxf client API to call the REST service in
+get() and post() methods.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+to show we use JSON or XML depending on the test method we
+activated on EnableServices the attribute httpDebug which prints the
+http messages in the logs.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.johnzon.jaxrs.JohnzonProvider;
+import org.apache.openejb.jee.WebApp;
+import org.apache.openejb.junit.ApplicationComposer;
+import org.apache.openejb.testing.Classes;
+import org.apache.openejb.testing.Configuration;
+import org.apache.openejb.testing.EnableServices;
+import org.apache.openejb.testing.Module;
+import org.apache.openejb.testng.PropertiesBuilder;
+import org.apache.openejb.util.NetworkUtil;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import jakarta.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.Properties;
+
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+
+@EnableServices(value = "jaxrs", httpDebug = true)
+@RunWith(ApplicationComposer.class)
+public class GreetingServiceTest {
+    private int port;
+
+    @Configuration
+    public Properties randomPort() {
+        port = NetworkUtil.getNextAvailablePort();
+        return new PropertiesBuilder().p("httpejbd.port", Integer.toString(port)).build();
+    }
+
+    @Module
+    @Classes(value = {GreetingService.class, Greeting.class}, cdi = true) // This enables the CDI magic
+    public WebApp app() {
+        return new WebApp().contextRoot("test");
+    }
+
+    @Test
+    public void getXml() throws IOException {
+        final String message = WebClient.create("http://localhost:" + port).path("/test/greeting/")
+                .accept(MediaType.APPLICATION_XML_TYPE)
+                .get(GreetingService.Greet.class).getMessage();
+        assertEquals("Hi REST!", message);
+    }
+
+    @Test
+    public void postXml() throws IOException {
+        final String message = WebClient.create("http://localhost:" + port).path("/test/greeting/")
+                .accept(MediaType.APPLICATION_XML_TYPE)
+                .type(MediaType.APPLICATION_XML_TYPE)
+                .post(new Request("Hi REST!"), GreetingService.Greet.class).getMessage();
+        assertEquals("hi rest!", message);
+    }
+
+    @Test
+    public void getJson() throws IOException {
+        final String message = WebClient.create("http://localhost:" + port, asList(new JohnzonProvider&lt;GreetingService.Greet&gt;())).path("/test/greeting/")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(GreetingService.Greet.class).getMessage();
+        assertEquals("Hi REST!", message);
+    }
+
+    @Test
+    public void postJson() throws IOException {
+        final String message = WebClient.create("http://localhost:" + port, asList(new JohnzonProvider&lt;GreetingService.Greet&gt;())).path("/test/greeting/")
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .post(new Request("Hi REST!"), GreetingService.Greet.class).getMessage();
+        assertEquals("hi rest!", message);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>#Running</p>
+</div>
+<div class="paragraph">
+<p>Running the example is fairly simple. In the ``rest-cdi'' directory run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which should create output like the following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.rest.GreetingServiceTest
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf-rs)
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Using 'print=true'
+FINE - Using default '.xml=false'
+FINE - Using default 'stream.count=false'
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       44455
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest" loaded.
+INFO - Creating dedicated application classloader for GreetingServiceTest
+INFO - Assembling app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.openejb.util.proxy.LocalBeanProxyFactory$Unsafe (file:/home/daniel/.m2/repository/org/apache/tomee/openejb-core/10.0.0-M1-SNAPSHOT/openejb-core-10.0.0-M1-SNAPSHOT.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of org.apache.openejb.util.proxy.LocalBeanProxyFactory$Unsafe
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 476 ms.
+INFO - Using readers:
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@693b3e2
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@c68e0782
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@ef757da4
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@778a403d
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@7bca3240
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@2407e67e
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@b06cecc0
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@493b69a5
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@5dfe78fe
+INFO - Using writers:
+INFO -      org.apache.johnzon.jaxrs.WadlDocumentMessageBodyWriter@5ec30d6b
+INFO -      org.apache.cxf.jaxrs.nio.NioMessageBodyWriter@58b50d53
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@b06cecc0
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@7bca3240
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@693b3e2
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@c68e0782
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@ef757da4
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@778a403d
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@2407e67e
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@493b69a5
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@5dfe78fe
+INFO - Using exception mappers:
+INFO -      org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper@8dfc1000
+INFO -      org.apache.openejb.server.cxf.rs.EJBExceptionMapper@b734211e
+INFO -      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@2716b807
+INFO - REST Application: http://127.0.0.1:44455/test/         -&gt; org.apache.openejb.server.rest.InternalApplication@e4c4de9b
+INFO -      Service URI: http://127.0.0.1:44455/test/greeting -&gt; Pojo org.superbiz.rest.GreetingService
+INFO -               GET http://127.0.0.1:44455/test/greeting -&gt;      Greet message()
+INFO -              POST http://127.0.0.1:44455/test/greeting -&gt;      Greet lowerCase(Request)
+INFO - Deployed Application(path=/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest)
+FINE - ******************* REQUEST ******************
+GET http://localhost:44455/test/greeting/
+Accept=[application/xml]
+Cache-Control=[no-cache]
+User-Agent=[Apache-CXF/3.3.7]
+Connection=[keep-alive]
+Host=[localhost:44455]
+Pragma=[no-cache]
+
+
+**********************************************
+
+FINE - HTTP/1.1 200 OK
+Server: OpenEJB/10.0.0-M1-SNAPSHOT Linux/5.0.0-23-generic (amd64)
+Connection: close
+Content-Length: 97
+Date: Sun, 15 Nov 2020 20:48:49 GMT
+Content-Type: application/xml
+
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;greet&gt;&lt;message&gt;Hi REST!&lt;/message&gt;&lt;/greet&gt;
+INFO - Undeploying app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Stopping network services
+INFO - Stopping server services
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf-rs)
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Using 'print=true'
+FINE - Using default '.xml=false'
+FINE - Using default 'stream.count=false'
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       36735
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest" loaded.
+INFO - Creating dedicated application classloader for GreetingServiceTest
+INFO - Assembling app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 109 ms.
+INFO - Using readers:
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@db2555f8
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@73151fc3
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@280eff60
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@e6d6d01c
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@9aa666e
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@de52b81d
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@2773d96d
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@5a199358
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@8b965c01
+INFO - Using writers:
+INFO -      org.apache.johnzon.jaxrs.WadlDocumentMessageBodyWriter@7a775189
+INFO -      org.apache.cxf.jaxrs.nio.NioMessageBodyWriter@b03af552
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@2773d96d
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@9aa666e
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@db2555f8
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@73151fc3
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@280eff60
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@e6d6d01c
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@de52b81d
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@5a199358
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@8b965c01
+INFO - Using exception mappers:
+INFO -      org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper@d855787e
+INFO -      org.apache.openejb.server.cxf.rs.EJBExceptionMapper@16616b4d
+INFO -      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@874c811e
+INFO - REST Application: http://127.0.0.1:36735/test/         -&gt; org.apache.openejb.server.rest.InternalApplication@27131dcb
+INFO -      Service URI: http://127.0.0.1:36735/test/greeting -&gt; Pojo org.superbiz.rest.GreetingService
+INFO -               GET http://127.0.0.1:36735/test/greeting -&gt;      Greet message()
+INFO -              POST http://127.0.0.1:36735/test/greeting -&gt;      Greet lowerCase(Request)
+INFO - Deployed Application(path=/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest)
+FINE - ******************* REQUEST ******************
+POST http://localhost:36735/test/greeting/
+Accept=[application/xml]
+Cache-Control=[no-cache]
+User-Agent=[Apache-CXF/3.3.7]
+Connection=[keep-alive]
+Host=[localhost:36735]
+Pragma=[no-cache]
+Content-Length=[97]
+Content-Type=[application/xml]
+
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;request&gt;&lt;value&gt;Hi REST!&lt;/value&gt;&lt;/request&gt;
+**********************************************
+
+FINE - HTTP/1.1 200 OK
+Server: OpenEJB/10.0.0-M1-SNAPSHOT Linux/5.0.0-23-generic (amd64)
+Connection: close
+Content-Length: 97
+Date: Sun, 15 Nov 2020 20:48:50 GMT
+Content-Type: application/xml
+
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;greet&gt;&lt;message&gt;hi rest!&lt;/message&gt;&lt;/greet&gt;
+INFO - Undeploying app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Stopping network services
+INFO - Stopping server services
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf-rs)
+SEVERE - MBean Object org.apache.cxf.bus.extension.ExtensionManagerBus@85333fc register to MBeanServer failed : javax.management.InstanceAlreadyExistsException: org.apache.cxf:bus.id=openejb.cxf.bus,type=Bus,instance.id=139670524
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Using 'print=true'
+FINE - Using default '.xml=false'
+FINE - Using default 'stream.count=false'
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       42019
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest" loaded.
+INFO - Creating dedicated application classloader for GreetingServiceTest
+INFO - Assembling app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 80 ms.
+INFO - Using readers:
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@3f537f62
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@db539692
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@df3f15ad
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@ad292069
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@f8ae41f1
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@63f3092c
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@1988f4f7
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@77b845b1
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@76debaaf
+INFO - Using writers:
+INFO -      org.apache.johnzon.jaxrs.WadlDocumentMessageBodyWriter@a74630bf
+INFO -      org.apache.cxf.jaxrs.nio.NioMessageBodyWriter@abe4d74b
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@1988f4f7
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@f8ae41f1
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@3f537f62
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@db539692
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@df3f15ad
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@ad292069
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@63f3092c
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@77b845b1
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@76debaaf
+INFO - Using exception mappers:
+INFO -      org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper@3916141e
+INFO -      org.apache.openejb.server.cxf.rs.EJBExceptionMapper@dd2239cb
+INFO -      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@d549b1a8
+INFO - REST Application: http://127.0.0.1:42019/test/         -&gt; org.apache.openejb.server.rest.InternalApplication@bbcd5d77
+INFO -      Service URI: http://127.0.0.1:42019/test/greeting -&gt; Pojo org.superbiz.rest.GreetingService
+INFO -               GET http://127.0.0.1:42019/test/greeting -&gt;      Greet message()
+INFO -              POST http://127.0.0.1:42019/test/greeting -&gt;      Greet lowerCase(Request)
+INFO - Deployed Application(path=/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest)
+FINE - ******************* REQUEST ******************
+GET http://localhost:42019/test/greeting/
+Accept=[application/json]
+Cache-Control=[no-cache]
+User-Agent=[Apache-CXF/3.3.7]
+Connection=[keep-alive]
+Host=[localhost:42019]
+Pragma=[no-cache]
+
+
+**********************************************
+
+FINE - HTTP/1.1 200 OK
+Server: OpenEJB/10.0.0-M1-SNAPSHOT Linux/5.0.0-23-generic (amd64)
+Connection: close
+Content-Length: 22
+Date: Sun, 15 Nov 2020 20:48:51 GMT
+Content-Type: application/json
+
+{"message":"Hi REST!"}
+INFO - Undeploying app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Stopping network services
+INFO - Stopping server services
+INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Succeeded in installing singleton service
+INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Creating TransactionManager(id=Default Transaction Manager)
+INFO - Creating SecurityService(id=Default Security Service)
+INFO - Initializing network services
+INFO - Creating ServerService(id=cxf-rs)
+SEVERE - MBean Object org.apache.cxf.bus.extension.ExtensionManagerBus@85333fc register to MBeanServer failed : javax.management.InstanceAlreadyExistsException: org.apache.cxf:bus.id=openejb.cxf.bus,type=Bus,instance.id=139670524
+INFO - Creating ServerService(id=httpejbd)
+INFO - Created ServicePool 'httpejbd' with (10) core threads, limited to (200) threads with a queue of (9)
+INFO - Using 'print=true'
+FINE - Using default '.xml=false'
+FINE - Using default 'stream.count=false'
+INFO - Initializing network services
+INFO -   ** Bound Services **
+INFO -   NAME                 IP              PORT
+INFO -   httpejbd             127.0.0.1       33015
+INFO - -------
+INFO - Ready!
+INFO - Configuring enterprise application: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
+INFO - Creating Container(id=Default Managed Container)
+INFO - Using directory /tmp for stateful session passivation
+INFO - Enterprise application "/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest" loaded.
+INFO - Creating dedicated application classloader for GreetingServiceTest
+INFO - Assembling app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@1b048504
+INFO - Some Principal APIs could not be loaded: org.eclipse.microprofile.jwt.JsonWebToken out of org.eclipse.microprofile.jwt.JsonWebToken not found
+INFO - OpenWebBeans Container is starting...
+INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
+INFO - All injection points were validated successfully.
+INFO - OpenWebBeans Container has started, it took 95 ms.
+INFO - Using readers:
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@68b824ec
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@55233ec4
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@628c68e0
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@db9db667
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@3ae6d4db
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@8a500f50
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@d662719e
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@f142ede7
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@6c372f1e
+INFO - Using writers:
+INFO -      org.apache.johnzon.jaxrs.WadlDocumentMessageBodyWriter@38e7693a
+INFO -      org.apache.cxf.jaxrs.nio.NioMessageBodyWriter@8d587dd5
+INFO -      org.apache.cxf.jaxrs.provider.StringTextProvider@d662719e
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementTypedProvider@3ae6d4db
+INFO -      org.apache.cxf.jaxrs.provider.PrimitiveTextProvider@68b824ec
+INFO -      org.apache.cxf.jaxrs.provider.FormEncodingProvider@55233ec4
+INFO -      org.apache.cxf.jaxrs.provider.MultipartProvider@628c68e0
+INFO -      org.apache.cxf.jaxrs.provider.SourceProvider@db9db667
+INFO -      org.apache.cxf.jaxrs.provider.JAXBElementProvider@8a500f50
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonbProvider@52f938e6
+INFO -      org.apache.openejb.server.cxf.rs.johnzon.TomEEJsonpProvider@75f6fb76
+INFO -      org.apache.cxf.jaxrs.provider.BinaryDataProvider@f142ede7
+INFO -      org.apache.cxf.jaxrs.provider.DataSourceProvider@6c372f1e
+INFO - Using exception mappers:
+INFO -      org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper@c67a80b8
+INFO -      org.apache.openejb.server.cxf.rs.EJBExceptionMapper@6ba782bb
+INFO -      org.apache.cxf.jaxrs.validation.ValidationExceptionMapper@20db75dc
+INFO - REST Application: http://127.0.0.1:33015/test/         -&gt; org.apache.openejb.server.rest.InternalApplication@cf272dee
+INFO -      Service URI: http://127.0.0.1:33015/test/greeting -&gt; Pojo org.superbiz.rest.GreetingService
+INFO -               GET http://127.0.0.1:33015/test/greeting -&gt;      Greet message()
+INFO -              POST http://127.0.0.1:33015/test/greeting -&gt;      Greet lowerCase(Request)
+INFO - Deployed Application(path=/home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest)
+FINE - ******************* REQUEST ******************
+POST http://localhost:33015/test/greeting/
+Accept=[application/json]
+Cache-Control=[no-cache]
+User-Agent=[Apache-CXF/3.3.7]
+Connection=[keep-alive]
+Host=[localhost:33015]
+Pragma=[no-cache]
+Content-Length=[20]
+Content-Type=[application/json]
+
+{"value":"Hi REST!"}
+**********************************************
+
+FINE - HTTP/1.1 200 OK
+Server: OpenEJB/10.0.0-M1-SNAPSHOT Linux/5.0.0-23-generic (amd64)
+Connection: close
+Content-Length: 22
+Date: Sun, 15 Nov 2020 20:48:51 GMT
+Content-Type: application/json
+
+{"message":"hi rest!"}
+INFO - Undeploying app: /home/daniel/git/apache/tomee/examples/rest-cdi/GreetingServiceTest
+INFO - Stopping network services
+INFO - Stopping server services
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.706 sec
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/jee/WebApp.html">org.apache.openejb.jee.WebApp</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/junit/ApplicationComposer.html">org.apache.openejb.junit.ApplicationComposer</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/testing/Classes.html">org.apache.openejb.testing.Classes</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/testing/Configuration.html">org.apache.openejb.testing.Configuration</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/testing/EnableServices.html">org.apache.openejb.testing.EnableServices</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/testing/Module.html">org.apache.openejb.testing.Module</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/testng/PropertiesBuilder.html">org.apache.openejb.testng.PropertiesBuilder</a></p>
+</li>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/util/NetworkUtil.html">org.apache.openejb.util.NetworkUtil</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/inject/Inject.html">jakarta.inject.Inject</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Consumes.html">jakarta.ws.rs.Consumes</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/POST.html">jakarta.ws.rs.POST</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Produces.html">jakarta.ws.rs.Produces</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/MediaType.html">jakarta.ws.rs.core.MediaType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/xml/bind/annotation/XmlRootElement.html">jakarta.xml.bind.annotation.XmlRootElement</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

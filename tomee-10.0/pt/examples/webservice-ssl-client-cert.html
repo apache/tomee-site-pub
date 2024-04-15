@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Webservice SSL Client Certificate</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este exemplo destina-se a mostrar como configurar o TomEE com HTTPS com o cliente SSL necessário.
+É muito comum usar HTTPS no lado do servidor para autenticar o servidor.
+Mas não é tão comum fazer com que o servidor exija autenticação de cliente usando SSL.</p>
+</div>
+<div class="paragraph">
+<p>Este exemplo gera pares de chaves para o cliente e o servidor e cria os 2 keystores (servidor e cliente).</p>
+</div>
+<div class="paragraph">
+<p>O conector HTTPS  no <code>server.xml</code> demonstra como configurar o lado do servidor.</p>
+</div>
+<div class="paragraph">
+<p>O caso de teste demonstra como interagir com a API CXF  a fim de configurar o lado do cliente.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorimpl">CalculatorImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
+
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Stateless;
+import jakarta.jws.WebService;
+
+/**
+ * Este é um bean de sessão sem estado(stateless) do Pojo estilo EJB 3
+ * Toda implementação de bean de sessão sem estado(stateless) deve ser anotada
+ * usando a anotação @Stateless
+ * Este EJB possui uma única interface: CalculatorWs uma interface de webservice.
+ */
+//START SNIPPET: code
+@DeclareRoles(value = {"Administrator"})
+@Stateless
+@WebService(
+        portName = "CalculatorPort",
+        serviceName = "CalculatorWsService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.CalculatorWs")
+public class CalculatorImpl implements CalculatorWs {
+
+    public int sum(int add1, int add2) {
+        return add1 + add2;
+    }
+
+    public int multiply(int mul1, int mul2) {
+        return mul1 * mul2;
+    }
+
+}
+//END SNIPPET: code</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorws">CalculatorWs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
+
+import jakarta.jws.WebService;
+
+//START SNIPPET: code
+/**
+ * Esta é uma interface de webservice do EJB 3
+ * Uma interface webservice deve ser anotada com a
+ * anotação @Local
+ */
+@WebService(targetNamespace = "http://superbiz.org/wsdl")
+public interface CalculatorWs {
+
+    int sum(int add1, int add2);
+
+    int multiply(int mul1, int mul2);
+}
+//END SNIPPET: code</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openejb_jar_xml">openejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb-jar xmlns="http://tomee.apache.org/xml/ns/openejb-jar-2.2"&gt;
+  &lt;enterprise-beans&gt;
+    &lt;session&gt;
+      &lt;ejb-name&gt;CalculatorImpl&lt;/ejb-name&gt;
+      &lt;web-service-security&gt;
+        &lt;security-realm-name/&gt;
+        &lt;transport-guarantee&gt;CONFIDENTIAL&lt;/transport-guarantee&gt;
+      &lt;/web-service-security&gt;
+    &lt;/session&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import javax.xml.namespace.QName;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.Service;
+import junit.framework.TestCase;
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(Arquillian.class)
+public class CalculatorTest {
+
+    @Deployment(testable = false)
+    public static Archive&lt;?&gt; app() {
+        return ShrinkWrap.create(WebArchive.class, "app.war")
+                .addClasses(CalculatorWs.class, CalculatorImpl.class);
+    }
+
+    @ArquillianResource
+    private URL base;
+
+    /**
+     * Crie um cliente de WebService usando o URL wsdl
+     *
+     * @throws Exception
+     */
+    //START SNIPPET: webservice
+    @Test
+    public void remoteCallWithSslClient() throws Exception {
+        // crie o serviço a partir do WSDL
+        final URL url = new URL(base.toExternalForm() + "webservices/CalculatorImpl?wsdl");
+        final QName calcServiceQName = new QName("http://superbiz.org/wsdl", "CalculatorWsService");
+        final Service calcService = Service.create(url, calcServiceQName);
+
+        assertNotNull(calcService);
+
+        // obtem a porta para o serviço
+        final CalculatorWs calc = calcService.getPort(CalculatorWs.class);
+
+        // mudar a URL de destino para invocação para HTTPS
+        ((BindingProvider) calc).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "https://localhost:8443/app/webservices/CalculatorImpl");
+
+        // adicione o certificado do cliente SSL, defina o trust store e o verificador do hostname
+        setupTLS(calc);
+
+        // chama o serviço da Web JAX-WS remoto
+        assertEquals(10, calc.sum(4, 6));
+        assertEquals(12, calc.multiply(3, 4));
+    }
+    //END SNIPPET: webservice
+
+
+    public static void setupTLS(final Object port) throws GeneralSecurityException, IOException {
+
+        final HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(port).getConduit();
+
+        final TLSClientParameters tlsCP = new TLSClientParameters();
+        final String storePassword = "keystorePass";
+        final String keyPassword = "clientPassword";
+        final KeyStore keyStore = KeyStore.getInstance("jks");
+        final String keyStoreLoc = "META-INF/clientStore.jks";
+        keyStore.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(keyStoreLoc), storePassword.toCharArray());
+
+        // define os gerenciadores de chaves do Java KeyStore que acabamos de carregar
+        final KeyManager[] myKeyManagers = getKeyManagers(keyStore, keyPassword);
+        tlsCP.setKeyManagers(myKeyManagers);
+        tlsCP.setCertAlias("clientalias"); // no caso de haver várias certs no keystore, certifique-se de escolher o que queremos
+
+        // Crie um trust manager que não valide as cadeias de certificados
+        // isso não deve ser feito na produção. Recomenda-se criar um cacerts com a cadeia de certificados ou
+        // confiar em uma autoridade de certificação bem conhecida, como a Verisign, que já está disponível na JVM
+        TrustManager[] trustAllCerts = getTrustManagers();
+        tlsCP.setTrustManagers(trustAllCerts);
+
+        // não verifique o hostname do certificado para corresponder ao servidor (executando localmente)
+        // isso não deve ser feito em um sistema de produção real
+        tlsCP.setHostnameVerifier((s, sslSession) -&gt; true);
+
+        httpConduit.setTlsClientParameters(tlsCP);
+    }
+
+    private static TrustManager[] getTrustManagers() throws NoSuchAlgorithmException, KeyStoreException {
+        return new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+    }
+
+    private static KeyManager[] getKeyManagers(KeyStore keyStore, String keyPassword) throws GeneralSecurityException, IOException {
+        String alg = KeyManagerFactory.getDefaultAlgorithm();
+        char[] keyPass = keyPassword != null ? keyPassword.toCharArray() : null;
+        KeyManagerFactory fac = KeyManagerFactory.getInstance(alg);
+        fac.init(keyStore, keyPass);
+        return fac.getKeyManagers();
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executando">Executando</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.calculator.CalculatorTest
+mai 22, 2019 11:28:28 AM org.apache.openejb.arquillian.common.Setup findHome
+INFOS: Unable to find home in: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee
+mai 22, 2019 11:28:28 AM org.apache.openejb.arquillian.common.MavenCache getArtifact
+INFOS: Downloading org.apache.tomee:apache-tomee:10.0.0-M1-SNAPSHOT:zip:plus please wait...
+mai 22, 2019 11:28:28 AM org.apache.openejb.arquillian.common.Zips unzip
+INFOS: Extracting '/Users/jlmonteiro/.m2/repository/org/apache/tomee/apache-tomee/10.0.0-M1-SNAPSHOT/apache-tomee-10.0.0-M1-SNAPSHOT-plus.zip' to '/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee'
+mai 22, 2019 11:28:29 AM org.apache.tomee.arquillian.remote.RemoteTomEEContainer configure
+INFOS: Downloaded container to: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT
+22-May-2019 11:28:30.050 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke La librairie Apache Tomcat Native basée sur APR qui permet des performances optimales dans les environnements de production n'a pas été trouvée sur le java.library.path: [/Users/jlmonteiro/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+22-May-2019 11:28:30.373 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Initialisation du gestionnaire de protocole ["http-nio-64661"]
+22-May-2019 11:28:30.408 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Initialisation du gestionnaire de protocole ["https-jsse-nio-8443"]
+mai 22, 2019 11:28:30 AM org.apache.openejb.client.EventLogger log
+INFOS: RemoteInitialContextCreated{providerUri=http://localhost:64661/tomee/ejb}
+22-May-2019 11:28:30.724 INFOS [main] org.apache.openejb.util.OptionsLog.info Using 'tomee.remote.support=true'
+22-May-2019 11:28:30.734 INFOS [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.jdbc.datasource-creator=org.apache.tomee.jdbc.TomEEDataSourceCreator'
+22-May-2019 11:28:30.856 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; OpenEJB http://tomee.apache.org/
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Startup: Wed May 22 11:28:30 CEST 2019
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Copyright 1999-2024 (C) Apache OpenEJB Project, All Rights Reserved.
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Version: 10.0.0-M1-SNAPSHOT
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build date: 20190522
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; Build time: 09:42
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; ********************************************************************************
+22-May-2019 11:28:30.857 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.home = /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT
+22-May-2019 11:28:30.858 INFOS [main] org.apache.openejb.OpenEJB$Instance.&lt;init&gt; openejb.base = /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT
+22-May-2019 11:28:30.860 INFOS [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@1c1bbc4e
+22-May-2019 11:28:30.863 INFOS [main] org.apache.openejb.cdi.CdiBuilder.initializeOWB Succeeded in installing singleton service
+22-May-2019 11:28:30.897 INFOS [main] org.apache.openejb.config.ConfigurationFactory.init TomEE configuration file is '/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/conf/tomee.xml'
+22-May-2019 11:28:30.933 INFOS [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Tomcat Security Service, type=SecurityService, provider-id=Tomcat Security Service)
+22-May-2019 11:28:30.935 INFOS [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+22-May-2019 11:28:30.937 INFOS [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.system.apps=true'
+22-May-2019 11:28:30.939 INFOS [main] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Singleton Container, type=Container, provider-id=Default Singleton Container)
+22-May-2019 11:28:30.957 INFOS [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating TransactionManager(id=Default Transaction Manager)
+22-May-2019 11:28:31.003 INFOS [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating SecurityService(id=Tomcat Security Service)
+22-May-2019 11:28:31.018 INFOS [main] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Singleton Container)
+22-May-2019 11:28:31.033 INFOS [main] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: openejb
+22-May-2019 11:28:31.087 INFOS [main] org.apache.openejb.util.OptionsLog.info Using 'openejb.jndiname.format={deploymentId}{interfaceType.openejbLegacyName}'
+22-May-2019 11:28:31.095 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=openejb/DeployerBusinessRemote) --&gt; Ejb(deployment-id=openejb/Deployer)
+22-May-2019 11:28:31.095 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!org.apache.openejb.assembler.Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+22-May-2019 11:28:31.096 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer) --&gt; Ejb(deployment-id=openejb/Deployer)
+22-May-2019 11:28:31.097 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=openejb/ConfigurationInfoBusinessRemote) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+22-May-2019 11:28:31.097 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!org.apache.openejb.assembler.classic.cmd.ConfigurationInfo) --&gt; Ejb(deployment-id=openejb/ConfigurationInfo)
+22-May-2019 11:28:31.099 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=MEJB) --&gt; Ejb(deployment-id=MEJB)
+22-May-2019 11:28:31.099 INFOS [main] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/openejb/openejb/openejb/Deployer!javax.management.j2ee.ManagementHome) --&gt; Ejb(deployment-id=MEJB)
+22-May-2019 11:28:31.106 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=MEJB, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.107 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.109 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.109 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=MEJB, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.109 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=openejb/ConfigurationInfo, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.109 INFOS [main] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=openejb/Deployer, ejb-name=openejb/Deployer, container=Default Singleton Container)
+22-May-2019 11:28:31.115 INFOS [main] org.apache.openejb.assembler.classic.Assembler.deployMBean Deployed MBean(openejb.user.mbeans:application=openejb,group=org.apache.openejb.assembler.monitoring,name=JMXDeployer)
+22-May-2019 11:28:31.117 INFOS [main] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=openejb)
+22-May-2019 11:28:31.151 INFOS [main] org.apache.openejb.server.ServiceManager.initServer Creating ServerService(id=cxf)
+22-May-2019 11:28:31.282 INFOS [main] org.apache.openejb.server.ServiceManager.initServer Creating ServerService(id=cxf-rs)
+22-May-2019 11:28:31.321 INFOS [main] org.apache.openejb.server.SimpleServiceManager.start   ** Bound Services **
+22-May-2019 11:28:31.321 INFOS [main] org.apache.openejb.server.SimpleServiceManager.printRow   NAME                 IP              PORT
+22-May-2019 11:28:31.322 INFOS [main] org.apache.openejb.server.SimpleServiceManager.start -------
+22-May-2019 11:28:31.322 INFOS [main] org.apache.openejb.server.SimpleServiceManager.start Ready!
+22-May-2019 11:28:31.322 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke L'initialisation du serveur a pris [1 451] millisecondes
+22-May-2019 11:28:31.330 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Démarrage du service [Catalina]
+22-May-2019 11:28:31.330 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Démarrage du moteur de Servlets: [Apache Tomcat (TomEE)/9.0.20 (10.0.0-M1-SNAPSHOT)]
+22-May-2019 11:28:31.375 INFOS [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Impossible de fixer la propriété [clearReferencesRmiTargets] du chargeur de classes de l'application web à [true] car cette propriété n'existe pas
+22-May-2019 11:28:31.375 INFOS [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Impossible de fixer la propriété [clearReferencesObjectStreamClassCaches] du chargeur de classes de l'application web à [true] car cette propriété n'existe pas
+22-May-2019 11:28:31.375 INFOS [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Impossible de fixer la propriété [clearReferencesObjectStreamClassCaches] du chargeur de classes de l'application web à [true] car cette propriété n'existe pas
+22-May-2019 11:28:31.375 INFOS [main] org.apache.catalina.core.StandardContext.setClassLoaderProperty Impossible de fixer la propriété [clearReferencesThreadLocals] du chargeur de classes de l'application web à [true] car cette propriété n'existe pas
+22-May-2019 11:28:31.405 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Démarrage du gestionnaire de protocole ["http-nio-64661"]
+22-May-2019 11:28:31.416 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Démarrage du gestionnaire de protocole ["https-jsse-nio-8443"]
+22-May-2019 11:28:31.422 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Le démarrage du serveur a pris [99] millisecondes
+22-May-2019 11:28:31.612 INFOS [http-nio-64661-exec-3] org.apache.openejb.util.JarExtractor.extract Extracting jar: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app.war
+22-May-2019 11:28:31.617 INFOS [http-nio-64661-exec-3] org.apache.openejb.util.JarExtractor.extract Extracted path: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app
+22-May-2019 11:28:31.617 INFOS [http-nio-64661-exec-3] org.apache.tomee.catalina.TomcatWebAppBuilder.deployWebApps using default host: localhost
+22-May-2019 11:28:31.618 INFOS [http-nio-64661-exec-3] org.apache.tomee.catalina.TomcatWebAppBuilder.init ------------------------- localhost -&gt; /app
+22-May-2019 11:28:31.619 INFOS [http-nio-64661-exec-3] org.apache.openejb.util.OptionsLog.info Using 'openejb.session.manager=org.apache.tomee.catalina.session.QuickSessionManager'
+22-May-2019 11:28:31.730 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.ConfigurationFactory.configureApplication Configuring enterprise application: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app
+22-May-2019 11:28:31.824 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.InitEjbDeployments.deploy Auto-deploying ejb CalculatorImpl: EjbDeployment(deployment-id=CalculatorImpl)
+22-May-2019 11:28:31.832 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+22-May-2019 11:28:31.833 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.AutoConfig.createContainer Auto-creating a container for bean CalculatorImpl: Container(type=STATELESS, id=Default Stateless Container)
+22-May-2019 11:28:31.833 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Stateless Container)
+22-May-2019 11:28:31.840 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.ConfigurationFactory.configureService Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
+22-May-2019 11:28:31.841 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.AutoConfig.createContainer Auto-creating a container for bean app.Comp168386325: Container(type=MANAGED, id=Default Managed Container)
+22-May-2019 11:28:31.841 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.createRecipe Creating Container(id=Default Managed Container)
+22-May-2019 11:28:31.848 INFOS [http-nio-64661-exec-3] org.apache.openejb.core.managed.SimplePassivater.init Using directory /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/temp for stateful session passivation
+22-May-2019 11:28:31.876 INFOS [http-nio-64661-exec-3] org.apache.openejb.config.AppInfoBuilder.build Enterprise application "/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app" loaded.
+22-May-2019 11:28:31.876 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.createApplication Assembling app: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app
+22-May-2019 11:28:31.892 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=CalculatorImplLocal) --&gt; Ejb(deployment-id=CalculatorImpl)
+22-May-2019 11:28:31.892 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/app/CalculatorImpl!org.superbiz.calculator.CalculatorWs) --&gt; Ejb(deployment-id=CalculatorImpl)
+22-May-2019 11:28:31.893 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.JndiBuilder.bind Jndi(name=global/app/CalculatorImpl) --&gt; Ejb(deployment-id=CalculatorImpl)
+22-May-2019 11:28:31.912 INFOS [http-nio-64661-exec-3] org.apache.openejb.cdi.CdiBuilder.initSingleton Existing thread singleton service in SystemInstance(): org.apache.openejb.cdi.ThreadSingletonServiceImpl@1c1bbc4e
+22-May-2019 11:28:31.999 INFOS [http-nio-64661-exec-3] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container is starting...
+22-May-2019 11:28:32.004 INFOS [http-nio-64661-exec-3] org.apache.webbeans.plugins.PluginLoader.startUp Adding OpenWebBeansPlugin : [CdiPlugin]
+22-May-2019 11:28:32.007 INFOS [http-nio-64661-exec-3] org.apache.openejb.cdi.CdiScanner.handleBda Using annotated mode for file:/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app/WEB-INF/classes/ looking all classes to find CDI beans, maybe think to add a beans.xml if not there or add the jar to exclusions.list
+22-May-2019 11:28:32.620 INFOS [http-nio-64661-exec-3] org.apache.webbeans.config.BeansDeployer.validateInjectionPoints All injection points were validated successfully.
+22-May-2019 11:28:32.629 INFOS [http-nio-64661-exec-3] org.apache.openejb.cdi.OpenEJBLifecycle.startApplication OpenWebBeans Container has started, it took 629 ms.
+22-May-2019 11:28:32.634 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.startEjbs Created Ejb(deployment-id=CalculatorImpl, ejb-name=CalculatorImpl, container=Default Stateless Container)
+22-May-2019 11:28:32.646 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.startEjbs Started Ejb(deployment-id=CalculatorImpl, ejb-name=CalculatorImpl, container=Default Stateless Container)
+22-May-2019 11:28:33.094 INFOS [http-nio-64661-exec-3] org.apache.openejb.server.webservices.WsService.deployApp Webservice(wsdl=http://localhost:64661/app/webservices/CalculatorImpl, qname={http://superbiz.org/wsdl}CalculatorWsService) --&gt; Ejb(id=CalculatorImpl)
+22-May-2019 11:28:33.094 INFOS [http-nio-64661-exec-3] org.apache.openejb.assembler.classic.Assembler.createApplication Deployed Application(path=/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app)
+22-May-2019 11:28:33.200 INFOS [http-nio-64661-exec-3] org.apache.myfaces.ee.MyFacesContainerInitializer.onStartup Using org.apache.myfaces.ee.MyFacesContainerInitializer
+22-May-2019 11:28:33.222 INFOS [http-nio-64661-exec-3] org.apache.myfaces.ee.MyFacesContainerInitializer.onStartup Added FacesServlet with mappings=[/faces/*, *.jsf, *.faces, *.xhtml]
+22-May-2019 11:28:33.252 INFOS [http-nio-64661-exec-3] org.apache.jasper.servlet.TldScanner.scanJars Au moins un fichier JAR a été analysé pour trouver des TLDs mais il n'en contenait pas, le mode "debug" du journal peut être activé pour obtenir une liste complète de JAR scannés sans succès; éviter d'analyser des JARs inutilement peut améliorer sensiblement le temps de démarrage et le temps de compilation des JSPs
+22-May-2019 11:28:33.258 INFOS [http-nio-64661-exec-3] org.apache.tomee.myfaces.TomEEMyFacesContainerInitializer.addListener Installing &lt;listener&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener&gt;
+22-May-2019 11:28:33.316 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getStandardFacesConfig Reading standard config META-INF/standard-faces-config.xml
+22-May-2019 11:28:33.527 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getClassloaderFacesConfig Reading config : jar:file:/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/lib/openwebbeans-el22-2.0.9.jar!/META-INF/faces-config.xml
+22-May-2019 11:28:33.528 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.DefaultFacesConfigurationProvider.getClassloaderFacesConfig Reading config : jar:file:/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/lib/openwebbeans-jsf-2.0.9.jar!/META-INF/faces-config.xml
+22-May-2019 11:28:33.656 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.LogMetaInfUtils.logArtifact Artifact 'myfaces-api' was found in version '2.3.3' from path 'file:/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/lib/myfaces-api-2.3.3.jar'
+22-May-2019 11:28:33.656 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.LogMetaInfUtils.logArtifact Artifact 'myfaces-impl' was found in version '2.3.3' from path 'file:/Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/tomee/apache-tomee-plus-10.0.0-M1-SNAPSHOT/lib/myfaces-impl-2.3.3.jar'
+22-May-2019 11:28:33.666 INFOS [http-nio-64661-exec-3] org.apache.myfaces.util.ExternalSpecifications.isCDIAvailable MyFaces CDI support enabled
+22-May-2019 11:28:33.667 INFOS [http-nio-64661-exec-3] org.apache.myfaces.spi.impl.DefaultInjectionProviderFactory.getInjectionProvider Using InjectionProvider org.apache.myfaces.spi.impl.CDIAnnotationDelegateInjectionProvider
+22-May-2019 11:28:33.711 INFOS [http-nio-64661-exec-3] org.apache.myfaces.util.ExternalSpecifications.isBeanValidationAvailable MyFaces Bean Validation support enabled
+22-May-2019 11:28:33.737 INFOS [http-nio-64661-exec-3] org.apache.myfaces.application.ApplicationImpl.getProjectStage Couldn't discover the current project stage, using Production
+22-May-2019 11:28:33.737 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.FacesConfigurator.handleSerialFactory Serialization provider : class org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory
+22-May-2019 11:28:33.742 INFOS [http-nio-64661-exec-3] org.apache.myfaces.config.annotation.DefaultLifecycleProviderFactory.getLifecycleProvider Using LifecycleProvider org.apache.myfaces.config.annotation.Tomcat7AnnotationLifecycleProvider
+22-May-2019 11:28:33.763 INFOS [http-nio-64661-exec-3] org.apache.myfaces.webapp.AbstractFacesInitializer.initFaces ServletContext initialized.
+22-May-2019 11:28:33.767 INFOS [http-nio-64661-exec-3] org.apache.myfaces.view.facelets.ViewPoolProcessor.initialize org.apache.myfaces.CACHE_EL_EXPRESSIONS web config parameter is set to "noCache". To enable view pooling this param must be set to "alwaysRecompile". View Pooling disabled.
+22-May-2019 11:28:33.778 INFOS [http-nio-64661-exec-3] org.apache.myfaces.webapp.StartupServletContextListener.contextInitialized MyFaces Core has started, it took [517] ms.
+mai 22, 2019 11:28:34 AM org.apache.cxf.wsdl.service.factory.ReflectionServiceFactoryBean buildServiceFromWSDL
+INFOS: Creating Service {http://superbiz.org/wsdl}CalculatorWsService from WSDL: http://localhost:64661/app/webservices/CalculatorImpl?wsdl
+mai 22, 2019 11:28:34 AM org.apache.cxf.wsdl.service.factory.ReflectionServiceFactoryBean buildServiceFromWSDL
+INFOS: Creating Service {http://superbiz.org/wsdl}CalculatorWsService from WSDL: http://localhost:64661/app/webservices/CalculatorImpl?wsdl
+mai 22, 2019 11:28:35 AM org.apache.openejb.client.EventLogger log
+INFOS: RemoteInitialContextCreated{providerUri=http://localhost:64661/tomee/ejb}
+22-May-2019 11:28:35.386 INFOS [http-nio-64661-exec-6] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app
+mai 22, 2019 11:28:35 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFOS: cleaning /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app.war
+mai 22, 2019 11:28:35 AM org.apache.openejb.arquillian.common.TomEEContainer undeploy
+INFOS: cleaning /Users/apache/tomee/examples/webservice-ssl-client-cert/target/test/app/0/app
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.519 sec
+22-May-2019 11:28:35.570 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Une commande d'arrêt valide a été reçue sur le port d'arrêt, arrêt de l'instance du serveur
+22-May-2019 11:28:35.570 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Le gestionnaire de protocole ["http-nio-64661"] est mis en pause
+22-May-2019 11:28:35.581 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Le gestionnaire de protocole ["https-jsse-nio-8443"] est mis en pause
+22-May-2019 11:28:35.588 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Arrêt du service [Catalina]
+22-May-2019 11:28:35.589 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Arrêt du gestionnaire de protocole ["http-nio-64661"]
+22-May-2019 11:28:35.591 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Arrêt du gestionnaire de protocole ["https-jsse-nio-8443"]
+22-May-2019 11:28:35.592 INFOS [main] org.apache.openejb.server.SimpleServiceManager.stop Stopping server services
+22-May-2019 11:28:35.600 INFOS [main] org.apache.openejb.assembler.classic.Assembler.destroyApplication Undeploying app: openejb
+22-May-2019 11:28:35.601 GRAVE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+22-May-2019 11:28:35.601 GRAVE [main] org.apache.openejb.core.singleton.SingletonInstanceManager.undeploy Unable to unregister MBean openejb.management:J2EEServer=openejb,J2EEApplication=&lt;empty&gt;,EJBModule=openejb,SingletonSessionBean=openejb/Deployer,name=openejb/Deployer,j2eeType=Invocations
+22-May-2019 11:28:35.611 INFOS [main] sun.reflect.NativeMethodAccessorImpl.invoke Destruction du gestionnaire de protocole ["http-nio-64661"]
+22-May-2019 11:28:35.611 INFOS [main] sun.reflect.DelegatingMethodAccessorImpl.invoke Destruction du gestionnaire de protocole ["https-jsse-nio-8443"]
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/annotation/security/DeclareRoles.html">jakarta.annotation.security.DeclareRoles</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/annotation/security/RolesAllowed.html">jakarta.annotation.security.RolesAllowed</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Stateless.html">jakarta.ejb.Stateless</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/jws/WebService.html">jakarta.jws.WebService</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/xml/ws/BindingProvider.html">jakarta.xml.ws.BindingProvider</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/xml/ws/Service.html">jakarta.xml.ws.Service</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

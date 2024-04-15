@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>JPA com EclipseLink e Jersey</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Neste exemplo, um serviço da web é criado para armazenar e recuperar dados do banco de dados.
+<a href="https://jersey.github.io/">Jersey</a> será usado para criar o serviço da web..
+Para o banco de dados, o provedor JPA usado será <a href="https://www.eclipse.org/eclipselink/">EclipseLink</a>.</p>
+</div>
+<div class="paragraph">
+<p>O serviço da web irá armazenar e recuperar informações sobre pessoas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Entity
+@XmlRootElement
+@NamedQuery(name = "Person.findAll", query = "select p from Person p")
+public class Person {
+
+    @Id
+    @GeneratedValue
+    private long id;
+    private String name;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Os dois serviços que nosso aplicativo oferece são: persistir uma pessoa, recuperando todas as pessoas do banco de dados:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Singleton
+@Lock(LockType.READ)
+public class PersonDAO {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public Person save(final String name) {
+        final Person person = new Person();
+        person.setName(name);
+        em.persist(person);
+        return person;
+    }
+
+    public List&lt;Person&gt; findAll() {
+        return em.createNamedQuery("Person.findAll", Person.class).getResultList();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A seguir, estamos prontos para expor como um serviço esta lógica de negócios:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Path("/person")
+@RequestScoped
+public class PersonService {
+
+    @Inject
+    private PersonDAO dao;
+
+    public PersonService() {
+        System.out.println();
+    }
+
+    @GET
+    @Path("/create/{name}")
+    public Person create(@PathParam("name") final String name) {
+        return dao.save(name);
+    }
+
+    @GET
+    @Path("/all")
+    public List&lt;Person&gt; list() {
+        return dao.findAll();
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora que temos uma classe de serviço, definindo os recursos fornecidos pelo aplicativo, estendemos a classe <code>jakarta.ws.rs.core.Application</code> e adicionamos nosso <code>PersonService</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class JerseyApplication extends Application {
+
+    @Override
+    public Set&lt;Class&lt;?&gt;&gt; getClasses() {
+        final Set&lt;Class&lt;?&gt;&gt; classes = new HashSet&lt;Class&lt;?&gt;&gt;();
+        classes.add(PersonService.class);
+        return classes;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Há mais uma etapa a ser executada para configurar um servlet fornecido por Jersey.
+Isso pode ser feito em <code>webapp/WEB-INF/web.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;Jersey Web Application&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.sun.jersey.spi.container.servlet.ServletContainer&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;jakarta.ws.rs.Application&lt;/param-name&gt;
+      &lt;param-value&gt;org.superbiz.service.JerseyApplication&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;Jersey Web Application&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O serviço da web está pronto para ser testado. Para isso, vamos escrever um teste de unidade usando <a href="http://arquillian.org/">Arquillian</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
+public class JerseyApplicationTest {
+
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class, "jersey-application.war")
+                .addPackage(JerseyApplication.class.getPackage())
+                .addPackage(Person.class.getPackage())
+                .addPackage(PersonDAO.class.getPackage())
+                .addAsManifestResource(new FileAsset(new File("src/main/webapp/WEB-INF/web.xml")), "web.xml")
+                .addAsManifestResource(new ClassLoaderAsset("META-INF/persistence.xml"), "persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @ArquillianResource
+    private URL webapp;
+
+    @Test
+    public void test() {
+        get("person/create/TestPerson");
+
+        String allPersons = get("person/all");
+
+        assertTrue(allPersons.contains("&lt;name&gt;TestPerson&lt;/name&gt;"));
+    }
+
+    private String get(String url) {
+        final CloseableHttpClient client = HttpClients.custom().build();
+        final HttpHost httpHost = new HttpHost(webapp.getHost(), webapp.getPort(), webapp.getProtocol());
+        final HttpClientContext context = HttpClientContext.create();
+
+        final HttpGet get = new HttpGet(webapp.toExternalForm() + url);
+        CloseableHttpResponse response = null;
+        try {
+            response = client.execute(httpHost, get, context);
+            return EntityUtils.toString(response.getEntity());
+        } catch (final IOException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            try {
+                IO.close(response);
+            } catch (final IOException e) {
+                // no-op
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usamos o Arquillian para iniciar programaticamente um novo container de teste. Em um teste, uma pessoa é persistida e sua presença no banco de dados é verificada recuperando todas as entidades de pessoa.</p>
+</div>
+<div class="paragraph">
+<p>Um exemplo completo pode ser encontrado <a href="https://github.com/apache/tomee/tree/master/examples/tomee-jersey-eclipselink">aqui</a>.
+É um projeto maven, e o teste pode ser executado com o comando <code>mvn clean install</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../tomee-10.0/javadoc/org/apache/openejb/arquillian/common/IO.html">org.apache.openejb.arquillian.common.IO</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/annotation/PostConstruct.html">jakarta.annotation.PostConstruct</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/annotation/Resource.html">jakarta.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Lock.html">jakarta.ejb.Lock</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/LockType.html">jakarta.ejb.LockType</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Singleton.html">jakarta.ejb.Singleton</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Startup.html">jakarta.ejb.Startup</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/enterprise/context/RequestScoped.html">jakarta.enterprise.context.RequestScoped</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/inject/Inject.html">jakarta.inject.Inject</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/Entity.html">jakarta.persistence.Entity</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/EntityManager.html">jakarta.persistence.EntityManager</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/GeneratedValue.html">jakarta.persistence.GeneratedValue</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/Id.html">jakarta.persistence.Id</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/NamedQuery.html">jakarta.persistence.NamedQuery</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/persistence/PersistenceContext.html">jakarta.persistence.PersistenceContext</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/transaction/TransactionManager.html">jakarta.transaction.TransactionManager</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/PathParam.html">jakarta.ws.rs.PathParam</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/Application.html">jakarta.ws.rs.core.Application</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/xml/bind/annotation/XmlRootElement.html">jakarta.xml.bind.annotation.XmlRootElement</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

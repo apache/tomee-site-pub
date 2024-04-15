@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Métricas com MicroProfile <code>@Metered</code></h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este é um exemplo sobre como utilizar as métricas do MicroProfile em TomEE.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executando_a_aplicação">Executando a aplicação:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn clean install tomee:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dentro da aplicação, há um endpoint que vai fornecer o estado do clima para o dia e a semana.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_obtendo_o_clima_para_semana">Obtendo o clima para semana:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-metered/weather/day/status</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta">Resposta:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">Hi, today is a sunny day!</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usando_metered">Usando <code>@Metered</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As métricas do MicroProfile tem uma função que se pode usar para medir solicitações para um serviço.</p>
+</div>
+<div class="paragraph">
+<p>Para utilizar esta função, você deve anotar os métodos dos recursos JAX-RS com <code>@Metered</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Path("/weather")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@ApplicationScoped
+public class WeatherService {
+
+    @Path("/day/status")
+    @Metered(name = "dailyStatus",
+             unit = MetricUnits.MINUTES,
+             description = "Metrics to daily weather status method",
+             absolute = true)
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String dayStatus() {
+        return "Hi, today is a sunny day!";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Existem algumas configurações, como parte do <code>@Metered</code>, que você precisa saber:</p>
+</div>
+<div class="paragraph">
+<p><strong>String name</strong>
+Opcional. Define o nome da métrica. Se não for fornecido
+explicitamente, o nome do objeto anotado é usado.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean absolute</strong> Se verdadeiro, use o nome fornecido como o nome absoluto
+da métrica. Se falso, ele prefixa o nome do pacote e o nome da classe antes do nome fornecido.
+O valor padrão é falso.</p>
+</div>
+<div class="paragraph">
+<p><strong>String displayName</strong> Opcional. Um nome de exibição legível para metadados.</p>
+</div>
+<div class="paragraph">
+<p><strong>String description</strong> Opcional. Uma descrição da métrica.</p>
+</div>
+<div class="paragraph">
+<p><strong>String[] tags</strong> Opcional. Matriz de cadeia no formato = para fornecer
+etiquetas especiais para uma métrica.</p>
+</div>
+<div class="paragraph">
+<p><strong>boolean reusable</strong> Indica se uma métrica com um determinado nome pode ser
+registrado em mais de um local. Não se aplica a gauges.</p>
+</div>
+<div class="paragraph">
+<p><strong>String unit</strong> Unidade da métrica. O valor padrão para <code>@Metered</code> é nanossegundos.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dados_métricos">Dados Métricos</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Verifique a métrica <code>@Metered</code> fazendo uma solicitação <em>GET</em>:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_formato_prometheus">Formato Prometheus:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X GET http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta_prometheus">Resposta Prometheus:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># TYPE application:daily_status_seconds_count meter
+application:daily_status_seconds_count 1.2E-7
+# TYPE application:daily_status_rate_per_second meter
+application:daily_status_rate_per_second 0.0
+# TYPE application:daily_status_one_min_rate_per_second meter
+application:daily_status_one_min_rate_per_second 1.3376002644204984E-19
+# TYPE application:daily_status_five_min_rate_per_second meter
+application:daily_status_five_min_rate_per_second 3.5942838529305413E-20
+# TYPE application:daily_status_fifteen_min_rate_per_second meter
+application:daily_status_fifteen_min_rate_per_second 3.4665766454142955E-21</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_formato_json">Formato JSON:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para o formato json, adicione o cabeçalho <code>Accept: application/json</code> ao diretório
+Solicitação HTTP.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta_json">Resposta JSON</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
+	"dailyStatus": {
+		"count": 2,
+		"fifteenMinRate": 5.77762774235716e-14,
+		"fiveMinRate": 5.990473088217569e-13,
+		"meanRate": 0,
+		"oneMinRate": 2.229333774034164e-12,
+		"unit": "minutes"
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metadatos_métrica">Metadatos Métrica</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Uma métrica terá metadados para que você possa aprender mais sobre ela, como <code>displayName</code>,<code>description</code>, <code>tags</code>, etc.</p>
+</div>
+<div class="paragraph">
+<p>Verifique os metadados da métrica fazendo uma solicitação HTTP <em>OPTIONS</em>:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solicitação_http_options">Solicitação HTTP <em>OPTIONS</em></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -X OPTIONS http://localhost:8080/mp-metrics-metered/metrics/application/dailyStatus</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resposta_2">Resposta:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">{
+	"dailyStatus": {
+		"description": "Metrics to daily weather status method",
+		"displayName": "",
+		"name": "dailyStatus",
+		"reusable": false,
+		"tags": "",
+		"type": "meter",
+		"typeRaw": "METERED",
+		"unit": "minutes"
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_teste_o_aplicativo">Teste o aplicativo:</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvn test</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/enterprise/context/ApplicationScoped.html">jakarta.enterprise.context.ApplicationScoped</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/Consumes.html">jakarta.ws.rs.Consumes</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/Produces.html">jakarta.ws.rs.Produces</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/MediaType.html">jakarta.ws.rs.core.MediaType</a></p>
+</li>
+<li>
+<p><a href="../../../microprofile-6.0/javadoc/org/eclipse/microprofile/metrics/MetricUnits.html">org.eclipse.microprofile.metrics.MetricUnits</a></p>
+</li>
+<li>
+<p><a href="../../../microprofile-5.0/javadoc/org/eclipse/microprofile/metrics/annotation/Metered.html">org.eclipse.microprofile.metrics.annotation.Metered</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Portability between ActiveMQ and IBM MQ</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This app demonstrates capability to achive portability/interoperability between ActiveMQ and IBM MQ for tomee based application of type MDB and Custom Java based JMS connection. It covers patterns and learnings as listed below</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>How to run multiple mdb containers in same JVM</p>
+</li>
+<li>
+<p>Various ways of configuring IBM Queues/Topics vs AMQ Queues/Topics</p>
+</li>
+<li>
+<p>MDB configuration for IBM MQ vs AMQ, Annotations vs Configuration</p>
+</li>
+<li>
+<p>Static vs Dynamic declaration/override of queues/topics</p>
+</li>
+<li>
+<p>Use and importance of RA (Resource Adapaters), Connection Factory</p>
+</li>
+<li>
+<p>Web service samples to write data to IBM Queues and AMQ Queues using injection of resources (connection factories and queue/topics)</p>
+</li>
+<li>
+<p>JNDI reference to resources (see WMQReadBean configuration in ejb-jar.xml)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_this_application">Running this application</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_environment">Environment</h3>
+<div class="paragraph">
+<p>Application can be imported in IDE like eclipse as a maven project and is tested using apache-tomee-plume-7.0.2, apache-activemq-5.14.3 (running as standalone on localhost, IBM MQ 8.x.x (connections details hidden to avoid misuse, those how want to test can reach out to middleware team to get access to managed IBM MQ instance and AppWatch ))</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_additional_libraries">Additional Libraries</h3>
+<div class="paragraph">
+<p>In order to connect to IBM MQ, tomee requires additional libraries containing implementation for JCA Resource Adapter, IBM MQ connection factories, queue/topic resources, ActivationConfigs etc. These libraries come with IBM subscription and all of them are not available on maven central, below is list of all IBM specific jar files</p>
+</div>
+<div class="paragraph">
+<p>com.ibm.mq.connector.jar
+com.ibm.mq.jar
+com.ibm.mq.pcf.jar
+com.ibm.mq.headers.jar
+com.ibm.mq.jmqi.jar
+com.ibm.mqjms.jar
+providerutil.jar</p>
+</div>
+<div class="paragraph">
+<p>com.ibm.mq.connector.jar can be extracted from wmq.jmsra.rar which is availble with IBM MQ installation (not available on internet)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tomee_xml">tomee.xml</h3>
+<div class="paragraph">
+<p>This file (located under tomee_home/conf is left blank as we would like our application to manage all resources.Any resource declared here would be available to all application deployed on the server.
+(File not included in this git repo)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;tomee&gt;
+&lt;/tomee&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_catalina_properties">catalina.properties</h3>
+<div class="paragraph">
+<p>This file can be used to convinently provide -D java arguments as an input to tomee. However in real world these parameters would be configured using environment variables to avoid adding application specific properties in tomme conf (File not included in this git repo)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">com.ibm.msg.client.commonservices.log.status=OFF
+
+AMQReadBean2.activation.destination=overriden_queue_IMQReadBean
+#queue destinations
+amq.variable.destination=my_overriden_value
+#Resource overrides
+#amq_ra.ServerUrl=tcp://xxxxx.xxx.xxx.com:61616
+
+#MDB Activation Config overrides
+#Hirarchy for activation override rules (specific to generic)
+#1  -D&lt;deploymentId&gt;.activation.&lt;property&gt;=&lt;value&gt;
+#2. -D&lt;ejbName&gt;.activation.&lt;property&gt;=&lt;value&gt;
+#3. -D&lt;message-listener-interface&gt;.activation.&lt;property&gt;=&lt;value&gt;
+#4. -Dmdb.activation.&lt;property&gt;=&lt;value&gt;
+#mdb.activation.destination=overriden_queue_value
+WMQReadBean.activation.HostName=10.234.56.789</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resources_xml">resources.xml</h3>
+<div class="paragraph">
+<p>This file is application specific placeholder for resources (it will override any matching resources declared in tomee.xml) like resource-adapters, connection-factories, queues, topics, mdb-containers etc.
+This example makes heavy use of this file which is under src/main/webapp/WEB-INF, for applications deployed as war file it get copied to <mark>#</mark>/webapps/application-name/WEB-INF/resources.xml .</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejb_jar_xml">ejb-jar.xml</h3>
+<div class="paragraph">
+<p>This file is located under src/main/resources/META-INF/  and contains application specific configuration for enterprise beans, in the demo we have configured our message beans in this file. Definitions in this file are equivalent of annotations , version="3.1" will support a combination of configured and annotated beans. One important difference between annotated beans and configured beans is as follows. If there are multiple containers defined or use in same application(Like this application uses amq-container and imq-container)
+Any annotated bean is sequentially binded to the container resource, this can bring inpredictability and may result in a Bean getting binded to incorrect target container. As an example ChatBean MDB is intentionally commented as it may throw errors by getting incorrectly binded to IMQ. To deal with such problems, configuration based approach can be used in conjunction with openejb-jar.xml (as described below)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_openejb_jar_xml">openejb-jar.xml</h3>
+<div class="paragraph">
+<p>This file is located under src/main/resources/META-INF/  and contains additional mapping between ejb and targeted containers. It also has a deployment id which can be used to create multiple deployments for same ejb in a container or across containers. This is very useful when you want to bind a specific bean to desired container (example WMQReadBean should necessarily bind to simple-tomee-1.0/imq_container container)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_web_xml">web.xml</h3>
+<div class="paragraph">
+<p>Typical web resource file, not used much in this tutorial app</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_beans_xml">beans.xml</h3>
+<div class="paragraph">
+<p>To use @Inject, the first thing you need is a META-INF/beans.xml file in the module or jar. This effectively turns on CDI and allows the @Inject references to work. No META-INF/beans.xml no injection, period
+Not used in this tutorial app</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_developers">Developers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Suyog Barve &lt;<a href="mailto:suyog.barve@walmart.com">suyog.barve@walmart.com</a>&gt;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/annotation/Resource.html">jakarta.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/Connection.html">jakarta.jms.Connection</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/ConnectionFactory.html">jakarta.jms.ConnectionFactory</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/DeliveryMode.html">jakarta.jms.DeliveryMode</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/JMSException.html">jakarta.jms.JMSException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/Message.html">jakarta.jms.Message</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/MessageListener.html">jakarta.jms.MessageListener</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/MessageProducer.html">jakarta.jms.MessageProducer</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/Queue.html">jakarta.jms.Queue</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/Session.html">jakarta.jms.Session</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/jms/TextMessage.html">jakarta.jms.TextMessage</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/http/HttpServletRequest.html">jakarta.servlet.http.HttpServletRequest</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/POST.html">jakarta.ws.rs.POST</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/PUT.html">jakarta.ws.rs.PUT</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/Produces.html">jakarta.ws.rs.Produces</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/QueryParam.html">jakarta.ws.rs.QueryParam</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/Context.html">jakarta.ws.rs.core.Context</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/MediaType.html">jakarta.ws.rs.core.MediaType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/ws/rs/core/Response.html">jakarta.ws.rs.core.Response</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

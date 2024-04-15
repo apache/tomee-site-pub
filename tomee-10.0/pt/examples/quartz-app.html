@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Uso do Adaptador de Recursos de Quartz</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Este exemplo é um pouco datado. Ele antecede a API de agendamento que
+foi adicionado ao EJB 3.1. Aplicações modernas devem usar a API de agendamento, que possui muitos, se não todos, os mesmos recursos que o Quartz. De fato, o Quartz é o mecanismo que aciona o suporte <code>@Schedule</code> e <code>ScheduleExpression</code> no OpenEJB e TomEE.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Apesar de datado de uma perspectiva de programação, ainda é uma
+excelente referência sobre como conectar e testar um Java EE Resource Adapter personalizado..</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_estrutura_do_projeto">Estrutura do projeto</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Como os arquivos <code>.rar</code> não se saem bem em uma estrutura padrão do classpath, o
+objetivo é efetivamente <code>desembrulhar</code> o <code>.rar</code> para que suas dependências
+estejam no classpath e seu arquivo <code>ra.xml</code> ser encontrado e verificado pelo
+OpenEJB.</p>
+</div>
+<div class="paragraph">
+<p>Fazemos isso criando um módulo mini-maven para representar o <code>.rar</code> no
+termos maven. O <code>pom.xml</code> do <code>módulo rar</code> declara todos os
+jars que estariam dentro do <code>.rar</code> como dependências automatizadas. O arquivo <code>ra.xml</code>
+é adicionado ao projeto em <code>src/main/resources/META-INF/ra.xml</code>
+onde será visível para outros módulos.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">quartz-app
+quartz-app/pom.xml
+quartz-app/quartz-beans
+quartz-app/quartz-beans/pom.xml
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/JobBean.java
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/JobScheduler.java
+quartz-app/quartz-beans/src/main/java/org/superbiz/quartz/QuartzMdb.java
+quartz-app/quartz-beans/src/main/resources/META-INF
+quartz-app/quartz-beans/src/main/resources/META-INF/ejb-jar.xml
+quartz-app/quartz-beans/src/test/java/org/superbiz/quartz/QuartzMdbTest.java
+quartz-app/quartz-ra
+quartz-app/quartz-ra/pom.xml
+quartz-app/quartz-ra/src/main/resources/META-INF
+quartz-app/quartz-ra/src/main/resources/META-INF/ra.xml</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ra_xml">ra.xml</h3>
+<div class="paragraph">
+<p>O conector em questão possui adaptadores de recursos de entrada e saída.
+O adaptador de recursos de entrada pode ser usado para conduzir message driven beans (MDBs).
+O adaptador de recursos de saída, <code>QuartzResourceAdapter</code>, pode ser injetado em qualquer componente via`@Resource` e usado para originar e enviar mensagens ou eventos.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;connector xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+           http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"
+           version="1.5"&gt;
+
+  &lt;description&gt;Quartz ResourceAdapter&lt;/description&gt;
+  &lt;display-name&gt;Quartz ResourceAdapter&lt;/display-name&gt;
+
+  &lt;vendor-name&gt;OpenEJB&lt;/vendor-name&gt;
+  &lt;eis-type&gt;Quartz Adapter&lt;/eis-type&gt;
+  &lt;resourceadapter-version&gt;1.0&lt;/resourceadapter-version&gt;
+
+  &lt;resourceadapter id="QuartzResourceAdapter"&gt;
+    &lt;resourceadapter-class&gt;org.apache.openejb.resource.quartz.QuartzResourceAdapter&lt;/resourceadapter-class&gt;
+
+    &lt;inbound-resourceadapter&gt;
+      &lt;messageadapter&gt;
+        &lt;messagelistener&gt;
+          &lt;messagelistener-type&gt;org.quartz.Job&lt;/messagelistener-type&gt;
+          &lt;activationspec&gt;
+            &lt;activationspec-class&gt;org.apache.openejb.resource.quartz.JobSpec&lt;/activationspec-class&gt;
+          &lt;/activationspec&gt;
+        &lt;/messagelistener&gt;
+      &lt;/messageadapter&gt;
+    &lt;/inbound-resourceadapter&gt;
+
+  &lt;/resourceadapter&gt;
+&lt;/connector&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usando_o_adaptador_de_recursos_de_saída">Usando o Adaptador de Recursos de Saída</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui vemos o adaptador de recursos de saída usado em um bean de sessão stateless para agendar uma tarefa que será executada pelo MDB</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
+
+import org.apache.openejb.resource.quartz.QuartzResourceAdapter;
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.Scheduler;
+import org.quartz.SimpleTrigger;
+
+import jakarta.ejb.Stateless;
+import javax.naming.InitialContext;
+import java.util.Date;
+
+@Stateless
+public class JobBean implements JobScheduler {
+
+    @Override
+    public Date createJob() throws Exception {
+
+        final QuartzResourceAdapter ra = (QuartzResourceAdapter) new InitialContext().lookup("java:openejb/Resource/QuartzResourceAdapter");
+        final Scheduler s = ra.getScheduler();
+
+        //Add a job type
+        final JobDetail jd = new JobDetail("job1", "group1", JobBean.MyTestJob.class);
+        jd.getJobDataMap().put("MyJobKey", "MyJobValue");
+
+        //Schedule my 'test' job to run now
+        final SimpleTrigger trigger = new SimpleTrigger("trigger1", "group1", new Date());
+        return s.scheduleJob(jd, trigger);
+    }
+
+    public static class MyTestJob implements Job {
+
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+            System.out.println("This is a simple test job to get: " + context.getJobDetail().getJobDataMap().get("MyJobKey"));
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_recebendo_dados_do_adaptador_de_recursos_de_entrada">Recebendo dados do adaptador de recursos de entrada</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+import jakarta.ejb.ActivationConfigProperty;
+import jakarta.ejb.MessageDriven;
+
+@MessageDriven(activationConfig = {
+        @ActivationConfigProperty(propertyName = "cronExpression", propertyValue = "* * * * * ?")})
+public class QuartzMdb implements Job {
+
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        System.out.println("Executing Job");
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_caso_de_teste">Caso de teste</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.quartz;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.util.Date;
+import java.util.Properties;
+
+public class QuartzMdbTest {
+
+    private static InitialContext initialContext = null;
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+
+        if (null == initialContext) {
+            Properties properties = new Properties();
+            properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+
+            initialContext = new InitialContext(properties);
+        }
+    }
+
+    @AfterClass
+    public static void afterClass() throws Exception {
+        if (null != initialContext) {
+            initialContext.close();
+            initialContext = null;
+        }
+    }
+
+    @Test
+    public void testLookup() throws Exception {
+
+        final JobScheduler jbi = (JobScheduler) initialContext.lookup("JobBeanLocal");
+        final Date d = jbi.createJob();
+        Thread.sleep(500);
+        System.out.println("Scheduled test job should have run at: " + d.toString());
+    }
+
+    @Test
+    public void testMdb() throws Exception {
+        // Sleep 3 seconds and give quartz a chance to execute our MDB
+        Thread.sleep(3000);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executando">Executando</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.superbiz.quartz.QuartzMdbTest
+Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
+http://tomee.apache.org/
+INFO - openejb.home = /Users/dblevins/examples/quartz-app/quartz-beans
+INFO - openejb.base = /Users/dblevins/examples/quartz-app/quartz-beans
+INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
+INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
+INFO - Found ConnectorModule in classpath: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Found EjbModule in classpath: /Users/dblevins/examples/quartz-app/quartz-beans/target/classes
+INFO - Beginning load: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Extracting jar: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0.jar
+INFO - Extracted path: /Users/dblevins/examples/quartz-app/quartz-ra/target/quartz-ra-1.0
+INFO - Beginning load: /Users/dblevins/examples/quartz-app/quartz-beans/target/classes
+INFO - Configuring enterprise application: /Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear
+INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
+INFO - Auto-creating a container for bean JobBean: Container(type=STATELESS, id=Default Stateless Container)
+INFO - Configuring Service(id=QuartzResourceAdapter, type=Resource, provider-id=QuartzResourceAdapter)
+INFO - Configuring Service(id=quartz-ra-1.0, type=Container, provider-id=Default MDB Container)
+INFO - Enterprise application "/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear" loaded.
+INFO - Assembling app: /Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear
+INFO - Jndi(name=JobBeanLocal) --&gt; Ejb(deployment-id=JobBean)
+INFO - Jndi(name=global/classpath.ear/quartz-beans/JobBean!org.superbiz.quartz.JobScheduler) --&gt; Ejb(deployment-id=JobBean)
+INFO - Jndi(name=global/classpath.ear/quartz-beans/JobBean) --&gt; Ejb(deployment-id=JobBean)
+INFO - Created Ejb(deployment-id=JobBean, ejb-name=JobBean, container=Default Stateless Container)
+INFO - Created Ejb(deployment-id=QuartzMdb, ejb-name=QuartzMdb, container=quartz-ra-1.0)
+Executing Job
+INFO - Started Ejb(deployment-id=JobBean, ejb-name=JobBean, container=Default Stateless Container)
+INFO - Started Ejb(deployment-id=QuartzMdb, ejb-name=QuartzMdb, container=quartz-ra-1.0)
+INFO - Deployed Application(path=/Users/dblevins/examples/quartz-app/quartz-beans/classpath.ear)
+This is a simple test job to get: MyJobValue
+Scheduled test job should have run at: Fri Oct 28 17:05:12 PDT 2011
+Executing Job
+Executing Job
+Executing Job
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.971 sec
+
+Results :
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../tomee-10.0/javadoc/org/apache/openejb/config/OutputGeneratedDescriptors.html">org.apache.openejb.config.OutputGeneratedDescriptors</a></p>
+</li>
+<li>
+<p><a href="../../../tomee-10.0/javadoc/org/apache/openejb/resource/quartz/QuartzResourceAdapter.html">org.apache.openejb.resource.quartz.QuartzResourceAdapter</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/ActivationConfigProperty.html">jakarta.ejb.ActivationConfigProperty</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Local.html">jakarta.ejb.Local</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/MessageDriven.html">jakarta.ejb.MessageDriven</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-10.0/javadoc/jakarta/ejb/Stateless.html">jakarta.ejb.Stateless</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

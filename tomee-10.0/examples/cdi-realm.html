@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>CDI Realm</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to secure access to a web resource provided by a servlet. For this, we will use realms.</p>
+</div>
+<div class="paragraph">
+<p>A <a href="https://javaee.github.io/tutorial/security-intro005.html#BNBXJ">realm</a>, in JEE world, is a security policy domain defined for a web or application server.
+A realm contains a collection of users, who may or may not be assigned to a group.</p>
+</div>
+<div class="paragraph">
+<p>A realm, basically, specifies a list of users and roles. I&#8217;s a "database" of users with associated passwords and possible roles.
+The Servlet Specification doesn&#8217;t specifies an API for specifying such a list of users and roles for a given application.
+For this reason, Tomcat servlet container defines an interface, <code>org.apache.catalina.Realm</code>. More information can be found <a href="https://tomcat.apache.org/tomcat-9.0-doc/realm-howto.html">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>In TomEE application server, the mechanism used by Tomcat to define a realm for a servlet is reused and enhanced. More information can be found <a href="https://www.tomitribe.com/blog/tomee-security-episode-1-apache-tomcat-and-apache-tomee-security-under-the-covers">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows a servlet secured using a realm. The secured servlet has a simple functionality, just for illustrating the concepts explained here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/servlet")
+public class SecuredServlet extends HttpServlet {
+    @Override
+    protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().write("Servlet!");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For securing this servlet, we will add the following class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import jakarta.enterprise.context.RequestScoped;
+import java.security.Principal;
+
+@RequestScoped // just to show we can be bound to the request but @ApplicationScoped is what makes sense
+public class AuthBean {
+    public Principal authenticate(final String username, String password) {
+        if (("userA".equals(username) || "userB".equals(username)) &amp;&amp; "test".equals(password)) {
+            return new Principal() {
+                @Override
+                public String getName() {
+                    return username;
+                }
+
+                @Override
+                public String toString() {
+                    return username;
+                }
+            };
+        }
+        return null;
+    }
+
+    public boolean hasRole(final Principal principal, final String role) {
+        return principal != null &amp;&amp; (
+                principal.getName().equals("userA") &amp;&amp; (role.equals("admin")
+                        || role.equals("user"))
+                        || principal.getName().equals("userB") &amp;&amp; (role.equals("user"))
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The class defines 2 methods: <code>authenticate</code> and <code>hasRole</code>.
+Both these methods will be used by a class, <code>LazyRealm</code>, implemented in TomEE application server.
+In the file <code>webapp/META-INF/context.xml</code> this realm is configured:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Context preemptiveAuthentication="true"&gt;
+  &lt;Valve className="org.apache.catalina.authenticator.BasicAuthenticator" /&gt;
+  &lt;Realm className="org.apache.tomee.catalina.realm.LazyRealm"
+         cdi="true" realmClass="org.superbiz.AuthBean"/&gt;
+&lt;/Context&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The class <code>AuthBean</code> defines a "database" with 2 users: userA (having role admin) and userB (having role user), both having the password test.
+Class <code>org.apache.tomee.catalina.realm.LazyRealm</code> will load our <code>AuthBean</code> class and will use it to check if a user has access to the content provided by our servlet.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tests">Tests</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.apache.openejb.arquillian.common.IO;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.FileAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+@RunWith(Arquillian.class)
+public class AuthBeanTest {
+    @Deployment(testable = false)
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class, "low-typed-realm.war")
+                .addClasses(SecuredServlet.class, AuthBean.class)
+                .addAsManifestResource(new FileAsset(new File("src/main/webapp/META-INF/context.xml")), "context.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    @ArquillianResource
+    private URL webapp;
+
+    @Test
+    public void success() throws IOException {
+        assertEquals("200 Servlet!", get("userA", "test"));
+    }
+
+    @Test
+    public void failure() throws IOException {
+        assertThat(get("userA", "oops, wrong password"), startsWith("401"));
+    }
+
+    private String get(final String user, final String password) {
+        final BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
+        basicCredentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(user, password));
+        final CloseableHttpClient client = HttpClients.custom()
+                .setDefaultCredentialsProvider(basicCredentialsProvider).build();
+
+        final HttpHost httpHost = new HttpHost(webapp.getHost(), webapp.getPort(), webapp.getProtocol());
+        final AuthCache authCache = new BasicAuthCache();
+        final BasicScheme basicAuth = new BasicScheme();
+        authCache.put(httpHost, basicAuth);
+        final HttpClientContext context = HttpClientContext.create();
+        context.setAuthCache(authCache);
+
+        final HttpGet get = new HttpGet(webapp.toExternalForm() + "servlet");
+        CloseableHttpResponse response = null;
+        try {
+            response = client.execute(httpHost, get, context);
+            return response.getStatusLine().getStatusCode() + " " + EntityUtils.toString(response.getEntity());
+        } catch (final IOException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            try {
+                IO.close(response);
+            } catch (final IOException e) {
+                // no-op
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test uses Arquillian to start an application server and load the servlet.
+There are two tests methods: <code>success</code>, where our servlet is accessed with the correct username and password, and <code>failure</code>, where our servlet is accessed with an incorrect password.</p>
+</div>
+<div class="paragraph">
+<p>Full example can be found <a href="https://github.com/apache/tomee/tree/master/examples/cdi-realm">here</a>.
+It&#8217;s a maven project, and the test can be run with <code>mvn clean install</code> command.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tomee-10.0/javadoc/org/apache/openejb/arquillian/common/IO.html">org.apache.openejb.arquillian.common.IO</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/enterprise/context/RequestScoped.html">jakarta.enterprise.context.RequestScoped</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/ServletException.html">jakarta.servlet.ServletException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/annotation/WebServlet.html">jakarta.servlet.annotation.WebServlet</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/http/HttpServlet.html">jakarta.servlet.http.HttpServlet</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/http/HttpServletRequest.html">jakarta.servlet.http.HttpServletRequest</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-10.0/javadoc/jakarta/servlet/http/HttpServletResponse.html">jakarta.servlet.http.HttpServletResponse</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
