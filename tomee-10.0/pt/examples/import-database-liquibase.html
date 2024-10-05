@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//matomo.privacy.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Importação de Banco de Dados via Liquibase</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este é um exemplo sobre como utilizar a ferramenta Liquibase, para fazer a importação de banco de dados programaticamente.</p>
+</div>
+<h4 id="_importação_de_banco_de_dados_via_liquibase" class="discrete">Importação de Banco de Dados via Liquibase</h4>
+<div class="paragraph">
+<p>Para utilizarmos o Liquibase, em tempo de execução da aplicação dentro do servidor de aplicação, iremos utilizar o DataSource do servidor de aplicações, mas para o teste unitário/teste integrado, iremos utilizar um DataSource configurado, para utilizar um banco de dados em memória.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class ImportByLiquibase {
+	private static final Logger LOGGER = Logger.getInstance(LogCategory.OPENEJB,
+			EntityManagerFactoryCallable.class.getName());
+
+	public static final String IMPORT_FILE_PREFIX = "V_";
+	public static final String IMPORT_FILE_EXTENSION = ".sql";
+
+	private final DataSource dataSource;
+	private final String resource;
+
+	public ImportByLiquibase(final ClassLoader cl, final String resource, final DataSource ds) {
+		this.dataSource = ds;
+		this.resource = resource;
+
+		if (dataSource == null) {
+			throw new NullPointerException("datasource can't be null");
+		}
+
+	}
+
+	@SuppressWarnings("deprecation")
+	public void doImport() {
+
+		try {
+
+			List&lt;String&gt; sqlFiles = new ArrayList&lt;String&gt;();
+
+			try {
+
+				sqlFiles = listFilteredFiles(resource, Integer.MAX_VALUE);
+
+				if (Objects.nonNull(sqlFiles)) {
+					if (sqlFiles.isEmpty()) {
+						LOGGER.error("The Resource directory for sql files, can not to be empty.");
+						throw new Exception("The Resource directory for sql files, can not to be empty.");
+					}
+				}
+
+			} catch (final IOException e) {
+				throw new OpenEJBRuntimeException("The Resource directory for sql files, can not to be empty.", e);
+			}
+			ChangeLogHistoryServiceFactory.getInstance().resetAll();
+			for (String changelogPath : sqlFiles) {
+
+				try (Liquibase liquibase = getLiquibase(changelogPath)) {
+					liquibase.update("test");
+
+				} catch (Exception e) {
+					LOGGER.error("Error running Liquibase changelog", e);
+					throw new RuntimeException("Error running Liquibase changelog", e);
+				}
+			}
+
+		} catch (final Exception e) {
+			LOGGER.error("Can not create a statement, import scripts will be ignored", e);
+			return;
+		}
+
+	}
+
+	public List&lt;String&gt; listFilteredFiles(String dir, int depth) throws IOException {
+		try (Stream&lt;Path&gt; stream = Files.walk(Paths.get(dir), depth)) {
+			return stream.filter(file -&gt; !Files.isDirectory(file))
+					.filter(file -&gt; !file.getFileName().toString().startsWith(".")).map(Path::toString)
+					.map(s -&gt; s.replaceFirst(resource, "")).collect(Collectors.toList());
+		}
+	}
+
+	private Liquibase getLiquibase(final String changelogPath) throws DatabaseException, SQLException {
+		Liquibase liquibase = null;
+		HsqlConnection hsqlConnection = new HsqlConnection(dataSource.getConnection());
+
+		try {
+			Path path = Paths.get(this.resource);
+
+			ResourceAccessor resourceAccessor = new SearchPathResourceAccessor(
+					new DirectoryResourceAccessor(path.toFile()));
+
+			liquibase = new Liquibase(changelogPath, resourceAccessor, hsqlConnection);
+
+		} catch (FileNotFoundException ex) {
+			LOGGER.error("can't create a statement, import scripts will be ignored", ex);
+
+		} catch (LiquibaseException ex) {
+			LOGGER.error("can't create a statement, import scripts will be ignored", ex);
+		}
+		return liquibase;
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O teste unitário está vinculado a um conjunto de instruções SQL, definidas nos scripts <code>0010_create_table_test.sql</code> e <code>0020_insert_table_test.sql</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">0010_create_table_test.sql
+----
+CREATE TABLE public.table_test (ID INT NOT NULL, DESCRIPTION VARCHAR(120) NOT NULL, PRIMARY KEY (ID));
+----</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>0020_insert_table_test.sql</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>insert into public.table_test (id, description) values(1, 'Test 1');
+insert into public.table_test (id, description) values(2, 'Test 2');
+insert into public.table_test (id, description) values(3, 'Test 3');</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_executando_o_teste_unitário">Executando o teste unitário:</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Executar o teste unitário para a classe ImportByLiquibaseTest.
+Deve-se seguir, as seguintes etapas:</p>
+</div>
+<div class="paragraph">
+<p>Executar o build do projeto examples/import-database-liquibase:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deve ser exibida, a seguinte saída:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ T E S T S
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+Running org.apache.openejb.assembler.classic.migrate.database.ImportByLiquibaseTest
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) entered
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) exited
+[Server@50b494a6]: [Thread[main,5,main]]: setDatabaseName(0,testdb)
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) entered
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) exited
+[Server@50b494a6]: [Thread[main,5,main]]: setDatabasePath(0,mem:testdb;sql.enforce_strict_size=true;sql.restrict_exec=true)
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) entered
+[Server@50b494a6]: [Thread[main,5,main]]: checkRunning(false) exited
+[Server@50b494a6]: [Thread[main,5,main]]: setPort(9001)
+[Server@50b494a6]: [Thread[main,5,main]]: start() entered
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: run() entered
+[Server@50b494a6]: Initiating startup sequence...
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.maxdatabases=10
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.tls=false
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.port=9001
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.trace=false
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.database.0=mem:testdb;sql.enforce_strict_size=true;sql.restrict_exec=true
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.restart_on_shutdown=false
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.no_system_exit=true
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.silent=true
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.default_page=index.html
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.dbname.0=testdb
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.address=0.0.0.0
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: server.root=.
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: openServerSocket() entered
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: Got server socket: ServerSocket[addr=0.0.0.0/0.0.0.0,localport=9001]
+[Server@50b494a6]: Server socket opened successfully in 174 ms.
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: openServerSocket() exiting
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: openDatabases() entered
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: Opening database: [mem:testdb]
+[Server@50b494a6]: Database [index=0, id=0, db=mem:testdb, alias=testdb] opened successfully in 613 ms.
+[Server@50b494a6]: [Thread[HSQLDB Server @50b494a6,5,main]]: openDatabases() exiting
+[Server@50b494a6]: Startup sequence completed in 828 ms.
+[Server@50b494a6]: 2024-09-28 00:47:40.682 HSQLDB server 2.7.3 is online on port 9001
+[Server@50b494a6]: To close normally, connect and execute SHUTDOWN SQL
+[Server@50b494a6]: From command line, use [Ctrl]+[C] to abort abruptly
+[Server@50b494a6]: [Thread[main,5,main]]: start() exiting
+set. 27, 2024 9:47:40 PM com.zaxxer.hikari.HikariDataSource &lt;init&gt;
+INFORMAÇÕES: hikariCP - Starting...
+set. 27, 2024 9:47:41 PM com.zaxxer.hikari.pool.PoolBase getAndSetNetworkTimeout
+INFORMAÇÕES: hikariCP - Driver does not support get/set network timeout for connections. (feature not supported)
+set. 27, 2024 9:47:41 PM com.zaxxer.hikari.pool.HikariPool checkFailFast
+INFORMAÇÕES: hikariCP - Added connection org.hsqldb.jdbc.JDBCConnection@4d49af10
+set. 27, 2024 9:47:41 PM com.zaxxer.hikari.HikariDataSource &lt;init&gt;
+INFORMAÇÕES: hikariCP - Start completed.
+set. 27, 2024 9:47:41 PM liquibase.database
+INFORMAÇÕES: Set default schema name to PUBLIC
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Creating database history table with name: PUBLIC.DATABASECHANGELOG
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Reading from PUBLIC.DATABASECHANGELOG
+set. 27, 2024 9:47:42 PM liquibase.lockservice
+INFORMAÇÕES: Successfully acquired change log lock
+set. 27, 2024 9:47:42 PM liquibase.command
+INFORMAÇÕES: Using deploymentId: 7484462456
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Reading from PUBLIC.DATABASECHANGELOG
+Running Changeset: 0010_create_table_test.sql::1::user
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Custom SQL executed
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: ChangeSet 0010_create_table_test.sql::1::user ran successfully in 37ms
+
+UPDATE SUMMARY
+Run:                          1
+Previously run:               0
+Filtered out:                 0
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+Total change sets:            1
+
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: UPDATE SUMMARY
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Run:                          1
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Previously run:               0
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Filtered out:                 0
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: -------------------------------
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Total change sets:            1
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Update summary generated
+set. 27, 2024 9:47:42 PM liquibase.command
+INFORMAÇÕES: Update command completed successfully.
+Liquibase: Update has been successful. Rows affected: 1
+set. 27, 2024 9:47:42 PM liquibase.lockservice
+INFORMAÇÕES: Successfully released change log lock
+set. 27, 2024 9:47:42 PM liquibase.command
+INFORMAÇÕES: Command execution complete
+set. 27, 2024 9:47:42 PM liquibase.database
+INFORMAÇÕES: Set default schema name to PUBLIC
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Reading from PUBLIC.DATABASECHANGELOG
+set. 27, 2024 9:47:42 PM liquibase.lockservice
+INFORMAÇÕES: Successfully acquired change log lock
+set. 27, 2024 9:47:42 PM liquibase.command
+INFORMAÇÕES: Using deploymentId: 7484462849
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Reading from PUBLIC.DATABASECHANGELOG
+Running Changeset: 0020_insert_table_test.sql::1::user
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Custom SQL executed
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: ChangeSet 0020_insert_table_test.sql::1::user ran successfully in 7ms
+Running Changeset: 0020_insert_table_test.sql::2::user
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Custom SQL executed
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: ChangeSet 0020_insert_table_test.sql::2::user ran successfully in 10ms
+Running Changeset: 0020_insert_table_test.sql::3::user
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: Custom SQL executed
+set. 27, 2024 9:47:42 PM liquibase.changelog
+INFORMAÇÕES: ChangeSet 0020_insert_table_test.sql::3::user ran successfully in 18ms
+
+UPDATE SUMMARY
+Run:                          3
+Previously run:               0
+Filtered out:                 0
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+Total change sets:            3
+
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: UPDATE SUMMARY
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Run:                          3
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Previously run:               0
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Filtered out:                 0
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: -------------------------------
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Total change sets:            3
+set. 27, 2024 9:47:42 PM liquibase.util
+INFORMAÇÕES: Update summary generated
+set. 27, 2024 9:47:42 PM liquibase.command
+INFORMAÇÕES: Update command completed successfully.
+Liquibase: Update has been successful. Rows affected: 6
+set. 27, 2024 9:47:43 PM liquibase.lockservice
+INFORMAÇÕES: Successfully released change log lock
+set. 27, 2024 9:47:43 PM liquibase.command
+INFORMAÇÕES: Command execution complete
+INFORMAÇÕES - id:1 description:Test 1
+INFORMAÇÕES - id:2 description:Test 2
+INFORMAÇÕES - id:3 description:Test 3
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.647 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2024 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+
