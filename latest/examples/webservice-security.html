@@ -25,18 +25,23 @@
 	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
 
 	<script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-2717626-1']);
-      _gaq.push(['_setDomainName', 'apache.org']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
     </script>
 </head>
 
@@ -44,6 +49,7 @@
     <div class="preloader">
 		<img src="../../img/loader.gif" alt="Preloader image">
 	</div>
+
 	    <nav class="navbar">
 		<div class="container">
 		  <div class="row">          <div class="col-md-12">
@@ -56,15 +62,18 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">
+				<a class="navbar-brand" href="/" title="Apache TomEE">
 				    <span>
 
 				    
-                        <img src="../../img/logo-active.png">
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
                     
 
                     </span>
-				    Apache TomEE
                 </a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -73,7 +82,7 @@
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
 					<li><a href="../../security/security.html">Security</a></li>
-					<li><a href="../../download-ng.html">Downloads</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -95,14 +104,25 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>CalculatorImpl</h2>
-<pre><code>package org.superbiz.calculator;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorimpl">CalculatorImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateless;
-import javax.jws.WebService;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Stateless;
+import jakarta.jws.WebService;
 
 /**
  * This is an EJB 3 style pojo stateless session bean
@@ -111,30 +131,37 @@ import javax.jws.WebService;
  * This EJB has a single interface: CalculatorWs a webservice interface.
  */
 //START SNIPPET: code
-@DeclareRoles(value = {&quot;Administrator&quot;})
+@DeclareRoles(value = {"Administrator"})
 @Stateless
 @WebService(
-        portName = &quot;CalculatorPort&quot;,
-        serviceName = &quot;CalculatorWsService&quot;,
-        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.calculator.CalculatorWs&quot;)
+        portName = "CalculatorPort",
+        serviceName = "CalculatorWsService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.CalculatorWs")
 public class CalculatorImpl implements CalculatorWs, CalculatorRemote {
 
-    @RolesAllowed(value = {&quot;Administrator&quot;})
+    @RolesAllowed(value = {"Administrator"})
     public int sum(int add1, int add2) {
         return add1 + add2;
     }
 
-    @RolesAllowed(value = {&quot;Administrator&quot;})
+    @RolesAllowed(value = {"Administrator"})
     public int multiply(int mul1, int mul2) {
         return mul1 * mul2;
     }
-}
-</code></pre>
-<h2>CalculatorRemote</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorremote">CalculatorRemote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface CalculatorRemote {
@@ -142,12 +169,19 @@ public interface CalculatorRemote {
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>CalculatorWs</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorws">CalculatorWs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 //END SNIPPET: code
 
@@ -157,19 +191,33 @@ import javax.jws.WebService;
  * annotation.
  */
 //START SNIPPET: code
-@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+@WebService(targetNamespace = "http://superbiz.org/wsdl")
 public interface CalculatorWs {
 
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar/&gt;
-</code></pre>
-<h2>openejb-jar.xml</h2>
-<pre><code>&lt;openejb-jar xmlns=&quot;http://tomee.apache.org/xml/ns/openejb-jar-2.2&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openejb_jar_xml">openejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb-jar xmlns="http://tomee.apache.org/xml/ns/openejb-jar-2.2"&gt;
   &lt;enterprise-beans&gt;
     &lt;session&gt;
       &lt;ejb-name&gt;CalculatorImpl&lt;/ejb-name&gt;
@@ -180,18 +228,25 @@ public interface CalculatorWs {
       &lt;/web-service-security&gt;
     &lt;/session&gt;
   &lt;/enterprise-beans&gt;
-&lt;/openejb-jar&gt;
-</code></pre>
-<h2>CalculatorTest</h2>
-<pre><code>package org.superbiz.calculator;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 import junit.framework.TestCase;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.Service;
+import jakarta.xml.ws.BindingProvider;
+import jakarta.xml.ws.Service;
 import java.net.URL;
 import java.util.Properties;
 
@@ -202,8 +257,8 @@ public class CalculatorTest extends TestCase {
 
     protected void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.embedded.remotable", "true");
 
         initialContext = new InitialContext(properties);
     }
@@ -216,22 +271,29 @@ public class CalculatorTest extends TestCase {
      */
     //START SNIPPET: webservice
     public void testCalculatorViaWsInterface() throws Exception {
-        URL url = new URL(&quot;http://127.0.0.1:4204/CalculatorImpl?wsdl&quot;);
-        QName calcServiceQName = new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;);
+        URL url = new URL("http://127.0.0.1:4204/CalculatorImpl?wsdl");
+        QName calcServiceQName = new QName("http://superbiz.org/wsdl", "CalculatorWsService");
         Service calcService = Service.create(url, calcServiceQName);
         assertNotNull(calcService);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
-        ((BindingProvider) calc).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, &quot;jane&quot;);
-        ((BindingProvider) calc).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, &quot;waterfall&quot;);
+        ((BindingProvider) calc).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, "jane");
+        ((BindingProvider) calc).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, "waterfall");
         assertEquals(10, calc.sum(4, 6));
         assertEquals(12, calc.multiply(3, 4));
     }
     //END SNIPPET: webservice
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>-------------------------------------------------------
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">-------------------------------------------------------
  T E S T S
 -------------------------------------------------------
 Running org.superbiz.calculator.CalculatorTest
@@ -246,7 +308,7 @@ INFO - Beginning load: /Users/dblevins/examples/webservice-security/target/class
 INFO - Configuring enterprise application: /Users/dblevins/examples/webservice-security/classpath.ear
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean CalculatorImpl: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/webservice-security/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/webservice-security/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/webservice-security/classpath.ear
 INFO - Jndi(name=CalculatorImplRemote) --&gt; Ejb(deployment-id=CalculatorImpl)
 INFO - Jndi(name=global/classpath.ear/webservice-security/CalculatorImpl!org.superbiz.calculator.CalculatorRemote) --&gt; Ejb(deployment-id=CalculatorImpl)
@@ -262,23 +324,27 @@ INFO - Creating ServerService(id=ejbd)
 INFO - Creating ServerService(id=ejbds)
 INFO - Initializing network services
   ** Starting Services **
-  NAME                 IP              PORT  
-  httpejbd             127.0.0.1       4204  
-  admin thread         127.0.0.1       4200  
-  ejbd                 127.0.0.1       4201  
-  ejbd                 127.0.0.1       4203  
+  NAME                 IP              PORT
+  httpejbd             127.0.0.1       4204
+  admin thread         127.0.0.1       4200
+  ejbd                 127.0.0.1       4201
+  ejbd                 127.0.0.1       4203
 -------
 Ready!
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.481 sec
 
 Results :
 
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
     </div>
+<div style="margin-bottom: 30px;"></div>
 <footer>
 		<div class="container">
 			<div class="row">
@@ -288,13 +354,15 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 					<ul class="social-footer">
 						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
 						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
 					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
 				</div>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
@@ -322,9 +390,9 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 						<div class="col-sm-3 text-center-mobile">
 							<h5><a href="../../security/index.html" class="white">Security</a></h5>
 							<ul class="list-unstyled">
-								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
-								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
-								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
 							</ul>
 						</div>
 					</div>
@@ -332,7 +400,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 			</div>
 			<div class="row bottom-footer text-center-mobile">
 				<div class="col-sm-12 light-white">
-					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>Copyright &copy; 1999-2025 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
 				</div>
 			</div>
 		</div>

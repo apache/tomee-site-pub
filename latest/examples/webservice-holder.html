@@ -25,18 +25,23 @@
 	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
 
 	<script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-2717626-1']);
-      _gaq.push(['_setDomainName', 'apache.org']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
     </script>
 </head>
 
@@ -44,6 +49,7 @@
     <div class="preloader">
 		<img src="../../img/loader.gif" alt="Preloader image">
 	</div>
+
 	    <nav class="navbar">
 		<div class="container">
 		  <div class="row">          <div class="col-md-12">
@@ -56,15 +62,18 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">
+				<a class="navbar-brand" href="/" title="Apache TomEE">
 				    <span>
 
 				    
-                        <img src="../../img/logo-active.png">
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
                     
 
                     </span>
-				    Apache TomEE
                 </a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -73,7 +82,7 @@
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
 					<li><a href="../../security/security.html">Security</a></li>
-					<li><a href="../../download-ng.html">Downloads</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -88,105 +97,161 @@
           <div class="col-md-12">
             <div class='page-header'>
               
-              <h1>@WebService OUT params via javax.xml.ws.Holder</h1>
+              <h1>@WebService OUT params via jakarta.xml.ws.Holder</h1>
             </div>
           </div>
         </div>
         <div class="row">
             
             <div class="col-md-12">
-                <p>With SOAP it is possible to return multiple values in a single request. This is impossible in Java as a method can only return one object.</p>
-<p>JAX-WS solves this problem with the concept of Holders. A <code>javax.xml.ws.Holder</code> is a simple wrapper object that can be passed into the <code>@WebService</code> method as a parameter. The application sets the value of the holder during the request and the server will send the value back as an OUT parameter.</p>
-<h2>Using @WebParam and javax.xml.ws.Holder</h2>
-<p>The <code>@WebParam</code> annotation allows us to declare the <code>sum</code> and <code>multiply</code> Holders as <code>WebParam.Mode.OUT</code> parameters. As mentioned, these holders are simply empty buckets the application can fill in with data to have sent to the client. The server will pass them in uninitialized.</p>
-<pre><code>@Stateless
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>With SOAP it is possible to return multiple values in a single request.
+This is impossible in Java as a method can only return one object.</p>
+</div>
+<div class="paragraph">
+<p>JAX-WS solves this problem with the concept of Holders. A
+<code>jakarta.xml.ws.Holder</code> is a simple wrapper object that can be passed into
+the <code>@WebService</code> method as a parameter. The application sets the value
+of the holder during the request and the server will send the value back
+as an OUT parameter.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_webparam_and_jakarta_xml_ws_holder">Using @WebParam and jakarta.xml.ws.Holder</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>@WebParam</code> annotation allows us to declare the <code>sum</code> and <code>multiply</code>
+Holders as <code>WebParam.Mode.OUT</code> parameters. As mentioned, these holders
+are simply empty buckets the application can fill in with data to have
+sent to the client. The server will pass them in uninitialized.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
 @WebService(
-        portName = &quot;CalculatorPort&quot;,
-        serviceName = &quot;CalculatorService&quot;,
-        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.ws.out.CalculatorWs&quot;)
+        portName = "CalculatorPort",
+        serviceName = "CalculatorService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.ws.out.CalculatorWs")
 public class Calculator implements CalculatorWs {
 
     public void sumAndMultiply(int a, int b,
-                               @WebParam(name = &quot;sum&quot;, mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; sum,
-                               @WebParam(name = &quot;multiply&quot;, mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; multiply) {
+                               @WebParam(name = "sum", mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; sum,
+                               @WebParam(name = "multiply", mode = WebParam.Mode.OUT) Holder&lt;Integer&gt; multiply) {
         sum.value = a + b;
         multiply.value = a * b;
     }
-}
-</code></pre>
-<p>If the Holders were specified as <code>WebParam.Mode.INOUT</code> params, then the client could use them to send data and the application as well. The <code>Holder</code> instances would then be initialized with the data from the client request. The application could check the data before eventually overriting it with the response values.</p>
-<h2>The WSDL</h2>
-<p>The above JAX-WS <code>@WebService</code> component results in the folliwing WSDL that will be created automatically. Note the <code>sumAndMultiplyResponse</code> complext type returns two elements. These match the <code>@WebParam</code> declarations and our two <code>Holder&lt;Integer&gt;</code> params.</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;wsdl:definitions xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;
-                  name=&quot;CalculatorService&quot;
-                  targetNamespace=&quot;http://superbiz.org/wsdl&quot;
-                  xmlns:soap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;
-                  xmlns:tns=&quot;http://superbiz.org/wsdl&quot;
-                  xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the Holders were specified as <code>WebParam.Mode.INOUT</code> params, then the
+client could use them to send data and the application as well. The
+<code>Holder</code> instances would then be initialized with the data from the
+client request. The application could check the data before eventually
+overriting it with the response values.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_wsdl">The WSDL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The above JAX-WS <code>@WebService</code> component results in the folliwing WSDL
+that will be created automatically. Note the <code>sumAndMultiplyResponse</code>
+complext type returns two elements. These match the <code>@WebParam</code>
+declarations and our two <code>Holder&lt;Integer&gt;</code> params.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  name="CalculatorService"
+                  targetNamespace="http://superbiz.org/wsdl"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://superbiz.org/wsdl"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;wsdl:types&gt;
-    &lt;xsd:schema attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;unqualified&quot;
-                targetNamespace=&quot;http://superbiz.org/wsdl&quot;
-                xmlns:tns=&quot;http://superbiz.org/wsdl&quot;
-                xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-      &lt;xsd:element name=&quot;sumAndMultiply&quot; type=&quot;tns:sumAndMultiply&quot;/&gt;
-      &lt;xsd:complexType name=&quot;sumAndMultiply&quot;&gt;
+    &lt;xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+                targetNamespace="http://superbiz.org/wsdl"
+                xmlns:tns="http://superbiz.org/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+      &lt;xsd:element name="sumAndMultiply" type="tns:sumAndMultiply"/&gt;
+      &lt;xsd:complexType name="sumAndMultiply"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element name=&quot;arg0&quot; type=&quot;xsd:int&quot;/&gt;
-          &lt;xsd:element name=&quot;arg1&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element name="arg0" type="xsd:int"/&gt;
+          &lt;xsd:element name="arg1" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
-      &lt;xsd:element name=&quot;sumAndMultiplyResponse&quot; type=&quot;tns:sumAndMultiplyResponse&quot;/&gt;
-      &lt;xsd:complexType name=&quot;sumAndMultiplyResponse&quot;&gt;
+      &lt;xsd:element name="sumAndMultiplyResponse" type="tns:sumAndMultiplyResponse"/&gt;
+      &lt;xsd:complexType name="sumAndMultiplyResponse"&gt;
         &lt;xsd:sequence&gt;
-          &lt;xsd:element minOccurs=&quot;0&quot; name=&quot;sum&quot; type=&quot;xsd:int&quot;/&gt;
-          &lt;xsd:element minOccurs=&quot;0&quot; name=&quot;multiply&quot; type=&quot;xsd:int&quot;/&gt;
+          &lt;xsd:element minOccurs="0" name="sum" type="xsd:int"/&gt;
+          &lt;xsd:element minOccurs="0" name="multiply" type="xsd:int"/&gt;
         &lt;/xsd:sequence&gt;
       &lt;/xsd:complexType&gt;
     &lt;/xsd:schema&gt;
   &lt;/wsdl:types&gt;
-  &lt;wsdl:message name=&quot;sumAndMultiplyResponse&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:sumAndMultiplyResponse&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="sumAndMultiplyResponse"&gt;
+    &lt;wsdl:part element="tns:sumAndMultiplyResponse" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:message name=&quot;sumAndMultiply&quot;&gt;
-    &lt;wsdl:part element=&quot;tns:sumAndMultiply&quot; name=&quot;parameters&quot;/&gt;
+  &lt;wsdl:message name="sumAndMultiply"&gt;
+    &lt;wsdl:part element="tns:sumAndMultiply" name="parameters"/&gt;
   &lt;/wsdl:message&gt;
-  &lt;wsdl:portType name=&quot;CalculatorWs&quot;&gt;
-    &lt;wsdl:operation name=&quot;sumAndMultiply&quot;&gt;
-      &lt;wsdl:input message=&quot;tns:sumAndMultiply&quot; name=&quot;sumAndMultiply&quot;/&gt;
-      &lt;wsdl:output message=&quot;tns:sumAndMultiplyResponse&quot; name=&quot;sumAndMultiplyResponse&quot;/&gt;
+  &lt;wsdl:portType name="CalculatorWs"&gt;
+    &lt;wsdl:operation name="sumAndMultiply"&gt;
+      &lt;wsdl:input message="tns:sumAndMultiply" name="sumAndMultiply"/&gt;
+      &lt;wsdl:output message="tns:sumAndMultiplyResponse" name="sumAndMultiplyResponse"/&gt;
     &lt;/wsdl:operation&gt;
   &lt;/wsdl:portType&gt;
-  &lt;wsdl:binding name=&quot;CalculatorServiceSoapBinding&quot; type=&quot;tns:CalculatorWs&quot;&gt;
-    &lt;soap:binding style=&quot;document&quot; transport=&quot;http://schemas.xmlsoap.org/soap/http&quot;/&gt;
-    &lt;wsdl:operation name=&quot;sumAndMultiply&quot;&gt;
-      &lt;soap:operation soapAction=&quot;&quot; style=&quot;document&quot;/&gt;
-      &lt;wsdl:input name=&quot;sumAndMultiply&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+  &lt;wsdl:binding name="CalculatorServiceSoapBinding" type="tns:CalculatorWs"&gt;
+    &lt;soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/&gt;
+    &lt;wsdl:operation name="sumAndMultiply"&gt;
+      &lt;soap:operation soapAction="" style="document"/&gt;
+      &lt;wsdl:input name="sumAndMultiply"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:input&gt;
-      &lt;wsdl:output name=&quot;sumAndMultiplyResponse&quot;&gt;
-        &lt;soap:body use=&quot;literal&quot;/&gt;
+      &lt;wsdl:output name="sumAndMultiplyResponse"&gt;
+        &lt;soap:body use="literal"/&gt;
       &lt;/wsdl:output&gt;
     &lt;/wsdl:operation&gt;
   &lt;/wsdl:binding&gt;
-  &lt;wsdl:service name=&quot;CalculatorService&quot;&gt;
-    &lt;wsdl:port binding=&quot;tns:CalculatorServiceSoapBinding&quot; name=&quot;CalculatorPort&quot;&gt;
-      &lt;soap:address location=&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;/&gt;
+  &lt;wsdl:service name="CalculatorService"&gt;
+    &lt;wsdl:port binding="tns:CalculatorServiceSoapBinding" name="CalculatorPort"&gt;
+      &lt;soap:address location="http://127.0.0.1:4204/Calculator?wsdl"/&gt;
     &lt;/wsdl:port&gt;
   &lt;/wsdl:service&gt;
-&lt;/wsdl:definitions&gt;
-</code></pre>
-<h2>Testing the OUT params</h2>
-<p>Here we see a JAX-WS client executing the <code>sumAndMultiply</code> operation. Two empty <code>Holder</code> instances are created and passed in as parameters. The data from the <code>sumAndMultiplyResponse</code> is placed in the <code>Holder</code> instances and is then available to the client after the operation completes.</p>
-<p>The holders themselves are not actually sent in the request unless they are configured as INOUT params via WebParam.Mode.INOUT on <code>@WebParam</code></p>
-<pre><code>import org.junit.BeforeClass;
+&lt;/wsdl:definitions&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_the_out_params">Testing the OUT params</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we see a JAX-WS client executing the <code>sumAndMultiply</code> operation.
+Two empty <code>Holder</code> instances are created and passed in as parameters.
+The data from the <code>sumAndMultiplyResponse</code> is placed in the <code>Holder</code>
+instances and is then available to the client after the operation
+completes.</p>
+</div>
+<div class="paragraph">
+<p>The holders themselves are not actually sent in the request unless they
+are configured as INOUT params via WebParam.Mode.INOUT on <code>@WebParam</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.embeddable.EJBContainer;
 import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
-import javax.xml.ws.Service;
+import jakarta.xml.ws.Holder;
+import jakarta.xml.ws.Service;
 import java.net.URL;
 import java.util.Properties;
 
@@ -198,17 +263,17 @@ public class CalculatorTest {
     @BeforeClass
     public static void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
-        //properties.setProperty(&quot;httpejbd.print&quot;, &quot;true&quot;);
-        //properties.setProperty(&quot;httpejbd.indent.xml&quot;, &quot;true&quot;);
+        properties.setProperty("openejb.embedded.remotable", "true");
+        //properties.setProperty("httpejbd.print", "true");
+        //properties.setProperty("httpejbd.indent.xml", "true");
         EJBContainer.createEJBContainer(properties);
     }
 
     @Test
     public void outParams() throws Exception {
         final Service calculatorService = Service.create(
-                new URL(&quot;http://127.0.0.1:4204/Calculator?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorService&quot;));
+                new URL("http://127.0.0.1:4204/Calculator?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorService"));
 
         assertNotNull(calculatorService);
 
@@ -222,36 +287,56 @@ public class CalculatorTest {
         assertEquals(10, (int) sum.value);
         assertEquals(24, (int) multiply.value);
     }
-}
-</code></pre>
-<h2>Inspecting the messages</h2>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inspecting_the_messages">Inspecting the messages</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>The above execution results in the following SOAP message.</p>
-<h3>SOAP sumAndMultiply <small>client request</small></h3>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+</div>
+<div class="sect2">
+<h3 id="_soap_sumandmultiply_client_request">SOAP sumAndMultiply client request</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:sumAndMultiply xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:sumAndMultiply xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;arg0&gt;4&lt;/arg0&gt;
       &lt;arg1&gt;6&lt;/arg1&gt;
     &lt;/ns1:sumAndMultiply&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
-<h3>SOAP sumAndMultiplyResponse <small>server response</small></h3>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soap_sumandmultiplyresponse_server_response">SOAP sumAndMultiplyResponse server response</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
   &lt;soap:Body&gt;
-    &lt;ns1:sumAndMultiplyResponse xmlns:ns1=&quot;http://superbiz.org/wsdl&quot;&gt;
+    &lt;ns1:sumAndMultiplyResponse xmlns:ns1="http://superbiz.org/wsdl"&gt;
       &lt;sum&gt;10&lt;/sum&gt;
       &lt;multiply&gt;24&lt;/multiply&gt;
     &lt;/ns1:sumAndMultiplyResponse&gt;
   &lt;/soap:Body&gt;
-&lt;/soap:Envelope&gt;
-</code></pre>
+&lt;/soap:Envelope&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
     </div>
+<div style="margin-bottom: 30px;"></div>
 <footer>
 		<div class="container">
 			<div class="row">
@@ -261,13 +346,15 @@ public class CalculatorTest {
 					<ul class="social-footer">
 						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
 						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
 					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
 				</div>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
@@ -295,9 +382,9 @@ public class CalculatorTest {
 						<div class="col-sm-3 text-center-mobile">
 							<h5><a href="../../security/index.html" class="white">Security</a></h5>
 							<ul class="list-unstyled">
-								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
-								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
-								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
 							</ul>
 						</div>
 					</div>
@@ -305,7 +392,7 @@ public class CalculatorTest {
 			</div>
 			<div class="row bottom-footer text-center-mobile">
 				<div class="col-sm-12 light-white">
-					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>Copyright &copy; 1999-2025 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
 				</div>
 			</div>
 		</div>

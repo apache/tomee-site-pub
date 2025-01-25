@@ -25,18 +25,23 @@
 	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
 
 	<script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-2717626-1']);
-      _gaq.push(['_setDomainName', 'apache.org']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
     </script>
 </head>
 
@@ -44,6 +49,7 @@
     <div class="preloader">
 		<img src="../../img/loader.gif" alt="Preloader image">
 	</div>
+
 	    <nav class="navbar">
 		<div class="container">
 		  <div class="row">          <div class="col-md-12">
@@ -56,15 +62,18 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">
+				<a class="navbar-brand" href="/" title="Apache TomEE">
 				    <span>
 
 				    
-                        <img src="../../img/logo-active.png">
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
                     
 
                     </span>
-				    Apache TomEE
                 </a>
 			</div>
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -73,7 +82,7 @@
 					<li><a href="../../docs.html">Documentation</a></li>
 					<li><a href="../../community/index.html">Community</a></li>
 					<li><a href="../../security/security.html">Security</a></li>
-					<li><a href="../../download-ng.html">Downloads</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -95,14 +104,25 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p><em>Help us document this example! Click the blue pencil icon in the upper right to edit this page.</em></p>
-<h2>CalculatorImpl</h2>
-<pre><code>package org.superbiz.calculator;
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><em>Help us document this example! Click the blue pencil icon in the upper
+right to edit this page.</em></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorimpl">CalculatorImpl</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Stateless;
-import javax.jws.WebService;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Stateless;
+import jakarta.jws.WebService;
 
 /**
  * This is an EJB 3 style pojo stateless session bean
@@ -111,16 +131,16 @@ import javax.jws.WebService;
  * This EJB has a single interface: CalculatorWs a webservice interface.
  */
 //START SNIPPET: code
-@DeclareRoles(value = {&quot;Administrator&quot;})
+@DeclareRoles(value = {"Administrator"})
 @Stateless
 @WebService(
-        portName = &quot;CalculatorPort&quot;,
-        serviceName = &quot;CalculatorWsService&quot;,
-        targetNamespace = &quot;http://superbiz.org/wsdl&quot;,
-        endpointInterface = &quot;org.superbiz.calculator.CalculatorWs&quot;)
+        portName = "CalculatorPort",
+        serviceName = "CalculatorWsService",
+        targetNamespace = "http://superbiz.org/wsdl",
+        endpointInterface = "org.superbiz.calculator.CalculatorWs")
 public class CalculatorImpl implements CalculatorWs, CalculatorRemote {
 
-    @RolesAllowed(value = {&quot;Administrator&quot;})
+    @RolesAllowed(value = {"Administrator"})
     public int sum(int add1, int add2) {
         return add1 + add2;
     }
@@ -128,12 +148,19 @@ public class CalculatorImpl implements CalculatorWs, CalculatorRemote {
     public int multiply(int mul1, int mul2) {
         return mul1 * mul2;
     }
-}
-</code></pre>
-<h2>CalculatorRemote</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorremote">CalculatorRemote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 @Remote
 public interface CalculatorRemote {
@@ -141,12 +168,19 @@ public interface CalculatorRemote {
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>CalculatorWs</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatorws">CalculatorWs</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 //END SNIPPET: code
 
@@ -156,18 +190,25 @@ import javax.jws.WebService;
  * annotation.
  */
 //START SNIPPET: code
-@WebService(targetNamespace = &quot;http://superbiz.org/wsdl&quot;)
+@WebService(targetNamespace = "http://superbiz.org/wsdl")
 public interface CalculatorWs {
 
     public int sum(int add1, int add2);
 
     public int multiply(int mul1, int mul2);
-}
-</code></pre>
-<h2>ejb-jar.xml</h2>
-<pre><code>&lt;ejb-jar xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd&quot;
-         version=&quot;3.0&quot; id=&quot;simple&quot; metadata-complete=&quot;false&quot;&gt;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejb_jar_xml">ejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+         version="3.0" id="simple" metadata-complete="false"&gt;
 
   &lt;enterprise-beans&gt;
 
@@ -245,12 +286,19 @@ public interface CalculatorWs {
 
   &lt;/enterprise-beans&gt;
 
-&lt;/ejb-jar&gt;
-</code></pre>
-<h2>openejb-jar.xml</h2>
-<pre><code>&lt;openejb-jar xmlns=&quot;http://www.openejb.org/openejb-jar/1.1&quot;&gt;
+&lt;/ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openejb_jar_xml">openejb-jar.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;openejb-jar xmlns="http://www.openejb.org/openejb-jar/1.1"&gt;
 
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImpl&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImpl"&gt;
     &lt;properties&gt;
       # webservice.security.realm
       # webservice.security.securityRealm
@@ -264,20 +312,20 @@ public interface CalculatorWs {
       wss4j.in.validator.{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}UsernameToken = org.apache.openejb.server.cxf.OpenEJBLoginValidator
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplTimestamp1way&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplTimestamp1way"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = Timestamp
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplTimestamp2ways&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplTimestamp2ways"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = Timestamp
       wss4j.out.action = Timestamp
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplUsernameTokenPlainPassword&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplUsernameTokenPlainPassword"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = UsernameToken
@@ -285,7 +333,7 @@ public interface CalculatorWs {
       wss4j.in.passwordCallbackClass=org.superbiz.calculator.CustomPasswordHandler
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplUsernameTokenHashedPassword&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplUsernameTokenHashedPassword"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = UsernameToken
@@ -293,7 +341,7 @@ public interface CalculatorWs {
       wss4j.in.passwordCallbackClass=org.superbiz.calculator.CustomPasswordHandler
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplUsernameTokenPlainPasswordEncrypt&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplUsernameTokenPlainPasswordEncrypt"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = UsernameToken Encrypt
@@ -302,7 +350,7 @@ public interface CalculatorWs {
       wss4j.in.decryptionPropFile = META-INF/CalculatorImplUsernameTokenPlainPasswordEncrypt-server.properties
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
-  &lt;ejb-deployment ejb-name=&quot;CalculatorImplSign&quot;&gt;
+  &lt;ejb-deployment ejb-name="CalculatorImplSign"&gt;
     &lt;properties&gt;
       webservice.security.authMethod = WS-SECURITY
       wss4j.in.action = Signature
@@ -311,13 +359,20 @@ public interface CalculatorWs {
     &lt;/properties&gt;
   &lt;/ejb-deployment&gt;
 
-&lt;/openejb-jar&gt;
-</code></pre>
-<h2>webservices.xml</h2>
-<pre><code>&lt;webservices xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-             xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee
-http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd&quot;
-             xmlns:ger=&quot;http://ciaows.org/wsdl&quot; version=&quot;1.1&quot;&gt;
+&lt;/openejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webservices_xml">webservices.xml</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;webservices xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd"
+             xmlns:ger="http://ciaows.org/wsdl" version="1.1"&gt;
 
   &lt;webservice-description&gt;
     &lt;webservice-description-name&gt;CalculatorWsService&lt;/webservice-description-name&gt;
@@ -363,10 +418,17 @@ http://www.ibm.com/webservices/xsd/j2ee_web_services_1_1.xsd&quot;
     &lt;/port-component&gt;
   &lt;/webservice-description&gt;
 
-&lt;/webservices&gt;
-</code></pre>
-<h2>CalculatorTest</h2>
-<pre><code>package org.superbiz.calculator;
+&lt;/webservices&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calculatortest">CalculatorTest</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 import junit.framework.TestCase;
 import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
@@ -386,8 +448,8 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import javax.xml.ws.soap.SOAPBinding;
+import jakarta.xml.ws.Service;
+import jakarta.xml.ws.soap.SOAPBinding;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -399,8 +461,8 @@ public class CalculatorTest extends TestCase {
     //START SNIPPET: setup
     protected void setUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;org.apache.openejb.core.LocalInitialContextFactory&quot;);
-        properties.setProperty(&quot;openejb.embedded.remotable&quot;, &quot;true&quot;);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+        properties.setProperty("openejb.embedded.remotable", "true");
 
         new InitialContext(properties);
     }
@@ -408,8 +470,8 @@ public class CalculatorTest extends TestCase {
 
     //START SNIPPET: webservice
     public void testCalculatorViaWsInterface() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImpl?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImpl?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
@@ -420,13 +482,13 @@ public class CalculatorTest extends TestCase {
 
         Map&lt;String, Object&gt; outProps = new HashMap&lt;String, Object&gt;();
         outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
-        outProps.put(WSHandlerConstants.USER, &quot;jane&quot;);
+        outProps.put(WSHandlerConstants.USER, "jane");
         outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
         outProps.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
 
             public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
                 WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
-                pc.setPassword(&quot;waterfall&quot;);
+                pc.setPassword("waterfall");
             }
         });
 
@@ -437,18 +499,18 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithTimestamp1way() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplTimestamp1way?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplTimestamp1way?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplTimestamp1way&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplTimestamp1way");
 
 //        CalculatorWs calc = calcService.getPort(
-//          new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
-//   CalculatorWs.class);
+//          new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
+//      CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
 
@@ -465,18 +527,18 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithTimestamp2ways() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplTimestamp2ways?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplTimestamp2ways?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplTimestamp2ways&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplTimestamp2ways");
 
 //        CalculatorWs calc = calcService.getPort(
-//          new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
-//   CalculatorWs.class);
+//          new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
+//      CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
 
@@ -499,17 +561,17 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithUsernameTokenPlainPassword() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplUsernameTokenPlainPassword?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplUsernameTokenPlainPassword?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplUsernameTokenPlainPassword&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplUsernameTokenPlainPassword");
 
 //        CalculatorWs calc = calcService.getPort(
-//          new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
+//          new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
 //          CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
@@ -520,14 +582,14 @@ public class CalculatorTest extends TestCase {
 
         Map&lt;String, Object&gt; outProps = new HashMap&lt;String, Object&gt;();
         outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
-        outProps.put(WSHandlerConstants.USER, &quot;jane&quot;);
+        outProps.put(WSHandlerConstants.USER, "jane");
         outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
         outProps.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
 
             @Override
             public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
                 WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
-                pc.setPassword(&quot;waterfall&quot;);
+                pc.setPassword("waterfall");
             }
         });
 
@@ -538,17 +600,17 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithUsernameTokenHashedPassword() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplUsernameTokenHashedPassword?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplUsernameTokenHashedPassword?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplUsernameTokenHashedPassword&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplUsernameTokenHashedPassword");
 
 //        CalculatorWs calc = calcService.getPort(
-//          new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
+//          new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
 //          CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
@@ -559,14 +621,14 @@ public class CalculatorTest extends TestCase {
 
         Map&lt;String, Object&gt; outProps = new HashMap&lt;String, Object&gt;();
         outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN);
-        outProps.put(WSHandlerConstants.USER, &quot;jane&quot;);
+        outProps.put(WSHandlerConstants.USER, "jane");
         outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_DIGEST);
         outProps.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
 
             @Override
             public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
                 WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
-                pc.setPassword(&quot;waterfall&quot;);
+                pc.setPassword("waterfall");
             }
         });
 
@@ -577,17 +639,17 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithUsernameTokenPlainPasswordEncrypt() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplUsernameTokenPlainPasswordEncrypt?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplUsernameTokenPlainPasswordEncrypt?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplUsernameTokenPlainPasswordEncrypt&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplUsernameTokenPlainPasswordEncrypt");
 
 //        CalculatorWs calc = calcService.getPort(
-//          new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
+//          new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
 //          CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
@@ -598,19 +660,19 @@ public class CalculatorTest extends TestCase {
 
         Map&lt;String, Object&gt; outProps = new HashMap&lt;String, Object&gt;();
         outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.USERNAME_TOKEN
-                + &quot; &quot; + WSHandlerConstants.ENCRYPT);
-        outProps.put(WSHandlerConstants.USER, &quot;jane&quot;);
+                + " " + WSHandlerConstants.ENCRYPT);
+        outProps.put(WSHandlerConstants.USER, "jane");
         outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
         outProps.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
 
             @Override
             public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
                 WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
-                pc.setPassword(&quot;waterfall&quot;);
+                pc.setPassword("waterfall");
             }
         });
-        outProps.put(WSHandlerConstants.ENC_PROP_FILE, &quot;META-INF/CalculatorImplUsernameTokenPlainPasswordEncrypt-client.properties&quot;);
-        outProps.put(WSHandlerConstants.ENCRYPTION_USER, &quot;serveralias&quot;);
+        outProps.put(WSHandlerConstants.ENC_PROP_FILE, "META-INF/CalculatorImplUsernameTokenPlainPasswordEncrypt-client.properties");
+        outProps.put(WSHandlerConstants.ENCRYPTION_USER, "serveralias");
 
         WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
         endpoint.getOutInterceptors().add(wssOut);
@@ -619,17 +681,17 @@ public class CalculatorTest extends TestCase {
     }
 
     public void testCalculatorViaWsInterfaceWithSign() throws Exception {
-        Service calcService = Service.create(new URL(&quot;http://127.0.0.1:4204/CalculatorImplSign?wsdl&quot;),
-                new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService&quot;));
+        Service calcService = Service.create(new URL("http://127.0.0.1:4204/CalculatorImplSign?wsdl"),
+                new QName("http://superbiz.org/wsdl", "CalculatorWsService"));
         assertNotNull(calcService);
 
         // for debugging (ie. TCPMon)
-        calcService.addPort(new QName(&quot;http://superbiz.org/wsdl&quot;,
-                &quot;CalculatorWsService2&quot;), SOAPBinding.SOAP12HTTP_BINDING,
-                &quot;http://127.0.0.1:8204/CalculatorImplSign&quot;);
+        calcService.addPort(new QName("http://superbiz.org/wsdl",
+                "CalculatorWsService2"), SOAPBinding.SOAP12HTTP_BINDING,
+                "http://127.0.0.1:8204/CalculatorImplSign");
 
 //      CalculatorWs calc = calcService.getPort(
-//  new QName(&quot;http://superbiz.org/wsdl&quot;, &quot;CalculatorWsService2&quot;),
+//  new QName("http://superbiz.org/wsdl", "CalculatorWsService2"),
 //  CalculatorWs.class);
 
         CalculatorWs calc = calcService.getPort(CalculatorWs.class);
@@ -640,17 +702,17 @@ public class CalculatorTest extends TestCase {
 
         Map&lt;String, Object&gt; outProps = new HashMap&lt;String, Object&gt;();
         outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
-        outProps.put(WSHandlerConstants.USER, &quot;clientalias&quot;);
+        outProps.put(WSHandlerConstants.USER, "clientalias");
         outProps.put(WSHandlerConstants.PW_CALLBACK_REF, new CallbackHandler() {
 
             @Override
             public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
                 WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];
-                pc.setPassword(&quot;clientPassword&quot;);
+                pc.setPassword("clientPassword");
             }
         });
-        outProps.put(WSHandlerConstants.SIG_PROP_FILE, &quot;META-INF/CalculatorImplSign-client.properties&quot;);
-        outProps.put(WSHandlerConstants.SIG_KEY_ID, &quot;IssuerSerial&quot;);
+        outProps.put(WSHandlerConstants.SIG_PROP_FILE, "META-INF/CalculatorImplSign-client.properties");
+        outProps.put(WSHandlerConstants.SIG_KEY_ID, "IssuerSerial");
 
         WSS4JOutInterceptor wssOut = new WSS4JOutInterceptor(outProps);
         endpoint.getOutInterceptors().add(wssOut);
@@ -658,10 +720,17 @@ public class CalculatorTest extends TestCase {
         assertEquals(24, calc.multiply(4, 6));
     }
     //END SNIPPET: webservice
-}
-</code></pre>
-<h2>CustomPasswordHandler</h2>
-<pre><code>package org.superbiz.calculator;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_custompasswordhandler">CustomPasswordHandler</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 import org.apache.ws.security.WSPasswordCallback;
 
@@ -677,17 +746,24 @@ public class CustomPasswordHandler implements CallbackHandler {
 
         if (pc.getUsage() == WSPasswordCallback.USERNAME_TOKEN) {
             // TODO get the password from the users.properties if possible
-            pc.setPassword(&quot;waterfall&quot;);
+            pc.setPassword("waterfall");
         } else if (pc.getUsage() == WSPasswordCallback.DECRYPT) {
-            pc.setPassword(&quot;serverPassword&quot;);
+            pc.setPassword("serverPassword");
         } else if (pc.getUsage() == WSPasswordCallback.SIGNATURE) {
-            pc.setPassword(&quot;serverPassword&quot;);
+            pc.setPassword("serverPassword");
         }
     }
-}
-</code></pre>
-<h1>Running</h1>
-<pre><code>generate keys:
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">generate keys:
 
 do.sun.jdk:
      [echo] *** Running on a Sun JDK ***
@@ -719,7 +795,7 @@ INFO - Beginning load: /Users/dblevins/examples/webservice-ws-security/target/cl
 INFO - Configuring enterprise application: /Users/dblevins/examples/webservice-ws-security/classpath.ear
 INFO - Configuring Service(id=Default Stateless Container, type=Container, provider-id=Default Stateless Container)
 INFO - Auto-creating a container for bean CalculatorImplTimestamp1way: Container(type=STATELESS, id=Default Stateless Container)
-INFO - Enterprise application &quot;/Users/dblevins/examples/webservice-ws-security/classpath.ear&quot; loaded.
+INFO - Enterprise application "/Users/dblevins/examples/webservice-ws-security/classpath.ear" loaded.
 INFO - Assembling app: /Users/dblevins/examples/webservice-ws-security/classpath.ear
 INFO - Jndi(name=CalculatorImplTimestamp1wayRemote) --&gt; Ejb(deployment-id=CalculatorImplTimestamp1way)
 INFO - Jndi(name=global/classpath.ear/simple/CalculatorImplTimestamp1way!org.superbiz.calculator.CalculatorRemote) --&gt; Ejb(deployment-id=CalculatorImplTimestamp1way)
@@ -780,23 +856,27 @@ INFO - Creating ServerService(id=ejbd)
 INFO - Creating ServerService(id=ejbds)
 INFO - Initializing network services
   ** Starting Services **
-  NAME                 IP              PORT  
-  httpejbd             127.0.0.1       4204  
-  admin thread         127.0.0.1       4200  
-  ejbd                 127.0.0.1       4201  
-  ejbd                 127.0.0.1       4203  
+  NAME                 IP              PORT
+  httpejbd             127.0.0.1       4204
+  admin thread         127.0.0.1       4200
+  ejbd                 127.0.0.1       4201
+  ejbd                 127.0.0.1       4203
 -------
 Ready!
 Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.582 sec
 
 Results :
 
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
-</code></pre>
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
             </div>
             
         </div>
     </div>
+<div style="margin-bottom: 30px;"></div>
 <footer>
 		<div class="container">
 			<div class="row">
@@ -806,13 +886,15 @@ Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
 					<ul class="social-footer">
 						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
 						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="https://plus.google.com/communities/105208241852045684449"><i class="fa fa-google-plus"></i></a></li>
 					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
 				</div>
 				<div class="col-sm-6 text-center-mobile">
 					<div class="row opening-hours">
 						<div class="col-sm-3 text-center-mobile">
-							<h5><a href="../../latest/docs/documentation.html" class="white">Documentation</a></h5>
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
 							<ul class="list-unstyled">
 								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
 								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
@@ -840,9 +922,9 @@ Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
 						<div class="col-sm-3 text-center-mobile">
 							<h5><a href="../../security/index.html" class="white">Security</a></h5>
 							<ul class="list-unstyled">
-								<li><a href="http://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
-								<li><a href="http://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
-								<li><a href="http://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
 							</ul>
 						</div>
 					</div>
@@ -850,7 +932,7 @@ Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
 			</div>
 			<div class="row bottom-footer text-center-mobile">
 				<div class="col-sm-12 light-white">
-					<p>Copyright &copy; 1999-2016 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>Copyright &copy; 1999-2025 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache feather logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
 				</div>
 			</div>
 		</div>
