@@ -839,34 +839,10 @@ contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ContextService" /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Declarable in properties via</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ContextService</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jndiprovider_inject_remote_clients">JndiProvider: inject remote clients</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A thread factory for a <code>ManagedExecutorService</code>.
-Default implementation is <code>org.apache.openejb.threads.impl.ManagedThreadFactoryImpl</code>.</p>
-</div>
-<div class="paragraph">
-<p>Declarable in tomee.xml via</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ManagedThreadFactory"&gt;
-    Prefix = openejb-managed-thread-
-    Lazy = true
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ContextService"&gt;
+  Propagated = Remaining
+  Cleared = Transaction
+  Unchanged = MyFoo
 &lt;/Resource&gt;</code></pre>
 </div>
 </div>
@@ -875,43 +851,20 @@ Default implementation is <code>org.apache.openejb.threads.impl.ManagedThreadFac
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ManagedThreadFactory
-Foo.Prefix = openejb-managed-thread-
-Foo.Lazy = true</code></pre>
+<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ContextService
+Foo.Propagated = Remaining
+Foo.Cleared = Transaction
+Foo.Unchanged = MyFoo</code></pre>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_configuration_8">Configuration</h3>
 <div class="sect3">
-<h4 id="_prefix_2">Prefix</h4>
+<h4 id="_propagated_cleared_unchanged">Propagated, Cleared, Unchanged</h4>
 <div class="paragraph">
-<p>The thread prefix (suffixed with thread id).</p>
+<p>Contexts to be propagated, cleared or ignored.
+Propagating the built-in type 'Transaction' is not supported!</p>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_contextservice_2">ContextService</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>A concurrency utilities for JavaEE context service. It allows to create
-contextual proxies (inheriting from security, classloader&#8230;&#8203;contexts).</p>
-</div>
-<div class="paragraph">
-<p>Declarable in tomee.xml via</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Resource id="Foo" type="ContextService" /&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Declarable in properties via</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">Foo = new://Resource?type=ContextService</code></pre>
 </div>
 </div>
 </div>
