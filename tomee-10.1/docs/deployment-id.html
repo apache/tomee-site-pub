@@ -115,17 +115,17 @@ deployment id.</p>
 <h2 id="_like_ejb_name">Like ejb-name</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This deployment id is much like the element of the ejb-jar.xml , with
+<p>This deployment id is much like the element of the <code>ejb-jar.xml</code>, with
 one very important difference. The is only required to be unique within
-the scope of the ejb-jar.xml in the bean&#8217;s jar. The deployment id is
+the scope of the <code>ejb-jar.xml</code> in the bean&#8217;s jar. The deployment id is
 required to be unique across all beans and jars in OpenEJB. This is a
 subtle, but important, distinction.</p>
 </div>
 <div class="paragraph">
 <p>Remember that the EJB specification was designed so that enterprise
-beans could be create, packaged, and sold by vendors (EJB Providers).
+beans could be created, packaged, and sold by vendors (EJB Providers).
 Furthermore, users should be able to buy a packaged set of beans (a jar
-with an ejb-jar.xml in it) and deploy it into an EJB Container without
+with an <code>ejb-jar.xml</code> in it) and deploy it into an EJB Container without
 modification.</p>
 </div>
 </div>
@@ -138,12 +138,12 @@ modification.</p>
 (jar) that contains a bean with the PurchaseOrder? Both are completely
 different in terms functionality and are different beans in every other
 respect. The EJB spec says, this is fine, ejb-names only have to unique
-within the jar and that jar&#8217;s ejb-jar.xml file. It&#8217;s ridiculous to
+within the jar and that jar&#8217;s <code>ejb-jar.xml</code> file. It&#8217;s ridiculous to
 expect EJB Providers to call each other up and ask, "Are you already
 using the name 'PurchaseOrder' in your jar?" Remember that the EJB
-specification was designed so that enterprise beans could be create,
+specification was designed so that enterprise beans could be created,
 packaged, and sold by vendors (EJB Providers). Furthermore, users should
-be able to buy a packaged set of beans (a jar with an ejb-jar.xml in it)
+be able to buy a packaged set of beans (a jar with an <code>ejb-jar.xml</code> in it)
 and deploy it into an EJB Container without modification. This is all
 fine and dandy, but it still leaves it up to the EJB Container/Server
 providers to settle the difference.</p>
@@ -203,7 +203,7 @@ Server.</p>
 <div class="paragraph">
 <p>For bean to bean communications, the Local Server must create a JNDI
 namespace (JNDI ENC) for each bean as defined by the bean&#8217;s , , and
-elements of the bean&#8217;s ejb-jar.xml file. Every bean literally gets its
+elements of the bean&#8217;s <code>ejb-jar.xml</code> file. Every bean literally gets its
 very own JNDI namespace. When a bean makes a JNDI call, the Local Server
 intercepts this call and uses the deployment id of the calling bean to
 retrieve that bean&#8217;s private JNDI namespace from the container system&#8217;s
@@ -213,7 +213,7 @@ namespace.</p>
 <div class="paragraph">
 <p>All non-bean clients share one big global namespace. Since non-bean
 clients are not deployed and do not have a deployment descriptor like an
-ejb-jar.xml, the Local Server is unable to taylor a namespace for each
+<code>ejb-jar.xml</code>, the Local Server is unable to taylor a namespace for each
 non-bean client as it can for bean clients. The Local server cannot
 identify non-bean clients as they have no deployment id. All JNDI calls
 made by clients that the Local Server cannot identify go to the public,
@@ -221,7 +221,7 @@ global namespace. The public, global JNDI namespace contains all beans
 and resources in the container system. name.</p>
 </div>
 <div class="paragraph">
-<p>Each bean is added to the public, global namespace using it&#8217;s deployment
+<p>Each bean is added to the public, global namespace using its deployment
 id as its JNDI lookup. For example, if a bean had a deployment-id of
 "/my/bean/foo", a non-bean client could lookup that bean as follows.</p>
 </div>
@@ -244,9 +244,10 @@ javax.naming.NameNotFoundException.</p>
 <p>In short&#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>For beans: - Each bean has it&#8217;s own private, personalized JNDI namespace
-- The names in it are the same names it uses in its ejb-jar.xml - Beans
-can only access their private namespace, period</p>
+<p>For beans:
+- Each bean has its own private, personalized JNDI namespace
+- The names in it are the same names it uses in its <code>ejb-jar.xml</code>
+- Beans can only access their private namespace, period</p>
 </div>
 <div class="paragraph">
 <p>For non-beans (everyone else): - Non-bean clients share the public,
@@ -268,7 +269,7 @@ JNDI namespace. Just as in the Local Server, the names in this namespace
 consist of the deployment ids of the beans in the container system.</p>
 </div>
 <div class="paragraph">
-<p>Just as before, clients can lookup beans from the Remote Server using
+<p>Just as before, clients can look up beans from the Remote Server using
 the bean&#8217;s deployment id. For example, if a bean had a deployment-id of
 "/my/bean/foo", a client could lookup that bean as follows.</p>
 </div>
@@ -288,9 +289,9 @@ system. Therefore, no two beans can share the same deployment ID.</p>
 </div>
 <div class="paragraph">
 <p>If a bean attempts to use a deployment ID that is already in use by
-another bean, the second bean and all beans in it&#8217;s jar will not be
+another bean, the second bean and all beans in its jar will not be
 loaded. In addition, the system will log a warning like the following
-one asking you to redeploy the jar and choose an different deployment ID
+one asking you to redeploy the jar and choose a different deployment ID
 for the bean.</p>
 </div>
 <div class="listingblock">
@@ -300,12 +301,12 @@ for the bean.</p>
 </div>
 <div class="paragraph">
 <p>For example, the acmeEjbs.jar contains a bean with the ejb-name
-"DaffyDuckBean". The disneyEjbs.jar contains contains a bean with the
+"DaffyDuckBean". The disneyEjbs.jar contains a bean with the
 ejb-name "DonaldDuckBean".</p>
 </div>
 <div class="paragraph">
 <p>We deploy the acmeEjbs.jar and give the "DaffyDuckBean" the deployment
-ID of "/my/favorite/duck". Sometime afterwards, we deploy the
+ID of "/my/favorite/duck". Sometime afterward, we deploy the
 disneyEjbs.jar and assign the "DonaldDuckBean" the deployment ID
 "/my/favorite/duck", having forgotten that we already gave that unique
 ID to the "DaffyDuckBean" in the acmeEjbs.jar.</p>
