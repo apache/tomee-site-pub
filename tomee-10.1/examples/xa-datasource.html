@@ -104,9 +104,12 @@
         <div class="row">
             
             <div class="col-md-12">
-                <p>This example shows use of <code>@PersistenceContext</code> to have an <code>EntityManager</code> with an<br/><code>EXTENDED</code> persistence context injected into a <code>@Stateful bean</code>. A JPA<br/><code>@Entity</code> bean is used with the <code>EntityManager</code> to create, persist and merge<br/>data to a database.</p>
+                <p>This example shows use of <code>@PersistenceContext</code> to have an <code>EntityManager</code> with an<br />
+<code>EXTENDED</code> persistence context injected into a <code>@Stateful bean</code>. A JPA<br />
+<code>@Entity</code> bean is used with the <code>EntityManager</code> to create, persist and merge<br />
+data to a database.</p>
 <h2>Creating the JPA Entity</h2>
-<p>The entity itself is simply a pojo annotated with <code>@Entity</code>. We create one called <code>Movie</code> which we can use to hold movie records.</p>
+<p>The entity itself is simply a pojo annotated with <code>@Entity</code>.  We create one called <code>Movie</code> which we can use to hold movie records.</p>
 <pre><code>package org.superbiz.injection.jpa;
 
 import jakarta.persistence.Entity;
@@ -164,7 +167,7 @@ public class Movie {
 }
 </code></pre>
 <h2>Configure the EntityManager via a persistence.xml file</h2>
-<p>The above <code>Movie</code> entity can be created, removed, updated or deleted via an <code>EntityManager</code> object. The <code>EntityManager</code> itself is configured via a <code>META-INF/persistence.xml</code> file that is placed in the same jar as the <code>Movie</code> entity.</p>
+<p>The above <code>Movie</code> entity can be created, removed, updated or deleted via an <code>EntityManager</code> object.  The <code>EntityManager</code> itself is configured via a <code>META-INF/persistence.xml</code> file that is placed in the same jar as the <code>Movie</code> entity.</p>
 <pre><code>&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; version=&quot;1.0&quot;&gt;
 
   &lt;persistence-unit name=&quot;movie-unit&quot;&gt;
@@ -178,10 +181,11 @@ public class Movie {
   &lt;/persistence-unit&gt;
 &lt;/persistence&gt;
 </code></pre>
-<p>Notice that the <code>Movie</code> entity is listed via a <code>&lt;class&gt;</code> element. This is not required, but can help when testing or when the<br/><code>Movie</code> class is located in a different jar than the jar containing the <code>persistence.xml</code> file.</p>
+<p>Notice that the <code>Movie</code> entity is listed via a <code>&lt;class&gt;</code> element.  This is not required, but can help when testing or when the<br />
+<code>Movie</code> class is located in a different jar than the jar containing the <code>persistence.xml</code> file.</p>
 <h2>Injection via @PersistenceContext</h2>
-<p>The <code>EntityManager</code> itself is created by the container using the information in the <code>persistence.xml</code>, so to use it at runtime, we simply need to request it be injected into one of our components. We do this via <code>@PersistenceContext</code></p>
-<p>The <code>@PersistenceContext</code> annotation can be used on any CDI bean, EJB, Servlet, Servlet Listener, Servlet Filter, or JSF ManagedBean. If you don't use an EJB you will need to use a <code>UserTransaction</code> begin and commit transactions manually. A transaction is required for any of the create, update or delete methods of the EntityManager to work.</p>
+<p>The <code>EntityManager</code> itself is created by the container using the information in the <code>persistence.xml</code>, so to use it at runtime, we simply need to request it be injected into one of our components.  We do this via <code>@PersistenceContext</code></p>
+<p>The <code>@PersistenceContext</code> annotation can be used on any CDI bean, EJB, Servlet, Servlet Listener, Servlet Filter, or JSF ManagedBean.  If you don't use an EJB you will need to use a <code>UserTransaction</code> begin and commit transactions manually.  A transaction is required for any of the create, update or delete methods of the EntityManager to work.</p>
 <pre><code>package org.superbiz.injection.jpa;
 
 import jakarta.ejb.Stateful;
@@ -211,8 +215,8 @@ public class Movies {
     }
 }
 </code></pre>
-<p>This particular <code>EntityManager</code> is injected as an <code>EXTENDED</code> persistence context, which simply means that the <code>EntityManager</code> is created when the <code>@Stateful</code> bean is created and destroyed when the <code>@Stateful</code> bean is destroyed. Simply put, the data in the <code>EntityManager</code> is cached for the lifetime of the <code>@Stateful</code> bean.</p>
-<p>The use of <code>EXTENDED</code> persistence contexts is <strong>only</strong> available to <code>@Stateful</code> beans. See the <a href="../../jpa-concepts.html">JPA Concepts</a> page for an high level explanation of what a "persistence context" really is and how it is significant to JPA.</p>
+<p>This particular <code>EntityManager</code> is injected as an <code>EXTENDED</code> persistence context, which simply means that the <code>EntityManager</code> is created when the <code>@Stateful</code> bean is created and destroyed when the <code>@Stateful</code> bean is destroyed.  Simply put, the data in the <code>EntityManager</code> is cached for the lifetime of the <code>@Stateful</code> bean.</p>
+<p>The use of <code>EXTENDED</code> persistence contexts is <strong>only</strong> available to <code>@Stateful</code> beans.  See the <a href="../../jpa-concepts.html">JPA Concepts</a> page for an high level explanation of what a &quot;persistence context&quot; really is and how it is significant to JPA.</p>
 <h2>MoviesTest</h2>
 <p>Testing JPA is quite easy, we can simply use the <code>EJBContainer</code> API to create a container in our test case.</p>
 <pre><code>package org.superbiz.injection.jpa;
@@ -263,7 +267,7 @@ Apache OpenEJB 4.0.0-beta-1    build: 20111002-04:06
 http://tomee.apache.org/
 INFO - openejb.home = /Users/dblevins/examples/injection-of-entitymanager
 INFO - openejb.base = /Users/dblevins/examples/injection-of-entitymanager
-INFO - Using &#39;jakarta.ejb.embeddable.EJBContainer=true&#39;
+INFO - Using 'jakarta.ejb.embeddable.EJBContainer=true'
 INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
 INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
 INFO - Configuring Service(id=movieDatabase, type=Resource, provider-id=Default JDBC Database)
@@ -275,9 +279,9 @@ INFO - Auto-creating a container for bean Movies: Container(type=STATEFUL, id=De
 INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
 INFO - Auto-creating a container for bean org.superbiz.injection.jpa.MoviesTest: Container(type=MANAGED, id=Default Managed Container)
 INFO - Configuring PersistenceUnit(name=movie-unit)
-INFO - Auto-creating a Resource with id &#39;movieDatabaseNonJta&#39; of type &#39;DataSource for &#39;movie-unit&#39;.
+INFO - Auto-creating a Resource with id 'movieDatabaseNonJta' of type 'DataSource for 'movie-unit'.
 INFO - Configuring Service(id=movieDatabaseNonJta, type=Resource, provider-id=movieDatabase)
-INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID &#39;movieDatabaseNonJta&#39; from &#39;movieDatabaseUnmanaged&#39;
+INFO - Adjusting PersistenceUnit movie-unit &lt;non-jta-data-source&gt; to Resource ID 'movieDatabaseNonJta' from 'movieDatabaseUnmanaged'
 INFO - Enterprise application &quot;/Users/dblevins/examples/injection-of-entitymanager&quot; loaded.
 INFO - Assembling app: /Users/dblevins/examples/injection-of-entitymanager
 INFO - PersistenceUnit(name=movie-unit, provider=org.apache.openjpa.persistence.PersistenceProviderImpl) - provider time 462ms
@@ -299,11 +303,12 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 <h2>Performance testing</h2>
 <h3>Prerequisites</h3>
 <ul>
-  <li>
-  <p>Oralce DB</p></li>
-  <li>
-    <p>Update your maven <code>setings.xml</code> file to contains in the <code>&lt;servers&gt;</code> section the following entry:</p>
-    <pre><code class="xml   ">    &lt;server&gt;
+<li>
+<p>Oralce DB</p>
+</li>
+<li>
+<p>Update your maven <code>setings.xml</code> file to contains in the <code>&lt;servers&gt;</code> section the following entry:</p>
+<pre><code class="language-xml">    &lt;server&gt;
         &lt;id&gt;maven.oracle.com &lt;/id&gt;
         &lt;username&gt;YourOracleAccountUsername&lt;/username&gt;
         &lt;password&gt;YourOracleAccountPassword&lt;/password&gt;
@@ -326,20 +331,20 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
         &lt;/configuration&gt;
     &lt;/server&gt;
 </code></pre>
-  </li>
-  <li>
-    <p>Update file <code>pom.xml</code>, section <code>&lt;dependency&gt;</code> with the following:</p>
-    <pre><code class="xml">    &lt;dependency&gt;
+</li>
+<li>
+<p>Update file <code>pom.xml</code>, section <code>&lt;dependency&gt;</code> with the following:</p>
+<pre><code class="language-xml">    &lt;dependency&gt;
       &lt;groupId&gt;com.oracle.jdbc&lt;/groupId&gt;
       &lt;artifactId&gt;ojdbc8&lt;/artifactId&gt;
       &lt;version&gt;18.3.0.0&lt;/version&gt;
       &lt;scope&gt;provided&lt;/scope&gt;
     &lt;/dependency&gt;
 </code></pre>
-  </li>
-  <li>
-    <p>Update file <code>pom.xml</code>, section <code>&lt;repositories&gt;</code> with the following: </p>
-    <pre><code class="xml               ">    &lt;repository&gt;
+</li>
+<li>
+<p>Update file <code>pom.xml</code>, section <code>&lt;repositories&gt;</code> with the following:</p>
+<pre><code class="language-xml">    &lt;repository&gt;
       &lt;id&gt;maven.oracle.com&lt;/id&gt;
       &lt;name&gt;oracle-maven-repo&lt;/name&gt;
       &lt;url&gt;https://maven.oracle.com&lt;/url&gt;
@@ -350,10 +355,10 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
       &lt;/releases&gt;
     &lt;/repository&gt;
 </code></pre>
-  </li>
-  <li>
-    <p>Update file <code>pom.xml</code>, after <code>&lt;/repositories&gt;</code> section, add the following:</p>
-    <pre><code class="xml        ">    &lt;pluginRepositories&gt;
+</li>
+<li>
+<p>Update file <code>pom.xml</code>, after <code>&lt;/repositories&gt;</code> section, add the following:</p>
+<pre><code class="language-xml">    &lt;pluginRepositories&gt;
         &lt;pluginRepository&gt;
           &lt;id&gt;maven.oracle.com&lt;/id&gt;
           &lt;name&gt;oracle-maven-repo&lt;/name&gt;
@@ -366,10 +371,10 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
         &lt;/pluginRepository&gt;
     &lt;/pluginRepositories&gt;   
 </code></pre>
-  </li>
-  <li>
-    <p>Update file <code>pom.xml</code>, add the type of JDBC jar for the tomee-maven-plugin:</p>
-    <pre><code class="xml        ">      &lt;plugin&gt;
+</li>
+<li>
+<p>Update file <code>pom.xml</code>, add the type of JDBC jar for the tomee-maven-plugin:</p>
+<pre><code class="language-xml">      &lt;plugin&gt;
         &lt;groupId&gt;org.apache.tomee.maven&lt;/groupId&gt;
         &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
         &lt;version&gt;${tomee.version}&lt;/version&gt;
@@ -384,7 +389,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
         &lt;/configuration&gt;
       &lt;/plugin&gt;
 </code></pre>
-  </li>
+</li>
 </ul>
 <p>For further Oracle JDBC Maven setup you can check <a href="https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides">Oracle Article</a></p>
 <h3>Run the application</h3>
@@ -397,6 +402,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 </code></pre>
 <p>Once the console UI is available, press the button <code>Start the worker processes</code></p>
 <p>The load test will continue until you press on the console the button <code>Stop the worker processes and the agent processes</code></p>
+
             </div>
             
         </div>
