@@ -166,18 +166,27 @@ classpath. A number of ServerServices are available currently:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><em>The source for this example is in the "telephone-stateful" directory
-located in the openejb:download.html[openejb-examples.zip] available on
-the <a href="http://tomee.apache.org/downloads.html">download page</a>.</em></p>
+<p><em>The source for this example is in the
+<a href="https://github.com/apache/tomee/tree/main/examples/telephone-stateful">telephone-stateful</a>
+example directory.</em></p>
 </div>
-<div class="paragraph">
-<p>{note} If your goal is simply to unit test beans with remote
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If your goal is simply to unit test beans with remote
 interfaces, this is <em>not</em> the right example for you. The
 LocalInitialContextFactory completely supports remote interfaces and all
 spec required pass-by-value (serialization) semantics without the need
 for network sockets. This example shows the use of OpenEJB in an
 embedded environment where connection <em>outside</em> the vm is
-required.{note}</p>
+required.
+</td>
+</tr>
+</table>
 </div>
 <h1 id="_the_code" class="sect0">The Code</h1>
 <div class="paragraph">
@@ -190,7 +199,7 @@ you call <em>listen</em> to get your answer.</p>
 <h2 id="_bean">bean</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>\{snippet:id=code|url=openejb3/examples/telephone-stateful/src/main/java/org/superbiz/telephone/TelephoneBean.java|lang=java}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/src/main/java/org/superbiz/telephone/TelephoneBean.java">TelephoneBean.java</a></p>
 </div>
 </div>
 </div>
@@ -198,10 +207,18 @@ you call <em>listen</em> to get your answer.</p>
 <h2 id="_business_interface">business interface</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>\{snippet:id=code|url=openejb3/examples/telephone-stateful/src/main/java/org/superbiz/telephone/Telephone.java|lang=java}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/src/main/java/org/superbiz/telephone/Telephone.java">Telephone.java</a></p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">EJB3 Notes</div>
 <div class="paragraph">
-<p>{title= EJB3 Notes} The bean class uses the annotation <em>`@Remote</em>` but
+<p>The bean class uses the annotation <code>@Remote</code> but
 does not specify a list of interfaces as is normally required. Per EJB3
 rules, if the bean implements exactly <em>one business interface</em> it may
 use <code>@Remote</code> with no other values and that business interface is then
@@ -211,8 +228,11 @@ identical usage of <code>@Local</code>.</p>
 <div class="paragraph">
 <p>The critical thing to know is that if you add another interface the
 rules change and require that you specify both interfaces in the <code>@Remote</code>
-annotation as in <code>@Remote</code>(\{Telephone.class, SecondInterface.class}).
-{tip}</p>
+annotation as in <code>@Remote</code>(\{Telephone.class, SecondInterface.class}).</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -231,7 +251,7 @@ communicates to the embedded container system over the ejbd protocol.</p>
 <h2 id="_setup">setUp</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>\{snippet:id=setup|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java">TelephoneTest.java</a></p>
 </div>
 </div>
 </div>
@@ -242,7 +262,7 @@ communicates to the embedded container system over the ejbd protocol.</p>
 <p>interface</p>
 </div>
 <div class="paragraph">
-<p>\{snippet:id=localcontext|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java">TelephoneTest.java</a></p>
 </div>
 </div>
 </div>
@@ -260,21 +280,21 @@ classpath and connect to OpenEJB via the RemoteInitialContextFactory
 like any other remote EJB client.</p>
 </div>
 <div class="paragraph">
-<p>\{snippet:id=remotecontext|url=openejb3/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java|lang=java}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/src/test/java/org/superbiz/telephone/TelephoneTest.java">TelephoneTest.java</a></p>
 </div>
 </div>
 </div>
 <h1 id="_maven_setup" class="sect0">Maven setup</h1>
 <div class="paragraph">
-<p>\{snippet:id=desc|url=openejb3/examples/telephone-stateful/pom.xml}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/pom.xml">pom.xml</a></p>
 </div>
 <div class="paragraph">
-<p>\{snippet:id=openejbdep|url=openejb3/examples/telephone-stateful/pom.xml|lang=xml}</p>
+<p><a href="https://github.com/apache/tomee/blob/main/examples/telephone-stateful/pom.xml">pom.xml</a></p>
 </div>
 <h1 id="_running" class="sect0">Running</h1>
 <div class="paragraph">
 <p>Running the example is fairly simple. In the "telephone-stateful"
-directory of the openejb:download.html[examples zip] , just run:</p>
+directory of the <a href="https://github.com/apache/tomee/tree/main/examples/telephone-stateful">telephone-stateful example</a>, just run:</p>
 </div>
 <div class="paragraph">
 <p>$ mvn clean install</p>
