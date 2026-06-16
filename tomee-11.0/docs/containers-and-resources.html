@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Containers and Resources</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="sect1">
+<h2 id="_containers">Containers</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cmp_entity">CMP_ENTITY</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Container?type=CMP_ENTITY</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CmpEngineFactory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value is <code>org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TransactionManager</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transaction manager used by the container.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_bmp_entity">BMP_ENTITY</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Container?type=BMP_ENTITY</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the size of the bean pools for this BMP entity container.
+Default value is <code>10</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_stateless">STATELESS</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Container?type=STATELESS</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TimeOut</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the time to wait between invocations, in milliseconds.
+A value of <code>0</code> means no timeout.
+Default value is <code>0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the size of the bean pools for this stateless SessionBean container.
+Default value is <code>10</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StrictPooling</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controls behavior when the pool reaches its maximum size.
+If <code>true</code>, requests wait for instances to become available and the pool never grows beyond <code>PoolSize</code>.
+If <code>false</code>, temporary instances are created for one invocation and then discarded.
+Default value is <code>true</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_stateful">STATEFUL</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Container?type=STATEFUL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Passivator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Responsible for writing beans to disk during passivation.
+Known implementations:
+<code>org.apache.openejb.core.stateful.RAFPassivater</code>
+<code>org.apache.openejb.core.stateful.SimplePassivater</code>
+Default value is <code>org.apache.openejb.core.stateful.SimplePassivater</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TimeOut</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the time to wait between invocations, in minutes.
+A value of <code>0</code> means no timeout.
+Default value is <code>20</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the size of the bean pools for this stateful SessionBean container.
+Default value is <code>1000</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BulkPassivate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of instances to passivate at one time during bulk passivation.
+Default value is <code>100</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_message">MESSAGE</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Container?type=MESSAGE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ResourceAdapter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resource adapter that delivers messages to the container.
+Default value is <strong>Default JMS Resource Adapter</strong>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MessageListenerInterface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message listener interface handled by this container.
+Default value is <code>jakarta.jms.MessageListener</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ActivationSpecClass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Activation specification class.
+Default value is <code>org.apache.activemq.ra.ActiveMQActivationSpec</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InstanceLimit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of bean instances allowed per MDB deployment.
+Default value is <code>10</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">Resources</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_javax_sql_datasource">javax.sql.DataSource</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=javax.sql.DataSource</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JtaManaged</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Determines whether the datasource is JTA managed.
+Default value is <code>true</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JdbcDriver</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC driver class name.
+Default value is <code>org.hsqldb.jdbcDriver</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JdbcUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC URL for creating connections.
+Default value is <code>jdbc:hsqldb:file:data/hsqldb/hsqldb</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UserName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default username.
+Default value is <code>sa</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConnectionProperties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Properties passed to the JDBC driver when creating connections.
+Format: <code>[propertyName=property;]*</code>
+<code>user</code> and <code>password</code> are passed explicitly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DefaultAutoCommit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default auto-commit state of new connections.
+Default value is <code>true</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DefaultReadOnly</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default read-only state of new connections.
+If not set, <code>setReadOnly</code> is not called.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DefaultTransactionIsolation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default transaction isolation level.
+Allowed values: <code>NONE</code>, <code>READ_COMMITTED</code>, <code>READ_UNCOMMITTED</code>, <code>REPEATABLE_READ</code>, <code>SERIALIZABLE</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">InitialSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial number of connections created when the pool starts.
+Default value is <code>0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MaxActive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of active connections.
+Default value is <code>20</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MaxIdle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of idle connections.
+Default value is <code>20</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MinIdle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of idle connections.
+Default value is <code>0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MaxWait</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum wait time (ms) for a connection before throwing an exception.
+Default value is <code>-1</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ValidationQuery</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL query used to validate connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TestOnBorrow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validate connections before borrowing.
+Default value is <code>true</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TestOnReturn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validate connections before returning to the pool.
+Default value is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TestWhileIdle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validate connections during idle eviction runs.
+Default value is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TimeBetweenEvictionRunsMillis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time between idle eviction runs (ms).
+Default value is <code>-1</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NumTestsPerEvictionRun</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections tested per eviction run.
+Default value is <code>3</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MinEvictableIdleTimeMillis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum idle time before eviction.
+Default value is <code>1800000</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolPreparedStatements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables pooling of prepared statements.
+Default value is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MaxOpenPreparedStatements</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum open prepared statements.
+Default value is <code>0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AccessToUnderlyingConnectionAllowed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows access to the raw JDBC connection.
+Default value is <code>false</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_activemqresourceadapter">ActiveMQResourceAdapter</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=ActiveMQResourceAdapter</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BrokerXmlConfig</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Broker configuration.
+Default value is <code>broker:(tcp://localhost:61616)?useJmx=false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ServerUrl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Broker address.
+Default value is <code>vm://localhost?async=true</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DataSource</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Datasource for message persistence.
+Default value is <strong>Default Unmanaged JDBC Database</strong>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_jakarta_jms_connectionfactory">jakarta.jms.ConnectionFactory</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=jakarta.jms.ConnectionFactory</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ResourceAdapter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default value is <strong>Default JMS Resource Adapter</strong>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TransactionSupport</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transaction support type: <code>xa</code>, <code>local</code>, or <code>none</code>.
+Default value is <code>xa</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolMaxSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of physical connections.
+Default value is <code>10</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PoolMinSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum number of physical connections.
+Default value is <code>0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConnectionMaxWaitMilliseconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time to wait for a connection.
+Default value is <code>5000</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConnectionMaxIdleMinutes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum idle time before reclaiming a connection.
+Default value is <code>15</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_jakarta_jms_queue">jakarta.jms.Queue</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=jakarta.jms.Queue</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the queue.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_jakarta_jms_topic">jakarta.jms.Topic</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=jakarta.jms.Topic</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Supports the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the topic.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="_jakarta_mail_session">jakarta.mail.Session</h3>
+<div class="paragraph">
+<p>Declarable in <code>tomee.xml</code> via</p>
+</div>
+<div class="paragraph">
+<p>Declarable in properties via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Foo = new://Resource?type=jakarta.mail.Session</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No properties.</p>
+</div>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+
