@@ -148,50 +148,55 @@ public class GreetingService {
 <div class="sect2">
 <h3 id="_test_for_the_jaxrs_service">Test for the JAXRS service</h3>
 <div class="paragraph">
-<p>The test uses the OpenEJB ApplicationComposer to make it trivial.</p>
+<p>The test uses Arquillian with the TomEE embedded adapter, so the REST service runs in a real TomEE.</p>
 </div>
 <div class="paragraph">
-<p>The idea is first to activate the <code>jaxrs</code> services. This is done using <code>@EnableServices</code> annotation.</p>
-</div>
-<div class="paragraph">
-<p>Then we create on the fly the application simply returning an object representing the <code>web.xml</code>. Here we simply use it to define the context root but you can use it to define your REST Application too. And to complete the application definition we add <code>@Classes</code> annotation to define the set of classes to use in this app.</p>
+<p>The <code>@Deployment</code> method creates on the fly the web application to deploy. Here it only contains the <code>GreetingService</code> class but you can add your REST Application and a <code>web.xml</code> too. <code>testable = false</code> runs the test methods as a client of the deployed application, and <code>@ArquillianResource</code> injects its base URL.</p>
 </div>
 <div class="paragraph">
 <p>Finally to test it we use cxf client API to call the REST service in <code>get()</code> and <code>post()</code> methods.</p>
+</div>
+<div class="paragraph">
+<p>The container is configured in <code>src/test/resources/arquillian.xml</code>: <code>httpPort</code> set to <code>-1</code> starts TomEE on a random port.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
 
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.openejb.jee.SingletonBean;
-import org.apache.openejb.junit.ApplicationComposer;
-import org.apache.openejb.testing.EnableServices;
-import org.apache.openejb.testing.Module;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
-@EnableServices(value = "jaxrs")
-@RunWith(ApplicationComposer.class)
+@RunWith(Arquillian.class)
 public class GreetingServiceTest {
-    @Module
-    public SingletonBean app() {
-        return (SingletonBean) new SingletonBean(GreetingService.class).localBean();
+
+    @ArquillianResource
+    private URL base;
+
+    @Deployment(testable = false)
+    public static WebArchive app() {
+        return ShrinkWrap.create(WebArchive.class).addClass(GreetingService.class);
     }
 
     @Test
     public void get() throws IOException {
-        final String message = WebClient.create("http://localhost:4204").path("/GreetingServiceTest/greeting/").get(String.class);
+        final String message = WebClient.create(base.toExternalForm()).path("greeting/").get(String.class);
         assertEquals("Hi REST!", message);
     }
 
     @Test
     public void post() throws IOException {
-        final String message = WebClient.create("http://localhost:4204").path("/GreetingServiceTest/greeting/").post("Hi REST!", String.class);
+        final String message = WebClient.create(base.toExternalForm()).path("greeting/").post("Hi REST!", String.class);
         assertEquals("hi rest!", message);
     }
 }</code></pre>
@@ -214,47 +219,20 @@ public class GreetingServiceTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">INFO - Cannot find the configuration file [conf/openejb.xml].  Will attempt to create one for the beans deployed.
-INFO - Configuring Service(id=Default Security Service, type=SecurityService, provider-id=Default Security Service)
-INFO - Configuring Service(id=Default Transaction Manager, type=TransactionManager, provider-id=Default Transaction Manager)
-INFO - Creating TransactionManager(id=Default Transaction Manager)
-INFO - Creating SecurityService(id=Default Security Service)
-INFO - Initializing network services
-INFO - Creating ServerService(id=httpejbd)
-INFO - Creating ServerService(id=cxf-rs)
-INFO - Initializing network services
-INFO - Starting service httpejbd
-INFO - Started service httpejbd
-INFO - Starting service cxf-rs
-INFO - Started service cxf-rs
-INFO -   ** Bound Services **
-INFO -   NAME                 IP              PORT
-INFO -   httpejbd             127.0.0.1       4204
-INFO - -------
-INFO - Ready!
-INFO - Configuring enterprise application: /opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest
-INFO - Configuring Service(id=Default Managed Container, type=Container, provider-id=Default Managed Container)
-INFO - Auto-creating a container for bean org.superbiz.rest.GreetingServiceTest: Container(type=MANAGED, id=Default Managed Container)
-INFO - Creating Container(id=Default Managed Container)
-INFO - Using directory /tmp for stateful session passivation
-INFO - Enterprise application "/opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest" loaded.
-INFO - Assembling app: /opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest
-INFO - Existing thread singleton service in SystemInstance() null
-INFO - Created new singletonService org.apache.openejb.cdi.ThreadSingletonServiceImpl@12c9b196
-INFO - Succeeded in installing singleton service
-INFO - OpenWebBeans Container is starting...
-INFO - Adding OpenWebBeansPlugin : [CdiPlugin]
-INFO - All injection points are validated successfully.
-INFO - OpenWebBeans Container has started, it took 11 ms.
-INFO - Deployed Application(path=/opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest)
-INFO - Setting the server's publish address to be http://127.0.0.1:4204/test
-INFO - REST Service: http://127.0.0.1:4204/test/greeting/.*  -&gt; Pojo org.superbiz.rest.GreetingService
-INFO - Undeploying app: /opt/dev/openejb/openejb-trunk/examples/GreetingServiceTest
-INFO - Stopping network services
-INFO - Stopping server services
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 sec
-
-Results :
+<pre class="highlight"><code class="language-java" data-lang="java">Running org.superbiz.rest.GreetingServiceTest
+INFO: Starting TomEE from: /tmp/arquillian-apache-tomee-20908
+INFO: Starting Servlet engine: [Apache Tomcat/11.0.25]
+INFO: Starting ProtocolHandler ["http-nio-52756"]
+INFO: Configuring enterprise application: /path/to/tomee/examples/simple-rest/target/tomee-embedded/0/5cfb3d73-fabd-4bc4-8550-88f254fe1095
+INFO: Enterprise application "/path/to/tomee/examples/simple-rest/target/tomee-embedded/0/5cfb3d73-fabd-4bc4-8550-88f254fe1095" loaded.
+INFO: Deployed Application(path=/path/to/tomee/examples/simple-rest/target/tomee-embedded/0/5cfb3d73-fabd-4bc4-8550-88f254fe1095)
+INFO: REST Application: http://localhost:52756/5cfb3d73-fabd-4bc4-8550-88f254fe1095/         -&gt; org.apache.openejb.server.rest.InternalApplication
+INFO:      Service URI: http://localhost:52756/5cfb3d73-fabd-4bc4-8550-88f254fe1095/greeting -&gt; Pojo org.superbiz.rest.GreetingService
+INFO:               GET http://localhost:52756/5cfb3d73-fabd-4bc4-8550-88f254fe1095/greeting -&gt;      String message()
+INFO:              POST http://localhost:52756/5cfb3d73-fabd-4bc4-8550-88f254fe1095/greeting -&gt;      String lowerCase(String)
+INFO: Undeploying app: /path/to/tomee/examples/simple-rest/target/tomee-embedded/0/5cfb3d73-fabd-4bc4-8550-88f254fe1095
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.613 s -- in org.superbiz.rest.GreetingServiceTest
+Results:
 
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 </div>
@@ -264,21 +242,6 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
-<li>
-<p><a href="../../tomee-10.2/javadoc/org/apache/openejb/jee/WebApp.html">org.apache.openejb.jee.WebApp</a></p>
-</li>
-<li>
-<p><a href="../../tomee-10.2/javadoc/org/apache/openejb/junit/ApplicationComposer.html">org.apache.openejb.junit.ApplicationComposer</a></p>
-</li>
-<li>
-<p><a href="../../tomee-10.2/javadoc/org/apache/openejb/testing/Classes.html">org.apache.openejb.testing.Classes</a></p>
-</li>
-<li>
-<p><a href="../../tomee-10.2/javadoc/org/apache/openejb/testing/EnableServices.html">org.apache.openejb.testing.EnableServices</a></p>
-</li>
-<li>
-<p><a href="../../tomee-10.2/javadoc/org/apache/openejb/testing/Module.html">org.apache.openejb.testing.Module</a></p>
-</li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
 </li>
