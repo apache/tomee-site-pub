@@ -106,10 +106,10 @@
             <div class="col-md-12">
                 <div class="paragraph">
 <p>Depending on your flavor of Linux, there are likely a few different ways you can run TomEE as a service.
-This page demonstrates running as a service with systemd, and has been tested with RedHat Enterprise Linux.</p>
+This page demonstrates running as a service with systemd, and has been tested with RedHat Enterprise Linux and Ubuntu.</p>
 </div>
 <div class="paragraph">
-<p>Create a file <code>/etc/systemd/system/tomee.service</code> with the following content:</p>
+<p>Create a dedicated user and group (here <code>tomee</code>) that owns the TomEE installation, then create a file <code>/etc/systemd/system/tomee.service</code> with the following content:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -118,27 +118,31 @@ Description=Apache TomEE
 After=network.target
 
 [Service]
-User=&lt;user to run as&gt;
+User=tomee
+Group=tomee
+WorkingDirectory=/opt/tomee
 Type=forking
-Environment=JAVA_HOME=/usr/lib/jvm/jre
+Environment=JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 Environment=CATALINA_PID=/opt/tomee/temp/tomee.pid
 Environment=CATALINA_HOME=/opt/tomee
 Environment=CATALINA_BASE=/opt/tomee
-Environment=CATALINA_OPTS='-server'
-Environment=JAVA_OPTS='-Djava.awt.headless=true'
+Environment=CATALINA_OPTS=-server
+Environment="JAVA_OPTS=-Dfile.encoding=UTF-8 -Djava.awt.headless=true -Xms2g -Xmx3g"
 ExecStart=/opt/tomee/bin/startup.sh
 ExecStop=/opt/tomee/bin/shutdown.sh
-KillSignal=SIGCONT
 
 [Install]
 WantedBy=multi-user.target</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The file above assumes TomEE is extracted to <code>/opt/tomee</code>, and that <code>JAVA_HOME</code> is at <code>/usr/lib/jvm/jre</code> - adjust these to match your installation.</p>
+<p>The file above assumes TomEE is extracted to <code>/opt/tomee</code> and that <code>JAVA_HOME</code> is at <code>/usr/lib/jvm/java-25-openjdk-amd64</code> - adjust these, and the heap settings in <code>JAVA_OPTS</code>, to match your installation.</p>
 </div>
 <div class="paragraph">
-<p>Once done, run <code>sudo systemctl daemon-reload</code> so systemd is aware of the new service.</p>
+<p>A value containing spaces has to be quoted as a whole (<code>"JAVA_OPTS=&#8230;&#8203;"</code>), and comments are not allowed inside a value.</p>
+</div>
+<div class="paragraph">
+<p>Once done, run <code>sudo systemctl daemon-reload</code> so systemd is aware of the new service, and <code>sudo systemctl enable tomee</code> to start it at boot.</p>
 </div>
 <div class="paragraph">
 <p>You should now be able to use the following commands to control the TomEE service:</p>
