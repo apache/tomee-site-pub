@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Multiple Arquillian Adapters</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to run tests against several TomEE Arquillian adapters in one Maven module.
+The adapters are all on the test classpath:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>arquillian-openejb-embedded</code>, which runs OpenEJB embedded in the test JVM</p>
+</li>
+<li>
+<p><code>arquillian-tomee-embedded</code>, which runs TomEE embedded in the test JVM</p>
+</li>
+<li>
+<p><code>arquillian-tomee-remote</code>, which runs TomEE in a separate process</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each test class is tagged with a JUnit category.
+Each surefire execution runs only one category and tells Arquillian which adapter and which <code>arquillian.xml</code> container to use.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_application">The application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application is a single stateless EJB:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz;
+
+import jakarta.ejb.Stateless;
+
+@Stateless
+public class SomeEJB {
+
+    public String ok() {
+        return "ejb";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dependencies">Dependencies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The pom declares all three TomEE Arquillian adapters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;!-- arquillian adapters --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;arquillian-openejb-embedded&lt;/artifactId&gt;
+  &lt;version&gt;${tomee.version}&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;arquillian-tomee-embedded&lt;/artifactId&gt;
+  &lt;version&gt;${tomee.version}&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;arquillian-tomee-remote&lt;/artifactId&gt;
+  &lt;version&gt;${tomee.version}&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_selecting_the_adapter_with_surefire_executions">Selecting the adapter with surefire executions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With several adapters on the classpath, each test run has to say which one to use.
+The pom turns off surefire&#8217;s default execution with <code>&lt;skip&gt;true&lt;/skip&gt;</code> in the plugin-level configuration.
+It then defines three executions in the <code>test</code> phase.
+Each execution sets three things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groups</code>: the JUnit category to run</p>
+</li>
+<li>
+<p><code>arquillian.launch</code>: the container qualifier to use from <code>arquillian.xml</code></p>
+</li>
+<li>
+<p><code>openejb.arquillian.adapter</code>: the TomEE adapter to activate (<code>openejb</code>, <code>tomee-embedded</code> or <code>tomee-remote</code>)</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;!--
+  Redefining execution to:
+  1. set the right arquillian adapter
+  2. set the category to execute (include/exclude works too)
+  3. set the arquillian launcher to use
+  --&gt;
+  &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+  &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+  &lt;version&gt;3.5.3&lt;/version&gt;
+  &lt;executions&gt;
+    &lt;execution&gt;
+      &lt;id&gt;test-embedded&lt;/id&gt;
+      &lt;phase&gt;test&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;test&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;skip&gt;${maven.test.skip}&lt;/skip&gt;
+        &lt;argLine&gt;-Djdk.attach.allowAttachSelf&lt;/argLine&gt;
+        &lt;groups&gt;org.superbiz.embedded.standalone.Embedded&lt;/groups&gt;
+        &lt;systemPropertyVariables&gt;
+          &lt;arquillian.launch&gt;embedded&lt;/arquillian.launch&gt;
+          &lt;openejb.arquillian.adapter&gt;openejb&lt;/openejb.arquillian.adapter&gt;
+        &lt;/systemPropertyVariables&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+    &lt;execution&gt;
+      &lt;id&gt;test-tomee-embedded&lt;/id&gt;
+      &lt;phase&gt;test&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;test&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;skip&gt;${maven.test.skip}&lt;/skip&gt;
+        &lt;groups&gt;org.superbiz.tomee.embedded.TomEEEmbedded&lt;/groups&gt;
+        &lt;argLine&gt;-Djdk.attach.allowAttachSelf&lt;/argLine&gt;
+        &lt;systemPropertyVariables&gt;
+          &lt;arquillian.launch&gt;tomee-embedded&lt;/arquillian.launch&gt;
+          &lt;openejb.arquillian.adapter&gt;tomee-embedded&lt;/openejb.arquillian.adapter&gt;
+        &lt;/systemPropertyVariables&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+    &lt;execution&gt;
+      &lt;id&gt;test-tomee-remote&lt;/id&gt;
+      &lt;phase&gt;test&lt;/phase&gt;
+      &lt;goals&gt;
+        &lt;goal&gt;test&lt;/goal&gt;
+      &lt;/goals&gt;
+      &lt;configuration&gt;
+        &lt;skip&gt;${maven.test.skip}&lt;/skip&gt;
+        &lt;groups&gt;org.superbiz.tomee.remote.TomEERemote&lt;/groups&gt;
+        &lt;systemPropertyVariables&gt;
+          &lt;arquillian.launch&gt;tomee-remote&lt;/arquillian.launch&gt;
+          &lt;openejb.arquillian.adapter&gt;tomee-remote&lt;/openejb.arquillian.adapter&gt;
+        &lt;/systemPropertyVariables&gt;
+      &lt;/configuration&gt;
+    &lt;/execution&gt;
+  &lt;/executions&gt;
+  &lt;configuration&gt;
+    &lt;skip&gt;true&lt;/skip&gt;
+    &lt;parallel&gt;none&lt;/parallel&gt;
+    &lt;threadCount&gt;1&lt;/threadCount&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_container_configurations_in_arquillian_xml">Container configurations in arquillian.xml</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>src/test/resources/arquillian.xml</code> defines one <code>&lt;container&gt;</code> for each qualifier used in the pom:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    &gt;
+  &lt;container qualifier="embedded"&gt;
+    &lt;configuration&gt;
+      &lt;property name="properties"&gt;
+        # to ensure we don't start remote container even if it is found at classpath
+        openejb.embedded.remotable = false
+      &lt;/property&gt;
+    &lt;/configuration&gt;
+  &lt;/container&gt;
+  &lt;container qualifier="tomee-embedded"&gt;
+    &lt;configuration&gt;
+      &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+      &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+      &lt;property name="dir"&gt;target/tomee-embedded&lt;/property&gt;
+      &lt;property name="appWorkingDir"&gt;target/work3&lt;/property&gt;
+    &lt;/configuration&gt;
+  &lt;/container&gt;
+  &lt;container qualifier="tomee-remote"&gt;
+    &lt;configuration&gt;
+      &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+      &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+      &lt;property name="ajpPort"&gt;-1&lt;/property&gt;
+      &lt;property name="dir"&gt;target/tomee-remote&lt;/property&gt;
+      &lt;property name="appWorkingDir"&gt;target/work4&lt;/property&gt;
+    &lt;/configuration&gt;
+  &lt;/container&gt;
+&lt;/arquillian&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>embedded</code> sets <code>openejb.embedded.remotable = false</code>, so OpenEJB runs without its remote layer.</p>
+</li>
+<li>
+<p><code>tomee-embedded</code> and <code>tomee-remote</code> set their ports to <code>-1</code>, which asks for random free ports. Each also gets its own <code>dir</code> and <code>appWorkingDir</code> under <code>target</code>, so the two containers don&#8217;t share files.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_tests">The tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each test class is annotated with <code>@Category</code>.
+The category is a marker interface in the same package, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.embedded.standalone;
+
+public interface Embedded {
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The other marker interfaces are <code>TomEEEmbedded</code> and <code>TomEERemote</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_openejb_embedded">OpenEJB embedded</h3>
+<div class="paragraph">
+<p>This test deploys a jar that contains <code>SomeEJB</code>.
+It checks that the injected EJB is not <code>null</code> and that it returns <code>"ejb"</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Category(Embedded.class)
+@RunWith(Arquillian.class)
+public class OpenEJBEmbeddedTest {
+
+    @EJB
+    private SomeEJB ejb;
+
+    @Deployment
+    public static JavaArchive jar() {
+        return ShrinkWrap.create(JavaArchive.class).addClass(SomeEJB.class);
+    }
+
+    @Test
+    public void check() {
+        assertNotNull(ejb);
+        assertEquals("ejb", ejb.ok());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tomee_embedded_and_tomee_remote">TomEE embedded and TomEE remote</h3>
+<div class="paragraph">
+<p><code>TomEEEmbeddedTest</code> and <code>TomEERemoteTest</code> deploy a <code>test.war</code> that contains <code>SomeEJB</code>.
+Both run the same check as the OpenEJB embedded test.
+The remote test also adds its category interface to the archive, because the test class is loaded inside the remote server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Category(TomEERemote.class)
+@RunWith(Arquillian.class)
+public class TomEERemoteTest {
+
+    @EJB
+    private SomeEJB ejb;
+
+    @Deployment
+    public static WebArchive war() {
+        // use test name for the war otherwise arquillian ejb enricher doesn't work
+        // don't forget the category otherwise it will fail since the runner parse annotations
+        // in embedded mode it is not so important
+        return ShrinkWrap.create(WebArchive.class, "test.war").addClasses(SomeEJB.class, TomEERemote.class);
+    }
+
+    @Test
+    public void check() {
+        assertNotNull(ejb);
+        assertEquals("ejb", ejb.ok());
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running">Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command runs all three surefire executions in turn: <code>test-embedded</code>, <code>test-tomee-embedded</code> and <code>test-tomee-remote</code>.
+Each execution runs only the tests in its category, against its own adapter.
+The pom has no profiles for choosing a single adapter.
+To add another adapter or configuration, add a category interface, an <code>arquillian.xml</code> container and a matching surefire execution.
+Passing <code>-Dmaven.test.skip=true</code> skips all three executions.</p>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

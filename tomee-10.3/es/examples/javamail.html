@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../../docs.html">Documentation</a></li>
+					<li><a href="../../../community/index.html">Community</a></li>
+					<li><a href="../../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Jakarta Mail API</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Este es un ejemplo simple para demostrar un uso muy básico de la API Javamail.
+Debería ser suficiente para iniciarse en el uso de los paquetes que maneja java para correo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_un_servicio_rest_simple_usando_la_api_jakarta_mail">Un servicio REST simple usando la API Jakarta Mail</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aquí vemos un endpoint RESTful muy simple que puede ser llamado para enviar un correo. No debería ser complicado modificar la aplicación
+para generar otras opciones de configuración adicionales.</p>
+</div>
+<div class="paragraph">
+<p>Este ejemplo no enviará ningún correo, pero si se cambian los parámetros para que coincidan con
+su servidor de correo; entonces sí se enviará un mensaje.</p>
+</div>
+<div class="paragraph">
+<p>Puede encontrar información más detallada en:
+<a href="https://java.net/projects/javamail/pages/Home#Samples">Javamail API</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
+
+import jakarta.annotation.Resource;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import java.util.Date;
+
+@Path("/email")
+public class EmailService {
+
+    @Resource(mappedName = "java:comp/env/tomee/mail/exampleSMTP")
+    private Session mailSession;
+
+    @POST
+    public String lowerCase(final String message) {
+
+        try {
+
+            /* Ensures that smtp authentication mechanism works as configured */
+            boolean authenticate = "true".equals(mailSession.getProperty("mail.smtp.auth"));
+            if (authenticate) {
+                final String username = mailSession.getProperty("mail.smtp.user");
+                final String password = mailSession.getProperty("mail.smtp.password");
+
+                final URLName url = new URLName(
+                        mailSession.getProperty("mail.transport.protocol"),
+                        mailSession.getProperty("mail.smtp.host"), -1, null,
+                        username, null);
+
+                mailSession.setPasswordAuthentication(url, new PasswordAuthentication(username, password));
+            } else {
+                return "Using EMailService without SMTP auth configured. This might be valid, but could also be dangerous!";
+            }
+
+            //Set this just to see some internal logging
+            mailSession.setDebug(true);
+
+            //Create a message
+            final MimeMessage msg = new MimeMessage(mailSession);
+            msg.setFrom(new InternetAddress("admin@localhost")); //your e-mail address
+            final InternetAddress[] address = {new InternetAddress("user@provider.com")};
+            msg.setRecipients(Message.RecipientType.TO, address);
+            msg.setSubject("JavaMail API test");
+            msg.setSentDate(new Date());
+            msg.setText(message, "UTF-8");
+
+            Transport.send(msg);
+        } catch (final MessagingException e) {
+            return "Failed to send message: " + e.getMessage();
+        }
+
+        return "Sent";
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pruebas">Pruebas</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_pruebas_del_servicio_jaxrs">Pruebas del servicio JAXRS</h3>
+<div class="paragraph">
+<p>La prueba usa Arquillian con el adaptador TomEE embedded, así el servicio REST se ejecuta en un TomEE real.</p>
+</div>
+<div class="paragraph">
+<p>El método @Deployment crea la aplicación web a desplegar con la clase EmailService y un WEB-INF/resources.xml que declara
+la sesión de correo. La sesión apunta a un servidor SMTP GreenMail que la prueba inicia en un puerto aleatorio.
+testable = false ejecuta los métodos de prueba como cliente de la aplicación desplegada, y @ArquillianResource inyecta su URL base.</p>
+</div>
+<div class="paragraph">
+<p>Finalmente, para hacer pruebas usamos una API cliente cxf para llamar el método post() del servicio REST.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.rest;
+
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.openejb.util.NetworkUtil;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.CountDownLatch;
+
+import static org.junit.Assert.assertEquals;
+
+@RunWith(Arquillian.class)
+public class EmailServiceTest {
+
+    private static final int SMTP_TEST_PORT = NetworkUtil.getNextAvailablePort();
+
+    private static final String USER_PASSWORD = "s3cr3t";
+    private static final String USER_NAME = "admin@localhost";
+    private static final String EMAIL_USER_ADDRESS = "admin@localhost";
+
+    private static GreenMail mailServer;
+    private static CountDownLatch started = new CountDownLatch(1);
+
+    @ArquillianResource
+    private URL base;
+
+    @Deployment(testable = false)
+    public static WebArchive app() {
+        //Note: We can also configure this via tomee.xml
+        return ShrinkWrap.create(WebArchive.class)
+                .addClass(EmailService.class)
+                .addAsWebInfResource(new StringAsset(
+                        "&lt;resources&gt;\n" +
+                        "  &lt;Resource id=\"tomee/mail/mySMTP\" type=\"jakarta.mail.Session\"&gt;\n" +
+                        "    mail.debug = false\n" +
+                        "    mail.transport.protocol = smtp\n" +
+                        "    mail.smtp.host = localhost\n" +
+                        "    mail.smtp.port = " + SMTP_TEST_PORT + "\n" +
+                        "    mail.smtp.auth = true\n" +
+                        "    mail.smtp.user = " + USER_NAME + "\n" +
+                        "    password = " + USER_PASSWORD + "\n" +
+                        "  &lt;/Resource&gt;\n" +
+                        "&lt;/resources&gt;"), "resources.xml");
+    }
+
+    @BeforeClass
+    public static void setUp() throws InterruptedException {
+        mailServer = new CustomGreenMailServer(new ServerSetup(SMTP_TEST_PORT, null, "smtp"));
+        mailServer.start();
+
+        //wait for the server startup...
+        started.await();
+
+        // create user on mail server
+        mailServer.setUser(EMAIL_USER_ADDRESS, USER_NAME, USER_PASSWORD);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        if (mailServer != null) {
+            mailServer.stop();
+        }
+    }
+
+    @Test
+    public void post() throws IOException {
+        final String message = WebClient.create(base.toExternalForm()).path("email/").post("Hello TomEE", String.class);
+        assertEquals("Sent", message);
+    }
+
+    public static class CustomGreenMailServer extends GreenMail {
+
+        public CustomGreenMailServer(ServerSetup config) {
+            super(new ServerSetup[]{config});
+        }
+
+        public synchronized void start() {
+            super.start();
+            started.countDown();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejecución">Ejecución</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Correr el ejemplo es bastante simple.  En el directorio "javamail-api" ejecute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">$ mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lo cual debería crear una salida como la siguiente:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Running org.superbiz.rest.EmailServiceTest
+INFO: Starting TomEE from: /tmp/arquillian-apache-tomee-25745
+INFO: Starting Servlet engine: [Apache Tomcat/11.0.25]
+INFO: Starting ProtocolHandler ["http-nio-53129"]
+INFO: Configuring enterprise application: /path/to/tomee/examples/javamail/target/tomee-embedded/0/f1d94c4d-a6ab-4b6a-a606-5e712002aebf
+INFO: Creating Resource(id=f1d94c4d-a6ab-4b6a-a606-5e712002aebf/tomee/mail/mySMTP)
+INFO: Auto-linking resource-ref 'java:comp/env/org.superbiz.rest.EmailService/mailSession' in bean f1d94c4d-a6ab-4b6a-a606-5e712002aebf.Comp813932100 to Resource(id=tomee/mail/mySMTP)
+INFO: Enterprise application "/path/to/tomee/examples/javamail/target/tomee-embedded/0/f1d94c4d-a6ab-4b6a-a606-5e712002aebf" loaded.
+INFO: Deployed Application(path=/path/to/tomee/examples/javamail/target/tomee-embedded/0/f1d94c4d-a6ab-4b6a-a606-5e712002aebf)
+INFO: REST Application: http://localhost:53129/f1d94c4d-a6ab-4b6a-a606-5e712002aebf/      -&gt; org.apache.openejb.server.rest.InternalApplication
+INFO:      Service URI: http://localhost:53129/f1d94c4d-a6ab-4b6a-a606-5e712002aebf/email -&gt; Pojo org.superbiz.rest.EmailService
+INFO:              POST http://localhost:53129/f1d94c4d-a6ab-4b6a-a606-5e712002aebf/email -&gt;      String lowerCase(String)
+INFO: Undeploying app: /path/to/tomee/examples/javamail/target/tomee-embedded/0/f1d94c4d-a6ab-4b6a-a606-5e712002aebf
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.620 s -- in org.superbiz.rest.EmailServiceTest
+Results:
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../../tomee-10.3/javadoc/org/apache/openejb/util/NetworkUtil.html">org.apache.openejb.util.NetworkUtil</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/annotation/Resource.html">jakarta.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/Message.html">jakarta.mail.Message</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/MessagingException.html">jakarta.mail.MessagingException</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/PasswordAuthentication.html">jakarta.mail.PasswordAuthentication</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/Session.html">jakarta.mail.Session</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/Transport.html">jakarta.mail.Transport</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/URLName.html">jakarta.mail.URLName</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/internet/InternetAddress.html">jakarta.mail.internet.InternetAddress</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/mail/internet/MimeMessage.html">jakarta.mail.internet.MimeMessage</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/ws/rs/POST.html">jakarta.ws.rs.POST</a></p>
+</li>
+<li>
+<p><a href="../../../jakartaee-11.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../../js/owl.carousel.min.js"></script>
+	<script src="../../../js/bootstrap.min.js"></script>
+	<script src="../../../js/wow.min.js"></script>
+	<script src="../../../js/typewriter.js"></script>
+	<script src="../../../js/jquery.onepagenav.js"></script>
+	<script src="../../../js/tree.jquery.js"></script>
+	<script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/main.js"></script>
+		</body>
+
+</html>
+

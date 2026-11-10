@@ -108,7 +108,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this example a web service is created that stores and retrieves data from the database.
-<a href="https://jersey.github.io/">Jersey</a> will be used to create the web service.
+<a href="https://eclipse-ee4j.github.io/jersey/">Jersey</a> will be used to create the web service.
 For the database, <a href="https://www.eclipse.org/eclipselink/">EclipseLink</a> JPA provider will be used.</p>
 </div>
 <div class="paragraph">
@@ -218,13 +218,13 @@ This can be done in <code>webapp/WEB-INF/web.xml</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0"&gt;
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1"&gt;
   &lt;servlet&gt;
     &lt;servlet-name&gt;Jersey Web Application&lt;/servlet-name&gt;
-    &lt;servlet-class&gt;com.sun.jersey.spi.container.servlet.ServletContainer&lt;/servlet-class&gt;
+    &lt;servlet-class&gt;org.glassfish.jersey.servlet.ServletContainer&lt;/servlet-class&gt;
     &lt;init-param&gt;
       &lt;param-name&gt;jakarta.ws.rs.Application&lt;/param-name&gt;
       &lt;param-value&gt;org.superbiz.service.JerseyApplication&lt;/param-value&gt;
@@ -237,6 +237,18 @@ This can be done in <code>webapp/WEB-INF/web.xml</code>:</p>
   &lt;/servlet-mapping&gt;
 &lt;/web-app&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Jersey is used instead of the CXF based JAX-RS implementation shipped with TomEE, so the webapp disables the latter
+in <code>webapp/WEB-INF/application.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">openejb.jaxrs.on = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>EclipseLink is provided by the TomEE Plume distribution, which is also the one the test runs on.</p>
 </div>
 <div class="paragraph">
 <p>The web service is ready to be tested. For this, we will write an unit test using <a href="http://arquillian.org/">Arquillian</a>:</p>
@@ -252,9 +264,14 @@ public class JerseyApplicationTest {
                 .addPackage(JerseyApplication.class.getPackage())
                 .addPackage(Person.class.getPackage())
                 .addPackage(PersonDAO.class.getPackage())
-                .addAsManifestResource(new FileAsset(new File("src/main/webapp/WEB-INF/web.xml")), "web.xml")
-                .addAsManifestResource(new ClassLoaderAsset("META-INF/persistence.xml"), "persistence.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"))
+                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/application.properties"), "application.properties")
+                .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsLibraries(Stream.of(Maven.resolver().loadPomFromFile("pom.xml")
+                                .importCompileAndRuntimeDependencies().resolve().withTransitivity().asFile())
+                        .filter(lib -&gt; !lib.getName().startsWith("jakarta.")) // provided by the server
+                        .toArray(File[]::new));
     }
 
     @ArquillianResource
@@ -310,12 +327,6 @@ It&#8217;s a maven project, and the test can be run with <code>mvn clean install
 <p><a href="../../tomee-11.0/javadoc/org/apache/openejb/arquillian/common/IO.html">org.apache.openejb.arquillian.common.IO</a></p>
 </li>
 <li>
-<p><a href="../../jakartaee-11.0/javadoc/jakarta/annotation/PostConstruct.html">jakarta.annotation.PostConstruct</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-11.0/javadoc/jakarta/annotation/Resource.html">jakarta.annotation.Resource</a></p>
-</li>
-<li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Lock.html">jakarta.ejb.Lock</a></p>
 </li>
 <li>
@@ -323,9 +334,6 @@ It&#8217;s a maven project, and the test can be run with <code>mvn clean install
 </li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Singleton.html">jakarta.ejb.Singleton</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Startup.html">jakarta.ejb.Startup</a></p>
 </li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/enterprise/context/RequestScoped.html">jakarta.enterprise.context.RequestScoped</a></p>
@@ -350,9 +358,6 @@ It&#8217;s a maven project, and the test can be run with <code>mvn clean install
 </li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/PersistenceContext.html">jakarta.persistence.PersistenceContext</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-11.0/javadoc/jakarta/transaction/TransactionManager.html">jakarta.transaction.TransactionManager</a></p>
 </li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>

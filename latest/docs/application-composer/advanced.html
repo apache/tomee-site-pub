@@ -137,49 +137,46 @@ public class MyTest {
 <h2 id="_services">Services</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you want to test a JAXRS or JAXWS service you need to activate these
-services.</p>
+<p><code>@EnableServices</code> starts the listed server services. Each service needs
+its module on the classpath, for instance <code>openejb-ejbd</code> for <code>ejbd</code>
+(remote EJB clients):</p>
 </div>
-<div class="paragraph">
-<p>To do so just add the needed dependency and use <code>@EnableServices</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-ejbd&lt;/artifactId&gt;
+  &lt;version&gt;${openejb.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// runner if needed etc...
-@EnableService("jaxrs") // jaxws supported as well
+@EnableServices("ejbd")
 public class MyTest {
    //...
 }</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_random_port">Random port</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Services like JAXRS and JAXWS relies on HTTP. Often it is nice to have a
-random port to be able to deploy multiple tests/projects on the same CI
-platform at the same time.</p>
-</div>
-<div class="paragraph">
-<p>To shortcut all the needed logic you can use <code>@RandomPort</code>. It is simply
-an injection giving you either the port (<code>int</code>) or the root context
-(<code>URL</code>):</p>
+<p><code>@RandomPort</code> picks a free port for the named service and injects it as
+an <code>int</code> or as a <code>URL</code> (<code><a href="http://localhost:&lt;port&gt;/" class="bare">http://localhost:&lt;port&gt;/</a></code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// runner, services if needed etc...
+<pre class="highlight"><code class="language-java" data-lang="java">@EnableServices("ejbd")
 public class MyTest {
-   @RandomPort("http")
+   @RandomPort("ejbd")
    private int port;
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note: you can generate this way multiple ports. The value is the name of
-the service it will apply on (being said http is an alias for httpejbd
-which is our embedded http layer).</p>
+<p>The ApplicationComposer has no HTTP server, so it doesn&#8217;t deploy JAXRS or
+JAXWS endpoints. To test them over HTTP, use the TomEE Embedded runners
+(<code>tomee-embedded</code>), which support <code>@RandomPort("http")</code> to get a random
+HTTP port, or the Arquillian TomEE Embedded/Remote adapters.</p>
 </div>
 </div>
 </div>
@@ -188,15 +185,6 @@ which is our embedded http layer).</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>@SimpleLog</code> annotation allows you to have one-liner logs</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jaxrsprovider">@JaxrsProvider</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>@JaxrsProvider</code> allows you to specify on a <code>@Module</code> method the list of
-JAXRS provider you want to use.</p>
 </div>
 </div>
 </div>
@@ -274,7 +262,8 @@ an instance (or Class) implementing <code>FallbackPropertyInjector</code>.</p>
 <h2 id="_webresource">@WebResource</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Allow for web application to add folders containing web resources.</p>
+<p>Sets the folder containing the web resources (docBase) of the web
+application. Only the TomEE Embedded runners use it, with a single folder.</p>
 </div>
 </div>
 </div>

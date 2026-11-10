@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>REST and JAAS</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to secure a JAX-RS endpoint in TomEE using JAAS.
+Tomcat&#8217;s <code>JAASRealm</code> delegates authentication to OpenEJB&#8217;s
+<code>PropertiesLoginModule</code>, which reads users and groups from two properties
+files. The servlet container protects the REST URLs with BASIC authentication,
+and the EJB container checks the caller&#8217;s role with <code>@RolesAllowed</code> before
+the resource method runs.</p>
+</div>
+<div class="paragraph">
+<p>The example has no Java code besides the REST resource. The rest is
+configuration in <code>src/main/tomee/conf</code> and <code>WEB-INF/web.xml</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_rest_resource">The REST resource</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>JAASSecuredRestEndpoint</code> is a JAX-RS resource that is also a <code>@Singleton</code>
+EJB, so EJB security annotations apply to it. The <code>jaas</code> method is restricted
+to the <code>superUser</code> role and returns the name of the authenticated caller,
+taken from the injected <code>SessionContext</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.jaxrs.jaas;
+
+import jakarta.annotation.Resource;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.SessionContext;
+import jakarta.ejb.Singleton;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+
+@Path("rest")
+@Singleton
+@Lock(LockType.READ)
+public class JAASSecuredRestEndpoint {
+
+    @Resource
+    private SessionContext ctx;
+
+    @GET
+    @Path("jaas")
+    @RolesAllowed("superUser")
+    public String getPrincipalName() {
+        return ctx.getCallerPrincipal().getName();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@Lock(LockType.READ)</code> allows concurrent requests to the singleton, since
+the method does not change any state.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_jaas_login_module">The JAAS login module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>src/main/tomee/conf/login.config</code> declares a JAAS application named
+<code>PropertiesLoginModule</code> backed by
+<code>org.apache.openejb.core.security.jaas.PropertiesLoginModule</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>PropertiesLoginModule {
+    org.apache.openejb.core.security.jaas.PropertiesLoginModule required
+    Debug=false
+    UsersFile="users.properties"
+    GroupsFile="groups.properties";
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The login module looks up both files in the TomEE <code>conf</code> directory.
+<code>users.properties</code> maps each user name to its password:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>tomee=tomee
+adminOnly=adminOnly</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>groups.properties</code> maps each group (role) to a comma-separated list of users:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>admin=tomee,adminOnly
+superUser=tomee</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So <code>tomee</code> has the roles <code>admin</code> and <code>superUser</code>, while <code>adminOnly</code> only has
+<code>admin</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_tomcat_realm">The Tomcat realm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>src/main/tomee/conf/server.xml</code> configures a <code>JAASRealm</code> on the engine. Its
+<code>appName</code> matches the entry in <code>login.config</code>. <code>userClassNames</code> and
+<code>roleClassNames</code> tell Tomcat which principals created by the login module
+represent the user and its roles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;Server port="8005" shutdown="SHUTDOWN"&gt;
+  &lt;Listener className="org.apache.tomee.catalina.ServerListener"/&gt;
+  &lt;Listener className="org.apache.catalina.security.SecurityListener"/&gt;
+
+  &lt;Service name="Catalina"&gt;
+    &lt;Connector port="8080" protocol="HTTP/1.1"/&gt;
+    &lt;Engine name="Catalina" defaultHost="localhost"&gt;
+
+      &lt;Realm className="org.apache.catalina.realm.JAASRealm" appName="PropertiesLoginModule"
+             userClassNames="org.apache.openejb.core.security.jaas.UserPrincipal"
+             roleClassNames="org.apache.openejb.core.security.jaas.GroupPrincipal"&gt;
+      &lt;/Realm&gt;
+
+      &lt;Host name="localhost" appBase="webapps"/&gt;
+    &lt;/Engine&gt;
+  &lt;/Service&gt;
+&lt;/Server&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_web_xml_security_constraint">The web.xml security constraint</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>WEB-INF/web.xml</code> enables BASIC authentication and protects every URL under
+<code>/rest/<strong></code>. The <code>&lt;role-name&gt;</strong>&lt;/role-name&gt;</code> auth constraint only requires the
+caller to be authenticated with one of the declared roles; the finer-grained
+check is left to <code>@RolesAllowed</code> on the resource. The transport guarantee
+<code>CONFIDENTIAL</code> requires the requests to use HTTPS.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"&gt;
+  &lt;login-config&gt;
+    &lt;auth-method&gt;BASIC&lt;/auth-method&gt;
+    &lt;realm-name&gt;PropertiesLoginModule&lt;/realm-name&gt;
+  &lt;/login-config&gt;
+
+  &lt;security-constraint&gt;
+    &lt;web-resource-collection&gt;
+      &lt;web-resource-name&gt;Secured REST Service with JAAS&lt;/web-resource-name&gt;
+      &lt;url-pattern&gt;/rest/*&lt;/url-pattern&gt;
+    &lt;/web-resource-collection&gt;
+    &lt;auth-constraint&gt;
+      &lt;role-name&gt;*&lt;/role-name&gt;
+      &lt;!-- we'll use JAAS so don't filter too much here --&gt;
+    &lt;/auth-constraint&gt;
+    &lt;user-data-constraint&gt;
+      &lt;transport-guarantee&gt;CONFIDENTIAL&lt;/transport-guarantee&gt;
+    &lt;/user-data-constraint&gt;
+  &lt;/security-constraint&gt;
+
+  &lt;security-role&gt;
+    &lt;role-name&gt;admin&lt;/role-name&gt;
+  &lt;/security-role&gt;
+  &lt;security-role&gt;
+    &lt;role-name&gt;superUser&lt;/role-name&gt;
+  &lt;/security-role&gt;
+&lt;/web-app&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_example">Running the example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>tomee-maven-plugin</code> copies <code>src/main/tomee/conf</code> into the TomEE
+instance it builds, deploys the application as <code>ROOT</code> and points the JVM to
+the JAAS configuration through the <code>java.security.auth.login.config</code> system
+property:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.tomee.maven&lt;/groupId&gt;
+  &lt;artifactId&gt;tomee-maven-plugin&lt;/artifactId&gt;
+  &lt;version&gt;11.0.0-M2-SNAPSHOT&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;systemVariables&gt;
+      &lt;java.security.auth.login.config&gt;${project.build.directory}/apache-tomee/conf/login.config&lt;/java.security.auth.login.config&gt;
+    &lt;/systemVariables&gt;
+    &lt;context&gt;ROOT&lt;/context&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example does not contain automated tests, so <code>mvn clean test</code> only
+compiles it. To try it, build and start TomEE with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>mvn clean package tomee:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The endpoint is <code>rest/jaas</code> under the root context. Because of the
+<code>CONFIDENTIAL</code> transport guarantee and the fact that the provided <code>server.xml</code>
+only defines a plain HTTP connector on port 8080, you need to add an HTTPS
+connector (with a keystore placed in <code>src/main/tomee/conf</code>) before calling it.
+Then:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tomee</code> / <code>tomee</code> has the <code>superUser</code> role and gets its principal name, <code>tomee</code>, back.</p>
+</li>
+<li>
+<p><code>adminOnly</code> / <code>adminOnly</code> is authenticated but only has <code>admin</code>, so <code>@RolesAllowed("superUser")</code> rejects the call.</p>
+</li>
+<li>
+<p>Requests without credentials or with a wrong password are rejected by the BASIC authentication.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

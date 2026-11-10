@@ -158,46 +158,33 @@ public class Calculator {
 <pre class="highlight"><code class="language-java" data-lang="java">package org.superbiz.calculator;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import jakarta.ejb.embeddable.EJBContainer;
-import javax.naming.NamingException;
 import java.net.URL;
-import java.util.Properties;
 
 import static org.junit.Assert.assertTrue;
 
+@RunWith(Arquillian.class)
 public class CalculatorTest {
-    private static EJBContainer container;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
-        final Properties properties = new Properties();
-        properties.setProperty("openejb.embedded.remotable", "true");
+    @ArquillianResource
+    private URL base;
 
-        container = EJBContainer.createEJBContainer(properties);
-    }
-
-    @Before
-    public void inject() throws NamingException {
-        if (container != null) {
-            container.getContext().bind("inject", this);
-        }
-    }
-
-    @AfterClass
-    public static void close() {
-        if (container != null) {
-            container.close();
-        }
+    @Deployment(testable = false)
+    public static WebArchive war() {
+        return ShrinkWrap.create(WebArchive.class, "simple-webservice-without-interface.war")
+                .addClass(Calculator.class);
     }
 
     @Test
     public void wsdlExists() throws Exception {
-        final URL url = new URL("http://127.0.0.1:4204/Calculator?wsdl");
+        final URL url = new URL(base.toExternalForm() + "webservices/Calculator?wsdl");
         assertTrue(IOUtils.readLines(url.openStream()).size() &gt; 0);
         assertTrue(IOUtils.readLines(url.openStream()).toString().contains("CalculatorWsService"));
     }
@@ -207,11 +194,21 @@ public class CalculatorTest {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ejb_jar_xml_2">ejb-jar.xml</h2>
+<h2 id="_arquillian_xml">arquillian.xml</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;arquillian
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    &gt;
+  &lt;container qualifier="tomee" default="true"&gt;
+    &lt;configuration&gt;
+      &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+      &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+      &lt;property name="appWorkingDir"&gt;target/tomee-embedded&lt;/property&gt;
+    &lt;/configuration&gt;
+  &lt;/container&gt;
+&lt;/arquillian&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -223,9 +220,6 @@ public class CalculatorTest {
 <ul>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Stateless.html">jakarta.ejb.Stateless</a></p>
-</li>
-<li>
-<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/embeddable/EJBContainer.html">jakarta.ejb.embeddable.EJBContainer</a></p>
 </li>
 <li>
 <p><a href="../../jakartaee-11.0/javadoc/jakarta/jws/WebService.html">jakarta.jws.WebService</a></p>

@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Connectors in EAR Files</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows a Jakarta Connectors (JCA) resource adapter packaged as a RAR inside an EAR, next to a WAR that uses it.
+The resource adapter supports both directions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>outbound</strong>: a REST endpoint in the WAR gets a <code>SampleConnectionFactory</code> injected and sends a message through a connection;</p>
+</li>
+<li>
+<p><strong>inbound</strong>: the resource adapter delivers that message to a message-driven bean in the WAR, which implements the adapter&#8217;s <code>InboundListener</code> interface.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The message is stored in a singleton and can be read back over HTTP, so a single POST followed by a GET exercises the full round trip.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_module_layout">Module layout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The example is a Maven multi-module build. The parent <code>pom.xml</code> lists the modules in build order:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;modules&gt;
+  &lt;module&gt;connector-sample-api&lt;/module&gt;
+  &lt;module&gt;connector-sample-impl&lt;/module&gt;
+  &lt;module&gt;connector-sample-rar&lt;/module&gt;
+  &lt;module&gt;connector-sample-war&lt;/module&gt;
+  &lt;module&gt;connector-sample-ear&lt;/module&gt;
+  &lt;module&gt;connector-sample-functional-tests&lt;/module&gt;
+&lt;/modules&gt;</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">Packaging</th>
+<th class="tableblock halign-left valign-top">Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The interfaces shared by the adapter and the application: <code>SampleConnectionFactory</code>, <code>SampleConnection</code> and <code>InboundListener</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-impl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The resource adapter implementation (<code>org.superbiz.connector.adapter</code>). Depends on the API with <code>provided</code> scope.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-rar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wraps the impl jar and adds <code>META-INF/ra.xml</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-war</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">war</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application: a REST endpoint, a message-driven bean and a singleton. Depends on the API with <code>provided</code> scope.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-ear</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ear</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bundles the RAR, the WAR and the API jar into one enterprise archive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connector-sample-functional-tests</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arquillian tests that deploy an EAR to a remote TomEE Plus.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The API jar is the one piece of code both sides need, so it is not packaged in the RAR or in the WAR. It goes into the EAR&#8217;s <code>lib</code> directory, where the adapter and the web application can both see it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_api">The API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The outbound contract is a connection factory and a connection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface SampleConnectionFactory extends Serializable, Referenceable {
+    public SampleConnection getConnection() throws ResourceException;
+}
+
+public interface SampleConnection {
+    public void sendMessage(final String message);
+    public void close();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The inbound contract is the message listener interface that message-driven beans implement:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public interface InboundListener {
+    public void receiveMessage(final String message);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_resource_adapter">The resource adapter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>SampleResourceAdapter</code> keeps track of every activated endpoint. When a message-driven bean is deployed, the container calls <code>endpointActivation</code>, and the adapter creates a <code>MessageEndpoint</code> and stores it. <code>sendMessage</code> passes a message to every registered endpoint by casting it to <code>InboundListener</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Connector(description = "Sample Resource Adapter", displayName = "Sample Resource Adapter", eisType = "Sample Resource Adapter", version = "1.0")
+public class SampleResourceAdapter implements ResourceAdapter {
+
+    final Map&lt;SampleActivationSpec, EndpointTarget&gt; targets = new ConcurrentHashMap&lt;&gt;();
+
+    public void endpointActivation(final MessageEndpointFactory messageEndpointFactory, final ActivationSpec activationSpec)
+            throws ResourceException
+    {
+        final SampleActivationSpec sampleActivationSpec = (SampleActivationSpec) activationSpec;
+
+        try {
+            final MessageEndpoint messageEndpoint = messageEndpointFactory.createEndpoint(null);
+            final EndpointTarget target = new EndpointTarget(messageEndpoint);
+            targets.put(sampleActivationSpec, target);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void endpointDeactivation(MessageEndpointFactory messageEndpointFactory, ActivationSpec activationSpec) {
+        final SampleActivationSpec sampleActivationSpec = (SampleActivationSpec) activationSpec;
+
+        final EndpointTarget endpointTarget = targets.get(sampleActivationSpec);
+        if (endpointTarget == null) {
+            throw new IllegalStateException("No EndpointTarget to undeploy for ActivationSpec " + activationSpec);
+        }
+
+        endpointTarget.messageEndpoint.release();
+    }
+
+    public void sendMessage(final String message) {
+        final Collection&lt;EndpointTarget&gt; endpoints = this.targets.values();
+        for (final EndpointTarget endpoint : endpoints) {
+            endpoint.invoke(message);
+        }
+    }
+
+    public static class EndpointTarget {
+        private final MessageEndpoint messageEndpoint;
+
+        public EndpointTarget(final MessageEndpoint messageEndpoint) {
+            this.messageEndpoint = messageEndpoint;
+        }
+
+        public void invoke(final String message) {
+            ((InboundListener)this.messageEndpoint).receiveMessage(message);
+        }
+    }
+
+    // start, stop and getXAResources omitted
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SampleActivationSpec</code> links the <code>InboundListener</code> interface to this adapter through <code>@Activation</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Activation(messageListeners = InboundListener.class)
+public class SampleActivationSpec implements ActivationSpec {
+    // holds the ResourceAdapter and the bean class
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The outbound side follows the usual JCA pattern. <code>SampleManagedConnectionFactory</code> is declared with <code>@ConnectionDefinition</code> and implements <code>ResourceAdapterAssociation</code>, so the container gives it a reference to the resource adapter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@ConnectionDefinition(connectionFactory = SampleConnectionFactory.class,
+        connectionFactoryImpl = SampleConnectionFactoryImpl.class,
+        connection = SampleConnection.class,
+        connectionImpl = SampleConnectionImpl.class)
+public class SampleManagedConnectionFactory implements ManagedConnectionFactory, ResourceAdapterAssociation {
+
+    public Object createConnectionFactory(ConnectionManager cxManager) throws ResourceException {
+        return new SampleConnectionFactoryImpl(this, cxManager);
+    }
+
+    public Object createConnectionFactory() throws ResourceException {
+        throw new ResourceException("This resource adapter doesn't support non-managed environments");
+    }
+
+    public ManagedConnection createManagedConnection(Subject subject,
+                                                     ConnectionRequestInfo cxRequestInfo) throws ResourceException {
+        return new SampleManagedConnection(this);
+    }
+
+    // matchManagedConnections, log writer and resource adapter accessors omitted
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SampleConnectionFactoryImpl.getConnection()</code> asks the container&#8217;s <code>ConnectionManager</code> for a connection. The <code>SampleConnectionImpl</code> handle it returns delegates <code>sendMessage</code> to its <code>SampleManagedConnection</code>, which hands the message to the resource adapter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">void sendMessage(final String message) {
+    final SampleResourceAdapter resourceAdapter = (SampleResourceAdapter) mcf.getResourceAdapter();
+    resourceAdapter.sendMessage(message);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is where outbound and inbound meet. Sending a message on an outbound connection delivers it to every activated message-driven bean.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_rar_descriptor">The RAR descriptor</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>connector-sample-rar/src/main/rar/META-INF/ra.xml</code> declares the resource adapter class, the outbound connection definition (without transaction support) and the inbound message listener with its activation spec:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;connector xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/connector_1_7.xsd"
+           version="1.7"&gt;
+    &lt;description&gt;Sample Resource Adapter&lt;/description&gt;
+    &lt;display-name&gt;Sample Resource Adapter&lt;/display-name&gt;
+    &lt;eis-type&gt;Sample Resource Adapter&lt;/eis-type&gt;
+    &lt;resourceadapter-version&gt;1.0&lt;/resourceadapter-version&gt;
+    &lt;license&gt;
+        &lt;license-required&gt;false&lt;/license-required&gt;
+    &lt;/license&gt;
+    &lt;resourceadapter&gt;
+        &lt;resourceadapter-class&gt;org.superbiz.connector.adapter.SampleResourceAdapter&lt;/resourceadapter-class&gt;
+        &lt;config-property&gt;
+            &lt;config-property-name&gt;interval&lt;/config-property-name&gt;
+            &lt;config-property-type&gt;int&lt;/config-property-type&gt;
+            &lt;config-property-value&gt;15&lt;/config-property-value&gt;
+        &lt;/config-property&gt;
+        &lt;outbound-resourceadapter&gt;
+            &lt;connection-definition&gt;
+                &lt;managedconnectionfactory-class&gt;org.superbiz.connector.adapter.SampleManagedConnectionFactory&lt;/managedconnectionfactory-class&gt;
+                &lt;connectionfactory-interface&gt;SampleConnectionFactory&lt;/connectionfactory-interface&gt;
+                &lt;connectionfactory-impl-class&gt;org.superbiz.connector.adapter.SampleConnectionFactoryImpl&lt;/connectionfactory-impl-class&gt;
+                &lt;connection-interface&gt;SampleConnection&lt;/connection-interface&gt;
+                &lt;connection-impl-class&gt;org.superbiz.connector.adapter.SampleConnectionImpl&lt;/connection-impl-class&gt;
+            &lt;/connection-definition&gt;
+            &lt;transaction-support&gt;NoTransaction&lt;/transaction-support&gt;
+            &lt;reauthentication-support&gt;false&lt;/reauthentication-support&gt;
+        &lt;/outbound-resourceadapter&gt;
+        &lt;inbound-resourceadapter&gt;
+            &lt;messageadapter&gt;
+                &lt;messagelistener&gt;
+                    &lt;messagelistener-type&gt;org.superbiz.connector.api.InboundListener&lt;/messagelistener-type&gt;
+                    &lt;activationspec&gt;
+                        &lt;activationspec-class&gt;org.superbiz.connector.adapter.SampleActivationSpec&lt;/activationspec-class&gt;
+                    &lt;/activationspec&gt;
+                &lt;/messagelistener&gt;
+            &lt;/messageadapter&gt;
+        &lt;/inbound-resourceadapter&gt;
+    &lt;/resourceadapter&gt;
+&lt;/connector&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>connector-sample-rar</code> module has <code>rar</code> packaging and a single dependency on <code>connector-sample-impl</code>, so the RAR contains the impl jar and this descriptor.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_web_application">The web application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The WAR also has a TomEE-specific <code>WEB-INF/resources.xml</code>. It declares the resource adapter, a message-driven container bound to it, and the connection factory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;resources&gt;
+    &lt;Resource id="SampleResourceAdapter" class-name="org.superbiz.connector.adapter.SampleResourceAdapter"&gt;
+    &lt;/Resource&gt;
+
+    &lt;Container id="SampleMDBContainer" ctype="MESSAGE"&gt;
+        ResourceAdapter=SampleResourceAdapter
+        ActivationSpecClass=org.superbiz.connector.adapter.SampleActivationSpec
+        MessageListenerInterface=org.superbiz.connector.api.InboundListener
+    &lt;/Container&gt;
+
+    &lt;Resource id="SampleConnectionFactory" type="org.superbiz.connector.api.SampleConnectionFactory" class-name="org.superbiz.connector.adapter.SampleManagedConnectionFactory"&gt;
+        ResourceAdapter=SampleResourceAdapter
+        TransactionSupport=none
+    &lt;/Resource&gt;
+&lt;/resources&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Sender</code> is a singleton EJB that is also a JAX-RS resource. A POST takes a connection from the injected <code>SampleConnectionFactory</code> and sends the request body. A GET returns every message received so far, one per line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Singleton
+@Lock(LockType.READ)
+@Path("")
+public class Sender {
+
+    @Resource
+    private SampleConnectionFactory cf;
+
+    @EJB
+    private MessagesReceived messagesReceived;
+
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    public void sendMessage(final String message) {
+        try {
+            final SampleConnection connection = cf.getConnection();
+            connection.sendMessage(message);
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getMessages() {
+        final StringBuilder sb = new StringBuilder();
+        final List&lt;String&gt; messages = this.messagesReceived.getMessagesReceived();
+        for (int i = 0; i &lt; messages.size(); i++) {
+            if (i &gt; 0) {
+                sb.append("\n");
+            }
+            sb.append(messages.get(i));
+        }
+
+        return sb.toString();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Receiver</code> is the inbound endpoint. Because it implements <code>InboundListener</code>, not a JMS <code>MessageListener</code>, it is driven by the resource adapter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@MessageDriven(name = "Receiver")
+public class Receiver implements InboundListener {
+
+    @EJB
+    private MessagesReceived messagesReceived;
+
+    @Resource
+    private MessageDrivenContext context;
+
+    @Override
+    public void receiveMessage(String message) {
+        messagesReceived.messageReceived(message);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MessagesReceived</code> is a <code>@Singleton</code> that stores the received messages in a list.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_ear">The EAR</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>connector-sample-ear</code> uses the <code>maven-ear-plugin</code> to generate <code>application.xml</code>. It maps the WAR to the <code>/sample</code> context root, registers the RAR as a connector module, and puts library dependencies (the API jar) in <code>lib</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;artifactId&gt;maven-ear-plugin&lt;/artifactId&gt;
+  &lt;version&gt;3.4.0&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;version&gt;6&lt;/version&gt;
+    &lt;generateApplicationXml&gt;true&lt;/generateApplicationXml&gt;
+    &lt;defaultLibBundleDir&gt;lib&lt;/defaultLibBundleDir&gt;
+    &lt;modules&gt;
+      &lt;webModule&gt;
+        &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+        &lt;artifactId&gt;connector-sample-war&lt;/artifactId&gt;
+        &lt;contextRoot&gt;/sample&lt;/contextRoot&gt;
+      &lt;/webModule&gt;
+      &lt;rarModule&gt;
+        &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+        &lt;artifactId&gt;connector-sample-rar&lt;/artifactId&gt;
+      &lt;/rarModule&gt;
+    &lt;/modules&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The tests are in <code>connector-sample-functional-tests</code>. They do not deploy the EAR built by Maven. Instead, each test builds the same structure with ShrinkWrap: an API jar in <code>lib</code>, a RAR that contains the impl jar and the real <code>ra.xml</code>, and a WAR that contains the <code>org.superbiz.application</code> classes and the real <code>resources.xml</code>. The descriptors are read from the sibling modules through the <code>Basedir</code> helper. The generated <code>application.xml</code> matches the one from the EAR module:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">final EnterpriseArchive enterpriseArchive = ShrinkWrap.create(EnterpriseArchive.class, "connector-sample.ear");
+enterpriseArchive.addAsLibraries(apiJar);
+enterpriseArchive.addAsModule(rar);
+enterpriseArchive.addAsModule(webArchive);
+
+ApplicationDescriptor applicationXml = Descriptors.create(ApplicationDescriptor.class);
+applicationXml.displayName("connector-sample-ear");
+applicationXml.createModule()
+        .getOrCreateWeb()
+            .webUri("connector-sample-war.war")
+            .contextRoot("/sample")
+        .up().up()
+        .createModule().connector("connector-sample-ra.rar")
+        .up().libraryDirectory("lib");</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_eartest">EARTest</h3>
+<div class="paragraph">
+<p><code>EARTest</code> runs with the Arquillian <code>arquillian-tomee-remote</code> adapter against TomEE Plus, configured in <code>src/test/resources/arquillian.xml</code>. The <code>${tomee.version}</code> placeholder is filled in by Maven resource filtering:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;container qualifier="tomee" default="true"&gt;
+  &lt;configuration&gt;
+    &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+    &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+    &lt;property name="version"&gt;${tomee.version}&lt;/property&gt;
+    &lt;property name="classifier"&gt;plus&lt;/property&gt;
+    &lt;property name="openejbVersion"&gt;${tomee.version}&lt;/property&gt;
+    &lt;property name="dir"&gt;target/apache-tomee-remote&lt;/property&gt;
+    &lt;property name="appWorkingDir"&gt;target/arquillian-test-working-dir&lt;/property&gt;
+  &lt;/configuration&gt;
+&lt;/container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test runs as a client. It POSTs <code>Hello, world</code> to <code>/sample/</code> and expects <code>204</code>. Then it GETs the same URL and expects <code>Hello, world</code> back, which proves the message went out through the connection factory and came back in through the message-driven bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testShouldMakeSureWebappIsWorking() throws Exception {
+    final String url = "http://" + deploymentUrl.getHost() + ":" + deploymentUrl.getPort() + "/sample/";
+    final WebClient webClient = WebClient.create(url);
+    final Response response = webClient.path("").type(MediaType.TEXT_PLAIN_TYPE).post("Hello, world");
+    assertEquals(204, response.getStatus());
+
+    final String result = webClient.path("").accept(MediaType.TEXT_PLAIN_TYPE).get(String.class);
+    assertEquals("Hello, world", result);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployinwebappsdirectorytest">DeployInWebAppsDirectoryTest</h3>
+<div class="paragraph">
+<p><code>DeployInWebAppsDirectoryTest</code> uses <code>RemoteTomEEContainer</code> only to start and stop TomEE Plus. It deploys by copying the exported EAR into the server&#8217;s <code>webapps</code> directory, which is the path fixed in TOMEE-2145. It retries the same POST/GET check for up to 30 attempts, one second apart, while TomEE picks up the archive. Then it stops the container and starts it again to make sure it still starts with the EAR in <code>webapps</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">container.start();
+final File webapps = new File(configuration.getDir(), "apache-tomee-" + configuration.getClassifier() + "-" + configuration.getVersion() + "/webapps");
+webapps.mkdirs();
+
+final InputStream is = createDeployment().as(ZipExporter.class).exportAsInputStream();
+IO.copy(is, new File(webapps, "connector-sample.ear"));
+
+final String appUrl = "http://localhost:" + configuration.getHttpPort() + "/sample/";
+attempt(new Callable&lt;Void&gt;() {
+    @Override
+    public Void call() throws Exception {
+        runTests(appUrl);
+        return null;
+    }
+}, 30);
+
+container.stop();
+
+// restart the container, make sure all is still well
+container.start();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running">Running</h3>
+<div class="paragraph">
+<p>The functional tests module depends on the other modules' artifacts, including the EAR and the WAR&#8217;s <code>classes</code> jar. Build the whole example from the <code>connector-ear</code> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both tests download and start a TomEE Plus distribution of the version set by <code>tomee.version</code> in the parent POM.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/openejb/loader/IO.html">org.apache.openejb.loader.IO</a></p>
+</li>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/tomee/arquillian/remote/RemoteTomEEConfiguration.html">org.apache.tomee.arquillian.remote.RemoteTomEEConfiguration</a></p>
+</li>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/tomee/arquillian/remote/RemoteTomEEContainer.html">org.apache.tomee.arquillian.remote.RemoteTomEEContainer</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/annotation/Resource.html">jakarta.annotation.Resource</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/EJB.html">jakarta.ejb.EJB</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Lock.html">jakarta.ejb.Lock</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/LockType.html">jakarta.ejb.LockType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/MessageDriven.html">jakarta.ejb.MessageDriven</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/MessageDrivenContext.html">jakarta.ejb.MessageDrivenContext</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Singleton.html">jakarta.ejb.Singleton</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/NotSupportedException.html">jakarta.resource.NotSupportedException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/Referenceable.html">jakarta.resource.Referenceable</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/ResourceException.html">jakarta.resource.ResourceException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/Activation.html">jakarta.resource.spi.Activation</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ActivationSpec.html">jakarta.resource.spi.ActivationSpec</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/BootstrapContext.html">jakarta.resource.spi.BootstrapContext</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ConnectionDefinition.html">jakarta.resource.spi.ConnectionDefinition</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ConnectionEvent.html">jakarta.resource.spi.ConnectionEvent</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ConnectionEventListener.html">jakarta.resource.spi.ConnectionEventListener</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ConnectionManager.html">jakarta.resource.spi.ConnectionManager</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ConnectionRequestInfo.html">jakarta.resource.spi.ConnectionRequestInfo</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/Connector.html">jakarta.resource.spi.Connector</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/InvalidPropertyException.html">jakarta.resource.spi.InvalidPropertyException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/LocalTransaction.html">jakarta.resource.spi.LocalTransaction</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ManagedConnection.html">jakarta.resource.spi.ManagedConnection</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ManagedConnectionFactory.html">jakarta.resource.spi.ManagedConnectionFactory</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ManagedConnectionMetaData.html">jakarta.resource.spi.ManagedConnectionMetaData</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ResourceAdapter.html">jakarta.resource.spi.ResourceAdapter</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ResourceAdapterAssociation.html">jakarta.resource.spi.ResourceAdapterAssociation</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/ResourceAdapterInternalException.html">jakarta.resource.spi.ResourceAdapterInternalException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/endpoint/MessageEndpoint.html">jakarta.resource.spi.endpoint.MessageEndpoint</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/resource/spi/endpoint/MessageEndpointFactory.html">jakarta.resource.spi.endpoint.MessageEndpointFactory</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/Consumes.html">jakarta.ws.rs.Consumes</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/GET.html">jakarta.ws.rs.GET</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/POST.html">jakarta.ws.rs.POST</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/Path.html">jakarta.ws.rs.Path</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/Produces.html">jakarta.ws.rs.Produces</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/core/MediaType.html">jakarta.ws.rs.core.MediaType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ws/rs/core/Response.html">jakarta.ws.rs.core.Response</a></p>
+</li>
+<li>
+<p><a href="../../latest/javadoc/org/apache/ziplock/JarLocation.html">org.apache.ziplock.JarLocation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

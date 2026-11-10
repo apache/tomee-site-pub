@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../../favicon.ico">
+	<link rel="icon"  type="image/png" href="../../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../../img/apache_tomee-logo.svg"
+							onerror="this.src='../../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../../docs.html">Documentation</a></li>
+					<li><a href="../../community/index.html">Community</a></li>
+					<li><a href="../../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Simple EAR</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example shows how to package a small Jakarta EE application as an
+Enterprise Archive (EAR) with Maven and how to test it against TomEE. It
+uses the moviefun code found in many other examples and splits it into
+five Maven modules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>moviefun-business-model</code> - the JPA entity, the <code>persistence.xml</code> and the
+<code>Movies</code> business interface</p>
+</li>
+<li>
+<p><code>moviefun-business-logic</code> - the <code>MoviesBean</code> stateless session bean (EJB module)</p>
+</li>
+<li>
+<p><code>moviefun-webapp</code> - a servlet and JSPs that use the EJB (web module)</p>
+</li>
+<li>
+<p><code>moviefun-ear</code> - packages the EJB module and the web module into an EAR</p>
+</li>
+<li>
+<p><code>moviefun-functional-tests</code> - deploys the EAR to a remote TomEE with
+Arquillian and checks the web pages with HtmlUnit</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The dependencies between the modules look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>moviefun-business-model
+        ^         ^
+        |         | (provided)
+moviefun-business-logic   moviefun-webapp
+        ^  (ejb)            ^  (war)
+        |                   |
+        +---- moviefun-ear -+
+                  ^  (ear, test scope)
+                  |
+        moviefun-functional-tests</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_layout">Project layout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The parent pom lists the modules in build order:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+&lt;artifactId&gt;moviefun-ear-parent&lt;/artifactId&gt;
+&lt;version&gt;11.0.0-M2-SNAPSHOT&lt;/version&gt;
+&lt;packaging&gt;pom&lt;/packaging&gt;
+&lt;name&gt;TomEE :: Examples :: Simple EAR&lt;/name&gt;
+&lt;modules&gt;
+  &lt;module&gt;moviefun-business-model&lt;/module&gt;
+  &lt;module&gt;moviefun-business-logic&lt;/module&gt;
+  &lt;module&gt;moviefun-webapp&lt;/module&gt;
+  &lt;module&gt;moviefun-ear&lt;/module&gt;
+  &lt;module&gt;moviefun-functional-tests&lt;/module&gt;
+&lt;/modules&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It also turns on filtering for <code>src/test/resources</code> and passes the TomEE
+version to the tests as the <code>tomee.version</code> system property.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_business_model">Business model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>moviefun-business-model</code> module is a plain jar holding the <code>Movie</code>
+entity:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Entity
+public class Movie implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String director;
+    private String title;
+    private int year;
+    private String genre;
+    private int rating;
+
+    // constructors, getters and setters
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the persistence unit that maps it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+
+  &lt;persistence-unit name="movie-unit"&gt;
+    &lt;jta-data-source&gt;movieDatabase&lt;/jta-data-source&gt;
+    &lt;non-jta-data-source&gt;movieDatabaseUnmanaged&lt;/non-jta-data-source&gt;
+    &lt;class&gt;org.superbiz.model.Movie&lt;/class&gt;
+
+    &lt;properties&gt;
+      &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+    &lt;/properties&gt;
+  &lt;/persistence-unit&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and the <code>@Local</code> business interface that both the EJB module and the web
+module compile against:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Local
+public interface Movies {
+    Movie find(Long id);
+
+    void addMovie(Movie movie);
+
+    void editMovie(Movie movie);
+
+    void deleteMovieId(long id);
+
+    List&lt;Movie&gt; getMovies();
+
+    List&lt;Movie&gt; findAll(int firstResult, int maxResults);
+
+    int countAll();
+
+    int count(String field, String searchTerm);
+
+    List&lt;Movie&gt; findRange(String field, String searchTerm, int firstResult, int maxResults);
+
+    void clean();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the interface lives in the model module, the webapp only needs the
+model jar to talk to the EJB and does not depend on the business logic
+module at all.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_business_logic">Business logic</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>moviefun-business-logic</code> module depends on the model and contains the
+EJB. An empty <code>META-INF/ejb-jar.xml</code> marks the jar as an EJB module:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;ejb-jar/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MoviesBean</code> is a stateless session bean that implements <code>Movies</code> using an
+<code>EntityManager</code> for the <code>movie-unit</code> persistence unit:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+public class MoviesBean implements Movies {
+
+    @PersistenceContext(unitName = "movie-unit")
+    private EntityManager entityManager;
+
+    @Override
+    public void addMovie(Movie movie) {
+        entityManager.persist(movie);
+    }
+
+    @Override
+    public void deleteMovieId(long id) {
+        Movie movie = entityManager.find(Movie.class, id);
+        entityManager.remove(movie);
+    }
+
+    @Override
+    public List&lt;Movie&gt; getMovies() {
+        CriteriaQuery&lt;Movie&gt; cq = entityManager.getCriteriaBuilder().createQuery(Movie.class);
+        cq.select(cq.from(Movie.class));
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    // find, editMovie, findAll, countAll, count, findRange and clean
+    // are implemented with the Criteria API in the same way
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webapp">Webapp</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>moviefun-webapp</code> module is packaged as a war. It depends on the
+business model with <code>provided</code> scope, so the model classes are not copied
+into <code>WEB-INF/lib</code>; inside the EAR they come from the EAR&#8217;s <code>lib</code> directory
+instead (see below).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+  &lt;artifactId&gt;moviefun-business-model&lt;/artifactId&gt;
+  &lt;version&gt;${project.version}&lt;/version&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ActionServlet</code> gets the EJB from the EJB module injected through its
+<code>Movies</code> interface and uses it to add, remove, list and search movies
+before forwarding to <code>WEB-INF/moviefun.jsp</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet("/moviefun/*")
+public class ActionServlet extends HttpServlet {
+
+    public static int PAGE_SIZE = 5;
+
+    @EJB
+    private Movies moviesBean;
+
+    private void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        if ("Add".equals(action)) {
+            // read the form fields and call moviesBean.addMovie(...)
+        } else if ("Remove".equals(action)) {
+            // call moviesBean.deleteMovieId(...) for every selected id
+        } else {
+            // page through moviesBean.findAll(...) or moviesBean.findRange(...)
+        }
+
+        request.getRequestDispatcher("WEB-INF/moviefun.jsp").forward(request, response);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>index.jsp</code> links to two pages: <code>setup.jsp</code>, which seeds the database with
+sample data, and <code>moviefun</code>, the servlet above. <code>setup.jsp</code> looks up the
+bean through the <code>java:comp/env</code> entry created by the servlet&#8217;s <code>@EJB</code>
+field:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">InitialContext initialContext = new InitialContext();
+Movies moviesBean = (Movies) initialContext.lookup("java:comp/env/org.superbiz.moviefun.ActionServlet/moviesBean");
+
+moviesBean.addMovie(new Movie("Wedding Crashers", "David Dobkin", "Comedy", 7, 2005));
+moviesBean.addMovie(new Movie("Starsky &amp; Hutch", "Todd Phillips", "Action", 6, 2004));
+moviesBean.addMovie(new Movie("Shanghai Knights", "David Dobkin", "Action", 6, 2003));
+moviesBean.addMovie(new Movie("I-Spy", "Betty Thomas", "Adventure", 5, 2002));
+moviesBean.addMovie(new Movie("The Royal Tenenbaums", "Wes Anderson", "Comedy", 8, 2001));
+moviesBean.addMovie(new Movie("Zoolander", "Ben Stiller", "Comedy", 6, 2001));
+moviesBean.addMovie(new Movie("Shanghai Noon", "Tom Dey", "Comedy", 7, 2000));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ear_packaging">EAR packaging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>moviefun-ear</code> module has <code>ear</code> packaging and depends on the EJB module
+(type <code>ejb</code>) and on the web module (type <code>war</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;artifactId&gt;moviefun-ear&lt;/artifactId&gt;
+&lt;packaging&gt;ear&lt;/packaging&gt;
+
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+    &lt;artifactId&gt;moviefun-business-logic&lt;/artifactId&gt;
+    &lt;version&gt;${project.version}&lt;/version&gt;
+    &lt;type&gt;ejb&lt;/type&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+    &lt;artifactId&gt;moviefun-webapp&lt;/artifactId&gt;
+    &lt;type&gt;war&lt;/type&gt;
+    &lt;version&gt;${project.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>maven-ear-plugin</code> generates the <code>application.xml</code>, maps the web module
+to the <code>/moviefun</code> context root and puts library jars into <code>lib</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+  &lt;artifactId&gt;maven-ear-plugin&lt;/artifactId&gt;
+  &lt;version&gt;3.4.0&lt;/version&gt;
+  &lt;configuration&gt;
+    &lt;version&gt;8&lt;/version&gt;
+    &lt;generateApplicationXml&gt;true&lt;/generateApplicationXml&gt;
+    &lt;defaultLibBundleDir&gt;lib&lt;/defaultLibBundleDir&gt;
+    &lt;modules&gt;
+      &lt;webModule&gt;
+        &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+        &lt;artifactId&gt;moviefun-webapp&lt;/artifactId&gt;
+        &lt;contextRoot&gt;/moviefun&lt;/contextRoot&gt;
+      &lt;/webModule&gt;
+      &lt;ejbModule&gt;
+        &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+        &lt;artifactId&gt;moviefun-business-logic&lt;/artifactId&gt;
+      &lt;/ejbModule&gt;
+    &lt;/modules&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>moviefun-business-model</code> is not listed directly; it is a transitive
+dependency of the EJB module, so the plugin places it in the EAR&#8217;s <code>lib</code>
+directory, where it is visible to both the EJB module and the web module.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing">Testing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_business_logic_test">Business logic test</h3>
+<div class="paragraph">
+<p><code>MoviesTest</code> in <code>moviefun-business-logic</code> tests the EJB without a server.
+It boots OpenEJB through <code>LocalInitialContextFactory</code>, sets
+<code>openejb.deployments.classpath.ear</code> to <code>true</code> so the modules found on the
+test classpath are deployed together as one application, and defines the
+two data sources required by <code>persistence.xml</code> as in-memory HSQLDB
+databases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class MoviesTest extends TestCase {
+
+    public void test() throws Exception {
+        Properties p = new Properties();
+        p.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.core.LocalInitialContextFactory");
+
+        p.put("openejb.deployments.classpath.ear", "true");
+
+        p.put("movieDatabase", "new://Resource?type=DataSource");
+        p.put("movieDatabase.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabase.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+
+        p.put("movieDatabaseUnmanaged", "new://Resource?type=DataSource");
+        p.put("movieDatabaseUnmanaged.JdbcDriver", "org.hsqldb.jdbcDriver");
+        p.put("movieDatabaseUnmanaged.JdbcUrl", "jdbc:hsqldb:mem:moviedb");
+        p.put("movieDatabaseUnmanaged.JtaManaged", "false");
+
+        Context context = new InitialContext(p);
+
+        Movies movies = (Movies) context.lookup("MoviesBeanLocal");
+
+        movies.addMovie(new Movie("Quentin Tarantino", "Reservoir Dogs", 1992));
+        movies.addMovie(new Movie("Joel Coen", "Fargo", 1996));
+        movies.addMovie(new Movie("Joel Coen", "The Big Lebowski", 1998));
+
+        List&lt;Movie&gt; list = movies.getMovies();
+        assertEquals("List.size()", 3, list.size());
+
+        for (Movie movie : list) {
+            movies.deleteMovieId(movie.getId());
+        }
+
+        assertEquals("Movies.getMovies()", 0, movies.getMovies().size());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It adds three movies, checks that <code>getMovies()</code> returns them, deletes them
+and checks that the list is empty again.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_functional_tests">Functional tests</h3>
+<div class="paragraph">
+<p>The <code>moviefun-functional-tests</code> module tests the packaged EAR end to end.
+It depends on the EAR produced by the sibling module:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.superbiz&lt;/groupId&gt;
+  &lt;artifactId&gt;moviefun-ear&lt;/artifactId&gt;
+  &lt;version&gt;${project.version}&lt;/version&gt;
+  &lt;type&gt;ear&lt;/type&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>together with <code>arquillian-tomee-remote</code>, the ShrinkWrap Maven resolver and
+HtmlUnit. The Arquillian container is configured in
+<code>src/test/resources/arquillian.xml</code>; a port of <code>-1</code> makes the adapter pick
+a free port, and TomEE is unpacked below <code>target</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;container qualifier="tomee" default="true"&gt;
+  &lt;configuration&gt;
+    &lt;property name="httpPort"&gt;-1&lt;/property&gt;
+    &lt;property name="stopPort"&gt;-1&lt;/property&gt;
+    &lt;property name="tomcatVersion"&gt;&lt;/property&gt;
+    &lt;property name="dir"&gt;target/apache-tomee-remote&lt;/property&gt;
+    &lt;property name="appWorkingDir"&gt;target/arquillian-test-working-dir&lt;/property&gt;
+  &lt;/configuration&gt;
+&lt;/container&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MoviesArquillianHtmlUnitTest</code> does not assemble the archive itself.
+Its <code>@Deployment</code> method resolves the <code>moviefun-ear</code> artifact with the
+ShrinkWrap Maven resolver. The version is read from <code>version.properties</code>,
+a filtered test resource containing <code>version=${tomee.version}</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@RunWith(Arquillian.class)
+@RunAsClient
+public class MoviesArquillianHtmlUnitTest {
+
+    @Deployment
+    public static EnterpriseArchive createDeployment() {
+        ResourceBundle mavenVersion = ResourceBundle.getBundle("version");
+
+        final EnterpriseArchive enterpriseArchive = Maven.resolver().resolve("org.superbiz:moviefun-ear:ear:" + mavenVersion.getString("version"))
+                .withoutTransitivity().asSingle(EnterpriseArchive.class);
+
+        System.out.println(enterpriseArchive.toString(true));
+
+        return enterpriseArchive;
+    }
+
+    @ArquillianResource
+    private URL deploymentUrl;
+
+    @Test
+    public void testShouldMakeSureWebappIsWorking() throws Exception {
+        final String url = "http://" + deploymentUrl.getHost() + ":" + deploymentUrl.getPort() + "/moviefun";
+
+        WebClient webClient = new WebClient();
+        HtmlPage page = webClient.getPage(url + "/setup.jsp");
+
+        assertMoviesPresent(page);
+
+        page = webClient.getPage(url + "/moviefun");
+
+        assertMoviesPresent(page);
+        webClient.close();
+    }
+
+    private void assertMoviesPresent(HtmlPage page) {
+        String pageAsText = page.asNormalizedText();
+        assertTrue(pageAsText.contains("Wedding Crashers"));
+        assertTrue(pageAsText.contains("Starsky &amp; Hutch"));
+        assertTrue(pageAsText.contains("Shanghai Knights"));
+        assertTrue(pageAsText.contains("I-Spy"));
+        assertTrue(pageAsText.contains("The Royal Tenenbaums"));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test runs as a client. After the EAR is deployed under the <code>/moviefun</code>
+context root, it opens <code>setup.jsp</code> to seed the database, then opens the
+servlet at <code>/moviefun/moviefun</code>, and checks on both pages that the seeded
+movies are listed. This covers the whole chain: web module, <code>@EJB</code>
+injection across modules, the stateless bean and JPA.</p>
+</div>
+<div class="paragraph">
+<p>The module also contains <code>DeployInWebAppsDirectoryTest</code>, which copies the
+EAR into the <code>webapps</code> directory of a TomEE started by the remote adapter
+instead of using the Arquillian deployer. It is currently marked
+<code>@Ignore("Not implemented yet")</code> and does not run.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running_the_tests">Running the tests</h3>
+<div class="paragraph">
+<p>The functional tests resolve the EAR as a Maven artifact, so it has to be
+installed in the local Maven repository first. Build the example from the
+<code>simple-ear</code> directory with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn clean install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running only <code>mvn test</code> or <code>mvn verify</code> does not install <code>moviefun-ear</code>,
+so the ShrinkWrap resolver cannot find it (or picks up an old copy from
+the local repository). Once the example has been installed, the
+business logic test can also be run on its own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mvn -pl moviefun-business-logic test</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apis_used">APIs Used</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/openejb/loader/IO.html">org.apache.openejb.loader.IO</a></p>
+</li>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/tomee/arquillian/remote/RemoteTomEEConfiguration.html">org.apache.tomee.arquillian.remote.RemoteTomEEConfiguration</a></p>
+</li>
+<li>
+<p><a href="../../tomee-11.0/javadoc/org/apache/tomee/arquillian/remote/RemoteTomEEContainer.html">org.apache.tomee.arquillian.remote.RemoteTomEEContainer</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/EJB.html">jakarta.ejb.EJB</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Local.html">jakarta.ejb.Local</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/ejb/Stateless.html">jakarta.ejb.Stateless</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/Entity.html">jakarta.persistence.Entity</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/EntityManager.html">jakarta.persistence.EntityManager</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/GeneratedValue.html">jakarta.persistence.GeneratedValue</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/GenerationType.html">jakarta.persistence.GenerationType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/Id.html">jakarta.persistence.Id</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/PersistenceContext.html">jakarta.persistence.PersistenceContext</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/TypedQuery.html">jakarta.persistence.TypedQuery</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/persistence/metamodel/EntityType.html">jakarta.persistence.metamodel.EntityType</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/servlet/ServletException.html">jakarta.servlet.ServletException</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/servlet/annotation/WebServlet.html">jakarta.servlet.annotation.WebServlet</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/servlet/http/HttpServlet.html">jakarta.servlet.http.HttpServlet</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/servlet/http/HttpServletRequest.html">jakarta.servlet.http.HttpServletRequest</a></p>
+</li>
+<li>
+<p><a href="../../jakartaee-11.0/javadoc/jakarta/servlet/http/HttpServletResponse.html">jakarta.servlet.http.HttpServletResponse</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../../js/jquery-1.11.1.min.js"></script>
+	<script src="../../js/owl.carousel.min.js"></script>
+	<script src="../../js/bootstrap.min.js"></script>
+	<script src="../../js/wow.min.js"></script>
+	<script src="../../js/typewriter.js"></script>
+	<script src="../../js/jquery.onepagenav.js"></script>
+	<script src="../../js/tree.jquery.js"></script>
+	<script src="../../js/highlight.pack.js"></script>
+    <script src="../../js/main.js"></script>
+		</body>
+
+</html>
+

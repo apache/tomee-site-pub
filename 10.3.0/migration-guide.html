@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Apache TomEE</title>
+	<meta name="description"
+		  content="Apache TomEE is a lightweight, yet powerful, JavaEE Application server with feature rich tooling." />
+	<meta name="keywords" content="tomee,asf,apache,javaee,jee,shade,embedded,test,junit,applicationcomposer,maven,arquillian" />
+	<meta name="author" content="Luka Cvetinovic for Codrops" />
+	<link rel="icon" href="../favicon.ico">
+	<link rel="icon"  type="image/png" href="../favicon.png">
+	<meta name="msapplication-TileColor" content="#80287a">
+	<meta name="theme-color" content="#80287a">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="../css/owl.css">
+	<link rel="stylesheet" type="text/css" href="../css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.1.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../fonts/eleganticons/et-icons.css">
+	<link rel="stylesheet" type="text/css" href="../css/jqtree.css">
+	<link rel="stylesheet" type="text/css" href="../css/idea.css">
+	<link rel="stylesheet" type="text/css" href="../css/cardio.css">
+
+	<script type="text/javascript">
+		<!-- Matomo -->
+		var _paq = window._paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		/* We explicitly disable cookie tracking to avoid privacy issues */
+		_paq.push(['disableCookies']);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function () {
+			var u = "//analytics.apache.org/";
+			_paq.push(['setTrackerUrl', u + 'matomo.php']);
+			_paq.push(['setSiteId', '5']);
+			var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+			g.async = true;
+			g.src = u + 'matomo.js';
+			s.parentNode.insertBefore(g, s);
+		})();
+		<!-- End Matomo Code -->
+    </script>
+</head>
+
+<body>
+    <div class="preloader">
+		<img src="../img/loader.gif" alt="Preloader image">
+	</div>
+
+	    <nav class="navbar">
+		<div class="container">
+		  <div class="row">          <div class="col-md-12">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/" title="Apache TomEE">
+				    <span>
+
+				    
+                        <img 
+							src="../img/apache_tomee-logo.svg"
+							onerror="this.src='../img/apache_tomee-logo.jpg'"
+							height="50"
+							>
+                    
+
+                    </span>
+                </a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right main-nav">
+					<li><a href="../docs.html">Documentation</a></li>
+					<li><a href="../community/index.html">Community</a></li>
+					<li><a href="../security/security.html">Security</a></li>
+					<li><a class="btn btn-accent accent-orange no-shadow" href="../download.html">Downloads</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		   </div></div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+    <div id="main-block" class="container main-block">
+        <div class="row title">
+          <div class="col-md-12">
+            <div class='page-header'>
+              
+              <h1>Migrating to Apache TomEE 10.3.0</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_removed_modules">Removed Modules</a></li>
+<li><a href="#_build_tools">Build Tools</a>
+<ul class="sectlevel2">
+<li><a href="#_maven_3_10_0_or_newer">Maven 3.10.0 or newer</a></li>
+<li><a href="#_gradle_plugin">Gradle plugin</a></li>
+<li><a href="#_quicksession_defaults_to_false">quickSession defaults to false</a></li>
+<li><a href="#_livereload_only_listens_on_localhost">LiveReload only listens on localhost</a></li>
+<li><a href="#_credentials_over_plain_http">Credentials over plain HTTP</a></li>
+</ul>
+</li>
+<li><a href="#_microprofile_jwt">MicroProfile JWT</a>
+<ul class="sectlevel2">
+<li><a href="#_the_mp_jwt_filter_requires_authmethod_mp_jwt">The MP-JWT filter requires authMethod "MP-JWT"</a></li>
+<li><a href="#_role_constraints_are_resolved_per_resource_class">Role constraints are resolved per resource class</a></li>
+<li><a href="#_negative_clock_skew_is_rejected">Negative clock skew is rejected</a></li>
+</ul>
+</li>
+<li><a href="#_authentication_and_identity_stores">Authentication and Identity Stores</a>
+<ul class="sectlevel2">
+<li><a href="#_ldap_identity_store">LDAP identity store</a></li>
+<li><a href="#_login_modules">Login modules</a></li>
+<li><a href="#_pbkdf2_password_hashes">PBKDF2 password hashes</a></li>
+<li><a href="#_tomcat_user_identity_store">Tomcat user identity store</a></li>
+<li><a href="#_principal_names_are_no_longer_mapped_to_roles">Principal names are no longer mapped to roles</a></li>
+<li><a href="#_static3des_password_cipher">Static3DES password cipher</a></li>
+</ul>
+</li>
+<li><a href="#_authorization">Authorization</a>
+<ul class="sectlevel2">
+<li><a href="#_ejb_method_permissions_are_enforced_on_java_21_and_newer">EJB method permissions are enforced on Java 21 and newer</a></li>
+<li><a href="#_internal_ejbs_require_an_admin_role">Internal EJBs require an admin role</a></li>
+</ul>
+</li>
+<li><a href="#_web_services_jax_rs_and_routing">Web Services, JAX-RS and Routing</a>
+<ul class="sectlevel2">
+<li><a href="#_jax_ws_endpoints_protect_all_http_methods">JAX-WS endpoints protect all HTTP methods</a></li>
+<li><a href="#_ejb_web_services_in_a_war_enforce_their_auth_method">EJB web services in a WAR enforce their auth-method</a></li>
+<li><a href="#_jax_rs_responses_for_ejbexception">JAX-RS responses for EJBException</a></li>
+<li><a href="#_routervalve_forwards">RouterValve forwards</a></li>
+</ul>
+</li>
+<li><a href="#_remote_ejb_and_server_services">Remote EJB and Server Services</a>
+<ul class="sectlevel2">
+<li><a href="#_remote_datasource_lookup_is_disabled">Remote DataSource lookup is disabled</a></li>
+<li><a href="#_ejbds_clients_verify_the_server_host_name">ejbds clients verify the server host name</a></li>
+<li><a href="#_no_transport_downgrade_for_clients">No transport downgrade for clients</a></li>
+<li><a href="#_only_from_is_authoritative">only_from is authoritative</a></li>
+<li><a href="#_derby_network_server_binds_to_localhost">Derby network server binds to localhost</a></li>
+<li><a href="#_admin_port_stop_requires_a_secret_openejb_standalone">Admin port stop requires a secret (OpenEJB standalone)</a></li>
+</ul>
+</li>
+<li><a href="#_filesystem_and_passivation">Filesystem and Passivation</a>
+<ul class="sectlevel2">
+<li><a href="#_passivation_directory">Passivation directory</a></li>
+<li><a href="#_temp_directories_and_archive_extraction">Temp directories and archive extraction</a></li>
+</ul>
+</li>
+<li><a href="#_packaging_and_operations">Packaging and Operations</a>
+<ul class="sectlevel2">
+<li><a href="#_debian_packages">Debian packages</a></li>
+<li><a href="#_server_info_and_version_output">Server info and version output</a></li>
+<li><a href="#_jars_skipped_by_the_scan_exclusion_list">Jars skipped by the scan exclusion list</a></li>
+</ul>
+</li>
+<li><a href="#_configuration_reference">Configuration Reference</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>TomEE 10.3.0 contains a large number of security hardening changes. Many of them tighten defaults that earlier TomEE
+versions left open, so applications and deployments that relied on the old behavior need to be adjusted. This guide
+lists every change that can affect an upgrade from TomEE 10.2.x, explains who is affected, and shows what to change.
+Where TomEE offers a switch to restore the previous behavior, it is listed as well. Use these switches only as a
+temporary measure: they re-open the issue the change fixed.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="release-notes.html">release notes</a> for the full list of changes.</p>
+</div>
+<div class="paragraph">
+<p>System properties mentioned in this guide can be set in <code>conf/system.properties</code> or passed as <code>-D</code> options to the JVM,
+unless the section says otherwise.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_removed_modules">Removed Modules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following modules are no longer built or published. None of them was part of a TomEE distribution by default.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">What it provided</th>
+<th class="tableblock halign-left valign-top">Replacement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb-hessian</code> (<a href="https://issues.apache.org/jira/browse/TOMEE-4700">TOMEE-4700</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>hessian</code> server service exposing <code>@Remote</code> EJBs over Hessian, <code>HessianInitialContextFactory</code> and the CDI <code>@Hessian</code> client injection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EJBd (<code>ejbd</code>/<code>ejbds</code>, or EJBd over HTTP at <code>/tomee/ejb</code>), JAX-RS or JAX-WS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb-ssh</code> (<a href="https://issues.apache.org/jira/browse/TOMEE-4701">TOMEE-4701</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>ssh</code> service (port 4222), a JAAS-authenticated administration shell</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMX, <code>tomee-maven-plugin</code> or remote deployment through the Deployer, the <code>bin/openejb</code> and <code>bin/tomee</code> commands</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb-common-cli</code> (<a href="https://issues.apache.org/jira/browse/TOMEE-4702">TOMEE-4702</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The command framework behind the SSH shell</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None needed. The <code>bin/openejb</code> commands (<code>start</code>, <code>stop</code>, <code>deploy</code>, <code>cipher</code>, &#8230;&#8203;) are not affected.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb-http</code> (<a href="https://issues.apache.org/jira/browse/TOMEE-4707">TOMEE-4707</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The standalone HTTP server (<code>httpejbd</code> service, port 4204) used by OpenEJB standalone and embedded containers, including its Jetty backend and the embedded JAX-RS/JAX-WS registries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TomEE, TomEE embedded or the Arquillian TomEE adapters. EJBd over HTTP is available in TomEE at <code>/tomee/ejb</code> with <code>tomee.remote.support=true</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Removing <code>openejb-http</code> has these further consequences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>OpenEJB standalone, <code>ApplicationComposer</code>, <code>EJBContainer</code> and <code>arquillian-openejb-embedded</code> no longer serve JAX-RS or
+JAX-WS endpoints over HTTP. The <code>conf/httpejbd.properties</code> file, the <code>httpejbd.*</code> properties and the
+<code>--httpejbd-bind</code>/<code>--httpejbd-port</code> options are gone.</p>
+</li>
+<li>
+<p><code>@EnableServices</code> no longer has the <code>jaxrs</code>, <code>jaxws</code> and <code>httpDebug</code> attributes, and <code>@JaxrsProviders</code> no longer has
+<code>applicationName</code>. Tests that used them need to move to TomEE embedded or Arquillian.</p>
+</li>
+<li>
+<p>The <code>org.apache.openejb.server.httpd.ServerServlet</code> class is now <code>org.apache.tomee.catalina.remote.ServerServlet</code>.
+If your <code>web.xml</code> declares this servlet to expose EJBd over HTTP, update the class name. <code>EEFilter</code>,
+<code>BeginWebBeansListener</code> and <code>EndWebBeansListener</code> moved to the <code>org.apache.tomee.catalina</code> package as well.</p>
+</li>
+<li>
+<p>The default of <code>openejb.rest.wildcard</code> changed from <code>.<strong></code> to <code></strong></code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_build_tools">Build Tools</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_maven_3_10_0_or_newer">Maven 3.10.0 or newer</h3>
+<div class="paragraph">
+<p>The TomEE Maven plugins no longer use the Maven 2 API
+(<a href="https://issues.apache.org/jira/browse/TOMEE-4705">TOMEE-4705</a>). <code>tomee-maven-plugin</code> and the other TomEE Maven
+plugins now require Maven 3.10.0 or newer and Java 17. Plugin coordinates, goals and parameters are unchanged.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gradle_plugin">Gradle plugin</h3>
+<div class="paragraph">
+<p>The Gradle plugin is built against the current Gradle API
+(<a href="https://issues.apache.org/jira/browse/TOMEE-4706">TOMEE-4706</a>) and works with Gradle 8.x and 9.x. The plugin id
+<code>org.apache.tomee.tomee-embedded</code> and its DSL are unchanged.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_quicksession_defaults_to_false">quickSession defaults to false</h3>
+<div class="paragraph">
+<p>The <code>quickSession</code> option makes the dev tooling generate session ids with a non-secure random generator. It now
+defaults to <code>false</code> in:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tomee-maven-plugin</code> (<code>quickSession</code>, user property <code>tomee-plugin.quick-session</code>)</p>
+</li>
+<li>
+<p><code>tomee-embedded-maven-plugin</code> (user property <code>tomee-embedded-plugin.quickSession</code>)</p>
+</li>
+<li>
+<p>TomEE embedded (<code>Configuration.quickSession</code>)</p>
+</li>
+<li>
+<p>the Gradle <code>tomee-embedded</code> task (<code>quickSession</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Startup can be slightly slower on systems with little entropy. Set the option to <code>true</code> to restore the previous behavior.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_livereload_only_listens_on_localhost">LiveReload only listens on localhost</h3>
+<div class="paragraph">
+<p>The LiveReload connector of <code>tomee-embedded-maven-plugin</code> (port 35729) now binds to <code>localhost</code> and rejects WebSocket
+handshakes whose <code>Origin</code> is not a loopback address. Browser extensions and requests without an <code>Origin</code> are still
+accepted. If you use LiveReload from another machine, a VM or a container host, configure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;liveReload&gt;
+  &lt;host&gt;0.0.0.0&lt;/host&gt;
+  &lt;allowAnyOrigin&gt;true&lt;/allowAnyOrigin&gt;
+&lt;/liveReload&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_credentials_over_plain_http">Credentials over plain HTTP</h3>
+<div class="paragraph">
+<p>The <code>tomee-maven-plugin</code> command goals (<code>deploy</code>, <code>undeploy</code>, &#8230;&#8203;) log a warning when they send a user and password to a
+non-local host over plain HTTP. Configure an HTTPS port with <code>tomee-plugin.https</code> and set
+<code>tomee-plugin.command-force-https=true</code> to send credentials over HTTPS.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_microprofile_jwt">MicroProfile JWT</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_mp_jwt_filter_requires_authmethod_mp_jwt">The MP-JWT filter requires authMethod "MP-JWT"</h3>
+<div class="paragraph">
+<p>Before, any class annotated with <code>@LoginConfig</code> enabled MP-JWT processing, whatever its <code>authMethod</code>. Now JWT
+processing is only enabled for:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@LoginConfig(authMethod = "MP-JWT")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Applications that use a different <code>authMethod</code> (for example <code>BASIC</code>) and still expect bearer tokens to be accepted must
+change it to <code>MP-JWT</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_role_constraints_are_resolved_per_resource_class">Role constraints are resolved per resource class</h3>
+<div class="paragraph">
+<p><code>@RolesAllowed</code>, <code>@PermitAll</code> and <code>@DenyAll</code> are now resolved for each resource class separately:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A method inherited by several resource classes no longer gets the union of the roles of all these classes. Each class
+gets the roles declared for it.</p>
+</li>
+<li>
+<p>An empty <code>@RolesAllowed({})</code> denies all callers (HTTP 403). Before, it allowed everyone. Use <code>@PermitAll</code> if the
+method should be public.</p>
+</li>
+<li>
+<p>An unannotated subclass inherits the class-level annotation of an annotated superclass for the methods it inherits
+(<a href="https://issues.apache.org/jira/browse/TOMEE-4730">TOMEE-4730</a>). Such endpoints were unprotected before and now
+return 401 or 403 for callers without the required role. A class carrying more than one of these annotations fails
+the deployment.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Review resources that use inheritance or empty role lists.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_negative_clock_skew_is_rejected">Negative clock skew is rejected</h3>
+<div class="paragraph">
+<p>A negative <code>mp.jwt.verify.clock.skew</code> used to disable the expiry check of tokens. It now fails the deployment with a
+<code>DeploymentException</code>. Set the value to <code>0</code> or a positive number of seconds.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authentication_and_identity_stores">Authentication and Identity Stores</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ldap_identity_store">LDAP identity store</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Caller names are escaped (RFC 4515) when TomEE builds search filters, and DNs built from <code>callerBaseDn</code> are escaped
+as well. If your application escaped caller names itself, remove that code, since names would now be escaped twice.
+Caller names containing <code>*</code>, <code>(</code>, <code>)</code> or <code>\</code> no longer act as wildcards or filter syntax.</p>
+</li>
+<li>
+<p>A caller with an empty or missing password is rejected without a bind attempt. Before, an LDAP server allowing
+anonymous binds accepted such logins.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_login_modules">Login modules</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SQLLoginModule</code> rejects users whose stored password is <code>NULL</code>. Before, such users could log in without a password.
+Give these users a password or remove them.</p>
+</li>
+<li>
+<p><code>PropertiesLoginModule</code> reports <code>Username or password does not match</code> for both an unknown user and a wrong password.
+Update anything that parses the old messages.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pbkdf2_password_hashes">PBKDF2 password hashes</h3>
+<div class="paragraph">
+<p><code>TomEEPbkdf2PasswordHash</code> now only accepts the algorithms <code>PBKDF2WithHmacSHA1</code>, <code>PBKDF2WithHmacSHA224</code>,
+<code>PBKDF2WithHmacSHA256</code>, <code>PBKDF2WithHmacSHA384</code> and <code>PBKDF2WithHmacSHA512</code> with at least 1024 iterations, both for new
+hashes and for stored hashes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Logins whose stored hash uses fewer iterations or another algorithm fail, and TomEE logs a warning once.</p>
+</li>
+<li>
+<p><code>Pbkdf2PasswordHash.Algorithm</code> or <code>Pbkdf2PasswordHash.Iterations</code> parameters outside these limits make the
+initialization fail with an <code>IllegalArgumentException</code>.</p>
+</li>
+<li>
+<p>Malformed stored hashes fail the login instead of throwing an exception.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Rehash affected passwords with stronger parameters. As a temporary measure, set the system property
+<code>tomee.security.pbkdf2.allow-weak-parameters=true</code> to accept weak stored hashes. TomEE then logs a warning for each
+weak parameter combination it accepts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tomcat_user_identity_store">Tomcat user identity store</h3>
+<div class="paragraph">
+<p>The identity store behind <code>@TomcatUserIdentityStoreDefinition</code> now checks passwords with the <code>CredentialHandler</code> of the
+<code>UserDatabaseRealm</code> in <code>conf/server.xml</code> that uses the same user database resource:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Passwords stored as digests in <code>tomcat-users.xml</code> are verified against the password the user enters. Sending the
+stored digest itself no longer works.</p>
+</li>
+<li>
+<p>A wrong password results in <code>INVALID</code> instead of <code>NOT_VALIDATED</code>.</p>
+</li>
+<li>
+<p>If no matching realm is found, TomEE compares passwords as plain text and logs a warning.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Make sure the <code>CredentialHandler</code> of the realm matches the format of the passwords in <code>tomcat-users.xml</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_principal_names_are_no_longer_mapped_to_roles">Principal names are no longer mapped to roles</h3>
+<div class="paragraph">
+<p>A user authenticated by a Tomcat realm was implicitly given a role with the same name as the user (for example user
+<code>admin</code> got role <code>admin</code>). This no longer happens: roles come only from the realm. Group principals are still mapped
+by name. If your application relied on this, assign the role to the user in the realm.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_static3des_password_cipher">Static3DES password cipher</h3>
+<div class="paragraph">
+<p>Using the <code>Static3DES</code> password cipher for resource passwords logs a warning: it uses a key shipped with TomEE and
+only obfuscates the password. Nothing breaks, but consider a custom <code>PasswordCipher</code> or a <code>cdi:</code> cipher.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authorization">Authorization</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ejb_method_permissions_are_enforced_on_java_21_and_newer">EJB method permissions are enforced on Java 21 and newer</h3>
+<div class="paragraph">
+<p>On Java 21 and newer, TomEE 10.2.0 skipped the JACC check for EJB method permissions and logged
+<code>Skipping JACC authorization checks as TomEE running on JDK 21+</code>. All callers could invoke EJBs regardless of
+<code>@RolesAllowed</code> and <code>@DenyAll</code>. TomEE 10.3.0 evaluates these permissions through the installed policy on all JDKs.</p>
+</div>
+<div class="paragraph">
+<p>If you run on Java 21 or newer, callers without the required role now get an <code>EJBAccessException</code>. Check the role
+assignments of your users and the <code>@RolesAllowed</code> annotations of your EJBs. If no JACC policy is installed, EJB access
+is denied.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_internal_ejbs_require_an_admin_role">Internal EJBs require an admin role</h3>
+<div class="paragraph">
+<p>Internal EJBs such as the Deployer (<code>openejb/DeployerBusinessRemote</code>) and <code>ConfigurationInfo</code> always require the
+<code>tomee-admin</code> or <code>openejb-admin</code> role. Before, the check was skipped in the default <code>development</code> profile. TomEE also
+no longer creates a <code>tomee</code>/<code>tomee</code> user with the <code>tomee-admin</code> role when <code>tomcat-users.xml</code> is empty.</p>
+</div>
+<div class="paragraph">
+<p>Remote deployment, for example with the <code>tomee-maven-plugin</code> deploy goals, now needs a user with one of these roles in
+<code>conf/tomcat-users.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;role rolename="tomee-admin"/&gt;
+&lt;user username="deployer" password="..." roles="tomee-admin"/&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Arquillian remote adapter, <code>RemoteTomEEEJBContainer</code> and <code>tomee-maven-plugin</code> with <code>reloadOnUpdate</code> disable the
+check themselves for the servers they start. To disable it for a server, set
+<code>openejb.internal.beans.security.enabled=false</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_services_jax_rs_and_routing">Web Services, JAX-RS and Routing</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_jax_ws_endpoints_protect_all_http_methods">JAX-WS endpoints protect all HTTP methods</h3>
+<div class="paragraph">
+<p>The security constraint TomEE generates for EJB web services with an <code>auth-method</code> used to cover only <code>GET</code> and <code>POST</code>.
+It now covers all HTTP methods and denies uncovered methods. <code>PUT</code>, <code>DELETE</code>, <code>OPTIONS</code> and other methods now require
+authentication as well. There is no switch to restore the old behavior.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejb_web_services_in_a_war_enforce_their_auth_method">EJB web services in a WAR enforce their auth-method</h3>
+<div class="paragraph">
+<p>EJB web services packaged in a WAR were published without applying the <code>&lt;web-service-security&gt;</code> settings
+(<code>auth-method</code>, <code>transport-guarantee</code>, <code>realm-name</code>) from <code>openejb-jar.xml</code>. They are now enforced:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Unauthenticated calls, including <code>?wsdl</code> requests, get HTTP 401.</p>
+</li>
+<li>
+<p>An <code>auth-method</code> other than <code>BASIC</code>, <code>DIGEST</code>, <code>CLIENT-CERT</code> or <code>NONE</code> fails the deployment.</p>
+</li>
+<li>
+<p>If the webapp has its own <code>login-config</code> with a different method, the webapp setting wins and TomEE logs a warning.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Set <code>&lt;auth-method&gt;NONE&lt;/auth-method&gt;</code> (or remove it) for endpoints that are meant to be public. Role names are still
+configured with <code>tomee.jaxws.security-role.&lt;context name&gt;</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jax_rs_responses_for_ejbexception">JAX-RS responses for EJBException</h3>
+<div class="paragraph">
+<p>When an <code>EJBException</code> has no mapper of its own, the default JAX-RS mapper used to return the exception message as a
+<code>text/plain</code> body. It now returns an empty HTTP 500 response and logs the message on the server. Exceptions whose cause
+has a mapper are not affected.</p>
+</div>
+<div class="paragraph">
+<p>If clients parse the error body, register your own <code>ExceptionMapper</code>. As a temporary measure, set
+<code>openejb.jaxrs.ejb-exception-mapper.expose-message=true</code> to restore the old body.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_routervalve_forwards">RouterValve forwards</h3>
+<div class="paragraph">
+<p>Forward routes in <code>WEB-INF/tomee-router.conf</code> are normalized and checked before forwarding:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Targets that are not absolute paths, cannot be decoded or point into <code>WEB-INF</code> or <code>META-INF</code> get HTTP 404.</p>
+</li>
+<li>
+<p>Targets protected by a security constraint the caller does not satisfy get HTTP 403. Before, the forward bypassed
+the constraint.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Redirect routes are not affected.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_remote_ejb_and_server_services">Remote EJB and Server Services</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_remote_datasource_lookup_is_disabled">Remote DataSource lookup is disabled</h3>
+<div class="paragraph">
+<p>Remote clients could look up a DataSource over EJBd and receive its connection details, including database
+credentials. This is now refused with a <code>NamingException</code> (<code>Remote DataSource lookup is disabled</code>), for <code>ejbd</code>, <code>ejbds</code>
+and EJBd over HTTP. Remote EJB calls are not affected.</p>
+</div>
+<div class="paragraph">
+<p>Clients should not connect to the database with server credentials. If you still need this, set
+<code>openejb.ejbd.datasource-metadata=true</code> on the server. This applies to all remote clients.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejbds_clients_verify_the_server_host_name">ejbds clients verify the server host name</h3>
+<div class="paragraph">
+<p>Clients connecting with <code>ejbds</code> now check that the server certificate matches the host in the provider URL. A
+certificate without a matching subject alternative name or common name, for example when connecting by IP address,
+fails the TLS handshake. Issue certificates for the host names clients use. As a temporary measure, start the client
+JVM with <code>-Dopenejb.client.disableEndpointIdentification=true</code>. This must be a system property of the client JVM, not a
+JNDI property.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_no_transport_downgrade_for_clients">No transport downgrade for clients</h3>
+<div class="paragraph">
+<p>A client configured with <code>ejbds</code>, <code>zejbds</code> or <code>https</code> ignores cluster and failover locations with a plain scheme
+(logging a warning) and refuses authentication redirects to a plain scheme. If you run a cluster that mixes secure and
+plain transports, configure all members for the secure transport. To restore the old behavior, start the client JVM
+with <code>-Dopenejb.client.allowTransportDowngrade=true</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_only_from_is_authoritative">only_from is authoritative</h3>
+<div class="paragraph">
+<p>When a server service sets <code>only_from</code>, only the listed hosts may connect. Localhost and the server&#8217;s own address are
+no longer admitted implicitly. Add <code>localhost</code> (or <code>127.0.0.1</code>) to <code>only_from</code> if local clients must connect. To restore
+the old behavior, set <code>openejb.server.only_from.implicit-local=true</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_derby_network_server_binds_to_localhost">Derby network server binds to localhost</h3>
+<div class="paragraph">
+<p>The <code>derbynet</code> service ignored its <code>bind</code> setting and listened on all interfaces. It now honors it, and the default is
+<code>127.0.0.1</code>. Remote JDBC clients of the embedded Derby network server (port 4205) need <code>-Dderbynet.bind=0.0.0.0</code> or the
+corresponding setting in the service configuration.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_admin_port_stop_requires_a_secret_openejb_standalone">Admin port stop requires a secret (OpenEJB standalone)</h3>
+<div class="paragraph">
+<p>This only affects OpenEJB standalone (<code>bin/openejb start</code>). TomEE does not start the admin service, and
+<code>catalina.sh stop</code> uses the Tomcat shutdown port as before.</p>
+</div>
+<div class="paragraph">
+<p>Stop requests on the admin port (4200) must carry a secret. Requests without it are refused and the server logs
+<code>Refused stop request without a valid secret</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set a fixed secret with <code>openejb.admin.shutdown.secret</code>. Otherwise the server generates one at each start and writes
+it to <code>conf/admin-shutdown.secret</code>, readable only by the server user.</p>
+</li>
+<li>
+<p><code>bin/openejb stop</code> reads the secret from <code>-s &lt;secret&gt;</code>, the <code>openejb.admin.shutdown.secret</code> property or
+<code>conf/admin-shutdown.secret</code>, so it works unchanged for the same user on the same machine. To stop the server from
+another host, use <code>bin/openejb stop -h &lt;host&gt; -s &lt;secret&gt;</code>.</p>
+</li>
+<li>
+<p>Custom scripts that send a plain stop byte to port 4200 must send the secret as well.</p>
+</li>
+<li>
+<p>To restore the old behavior, set <code>openejb.admin.shutdown.secret.required=false</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_filesystem_and_passivation">Filesystem and Passivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_passivation_directory">Passivation directory</h3>
+<div class="paragraph">
+<p>Stateful and managed beans were passivated directly into <code>java.io.tmpdir</code>, which is <code>CATALINA_BASE/temp</code> in TomEE. They
+are now passivated into a private directory <code>${java.io.tmpdir}/openejb-passivation-&lt;random&gt;/</code>, readable only by the
+server user. A new directory is used at every start and deleted when the JVM exits. The startup log shows the directory
+in use.</p>
+</div>
+<div class="paragraph">
+<p>Passivated state does not survive a restart, which matches the lifecycle of stateful beans. If tooling or monitoring
+expects the files in the shared temp directory, set <code>openejb.stateful.passivation.shared-tmpdir=true</code>. This property
+applies to both stateful and managed beans.</p>
+</div>
+<div class="paragraph">
+<p><code>RAFPassivater</code> also uses a private temp directory now. There is no switch for it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_temp_directories_and_archive_extraction">Temp directories and archive extraction</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Internal temp directories (for example for URL caching) are created with owner-only permissions. If another OS user
+needs to read them, adjust your setup.</p>
+</li>
+<li>
+<p>Archives whose entries resolve outside the target directory (for example <code>../</code> entries) fail to deploy or extract,
+both in the server and in <code>tomee-maven-plugin</code>. Repackage such archives.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_packaging_and_operations">Packaging and Operations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_debian_packages">Debian packages</h3>
+<div class="paragraph">
+<p>The post-install script of the Debian packages no longer makes the configuration writable for the <code>apachetomee</code>
+service group. <code>/etc/tomee-&lt;classifier&gt;</code> and <code>/var/lib/tomee-&lt;classifier&gt;</code> are now readable but not writable for the
+group, so members of <code>apachetomee</code> can no longer edit <code>server.xml</code>, <code>tomcat-users.xml</code>, <code>tomee.xml</code> or
+<code>bin/setenv.sh</code>. Edit these files as root. The <code>work</code> directory, the log directory and
+<code>/var/lib/tomee-&lt;classifier&gt;-user-data</code> (webapps, temp) remain writable for the group.</p>
+</div>
+<div class="paragraph">
+<p>If an application writes context descriptors to <code>conf/Catalina/localhost</code> at runtime, grant that directory write access
+yourself.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_info_and_version_output">Server info and version output</h3>
+<div class="paragraph">
+<p>TomEE no longer patches <code>catalina.jar</code> to report its version
+(<a href="https://issues.apache.org/jira/browse/TOMEE-4710">TOMEE-4710</a>). The server info string is the same as before,
+<code>Apache Tomcat (TomEE)/&lt;tomcat version&gt; (&lt;tomee version&gt;)</code>, but it now comes from
+<code>lib/org/apache/catalina/util/ServerInfo.properties</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>tomee.keep-server-info</code> system property is no longer read. To report the plain Tomcat server info, delete
+<code>lib/org/apache/catalina/util/ServerInfo.properties</code>.</p>
+</li>
+<li>
+<p>The bundled jars are no longer repacked, so their signatures and metadata are intact.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The startup banner has a new <code>Git revision</code> line
+(<a href="https://issues.apache.org/jira/browse/TOMEE-4709">TOMEE-4709</a>). Update log parsers that rely on the number of banner
+lines.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jars_skipped_by_the_scan_exclusion_list">Jars skipped by the scan exclusion list</h3>
+<div class="paragraph">
+<p>TomEE now logs the webapp jars it skips because their name matches the built-in scan exclusion list. Annotations in
+these jars (<code>@WebServlet</code>, <code>@RolesAllowed</code>, &#8230;&#8203;) are ignored. This was already the case before, but silently. If the log
+lists a jar that must be scanned, add its name prefix to the <code>openejb.additional.include</code> system property.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_reference">Configuration Reference</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following switches restore previous behavior. All of them default to the secure setting.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Effect when changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tomee.security.pbkdf2.allow-weak-parameters</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> accepts stored PBKDF2 hashes with weak parameters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.internal.beans.security.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> allows access to internal EJBs without an admin role</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.jaxrs.ejb-exception-mapper.expose-message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> returns <code>EJBException</code> messages to JAX-RS clients</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.ejbd.datasource-metadata</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> allows remote DataSource lookups over EJBd</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.client.disableEndpointIdentification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> disables host name verification for <code>ejbds</code> clients (client JVM)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.client.allowTransportDowngrade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> lets secure clients follow plain failover locations and redirects (client JVM)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.server.only_from.implicit-local</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> admits localhost to services restricted with <code>only_from</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>derbynet.bind</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>127.0.0.1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.0.0.0</code> exposes the Derby network server on all interfaces</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.admin.shutdown.secret.required</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> accepts stop requests without a secret (OpenEJB standalone)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>openejb.stateful.passivation.shared-tmpdir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> passivates stateful and managed beans into <code>java.io.tmpdir</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+            </div>
+            
+        </div>
+    </div>
+<div style="margin-bottom: 30px;"></div>
+<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 text-center-mobile">
+					<h3 class="white">Be simple.  Be certified. Be Tomcat.</h3>
+					<h5 class="light regular light-white">"A good application in a good server"</h5>
+					<ul class="social-footer">
+						<li><a href="https://www.facebook.com/ApacheTomEE/"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="https://twitter.com/apachetomee"><i class="fa fa-twitter"></i></a></li>
+					</ul>
+					<h5 class="light regular light-white">
+						<a href="../privacy-policy.html" class="white">Privacy Policy</a>
+					</h5>
+				</div>
+				<div class="col-sm-6 text-center-mobile">
+					<div class="row opening-hours">
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../latest/docs/" class="white">Documentation</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../latest/docs/admin/configuration/index.html" class="regular light-white">How to configure</a></li>
+								<li><a href="../latest/docs/admin/file-layout.html" class="regular light-white">Dir. Structure</a></li>
+								<li><a href="../latest/docs/developer/testing/index.html" class="regular light-white">Testing</a></li>
+								<li><a href="../latest/docs/admin/cluster/index.html" class="regular light-white">Clustering</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../latest/examples/" class="white">Examples</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../latest/examples/simple-cdi-interceptor.html" class="regular light-white">CDI Interceptor</a></li>
+								<li><a href="../latest/examples/rest-cdi.html" class="regular light-white">REST with CDI</a></li>
+								<li><a href="../latest/examples/ejb-examples.html" class="regular light-white">EJB</a></li>
+								<li><a href="../latest/examples/jsf-managedBean-and-ejb.html" class="regular light-white">JSF</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../community/index.html" class="white">Community</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="../community/contributors.html" class="regular light-white">Contributors</a></li>
+								<li><a href="../community/social.html" class="regular light-white">Social</a></li>
+								<li><a href="../community/sources.html" class="regular light-white">Sources</a></li>
+							</ul>
+						</div>
+						<div class="col-sm-3 text-center-mobile">
+							<h5><a href="../security/index.html" class="white">Security</a></h5>
+							<ul class="list-unstyled">
+								<li><a href="https://apache.org/security" target="_blank" class="regular light-white">Apache Security</a></li>
+								<li><a href="https://apache.org/security/projects.html" target="_blank" class="regular light-white">Security Projects</a></li>
+								<li><a href="https://cve.mitre.org" target="_blank" class="regular light-white">CVE</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row bottom-footer text-center-mobile">
+				<div class="col-sm-12 light-white">
+					<p>Copyright &copy; 1999-2026 The Apache Software Foundation, Licensed under the Apache License, Version 2.0. Apache TomEE, TomEE, Apache, the Apache logo, and the Apache TomEE project logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners.</p>
+					<p>
+						<a href="https://www.apache.org/" class="light-white">Foundation</a> |
+						<a href="https://www.apache.org/events/current-event.html" class="light-white">Events</a> |
+						<a href="https://www.apache.org/licenses/" class="light-white">License</a> |
+						<a href="https://www.apache.org/security/" class="light-white">Security</a> |
+						<a href="https://www.apache.org/foundation/sponsorship.html" class="light-white">Sponsorship</a> |
+						<a href="https://www.apache.org/foundation/thanks.html" class="light-white">Thanks</a> |
+						<a href="https://privacy.apache.org/policies/privacy-policy-public.html" class="light-white">Privacy</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Holder for mobile navigation -->
+	<div class="mobile-nav">
+        <ul>
+          <li><a hef="../latest/docs/admin/index.html">Administrators</a>
+          <li><a hef="../latest/docs/developer/index.html">Developers</a>
+          <li><a hef="../latest/docs/advanced/index.html">Advanced</a>
+          <li><a hef="../community/index.html">Community</a>
+        </ul>
+		<a href="#" class="close-link"><i class="arrow_up"></i></a>
+	</div>
+	<!-- Scripts -->
+	<script src="../js/jquery-1.11.1.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/wow.min.js"></script>
+	<script src="../js/typewriter.js"></script>
+	<script src="../js/jquery.onepagenav.js"></script>
+	<script src="../js/tree.jquery.js"></script>
+	<script src="../js/highlight.pack.js"></script>
+    <script src="../js/main.js"></script>
+		</body>
+
+</html>
+

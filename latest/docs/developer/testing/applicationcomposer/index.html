@@ -135,30 +135,6 @@
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>If you need JAXRS services you&#8217;ll add (or replace thanks to transitivity of maven) openejb-cxf-rs:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
-  &lt;artifactId&gt;openejb-cxf-rs&lt;/artifactId&gt;
-  &lt;version&gt;${openejb.version&gt;&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you need JAXWS services you&#8217;ll add (or replace thanks to transitivity of maven) openejb-cxf:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
-  &lt;artifactId&gt;openejb-cxf&lt;/artifactId&gt;
-  &lt;version&gt;${openejb.version&gt;&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -309,52 +285,46 @@ public class MyTest {
 <div class="sect2">
 <h3 id="_services">Services</h3>
 <div class="paragraph">
-<p>If you want to test a JAXRS or JAXWS service you need to activate these services.</p>
+<p><code>@EnableServices</code> starts the listed server services. Each service needs its module on the classpath, for instance <code>openejb-ejbd</code> for <code>ejbd</code> (remote EJB clients):</p>
 </div>
-<div class="paragraph">
-<p>To do so just add the needed dependency and use <code>@EnableServices</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.tomee&lt;/groupId&gt;
+  &lt;artifactId&gt;openejb-ejbd&lt;/artifactId&gt;
+  &lt;version&gt;${openejb.version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// runner if needed etc...
-@EnableService("jaxrs") // jaxws supported as well
+@EnableServices("ejbd")
 public class MyTest {
    //...
 }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_random_port">Random port</h3>
 <div class="paragraph">
-<p>Services like JAXRS and JAXWS relies on HTTP. Often it is nice to have a random port to be able to deploy multiple tests/projects on the same CI platform at the same time.</p>
-</div>
-<div class="paragraph">
-<p>To shortcut all the needed logic you can use <code>@RandomPort</code>. It is simply an injection giving you either the port (int) or the root context (URL):</p>
+<p><code>@RandomPort</code> picks a free port for the named service and injects it as an <code>int</code> or as a <code>URL</code> (<code><a href="http://localhost:&lt;port&gt;/" class="bare">http://localhost:&lt;port&gt;/</a></code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">// runner, services if needed etc...
+<pre class="highlight"><code class="language-java" data-lang="java">@EnableServices("ejbd")
 public class MyTest {
-   @RandomPort("http")
+   @RandomPort("ejbd")
    private int port;
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Note: you can generate this way multiple ports. The value is the name of the service it will apply on (being said http is an alias for httpejbd which is our embedded http layer).</p>
+<p>The ApplicationComposer has no HTTP server, so it doesn&#8217;t deploy JAXRS or JAXWS endpoints. To test them over HTTP, use the TomEE Embedded runners (<code>tomee-embedded</code>), which support <code>@RandomPort("http")</code> to get a random HTTP port, or the Arquillian TomEE Embedded/Remote adapters.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_nice_logs">Nice logs</h3>
 <div class="paragraph">
 <p>@SimpleLog annotation allows you to have one-liner logs</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_jaxrsprovider">@JaxrsProvider</h3>
-<div class="paragraph">
-<p>@JaxrsProvider allows you to specify on a <code>@Module</code> method the list of JAXRS provider you want to use.</p>
 </div>
 </div>
 <div class="sect2">
@@ -406,7 +376,7 @@ ContextProvider: allow to mock JAXRS contexts</p>
 <div class="sect2">
 <h3 id="_webresource">@WebResource</h3>
 <div class="paragraph">
-<p>Allow for web application to add folders containing web resources.</p>
+<p>Sets the folder containing the web resources (docBase) of the web application. Only the TomEE Embedded runners use it, with a single folder.</p>
 </div>
 </div>
 </div>
