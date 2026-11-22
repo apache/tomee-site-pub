@@ -371,7 +371,9 @@ accessed via properties.getProperty("username");</p>
 <p>Resources can also be defined within an application, and optionally use
 classes from the application&#8217;s classpath. To define resources in a .war
 file, include a <code>WEB-INF/resources.xml</code>. For an ejb-jar module, use
-<code>META-INF/resources.xml</code>.</p>
+<code>META-INF/resources.xml</code>. For an .ear file, use the <code>META-INF/resources.xml</code>
+of the EAR itself; read <a href="#ear-resource-injection">Injecting resources declared in an EAR</a>
+before injecting those.</p>
 </div>
 <div class="paragraph">
 <p>The format of <code>resources.xml</code> uses the same <code>&lt;Resource&gt;</code> tag as
@@ -397,6 +399,64 @@ application, alongside your application code, rather than requiring a
 <div class="paragraph">
 <p>Application resources are bound in JNDI under
 openejb:Resource/appname/resource id.</p>
+</div>
+<div class="sect2">
+<h3 id="ear-resource-injection">Injecting resources declared in an EAR</h3>
+<div class="paragraph">
+<p>Inside an EAR, TomEE registers each resource of the EAR&#8217;s
+<code>META-INF/resources.xml</code> under its id prefixed with the application name,
+for example <code>myapp/stopWords</code> for <code>&lt;Resource id="stopWords" &#8230;&#8203;&gt;</code> in
+<code>myapp.ear</code>. A plain <code>@Resource</code> without a matching name relies on the
+field name instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Stateless
+public class TextService {
+
+    @Resource // looked up as "stopWords", but the resource is registered as "myapp/stopWords"
+    private WordFilter stopWords;
+
+    @Resource // looked up as "medicalWords", registered as "myapp/medicalWords"
+    private WordFilter medicalWords;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The field name does not match the prefixed id. TomEE then falls back to
+the <strong>first resource of the requested type</strong> and only logs this at <code>DEBUG</code>
+level. As long as the application defines a single resource of that type,
+the result is still right. With several resources of the same type, every
+field silently receives the same instance: in the example above both
+<code>stopWords</code> and <code>medicalWords</code> get whichever <code>WordFilter</code> resource is
+listed first. Deployment succeeds, and the application simply works with
+the wrong configuration.</p>
+</div>
+<div class="paragraph">
+<p>This happens whether the EAR is deployed at startup (for example from
+<code>apps/</code>) or at runtime, and setting <code>Lazy</code> does not change it. The same
+code works where resources are registered without that prefix, such as
+resources from <code>tomee.xml</code> or tests using the ApplicationComposer, so the
+problem often only shows up once an application is packaged as an EAR.</p>
+</div>
+<div class="paragraph">
+<p>To get the intended resource, name it explicitly, using either of these:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// works inside and outside an EAR
+@Resource(lookup = "openejb:Resource/stopWords")
+private WordFilter stopWords;
+
+// the id as registered; ties the code to the application name "myapp"
+@Resource(name = "myapp/stopWords")
+private WordFilter stopWords;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>lookup</code> form is usually the better choice, since it does not depend
+on the name of the EAR.</p>
+</div>
 </div>
 </div>
 </div>
